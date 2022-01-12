@@ -1,48 +1,87 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.team670.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.team670.robot.commands.ExampleCommand;
-import frc.team670.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
+import frc.team670.mustanglib.RobotContainerBase;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.constants.OI;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
-public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+public class RobotContainer extends RobotContainerBase {
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
-  }
+  private static OI oi = new OI();
+
+  int i = 0;
+
+  private MustangCommand m_autonomousCommand;
+
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+  //     vision);
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  private void configureButtonBindings() {}
+  public RobotContainer() {
+    super();
+    
+  }
+
+  public void robotInit() {
+    
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+  public MustangCommand getAutonomousCommand() {
+    return null;
   }
+
+  public void autonomousInit() {
+    
+  }
+
+  public void teleopInit() {
+    
+    
+  }
+
+  @Override
+  public void disabled() {
+    
+  }
+
+  public static Joystick getOperatorController() {
+    return OI.getOperatorController();
+  }
+
+  public static void rumbleDriverController() {
+    notifyDriverController(1.0, 0.3);
+  }
+
+  public static void rumbleDriverController(double power, double time) {
+    oi.rumbleDriverController(power, time);
+  }
+
+  public static void notifyDriverController(double power, double time) {
+    oi.rumbleDriverController(power, time);
+  }
+
+  public static MustangController getDriverController() {
+    return OI.getDriverController();
+  }
+
+  public void periodic() {
+   
+  }
+
 }
