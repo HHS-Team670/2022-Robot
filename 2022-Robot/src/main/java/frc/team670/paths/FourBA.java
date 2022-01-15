@@ -13,9 +13,9 @@ import frc.team670.robot.constants.RobotConstants;
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
  * @author meganchoy, elisevbp, tarini, rishabh b
  */
-public class Eric_path1 extends Path{
+public class FourBA extends Path{
  
-        public Eric_path1(DriveBase driveBase) {
+        public FourBA(DriveBase driveBase) {
                 super(
 
                         List.of(
