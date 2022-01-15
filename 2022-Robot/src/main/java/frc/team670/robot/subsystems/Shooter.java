@@ -23,7 +23,7 @@ import frc.team670.mustanglib.utils.math.interpolable.InterpolatingTreeMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
+import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression; // something is missing from MustangLib
 import frc.team670.robot.constants.RobotConstants;
 
 
