@@ -10,14 +10,18 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.commands.auton.Taxi;
 
 
 public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
-
+  private DriveBase driveBase = new DriveBase(getDriverController());
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
@@ -30,6 +34,8 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
+    addSubsystem(driveBase);
+    oi.configureButtonBindings(driveBase);
     
   }
 
@@ -43,11 +49,16 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return null;
+    MustangCommand autonCommand = new Taxi(driveBase);
+    Logger.consoleLog("autonCommand: %s", autonCommand);
+    return autonCommand;
   }
 
   public void autonomousInit() {
-    
+    m_autonomousCommand = getAutonomousCommand();
+    if (m_autonomousCommand != null) {
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
+    }
   }
 
   public void teleopInit() {
