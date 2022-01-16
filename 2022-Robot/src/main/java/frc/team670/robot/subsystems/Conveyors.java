@@ -9,15 +9,17 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 
 import frc.team670.robot.constants.RobotMap;
 
-public class Conveyor extends MustangSubsystemBase {
+public class Conveyors extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
     private double CONVEYOR_SPEED = 0.4; // % output from testing 2/16.
 
-    public Conveyor() {
+    public Conveyors() 
+    {
         // Conveyor motor should not be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
+
     }
 
     /**
@@ -45,8 +47,6 @@ public class Conveyor extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        // TODO Auto-generated method stub
-
     }
 
 }
