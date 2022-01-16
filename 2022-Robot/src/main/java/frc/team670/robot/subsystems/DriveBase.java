@@ -13,24 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpiutil.math.VecBuilder;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
@@ -117,7 +117,7 @@ allMotors.addAll(rightControllers);
 setMotorsInvert(leftControllers, false);
 setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-super.setMotorControllers(new SpeedController[] { left1, left2 }, new SpeedController[] { right1, right2 }, false,
+super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, false,
   false, .1, true);
 
 // initialized NavX and sets Odometry
@@ -374,8 +374,8 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   public void resetOdometry(Pose2d pose2d) {
     zeroHeading();
     poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(getHeading()));
-    CANError lE = left1Encoder.setPosition(0);
-    CANError rE = right1Encoder.setPosition(0);
+    REVLibError lE = left1Encoder.setPosition(0);
+    REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
     SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition()); 
