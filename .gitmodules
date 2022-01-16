@@ -1,3 +1,3 @@
-[submodule "2022-Robot/src/main/java/frc/team670/mustanglib"]
+[submodule "/Users/lakshbhambhani/Documents/GitHub/2022-Robot/2022-Robot/src/main/java/frc/team670/mustanglibc"]
 	path = 2022-Robot/src/main/java/frc/team670/mustanglib
-	url = https://github.com/HHS-Team670/MustangLib
+	url = https://github.com/HHS-Team670/MustangLib.git

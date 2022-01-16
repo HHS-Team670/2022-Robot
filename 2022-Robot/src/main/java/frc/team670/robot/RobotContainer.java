@@ -10,6 +10,8 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
 
@@ -25,11 +27,13 @@ public class RobotContainer extends RobotContainerBase {
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
+  BeamBreak break1 = new BeamBreak(9);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
+    
     
   }
 
@@ -81,7 +85,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   
+   break1.sendBeamBreakDataToDashboard();
   }
 
 }
