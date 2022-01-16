@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -369,11 +370,11 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   /**
    * Resets the odometry to the specified pose.
    *
-   * @param pose The pose to which to set the odometry.
+   * @param pose2d The pose to which to set the odometry.
    */
-  public void resetOdometry(Pose2d pose) {
+  public void resetOdometry(Pose2d pose2d) {
     zeroHeading();
-    poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(getHeading()));
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
