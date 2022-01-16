@@ -10,6 +10,10 @@ import frc.team670.mustanglib.utils.Logger;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.SpeedController;
 import java.lang.AutoCloseable;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+
 
 import frc.team670.robot.constants.RobotMap;
 
