@@ -1,52 +1,74 @@
 package frc.team670.robot.subsystems;
 
-import com.revrobotics.CANError;
+import com.revrobotics.REVLibError;
 
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.mustanglib.utils.Logger;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.SpeedController;
+import java.lang.AutoCloseable;
 
 import frc.team670.robot.constants.RobotMap;
 
-public class Conveyors extends MustangSubsystemBase {
+public class Conveyors extends MustangSubsystemBase 
+{
 
-    private SparkMAXLite roller;
 
-    private double CONVEYOR_SPEED = 0.4; // % output from testing 2/16.
+    private CANSparkMax roller;
+    private int DeviceID = 1;
 
-    public Conveyors() 
+    private double conveyorSpeed; 
+
+    public Conveyors(double speed) 
     {
-        // Conveyor motor should not be inverted
-        roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
+        conveyorSpeed = speed;
+        roller = new CANSparkMax(DeviceID, MotorType.kBrushless);
 
     }
 
-    /**
-     * 
-     * @param reversed True to run the conveyor in reverse
-     */
-    public void run(boolean reversed) {
+    public void run(boolean reversed) 
+    {
         if (reversed) {
-            roller.set(CONVEYOR_SPEED * -1);
+            conveyorSpeed = Math.abs(conveyorSpeed) * -1;
         } else {
-            roller.set(CONVEYOR_SPEED);
+            conveyorSpeed = Math.abs(conveyorSpeed);
         }
+        
+        roller.set(conveyorSpeed);
     }
 
-    public void stop() {
-        roller.set(0);
+    public void disable() 
+    {
+        roller.disable();
+    }
+
+    public void stop() 
+    {
+        roller.stopMotor();
+    }
+
+    public void setSpeed(double speed)
+    {
+        conveyorSpeed = speed;
     }
 
     @Override
-    public HealthState checkHealth() {
-        if (roller.getLastError() != null && roller.getLastError() != CANError.kOk)
+    public HealthState checkHealth() 
+    {
+        if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
             return HealthState.RED;
+        }
+        
         return HealthState.GREEN;
     }
 
     @Override
-    public void mustangPeriodic() {
-    }
+    public void mustangPeriodic() 
+    {
+        Logger.consoleLog("Speed: " + conveyorSpeed);
+    } 
 
 }
