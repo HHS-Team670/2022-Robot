@@ -5,7 +5,7 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
 
 public class RobotConstants extends RobotConstantsBase{
