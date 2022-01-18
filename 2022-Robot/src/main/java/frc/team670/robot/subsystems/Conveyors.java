@@ -20,24 +20,23 @@ import frc.team670.robot.constants.RobotMap;
 public class Conveyors extends MustangSubsystemBase 
 {
 
-
-    private CANSparkMax roller;
-    private int DeviceID = 1;
+    private SparkMAXLite Roller;
 
     private double conveyorSpeed; 
 
-    public Conveyors(double speed) 
+    public Conveyors(int id, MotorConfig.Motor_Type type, double speed) 
     {
+        Roller = new SparkMAXLite(id, type);
         conveyorSpeed = speed;
-        roller = new CANSparkMax(DeviceID, MotorType.kBrushless);
-
     }
 
     public void run(boolean reversed) 
     {
-        if (reversed) {
+        if (reversed) 
+        {
             conveyorSpeed = Math.abs(conveyorSpeed) * -1;
-        } else {
+        } else 
+        {
             conveyorSpeed = Math.abs(conveyorSpeed);
         }
         
