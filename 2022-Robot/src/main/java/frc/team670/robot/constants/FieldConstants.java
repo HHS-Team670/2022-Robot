@@ -9,5 +9,7 @@ package frc.team670.robot.constants;
  */
 public class FieldConstants {
 
+    public static final double VISION_TARGET_CENTER_HEIGHT = 0;
+
 
 }
