@@ -22,26 +22,53 @@ import frc.team670.robot.constants.RobotMap;
 public class Conveyors extends MustangSubsystemBase 
 {
 
-    private SparkMAXLite roller;
-    private double conveyorSpeed;
-
-    private boolean conveyorStates[] = {false, false, false};
-
-
-    BeamBreak beamBreak1;
-    BeamBreak beamBreak2;
-    BeamBreak beamBreak3;
-    public Conveyors(int id, MotorConfig.Motor_Type type, double speed) 
-    {
-        roller = new SparkMAXLite(id, type);
-        conveyorSpeed = speed;
-        //Check the dio port for the beamBreak sensors
-        beamBreak1 = new BeamBreak(0);
-        beamBreak2 = new BeamBreak(1);
-        beamBreak3 = new BeamBreak(2);
-        numBalls = 0;
+    public Conveyors(){
+        Conveyor c1 = new Conveyor();
     }
 
+}
+
+
+
+public class Conveyor 
+{
+
+    private SparkMAXLite roller;
+
+    private double conveyorSpeed;
+
+    private boolean converyorState = false;
+    
+
+    BeamBreak beamBreak;
+
+    public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
+    {
+        roller = new SparkMAXLite(id, type);
+
+        conveyorSpeed = speed;
+
+        beamBreak = new BeamBreak(0);
+
+        numBalls = 0; //really need this?
+    }
+
+    //SENSOR SPECIAL FUNCTIONS
+    
+
+    // public void updateConveyorStates () 
+    // {
+    //     for (int i = 0; i < conveyorStates.length)
+    // }
+
+    public boolean active() 
+    {
+        return beamBreak.isTriggered();
+    }
+
+
+
+    //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
     public void run(boolean reversed) 
     {
         if (reversed) 
@@ -70,23 +97,6 @@ public class Conveyors extends MustangSubsystemBase
         conveyorSpeed = speed;
     }
 
-    public void updateConveyorStates () {
-        for (int i = 0; i < conveyorStates.length)
-    }
-
-    public boolean isConveyorFull() {
-        boolean conveyorCondition = false;
-        if (beamBreak3.isTriggered() == true)
-            conveyorCondition = true;
-        
-        return conveyorCondition;
-    }
-
-    public void useConveyor () {
-        if (!isConveyorFull()) {
-            run(false);
-        }
-    }
 
     @Override
     public HealthState checkHealth() 
