@@ -19,20 +19,22 @@ public class Conveyors extends MustangSubsystemBase
     private double conveyorSpeed;
 
     private boolean conveyorStates[] = {false, false, false};
+    private int numBalls=0;
 
 
-    BeamBreak beamBreak1;
-    BeamBreak beamBreak2;
-    BeamBreak beamBreak3;
+    BeamBreak[] beamBreaks= new BeamBreak[3];
+ 
     public Conveyors(int id, MotorConfig.Motor_Type type, double speed) 
     {
         roller = new SparkMAXLite(id, type);
         conveyorSpeed = speed;
         //Check the dio port for the beamBreak sensors
-        beamBreak1 = new BeamBreak(0);
-        beamBreak2 = new BeamBreak(1);
-        beamBreak3 = new BeamBreak(2);
+        
+        beamBreaks[0] = new BeamBreak(0);
+        beamBreaks[1] = new BeamBreak(1);
+        beamBreaks[2] = new BeamBreak(2);
         numBalls = 0;
+        updateConveyorStates();
     }
 
     public void run(boolean reversed) 
@@ -64,12 +66,25 @@ public class Conveyors extends MustangSubsystemBase
     }
 
     public void updateConveyorStates () {
-        for (int i = 0; i < conveyorStates.length)
+        numBalls=0;
+        for (int i = 0; i < conveyorStates.length;i++)
+        {
+            if(beamBreaks[i].isTriggered())
+            {
+                conveyorStates[i]=true;
+                numBalls++;
+            }else 
+            {
+                conveyorStates[i]=false;
+            }
+
+
+        }
     }
 
     public boolean isConveyorFull() {
         boolean conveyorCondition = false;
-        if (beamBreak3.isTriggered() == true)
+        if (beamBreaks[2].isTriggered())
             conveyorCondition = true;
         
         return conveyorCondition;
