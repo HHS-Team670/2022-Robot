@@ -3,30 +3,23 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.REVLibError;
 
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.mustanglib.utils.motorcontroller.*;
+
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.SpeedController;
-import java.lang.AutoCloseable;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
-
-import frc.team670.robot.constants.RobotMap;
 
 public class Conveyors extends MustangSubsystemBase 
 {
 
-    private SparkMAXLite Roller;
+    private SparkMAXLite roller;
 
     private double conveyorSpeed; 
 
     public Conveyors(int id, MotorConfig.Motor_Type type, double speed) 
     {
-        Roller = new SparkMAXLite(id, type);
+        roller = new SparkMAXLite(id, type);
         conveyorSpeed = speed;
     }
 
