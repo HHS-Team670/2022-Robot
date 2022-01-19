@@ -51,6 +51,7 @@ import frc.team670.robot.constants.RobotMap;
  * @author lakshbhambhani
  */
 public class DriveBase extends TankDriveBase {
+  
   private SparkMAXLite left1, left2, right1, right2;
   private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -85,6 +86,11 @@ public DriveBase(MustangController mustangController) {
   false, MotorConfig.Motor_Type.NEO);
 rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
   RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
+
+  poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(0),
+  new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
+  VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+  VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
 
 left1 = leftControllers.get(0);
 left2 = leftControllers.get(1);
@@ -374,7 +380,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
    */
   public void resetOdometry(Pose2d pose2d) {
     zeroHeading();
-    poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(getHeading()));
+    poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(0));
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());

@@ -8,15 +8,18 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.paths.right.RightThroughTrench;
+import frc.team670.robot.commands.auton.MoveForwards;
+import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.commands.auton.Taxi;
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -52,12 +55,16 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new Taxi(driveBase);
+    // MustangCommand autonCommand = new MoveForwards(driveBase);
+        MustangCommand autonCommand = new RightShootTrench(driveBase);
+
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
 
   public void autonomousInit() {
+    Logger.consoleLog("autoInit called");
+
     m_autonomousCommand = getAutonomousCommand();
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
@@ -65,7 +72,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    
+    Logger.consoleLog(driveBase.getPose().toString());
     
   }
 
@@ -95,7 +102,10 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   break1.sendBeamBreakDataToDashboard();
+    break1.sendBeamBreakDataToDashboard();
+    // driveBase.getHeading();
+    SmartDashboard.putNumber("navX", driveBase.getHeading());
+    SmartDashboard.putString("Encoder Position", String.format("(%d, %d)", driveBase.getPose().getX(), driveBase.getPose().getY()));
   }
 
 }

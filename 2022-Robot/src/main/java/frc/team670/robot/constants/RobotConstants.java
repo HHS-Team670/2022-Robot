@@ -5,7 +5,7 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
 
 public class RobotConstants extends RobotConstantsBase{
@@ -84,16 +84,16 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double rightKIDriveVel = 0.00;
     public static final double rightKDDriveVel = 0.0;
 
-    public static final double kMaxSpeedInchesPerSecond = 12;
-    public static final double kMaxAccelerationInchesPerSecondSquared = 12;
+    public static final double kMaxSpeedInchesPerSecond = 6;
+    public static final double kMaxAccelerationInchesPerSecondSquared = 6;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.5;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;// 1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 0.25;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;// 1; //0.305;
     public static final double endVelocityMetersPerSecond = 0;
 
-    public static final double kMaxSpeedMetersPerSecond2 = 0.6;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.6;// 1; //0.305;
-    public static final double endVelocityMetersPerSecond2 = 0.4;
+    public static final double kMaxSpeedMetersPerSecond2 = 0.3;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.3;// 1; //0.305;
+    public static final double endVelocityMetersPerSecond2 = 0.2;
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond2);
