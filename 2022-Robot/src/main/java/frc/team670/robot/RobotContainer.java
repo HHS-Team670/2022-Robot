@@ -17,6 +17,7 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.paths.right.RightThroughTrench;
 import frc.team670.robot.commands.auton.MoveForwards;
+import frc.team670.robot.commands.auton.NewYCoord;
 import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
@@ -55,8 +56,8 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // MustangCommand autonCommand = new MoveForwards(driveBase);
-        MustangCommand autonCommand = new RightShootTrench(driveBase);
+    MustangCommand autonCommand = new MoveForwards(driveBase);
+      //  MustangCommand autonCommand = new RightShootTrench(driveBase);
 
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
@@ -105,7 +106,7 @@ public class RobotContainer extends RobotContainerBase {
     break1.sendBeamBreakDataToDashboard();
     // driveBase.getHeading();
     SmartDashboard.putNumber("navX", driveBase.getHeading());
-    SmartDashboard.putString("Encoder Position", String.format("(%d, %d)", driveBase.getPose().getX(), driveBase.getPose().getY()));
+    SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
   }
 
 }

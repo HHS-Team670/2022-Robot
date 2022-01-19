@@ -357,7 +357,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   @Override
   public void mustangPeriodic() {
-    
+    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
 
   }
 

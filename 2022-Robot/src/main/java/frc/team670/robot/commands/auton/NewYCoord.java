@@ -14,15 +14,12 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.DriveBase;
 
-
-
-public class MoveForwards extends SequentialCommandGroup implements MustangCommand {
-
+public class NewYCoord extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public MoveForwards(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("MoveForwards", 1.0, 0.5);
+    public NewYCoord(DriveBase driveBase) {
+        trajectory = PathPlanner.loadPath("NewYCoord", 1.0, 0.5);
         Logger.consoleLog("Loaded path " + trajectory.toString());
         //SmartDashboard.putString("Loaded Path", trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -34,7 +31,6 @@ public class MoveForwards extends SequentialCommandGroup implements MustangComma
         addCommands(
             getTrajectoryFollowerCommand(trajectory, driveBase)
         );
-
     }
 
     @Override
@@ -48,5 +44,5 @@ public class MoveForwards extends SequentialCommandGroup implements MustangComma
         // TODO Auto-generated method stub
         return healthReqs;
     }
-    
+
 }
