@@ -43,6 +43,8 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
 
 /**
  * Represents a tank drive base.
@@ -70,6 +72,9 @@ public class DriveBase extends TankDriveBase {
   public static final double START_ANGLE_DEG = 180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
+  private AutoSelector autoSelector = new AutoSelector();
+  private AutoRoutine autoRoutine = AutoRoutine.UNKNOWN;
+  private double delayTime = -1;
 
   // public static final double 
 
@@ -350,7 +355,14 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   @Override
   public void mustangPeriodic() {
-    
+    AutoRoutine routine = autoSelector.getSelection();
+    double time = autoSelector.getDelayTime();
+    if (routine != AutoRoutine.UNKNOWN) {
+      autoRoutine = routine;
+    }
+    if (time != -1) {
+      delayTime = time;
+    }
 
   }
 
@@ -460,6 +472,20 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     return mController;
   }
 
+  public AutoRoutine getSelectedRoutine() {
+    while (autoRoutine == AutoRoutine.UNKNOWN) {
+      continue;
+    }
+    return autoRoutine;
+  }
+
+  public double getDelayTime() {
+    while (delayTime == -1) {
+      continue;
+    }
+    return delayTime;
+  }
+
   @Override
   public double getRightPositionTicks() {
     return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
@@ -542,5 +568,11 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
+
+  // @Override
+  // public void resetOdometry(frc.team670.mustanglib.subsystems.path.Pose2d pose) {
+  //   // TODO Auto-generated method stub
+    
+  // }
 
 }
