@@ -19,14 +19,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.team670.robot.constants.RobotMap;
 
-public class Conveyors extends MustangSubsystemBase 
+public class Conveyors// extends MustangSubsystemBase 
 {
     public Conveyor c1, c2;
 
 
     public Conveyors(){
-        c1 = new Conveyor();
-        c2 = new Conveyor();
+        // c1 = new Conveyor();
+        // c2 = new Conveyor();
     }
 
 }
