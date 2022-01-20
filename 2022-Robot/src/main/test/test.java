@@ -31,15 +31,19 @@ public class test {
 
     @Test // marks this method as a test
     public void doesntShoot() {
-        shooter.setVelocityTarget(2500);//sets the velocity
-        shooter.run();//hopefully the robot shoots
-        Assert.assertEquals(0,shooter.isShooting(),0);//
+       // shooter.setRampRate(false); //hopefully shoots the robot?
+        Assert.assertTrue(shooter.isShooting(),false);
+    }
+
+    @Test// test if the robot shoots
+    public void robotIsShooting() {
+        shooter.setRampRate(false); //hopefully shoots the robot?
+        Assert.assertTrue(shooter.isShooting(),true);
     }
 
     @Test
     public void testSpeed() {
-        Assert.assertEquals(/*expected value*/, shooter.getTargetRPMForDistance(distance), /* double delta*/);
-        
+        Assert.assertEquals(/*expected value*/, shooter.getTargetRPMForDistance(distance), /* double delta*/);       
     }
 
 }
