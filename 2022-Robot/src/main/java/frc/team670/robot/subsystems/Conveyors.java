@@ -9,21 +9,31 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.SpeedController;
+import java.lang.AutoCloseable;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 
-public class Conveyors extends MustangSubsystemBase 
+import frc.team670.robot.constants.RobotMap;
+
+public class Conveyors// extends MustangSubsystemBase 
 {
+    public Conveyor c1, c2;
+
 
     public Conveyors(){
-        Conveyor c1 = new Conveyor();
+        // c1 = new Conveyor();
+        // c2 = new Conveyor();
     }
 
 }
 
 
 
-public class Conveyor 
+class Conveyor 
 {
 
     private SparkMAXLite roller;
@@ -43,7 +53,6 @@ public class Conveyor
 
         beamBreak = new BeamBreak(0);
 
-        numBalls = 0; //really need this?
     }
 
     //SENSOR SPECIAL FUNCTIONS
