@@ -55,7 +55,29 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    
+    //Start Intake
+    /*
+    if(intake on){
+      if(!c1.active()){
+        c1.run();
+      }
+      
+      if(!c2.active()){
+        c2.run();
+      }
+
+      if(c2.active())
+      {
+        c2.stop();
+      }else{
+        if(c1.active())
+        {
+          c1.stop();
+        }
+      }
+    }
+    */
+
     
   }
 

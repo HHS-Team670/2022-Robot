@@ -21,16 +21,19 @@ import frc.team670.robot.constants.RobotMap;
 
 public class Conveyors extends MustangSubsystemBase 
 {
+    public Conveyor c1, c2;
+
 
     public Conveyors(){
-        Conveyor c1 = new Conveyor();
+        c1 = new Conveyor();
+        c2 = new Conveyor();
     }
 
 }
 
 
 
-public class Conveyor 
+class Conveyor 
 {
 
     private SparkMAXLite roller;
@@ -50,7 +53,6 @@ public class Conveyor
 
         beamBreak = new BeamBreak(0);
 
-        numBalls = 0; //really need this?
     }
 
     //SENSOR SPECIAL FUNCTIONS
