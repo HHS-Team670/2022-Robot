@@ -56,7 +56,7 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new NewYCoord(driveBase);
+    MustangCommand autonCommand = new MoveForwards(driveBase);
       //  MustangCommand autonCommand = new RightShootTrench(driveBase);
 
     Logger.consoleLog("autonCommand: %s", autonCommand);
