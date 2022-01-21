@@ -16,13 +16,13 @@ import frc.team670.robot.subsystems.DriveBase;
 
 
 
-public class MoveForwards extends SequentialCommandGroup implements MustangCommand {
+public class ATarmacFlushed1Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public MoveForwards(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("MoveForwards", 1.0, 0.5);
+    public ATarmacFlushed1Ball(DriveBase driveBase) {
+        trajectory = PathPlanner.loadPath("ATarmacFlushed1Ball", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
