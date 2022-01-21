@@ -74,7 +74,7 @@ public class Climber extends MustangSubsystemBase {
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
     public Climber() {
-        motorStraight = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
+        motorStraight = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR1, Motor_Type.NEO);
         motorStraight.setIdleMode(IdleMode.kBrake);
         motorStraight.setInverted(true);
         controllerStraight = motorStraight.getPIDController();
@@ -85,7 +85,7 @@ public class Climber extends MustangSubsystemBase {
         encoderStraight = motorStraight.getEncoder();
         encoderStraight.setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         setDefaultPID();
-        motorStraight2 = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
+        motorStraight2 = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR2, Motor_Type.NEO);
         motorStraight2.setIdleMode(IdleMode.kBrake);
         motorStraight2.setInverted(true);
         controllerStraight2 = motorStraight2.getPIDController();
@@ -98,7 +98,7 @@ public class Climber extends MustangSubsystemBase {
         setDefaultPID();
 
 
-        motorOblique = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
+        motorOblique = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR3, Motor_Type.NEO);
         motorStraight.setIdleMode(IdleMode.kBrake);
         motorOblique.setInverted(true);
         controllerOblique = motorOblique.getPIDController();
@@ -109,7 +109,7 @@ public class Climber extends MustangSubsystemBase {
         encoderOblique = motorOblique.getEncoder();
         encoderOblique.setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         setDefaultPID();
-        motorOblique2 = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
+        motorOblique2 = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR4, Motor_Type.NEO);
         motorStraight2.setIdleMode(IdleMode.kBrake);
         motorOblique2.setInverted(true);
         controllerOblique2 = motorOblique2.getPIDController();

@@ -45,7 +45,10 @@ public class RobotMap {
   public static final int UPDRAW_SPINNER = 10;
 
   // Climber
-  public static final int CLIMBER_MOTOR = 14;
+  public static final int CLIMBER_MOTOR1 = 14;
+  public static final int CLIMBER_MOTOR2 = 14;
+  public static final int CLIMBER_MOTOR3 = 14;
+  public static final int CLIMBER_MOTOR4 = 14;
 
   // PNEUMATICS
   public static final int PCMODULE = 2; // PCM CAN ID
