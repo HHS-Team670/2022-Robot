@@ -15,7 +15,7 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
  * 
- * @author Pallavi, Eugenia, Sofia, ctychen
+ * @author Pallavi, Eugenia, Sofia, ctychen, Sanatan
  */
 public class Climber extends MustangSubsystemBase {
 
@@ -227,7 +227,7 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(motorStraight) || isSparkMaxErrored(motorOblique)) {
+        if (isSparkMaxErrored(motorStraight) || isSparkMaxErrored(motorOblique) || isSparkMaxErrored(motorStraight2) || isSparkMaxErrored(motorOblique2)) {
             return HealthState.RED;
         }
         return HealthState.GREEN;
