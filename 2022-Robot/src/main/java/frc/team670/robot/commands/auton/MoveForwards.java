@@ -23,12 +23,11 @@ public class MoveForwards extends SequentialCommandGroup implements MustangComma
 
     public MoveForwards(DriveBase driveBase) {
         trajectory = PathPlanner.loadPath("MoveForwards", 1.0, 0.5);
-        Logger.consoleLog("Loaded path " + trajectory.toString());
-        //SmartDashboard.putString("Loaded Path", trajectory.toString());
+        //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
 
-        Logger.consoleLog("Initial Pose " + trajectory.getStates().get(0).poseMeters);
+        //Logger.consoleLog("Initial Pose " + trajectory.getStates().get(0).poseMeters);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(

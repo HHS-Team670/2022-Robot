@@ -15,10 +15,7 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.right.RightThroughTrench;
 import frc.team670.robot.commands.auton.MoveForwards;
-import frc.team670.robot.commands.auton.NewYCoord;
-import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 
@@ -57,7 +54,6 @@ public class RobotContainer extends RobotContainerBase {
    */
   public MustangCommand getAutonomousCommand() {
     MustangCommand autonCommand = new MoveForwards(driveBase);
-      //  MustangCommand autonCommand = new RightShootTrench(driveBase);
 
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
