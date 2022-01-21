@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ExtendClimberOblique extends CommandBase implements MustangCommand {
 
   private Climber climber;
-  private static final double MAX_EXTENDING_HEIGHT_CM = 66.24;
+  private static final double MAX_EXTENDING_HEIGHT_CM = 66.24; // TODO: change this later
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public ExtendClimberOblique(Climber climber) {

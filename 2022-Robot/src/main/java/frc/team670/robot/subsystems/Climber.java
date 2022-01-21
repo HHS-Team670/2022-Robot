@@ -170,6 +170,18 @@ public class Climber extends MustangSubsystemBase {
         }
     }
 
+    public void unhookFromBar() {
+        if (onBar) {
+            setPower1(0.25);
+            onBar = false;
+        }
+
+        if (onBar2) {
+            setPower2(0.25);
+            onBar2 = false;
+        }
+    }
+
     private boolean isHooked() {
         double current = motorStraight.getOutputCurrent();
         if (current > 0.2) {
