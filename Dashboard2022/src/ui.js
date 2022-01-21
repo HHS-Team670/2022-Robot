@@ -267,6 +267,7 @@ function getFromMap(key) {
 
 
 function getAutonFromMap() {
+    console.log("SELECTED VALUE", document.querySelector('input[name="start-position"]:checked').value);
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Message1":
             return 0;
@@ -286,7 +287,7 @@ function getAutonFromMap() {
 }
 
 function getDelayTime() {
-    return (document.querySelector('#delay input[name="delay-time"]').value)
+    return ((parseInt(document.querySelector('#delay input[name="delay-time"]').value)))
 }
 
 // function getLocation(offset, value) {
@@ -304,7 +305,9 @@ function getDelayTime() {
 function sendAuton() {
     var autonCommand = getAutonFromMap();
     var delayTime = getDelayTime();
-    console.log(autonCommand);
-    NetworkTables.putNumber('/SmartDashboard/auton-chooser', autonCommand);
-    NetworkTables.putNumber('/SmartDashboard/delayTime', delayTime);
+    console.log("SELECTED AUTON COMMAND", autonCommand);
+    var connected = NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
+    console.log("CONNECTED", connected);
+    NetworkTables.putValue('/SmartDashboard/delayTime', delayTime);
+    console.log(NetworkTables.getValue('/SmartDashboard/auton-chooser', "didn't work"));
 }

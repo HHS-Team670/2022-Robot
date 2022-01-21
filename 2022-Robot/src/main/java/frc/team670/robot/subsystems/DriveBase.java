@@ -76,6 +76,8 @@ public class DriveBase extends TankDriveBase {
   private AutoRoutine autoRoutine = AutoRoutine.UNKNOWN;
   private double delayTime = -1;
 
+  private Timer timer = new Timer();
+
   // public static final double 
 
   // Constants used for doing robot to target pose conversion
@@ -128,6 +130,8 @@ super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorContr
 // initialized NavX and sets Odometry
 navXMicro = new NavX(RobotMap.NAVX_PORT);
 // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
+
+    timer.start();
     
   }
 
@@ -355,13 +359,15 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   @Override
   public void mustangPeriodic() {
-    AutoRoutine routine = autoSelector.getSelection();
-    double time = autoSelector.getDelayTime();
-    if (routine != AutoRoutine.UNKNOWN) {
-      autoRoutine = routine;
-    }
-    if (time != -1) {
-      delayTime = time;
+    if (!timer.hasElapsed(5)) {
+      AutoRoutine routine = autoSelector.getSelection();
+      double time = autoSelector.getDelayTime();
+      if (routine != AutoRoutine.UNKNOWN) {
+        autoRoutine = routine;
+      }
+      if (time != -1) {
+        delayTime = time;
+      }
     }
 
   }
@@ -473,14 +479,22 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
 
   public AutoRoutine getSelectedRoutine() {
-    while (autoRoutine == AutoRoutine.UNKNOWN) {
-      continue;
-    }
+      while (autoRoutine == AutoRoutine.UNKNOWN) {
+        if (timer.hasElapsed(5)) {
+          Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+          break;
+        }
+        continue;
+      }
     return autoRoutine;
   }
 
   public double getDelayTime() {
     while (delayTime == -1) {
+      if (timer.hasElapsed(5)) {
+        Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+        break;
+      }
       continue;
     }
     return delayTime;
