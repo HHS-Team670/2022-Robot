@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
+//import edu.wpi.first.wpilibj.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangNotifications;
@@ -27,7 +27,7 @@ import org.photonvision.PhotonUtils;
  */
 public class Vision extends MustangSubsystemBase{
 
-    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
+    // private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
 
     PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
@@ -64,14 +64,14 @@ public class Vision extends MustangSubsystemBase{
             var result = camera.getLatestResult();
 
             if(hasTarget()){
-                double range =
-                PhotonUtils.calculateDistanceToTargetMeters(
-                        RobotConstants.CAMERA_HEIGHT,
-                        FieldConstants.VISION_TARGET_CENTER_HEIGHT,
-                        Units.degreesToRadians(RobotConstants.TILT_ANGLE),
-                        Units.degreesToRadians(result.getBestTarget().getPitch()));
+                // double range =
+                // PhotonUtils.calculateDistanceToTargetMeters(
+                //         RobotConstants.CAMERA_HEIGHT,
+                //         FieldConstants.VISION_TARGET_CENTER_HEIGHT,
+                //         Units.degreesToRadians(RobotConstants.TILT_ANGLE),
+                //         Units.degreesToRadians(result.getBestTarget().getPitch()));
         
-                    return range;
+                //     return range;
             }
             else{
                 return RobotConstants.VISION_ERROR_CODE;
@@ -94,17 +94,17 @@ public class Vision extends MustangSubsystemBase{
         return getDistanceToTargetM() * 100;
     }
 
-    public void turnOnLEDs() {
-        cameraLEDs.set(true);
-    }
+    // public void turnOnLEDs() {
+    //     cameraLEDs.set(true);
+    // }
 
-    public void turnOffLEDs() {
-        cameraLEDs.set(false);
-    }
+    // public void turnOffLEDs() {
+    //     cameraLEDs.set(false);
+    // }
 
-    public void testLEDS() {
-        cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
-    }
+    // public void testLEDS() {
+    //     cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
+    // }
 
     @Override
     public HealthState checkHealth() {

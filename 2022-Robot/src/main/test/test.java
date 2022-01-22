@@ -1,5 +1,8 @@
 import static org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import java.beans.Transient;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -11,7 +14,7 @@ import frc.team670.robot.subsystems.Vision;
 
 import org.junit.*;
 
-public class test {
+public class Test {
     //declaring Shooter and Vision
     Shooter shooter;
     Vision vision;
@@ -43,7 +46,9 @@ public class test {
 
     @Test
     public void testSpeed() {
-        Assert.assertEquals(/*expected value*/, shooter.getTargetRPMForDistance(distance), /* double delta*/);       
+        System.out.print(shooter.getTargetRPMForDistance(3));
+        //Assert.assertEquals(/*expected value*/, shooter.getTargetRPMForDistance(3), /* double delta*/);       
     }
+
 
 }
