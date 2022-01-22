@@ -41,11 +41,6 @@ public class ExtendClimberStd extends CommandBase implements MustangCommand {
     climber.setPower2(0);
     climber.setPowerOblique1(0);
     climber.setPowerOblique2(0);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
     climber.climb(MAX_EXTENDING_HEIGHT_CM);
   }
 

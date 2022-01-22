@@ -35,7 +35,26 @@ public class Climber extends MustangSubsystemBase {
     private static final double ROTATIONS_PER_CM = 50.0 / 9; // gearing is 50:1
     private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
+    //oblique:
+
+    private static final double kPO = 0.00005;
+    private static final double kIO = 0;
+    private static final double kDO = 0;
+    private static final double kFFO = 0.0120;
+
+    // SmartMotion constants
+    private static final double MAX_ACCO = 200;
+    private static final double MIN_VELO = 0;
+    private static final double MAX_VELO = 200;
+
+    private static final double ALLOWED_ERRO = 3;
+
+    private static final double NORMAL_OUTPUTO = 6.5; // Todo: this should be the current output when running normally
+    private static final double ROTATIONS_PER_CMO = 50.0 / 9; // gearing is 50:1
+    private static final double HALF_CMO = 0.5 * ROTATIONS_PER_CM;
+
     private int SMARTMOTION_SLOT = 0;
+    private int SMARTMOTION_SLOTO = 0;
 
     private CANPIDController controllerStraight;
     private CANEncoder encoderStraight;
@@ -58,6 +77,7 @@ public class Climber extends MustangSubsystemBase {
 
     private int currentAtHookedCount = 0;
     private int currentAtHookedCount2 = 0;
+    private double pow1, pow2;
 
     private boolean onBarOblique;
     private double targetOblique;
@@ -66,12 +86,19 @@ public class Climber extends MustangSubsystemBase {
 
     private int currentAtHookedCountOblique = 0;
     private int currentAtHookedCountOblique2 = 0;
+    private double powOblique1, powOblique2;
 
     private static final float MOTOR_ROTATIONS_AT_RETRACTED = 0;
     private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 368;
 
     private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+
+    private static final float MOTOR_ROTATIONS_AT_RETRACTEDO = 0;
+    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSIONO = 368;
+
+    private static final float SOFT_LIMIT_AT_RETRACTEDO = MOTOR_ROTATIONS_AT_RETRACTEDO + .5f;
+    private static final float SOFT_LIMIT_AT_EXTENSIONO = MOTOR_ROTATIONS_AT_MAX_EXTENSIONO - 10;
 
     public Climber() {
         motorStraight = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR1, Motor_Type.NEO);
@@ -132,14 +159,14 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public void setDefaultPID() {
-        controllerOblique.setP(kP);
-        controllerOblique.setI(kI);
-        controllerOblique.setD(kD);
-        controllerOblique.setFF(kFF);
-        controllerOblique.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
-        controllerOblique.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
-        controllerOblique.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
-        controllerOblique.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
+        controllerOblique.setP(kPO);
+        controllerOblique.setI(kIO);
+        controllerOblique.setD(kDO);
+        controllerOblique.setFF(kFFO);
+        controllerOblique.setSmartMotionMaxVelocity(MAX_VELO, this.SMARTMOTION_SLOTO);
+        controllerOblique.setSmartMotionMinOutputVelocity(MIN_VELO, this.SMARTMOTION_SLOTO);
+        controllerOblique.setSmartMotionMaxAccel(MAX_ACCO, this.SMARTMOTION_SLOTO);
+        controllerOblique.setSmartMotionAllowedClosedLoopError(ALLOWED_ERRO, this.SMARTMOTION_SLOTO);
 
         controllerStraight.setP(kP);
         controllerStraight.setI(kI);
@@ -223,18 +250,44 @@ public class Climber extends MustangSubsystemBase {
 
     public void setPower1(double power) {
         motorStraight.set(power);
+        pow1 = power;
     }
     public void setPower2(double power) {
         motorStraight2.set(power);
+        pow2 = power;
+    }
+
+    public void setPower(double power)
+    {
+        setPower1(power);
+        setPower2(power);
     }
 
     public void climb(double heightCM) {
-        double rotations = heightCM * ROTATIONS_PER_CM;
-        target = rotations;
-        target2 = rotations;
-        SmartDashboard.putNumber("Climber rotation target", rotations);
-        controllerStraight.setReference(rotations, ControlType.kSmartMotion);
-        controllerStraight2.setReference(rotations, ControlType.kSmartMotion);
+        if (heightCM < 1)
+        {
+            double rotations = heightCM * ROTATIONS_PER_CM;
+            target = rotations;
+            target2 = rotations;
+            SmartDashboard.putNumber("Climber rotation target", rotations);
+            controllerStraight.setReference(rotations, ControlType.kSmartMotion);
+            controllerStraight2.setReference(rotations, ControlType.kSmartMotion);
+            if (encoderStraight.getPosition() - encoderStraight2.getPosition() > 0)
+            {
+               setPower2(pow2 + (encoderStraight.getPosition() - encoderStraight2.getPosition()) / 4);
+            }  
+            if (encoderStraight.getPosition() - encoderStraight2.getPosition() < 0)
+            {
+                setPower2(pow1 + (encoderStraight2.getPosition() - encoderStraight.getPosition()) / 4);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                climb((heightCM - 5) / 50 + 5);
+            }
+        }
     }
 
     @Override
@@ -330,19 +383,44 @@ public class Climber extends MustangSubsystemBase {
 
     public void setPowerOblique1(double power) {
         motorOblique.set(power);
+        powOblique1 = power;
     }
 
     public void setPowerOblique2(double power) {
         motorOblique2.set(power);
+        powOblique2 = power;
+    }
+
+    public void setPowerOblique(double power) {
+        setPowerOblique1(power);
+        setPowerOblique2(power);
     }
 
     public void climbOblique(double heightCM) {
-        double rotations = heightCM * ROTATIONS_PER_CM;
-        targetOblique = rotations;
-        targetOblique2 = rotations;
-        SmartDashboard.putNumber("Climber rotation target", rotations);
-        controllerOblique.setReference(rotations, ControlType.kSmartMotion);
-        controllerOblique2.setReference(rotations, ControlType.kSmartMotion);
+        if (heightCM < 1)
+        {
+            double rotations = heightCM * ROTATIONS_PER_CM;
+            targetOblique = rotations;
+            targetOblique2 = rotations;
+            SmartDashboard.putNumber("Climber rotation target", rotations);
+            controllerOblique.setReference(rotations, ControlType.kSmartMotion);
+            controllerOblique2.setReference(rotations, ControlType.kSmartMotion);
+            if (encoderOblique.getPosition() - encoderOblique2.getPosition() > 0)
+            {
+               setPower2(powOblique2 + (encoderOblique.getPosition() - encoderOblique2.getPosition()) / 4);
+            }  
+            if (encoderOblique.getPosition() - encoderOblique2.getPosition() < 0)
+            {
+                setPower2(powOblique1 + (encoderOblique2.getPosition() - encoderOblique.getPosition()) / 4);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                climb((heightCM - 5) / 50 + 5);
+            }
+        }
     }
 
     public boolean isAtTargetOblique() {
