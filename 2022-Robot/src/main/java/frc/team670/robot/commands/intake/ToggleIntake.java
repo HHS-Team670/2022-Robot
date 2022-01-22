@@ -9,6 +9,10 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
+
+/*
+Duplicate class (similar functionality in DeployIntake and StopIntake)
+*/
 public class ToggleIntake extends InstantCommand implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
