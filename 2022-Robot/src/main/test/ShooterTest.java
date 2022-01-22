@@ -14,7 +14,7 @@ import frc.team670.robot.subsystems.Vision;
 
 import org.junit.*;
 
-public class Test {
+public class ShooterTest {
     //declaring Shooter and Vision
     Shooter shooter;
     Vision vision;
