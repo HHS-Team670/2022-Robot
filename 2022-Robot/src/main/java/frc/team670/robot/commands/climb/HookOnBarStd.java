@@ -5,19 +5,19 @@ import frc.team670.robot.subsystems.Climber;
 /**
  * Moves the climber slowly down until it hooks on the generator bar. 
  */
-public class HookOnBarOblique extends ClimberBaseCommand {
+public class HookOnBarStd extends ClimberBaseCommand {
 
-    public HookOnBarOblique(Climber climber) {
+    public HookOnBarStd(Climber climber) {
         super(climber);
     }
 
     @Override
     public void initialize() {
-        climber.oblique.hookOnBar();
+        climber.straight.hookOnBar();
     }
 
     @Override
     public boolean isFinished() {
-        return climber.oblique.isHookedOnBar();
+        return climber.straight.isHookedOnBar();
     }
 }
