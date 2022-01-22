@@ -7,15 +7,7 @@
 
 package frc.team670.robot.commands.climb;
 
-import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Climber;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Raise the climber mechanism to its maximum allowed height so it can reach the
