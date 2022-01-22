@@ -10,6 +10,8 @@ import frc.team670.mustanglib.constants.RobotConstantsBase;
 
 public class RobotConstants extends RobotConstantsBase{
 
+    public static final double TIME_TO_COLLECT_1_BALL_S = 2.0; // TODO: Change this later
+
     /**  the id for the camera that tells you how to shoot the ball*/
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
     public static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
