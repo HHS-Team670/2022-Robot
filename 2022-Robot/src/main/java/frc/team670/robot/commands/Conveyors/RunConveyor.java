@@ -17,7 +17,7 @@ public class RunConveyor extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean intaking;
 
-    public RunConveyor(Conveyors conveyors,boolean intaking)
+    public RunConveyor(Conveyors conveyors, boolean intaking)
     {
         this.conveyors=conveyors;
         addRequirements(conveyors);
@@ -30,12 +30,7 @@ public class RunConveyor extends CommandBase implements MustangCommand {
 
     public void initialize() {
         Logger.consoleLog("Running Conveyors");
-
-    }
-
-    public void execute() {
         conveyors.runConveyors(intaking);
-
     }
 
     @Override

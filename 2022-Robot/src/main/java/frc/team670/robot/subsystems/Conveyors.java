@@ -58,7 +58,7 @@ public class Conveyors extends MustangSubsystemBase
 
 
 
-class Conveyor 
+class Conveyor extends MustangSubsystemBase
 {
 
     private SparkMAXLite roller;
