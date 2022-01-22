@@ -264,30 +264,30 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public void climb(double heightCM) {
-        if (heightCM < 1)
-        {
+        //if (heightCM < 1)
+        //{
             double rotations = heightCM * ROTATIONS_PER_CM;
             target = rotations;
             target2 = rotations;
             SmartDashboard.putNumber("Climber rotation target", rotations);
             controllerStraight.setReference(rotations, ControlType.kSmartMotion);
             controllerStraight2.setReference(rotations, ControlType.kSmartMotion);
-            if (encoderStraight.getPosition() - encoderStraight2.getPosition() > 0)
+            /*if (encoderStraight.getPosition() - encoderStraight2.getPosition() > 0)
             {
                setPower2(pow2 + (encoderStraight.getPosition() - encoderStraight2.getPosition()) / 4);
             }  
             if (encoderStraight.getPosition() - encoderStraight2.getPosition() < 0)
             {
                 setPower2(pow1 + (encoderStraight2.getPosition() - encoderStraight.getPosition()) / 4);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                climb((heightCM - 5) / 50 + 5);
-            }
-        }
+            }*/
+       // }
+        //else
+        //{
+          //  for (int i = 0; i < 50; i++)
+            //{
+              //  climb((heightCM - 5) / 50);
+            //}
+        //}
     }
 
     @Override
@@ -397,30 +397,30 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public void climbOblique(double heightCM) {
-        if (heightCM < 1)
-        {
+        //if (heightCM < 1)
+        //{
             double rotations = heightCM * ROTATIONS_PER_CMO;
             targetOblique = rotations;
             targetOblique2 = rotations;
             SmartDashboard.putNumber("Climber rotation target", rotations);
             controllerOblique.setReference(rotations, ControlType.kSmartMotion);
             controllerOblique2.setReference(rotations, ControlType.kSmartMotion);
-            if (encoderOblique.getPosition() - encoderOblique2.getPosition() > 0)
+            /*if (encoderOblique.getPosition() - encoderOblique2.getPosition() > 0)
             {
                setPower2(powOblique2 + (encoderOblique.getPosition() - encoderOblique2.getPosition()) / 4);
             }  
             if (encoderOblique.getPosition() - encoderOblique2.getPosition() < 0)
             {
                 setPower2(powOblique1 + (encoderOblique2.getPosition() - encoderOblique.getPosition()) / 4);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 50; i++)
-            {
+            }*/
+        //}
+        //else
+        //{
+            //for (int i = 0; i < 50; i++)
+            //{
                 climb((heightCM - 5) / 50 + 5);
-            }
-        }
+            //}
+        //}
     }
 
     public boolean isAtTargetOblique() {
