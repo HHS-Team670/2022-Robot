@@ -47,7 +47,8 @@ class Conveyor
 
     public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
     {
-        roller = new SparkMAXLite(id, type);
+        
+        roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
 
         conveyorSpeed = speed;
 
