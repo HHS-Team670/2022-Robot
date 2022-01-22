@@ -19,39 +19,39 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
  */
 public class Climber extends MustangSubsystemBase {
 
-    private static final double kP = 0.00005;
+    private static final double kP = 0;
     private static final double kI = 0;
     private static final double kD = 0;
-    private static final double kFF = 0.0120;
+    private static final double kFF = 0;
 
     // SmartMotion constants
-    private static final double MAX_ACC = 200;
+    private static final double MAX_ACC = 0;
     private static final double MIN_VEL = 0;
-    private static final double MAX_VEL = 200;
+    private static final double MAX_VEL = 0;
 
-    private static final double ALLOWED_ERR = 3;
+    private static final double ALLOWED_ERR = 0;
 
-    private static final double NORMAL_OUTPUT = 6.5; // Todo: this should be the current output when running normally
-    private static final double ROTATIONS_PER_CM = 50.0 / 9; // gearing is 50:1
-    private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
+    private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
+    private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
+    private static final double HALF_CM = 0 * ROTATIONS_PER_CM;
 
     //oblique:
 
-    private static final double kPO = 0.00005;
+    private static final double kPO = 0;
     private static final double kIO = 0;
     private static final double kDO = 0;
-    private static final double kFFO = 0.0120;
+    private static final double kFFO = 0;
 
     // SmartMotion constants
-    private static final double MAX_ACCO = 200;
+    private static final double MAX_ACCO = 0;
     private static final double MIN_VELO = 0;
-    private static final double MAX_VELO = 200;
+    private static final double MAX_VELO = 0;
 
-    private static final double ALLOWED_ERRO = 3;
+    private static final double ALLOWED_ERRO = 0;
 
-    private static final double NORMAL_OUTPUTO = 6.5; // Todo: this should be the current output when running normally
-    private static final double ROTATIONS_PER_CMO = 50.0 / 9; // gearing is 50:1
-    private static final double HALF_CMO = 0.5 * ROTATIONS_PER_CM;
+    private static final double NORMAL_OUTPUTO = 0; // Todo: this should be the current output when running normally
+    private static final double ROTATIONS_PER_CMO = 0 / 9; // gearing is 50:1
+    private static final double HALF_CMO = 0 * ROTATIONS_PER_CM;
 
     private int SMARTMOTION_SLOT = 0;
     private int SMARTMOTION_SLOTO = 0;
@@ -89,13 +89,13 @@ public class Climber extends MustangSubsystemBase {
     private double powOblique1, powOblique2;
 
     private static final float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 368;
+    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
     private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
     private static final float MOTOR_ROTATIONS_AT_RETRACTEDO = 0;
-    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSIONO = 368;
+    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSIONO = 0;
 
     private static final float SOFT_LIMIT_AT_RETRACTEDO = MOTOR_ROTATIONS_AT_RETRACTEDO + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSIONO = MOTOR_ROTATIONS_AT_MAX_EXTENSIONO - 10;
@@ -344,7 +344,7 @@ public class Climber extends MustangSubsystemBase {
     private boolean isHookedOblique() {
         double current = motorOblique.getOutputCurrent();
         if (current > 0.2) {
-            if (current >= NORMAL_OUTPUT) {
+            if (current >= NORMAL_OUTPUTO) {
                 currentAtHookedCountOblique++;
             } else {
                 currentAtHookedCountOblique = 0;
@@ -360,7 +360,7 @@ public class Climber extends MustangSubsystemBase {
     private boolean isHookedOblique2() {
         double current = motorOblique2.getOutputCurrent();
         if (current > 0.2) {
-            if (current >= NORMAL_OUTPUT) {
+            if (current >= NORMAL_OUTPUTO) {
                 currentAtHookedCountOblique2++;
             } else {
                 currentAtHookedCountOblique2 = 0;
@@ -399,7 +399,7 @@ public class Climber extends MustangSubsystemBase {
     public void climbOblique(double heightCM) {
         if (heightCM < 1)
         {
-            double rotations = heightCM * ROTATIONS_PER_CM;
+            double rotations = heightCM * ROTATIONS_PER_CMO;
             targetOblique = rotations;
             targetOblique2 = rotations;
             SmartDashboard.putNumber("Climber rotation target", rotations);
@@ -424,7 +424,7 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public boolean isAtTargetOblique() {
-        return Math.abs(encoderOblique.getPosition() - targetOblique) < HALF_CM;
+        return Math.abs(encoderOblique.getPosition() - targetOblique) < HALF_CMO;
     }
 
     protected double getUnadjustedMotorRotationsOblique() {
@@ -436,7 +436,7 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public boolean isAtTargetOblique2() {
-        return Math.abs(encoderOblique2.getPosition() - targetOblique2) < HALF_CM;
+        return Math.abs(encoderOblique2.getPosition() - targetOblique2) < HALF_CMO;
     }
 
     protected double getUnadjustedMotorRotationsOblique2() {
