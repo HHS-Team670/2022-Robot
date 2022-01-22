@@ -19,7 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.team670.robot.constants.RobotMap;
 
-public class Conveyors// extends MustangSubsystemBase 
+public class Conveyors extends MustangSubsystemBase 
 {
     public Conveyor c1, c2;
 
@@ -37,6 +37,19 @@ public class Conveyors// extends MustangSubsystemBase
     {
         c1.stop();
         c2.stop();
+    }
+    @Override
+    public HealthState checkHealth() {
+        if(c1.checkHealth()==HealthState.RED||c2.checkHealth()==HealthState.RED)
+        {
+            return HealthState.RED;
+        }
+        return HealthState.GREEN;
+    }
+    @Override
+    public void mustangPeriodic() {
+        checkHealth();
+        
     }
 
 
