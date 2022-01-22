@@ -38,10 +38,8 @@ public class Conveyors// extends MustangSubsystemBase
         c1.stop();
         c2.stop();
     }
-    public boolean isEmpty()
-    {
-        return !c1.active()&&!c2.active();
-    }
+
+
 
 }
 
@@ -54,7 +52,7 @@ class Conveyor
 
     private double conveyorSpeed;
 
-    private boolean converyorState = false;
+    private boolean conveyorState = false;
     
 
     BeamBreak beamBreak;
@@ -80,7 +78,14 @@ class Conveyor
 
     public boolean active() 
     {
-        return beamBreak.isTriggered();
+        if(beamBreak.isTriggered())
+        {
+            conveyorState=true;
+            return conveyorState;
+        }
+        conveyorState=false;
+        return conveyorState;
+        
     }
 
 
@@ -121,6 +126,7 @@ class Conveyor
         if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
             return HealthState.RED;
         }
+        
         
         return HealthState.GREEN;
     }

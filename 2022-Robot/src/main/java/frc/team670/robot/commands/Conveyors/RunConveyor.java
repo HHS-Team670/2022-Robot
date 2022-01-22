@@ -6,7 +6,6 @@ import java.util.Map;
 import frc.team670.mustanglib.utils.Logger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -38,19 +37,13 @@ public class RunConveyor extends CommandBase implements MustangCommand {
         conveyors.runConveyors(intaking);
 
     }
-    public boolean isFinished()
-    {
-        if(conveyors.isEmpty())
-        {
-            return true;
-        }
-        return false;
-    }
 
-
-    public void end() {
-        conveyors.stopAll();
+    @Override
+    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+        
+        return healthReqs;
     }
+    
     
 
     
