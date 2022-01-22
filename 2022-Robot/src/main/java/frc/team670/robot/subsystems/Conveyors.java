@@ -4,6 +4,7 @@ import com.revrobotics.REVLibError;
 
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -27,6 +28,16 @@ public class Conveyors// extends MustangSubsystemBase
     public Conveyors(){
         // c1 = new Conveyor();
         // c2 = new Conveyor();
+    }
+    public void runConveyors(boolean intaking)
+    {
+        c1.run(intaking);
+        c2.run(intaking);
+    }
+    public void stopAll()
+    {
+        c1.stop();
+        c2.stop();
     }
 
 }
@@ -72,9 +83,9 @@ class Conveyor
 
 
     //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
-    public void run(boolean reversed) 
+    public void run(boolean intaking) 
     {
-        if (reversed) 
+        if (!intaking) 
         {
             conveyorSpeed = Math.abs(conveyorSpeed) * -1;
         } else 
