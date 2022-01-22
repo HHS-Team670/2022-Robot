@@ -17,26 +17,26 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class Shoot extends SequentialCommandGroup implements MustangCommand {
     
-    private Shooter climber;
+    private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private final double RPM = 408.0; // change this later
 
-    public Shoot(Shooter climber) {
-        this.climber = climber;
-        addRequirements(climber);
+    public Shoot(Shooter s) {
+        this.shooter = s;
+        addRequirements(s);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(climber, HealthState.GREEN);
+        healthReqs.put(s, HealthState.GREEN);
     }
 
     @Override
     public void end(boolean interrupted) {
         if (!interrupted){
             addCommands(
-                new SetRPMTarget(RPM, climber),
-                new ShootBall(climber),
+                new SetRPMTarget(RPM, shooter),
+                new ShootBall(shooter),
                 new WaitCommand(RobotConstants.TIME_TO_SHOOT_SECONDS),
-                new StopShooter(climber)
+                new StopShooter(shooter)
             );
         }
     }

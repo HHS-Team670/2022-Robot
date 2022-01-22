@@ -15,15 +15,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * Once the driver aligns the back wheels to the bars under the generator, 
  * drives straight to align with the climbing bar and extends the climber when in position.
  */
-public class VisionShootHigh extends SequentialCommandGroup implements MustangCommand {
+public class PoseShoot extends SequentialCommandGroup implements MustangCommand {
     
     private Shooter shooter;
-    private Vision v;
+    private DriveBase driveB;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public VisionShootHigh(Shooter s, Vision vis) {
+    public PoseShoot(Shooter s, DriveBase db) {
         this.shooter = s;
-        this.v = vis;
+        this.driveB = db;
         addRequirements(s);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(s, HealthState.GREEN);
@@ -33,7 +33,7 @@ public class VisionShootHigh extends SequentialCommandGroup implements MustangCo
     public void end(boolean interrupted) {
         if (!interrupted){
             addCommands(
-                new ShootBallVision(v, shooter),
+                new ShootBallPose(shooter, driveB),
                 new WaitCommand(RobotConstants.TIME_TO_SHOOT_SECONDS),
                 new StopShooter(shooter)
             );
