@@ -15,6 +15,7 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.ATarmacEdge4BallTest;
 import frc.team670.robot.commands.auton.ATarmacFlushed1Ball;
 import frc.team670.robot.commands.auton.LeftTarmac2Shoot;
 import frc.team670.robot.commands.auton.MoveForwards;
@@ -55,11 +56,12 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new ATarmacFlushed1Ball(driveBase);
+    MustangCommand autonCommand = new ATarmacEdge4BallTest(driveBase);
 
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
+
 
   public void autonomousInit() {
     Logger.consoleLog("autoInit called");
