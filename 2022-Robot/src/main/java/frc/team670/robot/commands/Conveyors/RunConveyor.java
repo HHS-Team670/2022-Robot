@@ -30,7 +30,12 @@ public class RunConveyor extends CommandBase implements MustangCommand {
 
     public void initialize() {
         Logger.consoleLog("Running Conveyors");
+        
+    }
+    
+    public void execute() {
         conveyors.runConveyors(intaking);
+
     }
 
     @Override
