@@ -28,16 +28,32 @@ public class Conveyors extends MustangSubsystemBase
         // c1 = new Conveyor();
         // c2 = new Conveyor();
     }
+
+    // ACTIONS
+
     public void runConveyors(boolean intaking)
     {
         c1.run(intaking);
         c2.run(intaking);
     }
+
     public void stopAll()
     {
         c1.stop();
         c2.stop();
     }
+
+
+    //DataCollection
+
+    public int ballCount()
+    {
+        return c1.ball + c2.ball;
+    }
+
+
+    //MUSTANGESUBSYSTEM
+
     @Override
     public HealthState checkHealth() {
         if(c1.checkHealth()==HealthState.RED||c2.checkHealth()==HealthState.RED)
@@ -46,11 +62,14 @@ public class Conveyors extends MustangSubsystemBase
         }
         return HealthState.GREEN;
     }
+
     @Override
     public void mustangPeriodic() {
         checkHealth();
         
     }
+
+
 
 
 
@@ -66,9 +85,13 @@ class Conveyor extends MustangSubsystemBase
     private double conveyorSpeed;
 
     private boolean conveyorState = false;
+
+    public int ball = 0;
     
 
     BeamBreak beamBreak;
+
+
 
     public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
     {
@@ -94,10 +117,14 @@ class Conveyor extends MustangSubsystemBase
     {
         if(beamBreak.isTriggered())
         {
+            ball = 1;
             conveyorState=true;
             return conveyorState;
         }
+
+        ball = 0;
         conveyorState=false;
+
         return conveyorState;
         
     }
@@ -125,7 +152,7 @@ class Conveyor extends MustangSubsystemBase
 
     public void stop() 
     {
-        roller.stopMotor();
+        roller.set(0);
     }
 
     public void setSpeed(double speed)
