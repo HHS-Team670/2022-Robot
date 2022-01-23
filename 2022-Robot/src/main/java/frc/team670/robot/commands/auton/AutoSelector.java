@@ -107,6 +107,7 @@ public class AutoSelector {
     public AutoRoutine getSelection() {
 
       // RETURNED FALSE
+      Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys(0));
       Logger.consoleLog("contains auton-chooser key %s", SmartDashboard.containsKey("auton-chooser"));
       
         Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
