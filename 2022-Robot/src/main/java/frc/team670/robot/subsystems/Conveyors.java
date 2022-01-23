@@ -89,6 +89,7 @@ class Conveyor extends MustangSubsystemBase
     //     for (int i = 0; i < conveyorStates.length)
     // }
 
+    //Needs to be fixed. sensor number and placement has changed
     public boolean active() 
     {
         if(beamBreak.isTriggered())
