@@ -56,7 +56,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
-    public TelescopingClimber(int motor1, int motor2, double[] pidConstants, float[] motorStats, double mehc) {
+    public TelescopingClimber(int motor1, int motor2, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double mehc) {
         motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO);
         for (SparkMAXLite motor : motors)
         {
@@ -69,9 +69,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
         }
         controllers = new ArrayList<CANPIDController>(motors.size());
         encoders = new ArrayList<CANEncoder>(motors.size());
-        for (int i = 0; i < controllers.size(); i++)
+        for (int ie = 0; ie < controllers.size(); ie++)
         {
-            controllers.set(i, motors.get(i).getPIDController());
+            controllers.set(ie, motors.get(ie).getPIDController());
         }
         for (int j = 0; j < encoders.size(); j++)
         {
@@ -79,12 +79,12 @@ public class TelescopingClimber extends MustangSubsystemBase {
             encoders.get(j).setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         }
 
-        kP = pidConstants[0];
-        kI = pidConstants[1];
-        kD = pidConstants[2];
-        kFF = pidConstants[3];
-        MOTOR_ROTATIONS_AT_RETRACTED = motorStats[0];
-        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorStats[1];
+        kP = p;
+        kI = i;
+        kD = d;
+        kFF = ff;
+        MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
+        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
 
         MAX_EXTENDING_HEIGHT_CM = mehc;
 

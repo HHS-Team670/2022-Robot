@@ -29,8 +29,8 @@ public class Climber extends MustangSubsystemBase {
     public TelescopingClimber oblique;
 
     public Climber() {
-        straight = new TelescopingClimber(RobotMap.CLIMBER_MOTOR1, RobotMap.CLIMBER_MOTOR2, new double[]{kP, kI, kD, kFF}, new float[]{MOTOR_ROTATIONS_AT_RETRACTED, MOTOR_ROTATIONS_AT_MAX_EXTENSION}, 66.24);
-        oblique = new TelescopingClimber(RobotMap.CLIMBER_MOTOR3, RobotMap.CLIMBER_MOTOR4, new double[]{kPO, kIO, kDO, kFFO}, new float[]{MOTOR_ROTATIONS_AT_RETRACTEDO, MOTOR_ROTATIONS_AT_MAX_EXTENSIONO}, 66.24);
+        straight = new TelescopingClimber(RobotMap.CLIMBER_MOTOR1, RobotMap.CLIMBER_MOTOR2, kP, kI, kD, kFF, MOTOR_ROTATIONS_AT_RETRACTED, MOTOR_ROTATIONS_AT_MAX_EXTENSION, 66.24);
+        oblique = new TelescopingClimber(RobotMap.CLIMBER_MOTOR3, RobotMap.CLIMBER_MOTOR4, kPO, kIO, kDO, kFFO, MOTOR_ROTATIONS_AT_RETRACTEDO, MOTOR_ROTATIONS_AT_MAX_EXTENSIONO, 66.24);
     }
 
     public void stop()
