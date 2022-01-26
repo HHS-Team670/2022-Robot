@@ -3,65 +3,55 @@ import java.util.HashMap;
 import java.util.Map;
 
 import frc.team670.mustanglib.utils.Logger;
-
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Conveyors;
 
-public class RunConveyor extends InstantCommand implements MustangCommand 
+public class RunConveyor extends CommandBase implements MustangCommand 
 {
 
     private Conveyors conveyors;
+    
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean intaking;
-/*
-    public RunConveyor(Conveyors conveyors, boolean intaking)
+    private double c1Speed,c2Speed;
+
+
+
+    public RunConveyor(Conveyors conveyors, boolean intaking,double c1Speed,double c2Speed)
     {
         this.conveyors = conveyors;
         addRequirements(conveyors);
         healthReqs = new HashMap < MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.YELLOW);
         this.intaking = intaking;
+        this.c1Speed=c1Speed;
+        this.c2Speed=c2Speed;
+    }
+    public void initialize()
+    {
+        conveyors.setSpeed(c1Speed, c2Speed);
     }
 
-    public void initialize() {
-        Logger.consoleLog("Running Conveyors");    
-    }
 
-    public void execute() {
-        conveyors.runConveyors(intaking);
-    }
-
-    @Override
-    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() 
-    { 
-        return healthReqs;
-    }
-}
-*/
     public void execute() {
         conveyors.runConveyors(intaking);
     }
 
     @Override
     public void end(boolean interrupted) {
-        Logger.consoleLog("Indexer system emptied");
-        conveyors.stop();
+        Logger.consoleLog("Conveyor system emptied");
+        conveyors.stopAll();
     }
 
     @Override
     public boolean isFinished() {
-        if(indexer.getTotalNumBalls() == 0 && microSecondsSinceZeroBalls == -1){
-            microSecondsSinceZeroBalls =  RobotController.getFPGATime();
-        }
-        if(microSecondsSinceZeroBalls != -1 && RobotController.getFPGATime() - microSecondsSinceZeroBalls >= 500000){
-            microSecondsSinceZeroBalls = -1;
-            return true;
-        }
-        return false;
+
+
+        return conveyors.finished();
+        
     }
 
     @Override
