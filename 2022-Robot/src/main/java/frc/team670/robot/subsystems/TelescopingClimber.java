@@ -19,10 +19,10 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
  */
 public class TelescopingClimber extends MustangSubsystemBase {
 
-    private static final double kP = 0;
-    private static final double kI = 0;
-    private static final double kD = 0;
-    private static final double kFF = 0;
+    private static double kP = 0;
+    private static double kI = 0;
+    private static double kD = 0;
+    private static double kFF = 0;
 
     // SmartMotion constants
     private static final double MAX_ACC = 0;
@@ -46,13 +46,15 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     private int currentAtHookedCount;
 
-    private static final float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
+    private static float MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    private static float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
-    private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-    private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+    private static float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+    private static float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
-    public TelescopingClimber(int motor1, int motor2) {
+    public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
+
+    public TelescopingClimber(int motor1, int motor2, double[] pidConstants, float[] motorStats, double mehc) {
         motors = new SparkMAXLite[]{SparkMAXFactory.buildFactorySparkMAX(motor1, Motor_Type.NEO), SparkMAXFactory.buildFactorySparkMAX(motor2, Motor_Type.NEO)};
         for (SparkMAXLite motor : motors)
         {
@@ -64,6 +66,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
             motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
             motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);  
         }
+        motors[1].follow(motors[0]);
         controllers = new CANPIDController[motors.length];
         encoders = new CANEncoder[motors.length];
         for (int i = 0; i < controllers.length; i++)
@@ -75,6 +78,16 @@ public class TelescopingClimber extends MustangSubsystemBase {
             encoders[j] = motors[j].getEncoder();
             encoders[j].setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         }
+
+        kP = pidConstants[0];
+        kI = pidConstants[1];
+        kD = pidConstants[2];
+        kFF = pidConstants[3];
+        MOTOR_ROTATIONS_AT_RETRACTED = motorStats[0];
+        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorStats[1];
+
+        MAX_EXTENDING_HEIGHT_CM = mehc;
+
         setDefaultPID();
 
         onBar = false;
@@ -102,7 +115,6 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public void hookOnBar() {
         if (isHooked() && !onBar) {
-            setPower(0);
             onBar = true;
         }
 
@@ -140,10 +152,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public void setPower(double power)
     {
-        for (SparkMAXLite motor : motors)
-        {
-            motor.set(power);
-        }
+        motors[0].set(power);
     }
 
     public void climb(double heightCM) {

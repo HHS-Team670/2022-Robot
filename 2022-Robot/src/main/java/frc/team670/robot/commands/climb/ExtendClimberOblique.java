@@ -23,7 +23,7 @@ public class ExtendClimberOblique extends ClimberBaseCommand {
   @Override
   public void initialize() {
     super.initialize();
-    climber.oblique.climb(ClimberBaseCommand.MAX_EXTENDING_HEIGHT_CM);
+    climber.oblique.climb(climber.oblique.MAX_EXTENDING_HEIGHT_CM);
   }
 
   // Returns true when the command should end.

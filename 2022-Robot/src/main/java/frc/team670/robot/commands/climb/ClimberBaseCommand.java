@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public abstract class ClimberBaseCommand extends CommandBase implements MustangCommand {
     protected Climber climber;
-    protected static final double MAX_EXTENDING_HEIGHT_CM = 66.24; // TODO: change this later
     protected Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public ClimberBaseCommand(Climber climber) {
@@ -32,7 +31,6 @@ public abstract class ClimberBaseCommand extends CommandBase implements MustangC
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        climber.stop();
     }
 
     @Override

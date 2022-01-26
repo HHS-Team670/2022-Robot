@@ -24,7 +24,7 @@ public class GetClimberDown extends ClimberBaseCommand {
   @Override
   public void initialize() {
     super.initialize();
-    climber.oblique.climb(-1 * ClimberBaseCommand.MAX_EXTENDING_HEIGHT_CM);
+    climber.straight.climb(0);
   }
 
   // Returns true when the command should end.

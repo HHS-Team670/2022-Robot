@@ -23,7 +23,7 @@ public class ExtendClimberStd extends ClimberBaseCommand {
   @Override
   public void initialize() {
     super.initialize();
-    climber.straight.climb(ClimberBaseCommand.MAX_EXTENDING_HEIGHT_CM);
+    climber.straight.climb(climber.straight.MAX_EXTENDING_HEIGHT_CM);
   }
 
   // Returns true when the command should end.
