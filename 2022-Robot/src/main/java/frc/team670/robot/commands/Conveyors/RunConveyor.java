@@ -1,15 +1,13 @@
 package frc.team670.robot.commands.conveyors;
 import java.util.HashMap;
 import java.util.Map;
-
-import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Conveyors;
 
-public class RunConveyor extends CommandBase implements MustangCommand 
+public class RunConveyor extends InstantCommand implements MustangCommand 
 {
 
     private Conveyors conveyors;
@@ -33,26 +31,9 @@ public class RunConveyor extends CommandBase implements MustangCommand
     public void initialize()
     {
         conveyors.setSpeed(c1Speed, c2Speed);
-    }
-
-
-    public void execute() {
         conveyors.runConveyors(intaking);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        Logger.consoleLog("Conveyor system emptied");
-        conveyors.stopAll();
-    }
-
-    @Override
-    public boolean isFinished() {
-
-
-        return conveyors.finished();
-        
-    }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
