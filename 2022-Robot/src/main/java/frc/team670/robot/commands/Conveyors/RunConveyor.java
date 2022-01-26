@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.conveyors;
+package frc.team670.robot.commands.Conveyors;
 import java.util.HashMap;
 import java.util.Map;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,9 +25,10 @@ public class RunConveyor extends InstantCommand implements MustangCommand
         healthReqs = new HashMap < MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.YELLOW);
         this.intaking = intaking;
-        this.c1Speed=c1Speed;
-        this.c2Speed=c2Speed;
+        this.c1Speed = c1Speed;
+        this.c2Speed = c2Speed;
     }
+    
     public void initialize()
     {
         conveyors.setSpeed(c1Speed, c2Speed);
