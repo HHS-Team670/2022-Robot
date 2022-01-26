@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.Conveyors;
+package frc.team670.robot.commands.conveyors;
 import java.util.HashMap;
 import java.util.Map;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
