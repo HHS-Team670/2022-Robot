@@ -3,23 +3,14 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 
 public class OI extends OIBase {
 
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   private static Joystick operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
-
-  // private static XKeys xkeys;
-
-  // operator buttons
-  
-
-  // xbox buttons
   
 
   public boolean isQuickTurnPressed() {
