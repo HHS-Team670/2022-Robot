@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.conveyors;
+package frc.team670.robot.commands.Conveyors;
 
 import java.util.HashMap;
 import java.util.Map;
