@@ -25,25 +25,14 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
         addRequirements(i);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(i, HealthState.GREEN);
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        if (!interrupted){
-            addCommands(
+        addCommands(
                 new DeployIntake(false, intake),
                 new RunIntake(false, intake),
                 new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S),
                 new StopIntake(intake)
             );
-        }
     }
-
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
+    
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
