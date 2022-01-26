@@ -33,7 +33,7 @@ import frc.team670.robot.constants.RobotConstants;
  * Represents a 2-stage shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
  * stage with SparkMax controllers.
  * 
- * @author ctychen, Pallavi Das
+ * @author 
  */
 public class Shooter extends MustangSubsystemBase {
 
