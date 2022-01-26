@@ -1,5 +1,7 @@
 package frc.team670.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
@@ -37,9 +39,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     private int SMARTMOTION_SLOT = 0;
 
-    private CANPIDController[] controllers;
-    private CANEncoder[] encoders;
-    private SparkMAXLite[] motors;
+    private ArrayList<CANPIDController> controllers;
+    private ArrayList<CANEncoder> encoders;
+    private ArrayList<SparkMAXLite> motors;
     
     private boolean onBar;
     private double[] targets;
@@ -55,10 +57,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
     public TelescopingClimber(int motor1, int motor2, double[] pidConstants, float[] motorStats, double mehc) {
-        motors = new SparkMAXLite[]{SparkMAXFactory.buildFactorySparkMAX(motor1, Motor_Type.NEO), SparkMAXFactory.buildFactorySparkMAX(motor2, Motor_Type.NEO)};
+        motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO);
         for (SparkMAXLite motor : motors)
         {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR1, Motor_Type.NEO);
             motor.setIdleMode(IdleMode.kBrake);
             motor.setInverted(true); 
             motor.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -66,17 +67,16 @@ public class TelescopingClimber extends MustangSubsystemBase {
             motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
             motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);  
         }
-        motors[1].follow(motors[0]);
-        controllers = new CANPIDController[motors.length];
-        encoders = new CANEncoder[motors.length];
-        for (int i = 0; i < controllers.length; i++)
+        controllers = new ArrayList<CANPIDController>(motors.size());
+        encoders = new ArrayList<CANEncoder>(motors.size());
+        for (int i = 0; i < controllers.size(); i++)
         {
-            controllers[i] = motors[i].getPIDController();
+            controllers.set(i, motors.get(i).getPIDController());
         }
-        for (int j = 0; j < encoders.length; j++)
+        for (int j = 0; j < encoders.size(); j++)
         {
-            encoders[j] = motors[j].getEncoder();
-            encoders[j].setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
+            encoders.set(j, motors.get(j).getEncoder());
+            encoders.get(j).setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         }
 
         kP = pidConstants[0];
@@ -131,7 +131,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     }
 
     private boolean isHooked() {
-        double current = motors[0].getOutputCurrent();
+        double current = motors.get(0).getOutputCurrent();
         if (current > 0.2) {
             if (current >= NORMAL_OUTPUT) {
                 currentAtHookedCount++;
@@ -152,7 +152,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public void setPower(double power)
     {
-        motors[0].set(power);
+        motors.get(0).set(power);
     }
 
     public void climb(double heightCM) {
@@ -181,7 +181,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     }
 
     public boolean isAtTarget() {
-        return (Math.abs(encoders[0].getPosition() - targets[0]) < HALF_CM) && (Math.abs(encoders[1].getPosition() - targets[1]) < HALF_CM);
+        return (Math.abs(encoders.get(0).getPosition() - targets[0]) < HALF_CM) && (Math.abs(encoders.get(1).getPosition() - targets[1]) < HALF_CM);
     }
 
     protected double getUnadjustedAvgMotorRotations() {
@@ -190,11 +190,11 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     protected double getUnadjustedMotorRotations(int mtr)
     {
-        return this.encoders[mtr].getPosition();
+        return this.encoders.get(mtr).getPosition();
     }
 
     protected double getMotorCurrent(int mtr) {
-        return this.motors[mtr].getOutputCurrent();
+        return this.motors.get(mtr).getOutputCurrent();
     }
 
     protected double getAvgMotorCurrent2() {
