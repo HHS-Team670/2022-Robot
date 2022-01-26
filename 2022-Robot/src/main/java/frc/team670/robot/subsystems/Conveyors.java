@@ -35,6 +35,13 @@ public class Conveyors extends MustangSubsystemBase
     {
         c1.run(intaking);
         c2.run(intaking);
+        
+        
+    }
+    public void setSpeed(double c1Speed, double c2Speed)
+    {
+        c1.setSpeed(c1Speed);
+        c2.setSpeed(c2Speed);
     }
 
     public void stopAll()
@@ -43,6 +50,10 @@ public class Conveyors extends MustangSubsystemBase
         c2.stop();
     }
 
+    public boolean finished(){
+        return !(!c1.isRunning && !c2.isRunning);
+    
+    }
 
     //DataCollection
 
@@ -85,6 +96,7 @@ class Conveyor extends MustangSubsystemBase
     private double conveyorSpeed;
 
     private boolean conveyorState = false;
+    public boolean isRunning = false;
 
     public int ball = 0;
     
@@ -142,16 +154,19 @@ class Conveyor extends MustangSubsystemBase
             conveyorSpeed = Math.abs(conveyorSpeed);
         }
         
+        isRunning = true;
         roller.set(conveyorSpeed);
     }
 
     public void disable() 
     {
+        isRunning = false;
         roller.disable();
     }
 
     public void stop() 
     {
+        isRunning = false;
         roller.set(0);
     }
 
