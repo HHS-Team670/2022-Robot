@@ -66,4 +66,8 @@ public class RobotMap {
   public static final int LEFT_SIDE_LEDS_PWM = 0;
   public static final int RIGHT_SIDE_LEDS_PWM = 1;
 
+public static final int SECONDARY_CONVEYOR_MOTOR = -1;//Needs to be changed
+
+public static final int PRIMARY_CONVEYOR_MOTOR = -1;//Needs to be changed
+
 }

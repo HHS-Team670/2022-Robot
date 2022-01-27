@@ -4,47 +4,41 @@ import com.revrobotics.REVLibError;
  
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import java.lang.AutoCloseable;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  
- 
- 
-import frc.team670.robot.constants.RobotMap;
  
 public class Conveyors extends MustangSubsystemBase
 {
-    public Conveyor bottomConveyor, topConveyor;
+    public Conveyor primaryConveyor, secondaryConveyor;
  
  
     public Conveyors(){
-
+        primaryConveyor = new Conveyor(RobotMap.PRIMARY_CONVEYOR_MOTOR);
+        secondaryConveyor = new Conveyor(RobotMap.SECONDARY_CONVEYOR_MOTOR);
+ 
     }
  
     // ACTIONS
  
     public void runConveyors(boolean intaking)
     {
-        bottomConveyor.run(intaking);
-        topConveyor.run(intaking);
+        primaryConveyor.run(intaking);
+        secondaryConveyor.run(intaking);
     }
  
     public void stopAll()
     {
-        bottomConveyor.stop();
-        topConveyor.stop();
+        primaryConveyor.stop();
+        secondaryConveyor.stop();
     }
     public void setSpeed(double bottomspeed, double topspeed)
     {
-         bottomConveyor.setSpeed(bottomspeed);
-         topConveyor.setSpeed(topspeed);
+         primaryConveyor.setSpeed(bottomspeed);
+         secondaryConveyor.setSpeed(topspeed);
     }
  
  
@@ -52,7 +46,7 @@ public class Conveyors extends MustangSubsystemBase
  
     public int ballCount()
     {
-        return bottomConveyor.ball + topConveyor.ball;
+        return primaryConveyor.ball + secondaryConveyor.ball;
     }
  
  
@@ -60,7 +54,7 @@ public class Conveyors extends MustangSubsystemBase
  
     @Override
     public HealthState checkHealth() {
-        if(bottomConveyor.checkHealth()==HealthState.RED||topConveyor.checkHealth()==HealthState.RED)
+        if(primaryConveyor.checkHealth()==HealthState.RED||secondaryConveyor.checkHealth()==HealthState.RED)
         {
             return HealthState.RED;
         }
@@ -97,15 +91,15 @@ class Conveyor extends MustangSubsystemBase
  
     double absConveyorSpeed;
  
-    public Conveyor(int id, MotorConfig.Motor_Type type, double speed)
+    public Conveyor(int id)
     {
        
         roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
  
-        conveyorSpeed = speed;
+        conveyorSpeed =0;
  
         beamBreak = new BeamBreak(0);
-
+ 
         absConveyorSpeed = Math.abs(conveyorSpeed);
  
     }
@@ -185,3 +179,4 @@ class Conveyor extends MustangSubsystemBase
     }
  
 }
+ 
