@@ -15,37 +15,22 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class ExtendClimber extends ClimberBaseCommand {
   
-  private boolean str;
 
   public ExtendClimber(Climber climber, boolean straight) {
-    super(climber);
-    str = straight;
+    super(climber, straight);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     super.initialize();
-    if (str)
-    {
-      climber.straight.climb(climber.straight.MAX_EXTENDING_HEIGHT_CM);
-    }
-    else
-    {
-      climber.oblique.climb(climber.oblique.MAX_EXTENDING_HEIGHT_CM);
-    }
+    telescopingClimber.climb(telescopingClimber.MAX_EXTENDING_HEIGHT_CM);
+    climber.oblique.climb(climber.oblique.MAX_EXTENDING_HEIGHT_CM);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (str)
-    {
-      return climber.straight.isAtTarget();
-    }
-    else
-    {
-      return climber.oblique.isAtTarget();
-    }
+    return telescopingClimber.isAtTarget();
   }
 }

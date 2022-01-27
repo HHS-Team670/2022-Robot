@@ -10,26 +10,25 @@ package frc.team670.robot.commands.climb;
 import frc.team670.robot.subsystems.Climber;
 
 /**
- * Raise the climber mechanism to its maximum allowed height so it can reach the
- * generator bar.
+ * Lower the Climber mechanism.
  */
 public class GetClimberDown extends ClimberBaseCommand {
 
   public GetClimberDown(Climber climber)
   {
-    super(climber);
+    super(climber, true);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     super.initialize();
-    climber.straight.climb(climber.straight.MOTOR_ROTATIONS_AT_RETRACTED);
+    telescopingClimber.climb(telescopingClimber.MOTOR_ROTATIONS_AT_RETRACTED);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.straight.isAtTarget();
+    return telescopingClimber.isAtTarget();
   }
 }

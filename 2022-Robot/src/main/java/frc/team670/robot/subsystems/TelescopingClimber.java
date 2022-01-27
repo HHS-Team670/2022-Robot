@@ -26,6 +26,8 @@ public class TelescopingClimber extends MustangSubsystemBase {
     private double kD = 0;
     private double kFF = 0;
 
+    private double POW = 0.25;
+
     // SmartMotion constants
     private static final double MAX_ACC = 0;
     private static final double MIN_VEL = 0;
@@ -56,7 +58,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
-    public TelescopingClimber(int motor1, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double mehc) {
+    public TelescopingClimber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
         kP = p;
         kI = i;
         kD = d;
@@ -66,11 +68,11 @@ public class TelescopingClimber extends MustangSubsystemBase {
         SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
         SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
-        MAX_EXTENDING_HEIGHT_CM = mehc;
+        MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
         
         // motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO); // Currently Broken as Mech changed something
         motors = new ArrayList<SparkMAXLite>();
-        motors.add(SparkMAXFactory.buildFactorySparkMAX(motor1, Motor_Type.NEO));
+        motors.add(SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO));
         for (SparkMAXLite motor : motors)
         {
             motor.setIdleMode(IdleMode.kBrake);
@@ -123,13 +125,13 @@ public class TelescopingClimber extends MustangSubsystemBase {
         }
 
         if (!onBar) {
-            setPower(-0.25);
+            setPower(-1 * POW);
         }
     }
 
     public void unhookFromBar() {
         if (onBar) {
-            setPower(0.25);
+            setPower(POW);
             onBar = false;
         }
     }

@@ -9,28 +9,28 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
  */
 public class Climber extends MustangSubsystemBase {
 
-    private static final double kP = 0;
-    private static final double kI = 0;
-    private static final double kD = 0;
-    private static final double kFF = 0;
+    private static final double STRAIGHT_kP = 0;
+    private static final double STRAIGHT_kI = 0;
+    private static final double STRAIGHT_kD = 0;
+    private static final double STRAIGHT_kFF = 0;
 
-    private static final float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
+    private static final float STRAIGHT_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    private static final float STRAIGHT_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
-    private static final double kPO = 0;
-    private static final double kIO = 0;
-    private static final double kDO = 0;
-    private static final double kFFO = 0;
+    private static final double OBLIQUE_kP = 0;
+    private static final double OBLIQUE_kI = 0;
+    private static final double OBLIQUE_kD = 0;
+    private static final double OBLIQUE_kFF = 0;
 
-    private static final float MOTOR_ROTATIONS_AT_RETRACTEDO = 0;
-    private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSIONO = 0;
+    private static final float OBLIQUE_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    private static final float OBLIQUE_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
     public TelescopingClimber straight;
     public TelescopingClimber oblique;
 
     public Climber() {
-        straight = new TelescopingClimber(RobotMap.CLIMBER_MOTOR1, kP, kI, kD, kFF, MOTOR_ROTATIONS_AT_RETRACTED, MOTOR_ROTATIONS_AT_MAX_EXTENSION, 66.24);
-        oblique = new TelescopingClimber(RobotMap.CLIMBER_MOTOR3, kPO, kIO, kDO, kFFO, MOTOR_ROTATIONS_AT_RETRACTEDO, MOTOR_ROTATIONS_AT_MAX_EXTENSIONO, 66.24);
+        straight = new TelescopingClimber(RobotMap.STRAIGHT_CLIMBER_MOTOR, STRAIGHT_kP, STRAIGHT_kI, STRAIGHT_kD, STRAIGHT_kFF, STRAIGHT_MOTOR_ROTATIONS_AT_RETRACTED, STRAIGHT_MOTOR_ROTATIONS_AT_MAX_EXTENSION, 66.24);
+        oblique = new TelescopingClimber(RobotMap.OBLIQUE_CLIMBER_MOTOR, OBLIQUE_kP, OBLIQUE_kI, OBLIQUE_kD, OBLIQUE_kFF, OBLIQUE_MOTOR_ROTATIONS_AT_RETRACTED, OBLIQUE_MOTOR_ROTATIONS_AT_MAX_EXTENSION, 66.24);
     }
 
     public void stop()
