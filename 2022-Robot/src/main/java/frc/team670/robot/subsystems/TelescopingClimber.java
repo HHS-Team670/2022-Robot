@@ -56,7 +56,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
-    public TelescopingClimber(int motor1, int motor2, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double mehc) {
+    public TelescopingClimber(int motor1, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double mehc) {
         kP = p;
         kI = i;
         kD = d;
@@ -68,7 +68,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
         MAX_EXTENDING_HEIGHT_CM = mehc;
         
-        motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO);
+        // motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO); // Currently Broken as Mech changed something
+        motors = new ArrayList<SparkMAXLite>();
+        motors.add(SparkMAXFactory.buildFactorySparkMAX(motor1, Motor_Type.NEO));
         for (SparkMAXLite motor : motors)
         {
             motor.setIdleMode(IdleMode.kBrake);
@@ -93,7 +95,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
         setDefaultPID();
 
         onBar = false;
-        targets = new double[]{0.0, 0.0};
+        targets = new double[]{0.0};
         currentAtHookedCount = 0;
         SmartDashboard.putNumber("Climber power", 0.0);
         SmartDashboard.putBoolean("Climber deploy", false);
@@ -183,12 +185,12 @@ public class TelescopingClimber extends MustangSubsystemBase {
     }
 
     public boolean isAtTarget() {
-        return (Math.abs(encoders.get(0).getPosition() - targets[0]) < HALF_CM) && (Math.abs(encoders.get(1).getPosition() - targets[1]) < HALF_CM);
+        return (Math.abs(encoders.get(0).getPosition() - targets[0]) < HALF_CM);
     }
 
-    protected double getUnadjustedAvgMotorRotations() {
+    /*protected double getUnadjustedAvgMotorRotations() {
         return (getUnadjustedMotorRotations(0) + getUnadjustedMotorRotations(1)) / 2.0;
-    }
+    }*/ // Redundant method
 
     protected double getUnadjustedMotorRotations(int mtr)
     {
@@ -199,9 +201,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
         return this.motors.get(mtr).getOutputCurrent();
     }
 
-    protected double getAvgMotorCurrent() {
+    /*protected double getAvgMotorCurrent() {
         return (getMotorCurrent(0) + getMotorCurrent(1)) / 2.0;
-    }
+    }*/ // Redundant method
 
 
     @Override
@@ -212,7 +214,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public void test() {
         setPower(SmartDashboard.getNumber("Climber power", 0.0));
-        SmartDashboard.putNumber("Climber motor rotations", getUnadjustedAvgMotorRotations());
+        SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations(0));
     }
 
 }
