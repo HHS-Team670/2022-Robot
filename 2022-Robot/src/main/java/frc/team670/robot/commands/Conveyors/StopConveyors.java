@@ -26,7 +26,7 @@ public class StopConveyors extends InstantCommand implements MustangCommand
 
     public void initialize()
     {
-        Logger.consoleLog("Stopping Conveyors");
+        
         conveyors.stopAll();
     }
 

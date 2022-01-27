@@ -13,32 +13,32 @@ import frc.team670.mustanglib.utils.Logger;
  
 public class Conveyors extends MustangSubsystemBase
 {
-    public Conveyor primaryConveyor, secondaryConveyor;
+    public Conveyor intakeConveyor, shooterConveyor;
  
  
     public Conveyors(){
-        primaryConveyor = new Conveyor(RobotMap.PRIMARY_CONVEYOR_MOTOR);
-        secondaryConveyor = new Conveyor(RobotMap.SECONDARY_CONVEYOR_MOTOR);
+        intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR);
+        shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR);
  
     }
  
     // ACTIONS
  
-    public void runConveyors(boolean intaking)
+    public void runConveyors(boolean intaking,boolean shooting)
     {
-        primaryConveyor.run(intaking);
-        secondaryConveyor.run(intaking);
+        
+        intakeConveyor.run(intaking);
+        if(shooting||!intaking)
+        {
+            shooterConveyor.run(intaking);
+        }
+        
     }
  
     public void stopAll()
     {
-        primaryConveyor.stop();
-        secondaryConveyor.stop();
-    }
-    public void setSpeed(double bottomspeed, double topspeed)
-    {
-         primaryConveyor.setSpeed(bottomspeed);
-         secondaryConveyor.setSpeed(topspeed);
+        intakeConveyor.stop();
+        shooterConveyor.stop();
     }
  
  
@@ -46,7 +46,7 @@ public class Conveyors extends MustangSubsystemBase
  
     public int ballCount()
     {
-        return primaryConveyor.ball + secondaryConveyor.ball;
+        return intakeConveyor.ball + shooterConveyor.ball;
     }
  
  
@@ -54,7 +54,7 @@ public class Conveyors extends MustangSubsystemBase
  
     @Override
     public HealthState checkHealth() {
-        if(primaryConveyor.checkHealth()==HealthState.RED||secondaryConveyor.checkHealth()==HealthState.RED)
+        if(intakeConveyor.checkHealth()==HealthState.RED||shooterConveyor.checkHealth()==HealthState.RED)
         {
             return HealthState.RED;
         }
@@ -80,16 +80,15 @@ class Conveyor extends MustangSubsystemBase
  
     private SparkMAXLite roller;
  
-    private double conveyorSpeed;
+    private double conveyorSpeed=1.0;
  
-    private boolean conveyorState = false;
  
     public int ball = 0;
    
  
     BeamBreak beamBreak;
  
-    double absConveyorSpeed;
+    double absConveyorSpeed=1.0;
  
     public Conveyor(int id)
     {
@@ -104,20 +103,20 @@ class Conveyor extends MustangSubsystemBase
  
     }
  
-
+ 
     public boolean running()
     {
         if(beamBreak.isTriggered())
         {
             ball = 1;
-            conveyorState = true;
-            return conveyorState;
+            
+            return true;
         }
  
         ball = 0;
-        conveyorState = false;
+        
  
-        return conveyorState;
+        return false;
        
     }
  
@@ -137,28 +136,26 @@ class Conveyor extends MustangSubsystemBase
         roller.set(conveyorSpeed);
     }
  
-    public void disable()
-    {
-        roller.disable();
-    }
- 
     public void stop()
     {
-        roller.set(0);
+        roller.stopMotor();;
     }
  
     public void setSpeed(double speed)
     {
         conveyorSpeed = speed;
+        Logger.consoleLog("Speed: " + conveyorSpeed);
     }
  
  
     @Override
     public HealthState checkHealth()
     {
-        if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
+        REVLibError rollerError=roller.getLastError();
+        if ( (rollerError != null) && (rollerError != REVLibError.kOk) ) {
             return HealthState.RED;
         }
+        
        
        
         return HealthState.GREEN;
@@ -167,8 +164,10 @@ class Conveyor extends MustangSubsystemBase
     @Override
     public void mustangPeriodic()
     {
-        Logger.consoleLog("Speed: " + conveyorSpeed);
+        running();
     }
  
 }
  
+ 
+
