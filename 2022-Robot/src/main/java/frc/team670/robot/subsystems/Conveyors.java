@@ -104,15 +104,7 @@ class Conveyor extends MustangSubsystemBase
  
     }
  
-    //SENSOR SPECIAL FUNCTIONS
-   
- 
-    // public void updateConveyorStates ()
-    // {
-    //     for (int i = 0; i < conveyorStates.length)
-    // }
- 
-    //Needs to be fixed. sensor number and placement has changed
+
     public boolean running()
     {
         if(beamBreak.isTriggered())
