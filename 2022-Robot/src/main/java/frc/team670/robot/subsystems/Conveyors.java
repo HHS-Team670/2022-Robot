@@ -1,7 +1,7 @@
 package frc.team670.robot.subsystems;
-
+ 
 import com.revrobotics.REVLibError;
-
+ 
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -14,183 +14,174 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import java.lang.AutoCloseable;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-
-
+ 
+ 
+ 
 import frc.team670.robot.constants.RobotMap;
-
-public class Conveyors extends MustangSubsystemBase 
+ 
+public class Conveyors extends MustangSubsystemBase
 {
-    public Conveyor c1, c2;
-
-
+    public Conveyor bottomConveyor, topConveyor;
+ 
+ 
     public Conveyors(){
-        // c1 = new Conveyor();
-        // c2 = new Conveyor();
+
     }
-
+ 
     // ACTIONS
-
+ 
     public void runConveyors(boolean intaking)
     {
-        c1.run(intaking);
-        c2.run(intaking);
-        
-        
+        bottomConveyor.run(intaking);
+        topConveyor.run(intaking);
     }
-    public void setSpeed(double c1Speed, double c2Speed)
-    {
-        c1.setSpeed(c1Speed);
-        c2.setSpeed(c2Speed);
-    }
-
+ 
     public void stopAll()
     {
-        c1.stop();
-        c2.stop();
+        bottomConveyor.stop();
+        topConveyor.stop();
     }
-
-    public boolean finished(){
-        return !(!c1.isRunning && !c2.isRunning);
-    
+    public void setSpeed(double bottomspeed, double topspeed)
+    {
+         bottomConveyor.setSpeed(bottomspeed);
+         topConveyor.setSpeed(topspeed);
     }
-
+ 
+ 
     //DataCollection
-
+ 
     public int ballCount()
     {
-        return c1.ball + c2.ball;
+        return bottomConveyor.ball + topConveyor.ball;
     }
-
-
+ 
+ 
     //MUSTANGESUBSYSTEM
-
+ 
     @Override
     public HealthState checkHealth() {
-        if(c1.checkHealth()==HealthState.RED||c2.checkHealth()==HealthState.RED)
+        if(bottomConveyor.checkHealth()==HealthState.RED||topConveyor.checkHealth()==HealthState.RED)
         {
             return HealthState.RED;
         }
         return HealthState.GREEN;
     }
-
+ 
     @Override
     public void mustangPeriodic() {
         checkHealth();
-        
+       
     }
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 }
-
-
-
+ 
+ 
+ 
 class Conveyor extends MustangSubsystemBase
 {
-
+ 
     private SparkMAXLite roller;
-
+ 
     private double conveyorSpeed;
-
+ 
     private boolean conveyorState = false;
-    public boolean isRunning = false;
-
+ 
     public int ball = 0;
-    
-
+   
+ 
     BeamBreak beamBreak;
-
-
-
-    public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
+ 
+    double absConveyorSpeed;
+ 
+    public Conveyor(int id, MotorConfig.Motor_Type type, double speed)
     {
-        
+       
         roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
-
+ 
         conveyorSpeed = speed;
-
+ 
         beamBreak = new BeamBreak(0);
 
+        absConveyorSpeed = Math.abs(conveyorSpeed);
+ 
     }
-
+ 
     //SENSOR SPECIAL FUNCTIONS
-    
-
-    // public void updateConveyorStates () 
+   
+ 
+    // public void updateConveyorStates ()
     // {
     //     for (int i = 0; i < conveyorStates.length)
     // }
-
+ 
     //Needs to be fixed. sensor number and placement has changed
-    public boolean active() 
+    public boolean running()
     {
         if(beamBreak.isTriggered())
         {
             ball = 1;
-            conveyorState=true;
+            conveyorState = true;
             return conveyorState;
         }
-
+ 
         ball = 0;
-        conveyorState=false;
-
+        conveyorState = false;
+ 
         return conveyorState;
-        
+       
     }
-
-
-
+ 
+ 
+ 
     //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
-    public void run(boolean intaking) 
+    public void run(boolean intaking)
     {
-        if (!intaking) 
+        if (!intaking)
         {
-            conveyorSpeed = Math.abs(conveyorSpeed) * -1;
-        } else 
+            conveyorSpeed = absConveyorSpeed * -1;
+        } else
         {
-            conveyorSpeed = Math.abs(conveyorSpeed);
+            conveyorSpeed = absConveyorSpeed;
         }
-        
-        isRunning = true;
+       
         roller.set(conveyorSpeed);
     }
-
-    public void disable() 
+ 
+    public void disable()
     {
-        isRunning = false;
         roller.disable();
     }
-
-    public void stop() 
+ 
+    public void stop()
     {
-        isRunning = false;
         roller.set(0);
     }
-
+ 
     public void setSpeed(double speed)
     {
         conveyorSpeed = speed;
     }
-
-
+ 
+ 
     @Override
-    public HealthState checkHealth() 
+    public HealthState checkHealth()
     {
         if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
             return HealthState.RED;
         }
-        
-        
+       
+       
         return HealthState.GREEN;
     }
-
+ 
     @Override
-    public void mustangPeriodic() 
+    public void mustangPeriodic()
     {
         Logger.consoleLog("Speed: " + conveyorSpeed);
-    } 
-
+    }
+ 
 }
