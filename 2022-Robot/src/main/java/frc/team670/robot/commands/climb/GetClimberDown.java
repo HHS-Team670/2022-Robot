@@ -24,12 +24,12 @@ public class GetClimberDown extends ClimberBaseCommand {
   @Override
   public void initialize() {
     super.initialize();
-    climber.straight.climb(0);
+    climber.straight.climb(climber.straight.MOTOR_ROTATIONS_AT_RETRACTED);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.oblique.isAtTarget();
+    return climber.straight.isAtTarget();
   }
 }

@@ -28,7 +28,7 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
                 new HookOnBarStd(climber),
                 new ExtendClimberOblique(climber),
                 new HookOnBarOblique(climber),
-                new UnhookFromBar(climber), // Do we really need to unhook??? And if we do should it come automatically with the hooking on to the higher bar???
+                new UnhookFromBar(climber), // TODO: Do we really need to unhook??? And if we do should it come automatically with the hooking on to the higher bar???
                 new GetClimberDown(climber)
             );
     }

@@ -21,10 +21,10 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
  */
 public class TelescopingClimber extends MustangSubsystemBase {
 
-    private static double kP = 0;
-    private static double kI = 0;
-    private static double kD = 0;
-    private static double kFF = 0;
+    private double kP = 0;
+    private double kI = 0;
+    private double kD = 0;
+    private double kFF = 0;
 
     // SmartMotion constants
     private static final double MAX_ACC = 0;
@@ -48,15 +48,26 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     private int currentAtHookedCount;
 
-    private static float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
+    public float MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    public float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
-    private static float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-    private static float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+    private float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+    private float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
     public TelescopingClimber(int motor1, int motor2, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double mehc) {
+        kP = p;
+        kI = i;
+        kD = d;
+        kFF = ff;
+        MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
+        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
+        SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+        SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+
+        MAX_EXTENDING_HEIGHT_CM = mehc;
+        
         motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO);
         for (SparkMAXLite motor : motors)
         {
@@ -78,15 +89,6 @@ public class TelescopingClimber extends MustangSubsystemBase {
             encoders.set(j, motors.get(j).getEncoder());
             encoders.get(j).setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         }
-
-        kP = p;
-        kI = i;
-        kD = d;
-        kFF = ff;
-        MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
-        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
-
-        MAX_EXTENDING_HEIGHT_CM = mehc;
 
         setDefaultPID();
 
@@ -197,7 +199,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
         return this.motors.get(mtr).getOutputCurrent();
     }
 
-    protected double getAvgMotorCurrent2() {
+    protected double getAvgMotorCurrent() {
         return (getMotorCurrent(0) + getMotorCurrent(1)) / 2.0;
     }
 
