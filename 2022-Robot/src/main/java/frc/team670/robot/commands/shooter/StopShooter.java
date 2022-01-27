@@ -8,7 +8,9 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-
+/*
+*Stops the shooter
+*/
 public class StopShooter extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;

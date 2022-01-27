@@ -10,7 +10,10 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
-
+/*
+Uses vision to get the target distance and predicts the RPM based off that
+If vision is broken, it just uses the default RPM
+*/
 public class StartShooterByVisionDistance extends CommandBase implements MustangCommand {
 
     private Shooter shooter;

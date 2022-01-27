@@ -9,7 +9,6 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.functions.MathUtils;
-import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 

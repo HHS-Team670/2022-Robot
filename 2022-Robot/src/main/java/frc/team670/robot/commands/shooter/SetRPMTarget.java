@@ -12,7 +12,7 @@ import frc.team670.mustanglib.utils.Logger;
 
 /**
  * Sets the shooter's target RPM
- * @author ctychen
+ * @author 
  */
 public class SetRPMTarget extends InstantCommand implements MustangCommand {
 

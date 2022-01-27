@@ -11,9 +11,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 
-/**
- * "So anyway, I started blasting..." 
- * - Frank Reynolds
+/*
+ * Starts ramping up the shooter and runs it
  */
 public class StartShooter extends CommandBase implements MustangCommand {
 
