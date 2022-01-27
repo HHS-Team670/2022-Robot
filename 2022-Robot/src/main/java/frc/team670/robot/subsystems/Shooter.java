@@ -10,9 +10,9 @@ package frc.team670.robot.subsystems;
 
 import java.util.List;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.ControlType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import frc.team670.robot.subsystems.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,8 +40,8 @@ public class Shooter extends MustangSubsystemBase {
   private SparkMAXLite mainController, followerController;
   private List<SparkMAXLite> controllers;
 
-  private CANEncoder stage2_mainEncoder;
-  private CANPIDController stage2_mainPIDController;
+  private RelativeEncoder stage2_mainEncoder;
+  private SparkMaxPIDController stage2_mainPIDController;
 
   private double targetRPM = 2500; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
@@ -60,7 +60,7 @@ public class Shooter extends MustangSubsystemBase {
 
   private static final double NORMAL_CURRENT = 0; // TODO: unknown
 
-  // Stage 2 values, as of 2/17 testing
+  // Stage 2 values, as of 2/17 testing Needs to be changed
   private static final double V_P = 0.000100;
   private static final double V_I = 0.0;
   private static final double V_D = 0.0;
