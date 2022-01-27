@@ -111,6 +111,7 @@ public class AutoSelector {
       Logger.consoleLog("contains auton-chooser key %s", SmartDashboard.containsKey("auton-chooser"));
       
         Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
+        
         // timer.start();
       
         // NetworkTableEntry value = table.getEntry("auton-chooser");
@@ -120,6 +121,7 @@ public class AutoSelector {
         // }
         // Number autoID = value.getNumber(-1);
         Logger.consoleLog("auton selector id: %s", autoID);
+
         this.selectedRoutine = AutoRoutine.getById((int)(autoID.intValue()));
         Logger.consoleLog("auton selector routine: %s", this.selectedRoutine);
         return this.selectedRoutine;
@@ -137,7 +139,7 @@ public class AutoSelector {
     public MustangCommand getCommandFromRoutine(AutoRoutine routine,
     double delayTime){
         // AutoRoutine result = select();
-        Logger.consoleLog("Auton %s", routine);
+        Logger.consoleLog("Inside getCommandFromRoutine() Auton %s", routine);
 
           switch(routine) {
             case LogMessage1:

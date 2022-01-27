@@ -368,6 +368,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
       if (time != -1) {
         delayTime = time;
       }
+      Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
     }
 
   }
