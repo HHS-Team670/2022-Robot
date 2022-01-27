@@ -13,22 +13,39 @@ import frc.team670.robot.subsystems.Climber;
  * Raise the climber mechanism to its maximum allowed height so it can reach the
  * generator bar.
  */
-public class ExtendClimberStd extends ClimberBaseCommand {
+public class ExtendClimber extends ClimberBaseCommand {
+  
+  private boolean str;
 
-  public ExtendClimberStd(Climber climber) {
+  public ExtendClimber(Climber climber, boolean straight) {
     super(climber);
+    str = straight;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     super.initialize();
-    climber.straight.climb(climber.straight.MAX_EXTENDING_HEIGHT_CM);
+    if (str)
+    {
+      climber.straight.climb(climber.straight.MAX_EXTENDING_HEIGHT_CM);
+    }
+    else
+    {
+      climber.oblique.climb(climber.oblique.MAX_EXTENDING_HEIGHT_CM);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.straight.isAtTarget();
+    if (str)
+    {
+      return climber.straight.isAtTarget();
+    }
+    else
+    {
+      return climber.oblique.isAtTarget();
+    }
   }
 }

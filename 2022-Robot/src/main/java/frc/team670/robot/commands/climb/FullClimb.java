@@ -24,10 +24,10 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(climber, HealthState.GREEN);
         addCommands(
-                new ExtendClimberStd(climber),
-                new HookOnBarStd(climber),
-                new ExtendClimberOblique(climber),
-                new HookOnBarOblique(climber),
+                new ExtendClimber(climber, true),
+                new HookOnBar(climber, true),
+                new ExtendClimber(climber, false),
+                new HookOnBar(climber, false),
                 new UnhookFromBar(climber), // TODO: Do we really need to unhook??? And if we do should it come automatically with the hooking on to the higher bar???
                 new GetClimberDown(climber)
             );
