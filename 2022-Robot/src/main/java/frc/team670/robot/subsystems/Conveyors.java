@@ -17,10 +17,14 @@ Intaking - 1
 Outtaking - 2
 Shooting - 3
 */
+enum Status
+{
+    OFF,INTAKING,OUTTAKING,SHOOTING
+}
 public class Conveyors extends MustangSubsystemBase
 {
     public Conveyor intakeConveyor, shooterConveyor;
-    private int status = 0; 
+    private Status status = Status.OFF; 
  
  
     public Conveyors(){
@@ -47,7 +51,7 @@ public class Conveyors extends MustangSubsystemBase
     private void intakeConveyor () {
         intakeConveyor.run(true);
         shooterConveyor.run(true);
-        status = 1;
+        status = Status.INTAKING;
         
 
 
@@ -56,7 +60,7 @@ public class Conveyors extends MustangSubsystemBase
     private void shootConveyor () {
         intakeConveyor.run(true);
         shooterConveyor.run(true);
-        status = 3;
+        status = Status.SHOOTING;
         
     }
 
@@ -64,42 +68,53 @@ public class Conveyors extends MustangSubsystemBase
     {
         intakeConveyor.run(false);
         shooterConveyor.run(false);
-        status = 2;
+        status = Status.OUTTAKING;
     }
     private void changeState()
     {
-        if(status == 1)
+        switch(status)
         {
-            if(shooterConveyor.ballCount == 1)
-            {
-                shooterConveyor.stop();
-                if(intakeConveyor.ballCount == 1)
+            case INTAKING:
+                if(shooterConveyor.ballCount == 1)
+                {
+                    shooterConveyor.stop();
+                    if(intakeConveyor.ballCount == 1)
+                    {
+                        intakeConveyor.stop();
+                    }
+                }
+                break;
+            case OUTTAKING:
+                if(shooterConveyor.ballCount==0)
+                {
+                    shooterConveyor.stop();
+                }
+                if(ballCount()==0)
+                {
+                    stopAll();
+                }
+                break;
+            case SHOOTING:
+                if(intakeConveyor.ballCount==0)
                 {
                     intakeConveyor.stop();
                 }
-            }           
-
-        }else if(status == 3||status == 2) 
-        {
-            if(status == 3 && intakeConveyor.ballCount==0)
-            {
-                intakeConveyor.stop();
-            }else if(status == 2 && shooterConveyor.ballCount==0)
-            {
-                shooterConveyor.stop();
-            }
-            if(ballCount() == 0)
-            {
-                stopAll();
-            }
+                if(ballCount()==0)
+                {
+                    stopAll();
+                }
+                break;
+            case OFF:
+                break;
         }
+        
 
 
     }
  
     public void stopAll()
     {
-        status = 0;
+        status = Status.OFF;
         intakeConveyor.stop();
         shooterConveyor.stop();
     }
