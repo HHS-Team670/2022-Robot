@@ -13,10 +13,20 @@ import frc.team670.robot.subsystems.DriveBase;
 
 public class BTarmac4BallTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory;
+    private Trajectory trajectory, trajectory2, trajectory3, trajectory4, trajectory5;
 
     public BTarmac4BallTerminal(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("BTarmac4BallTerminal", 2.0, 1);
+        trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
+        //pickup ball
+        trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
+        //shoot ball
+        trajectory3 = PathPlanner.loadPath("BTarmac4BallTerminalP3", 2.0, 1);
+        //pickup ball
+        trajectory4 = PathPlanner.loadPath("BTarmac4BallTerminalP4", 2.0, 1);
+        //pickup ball
+        trajectory5 = PathPlanner.loadPath("BTarmac4BallTerminalP5", 2.0, 1);
+        //shoot ball
+        
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
