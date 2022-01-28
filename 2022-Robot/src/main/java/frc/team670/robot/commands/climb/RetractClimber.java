@@ -12,9 +12,9 @@ import frc.team670.robot.subsystems.Climber;
 /**
  * Lower the Climber mechanism.
  */
-public class GetClimberDown extends ClimberBaseCommand {
+public class RetractClimber extends ClimberBaseCommand {
 
-  public GetClimberDown(Climber climber)
+  public RetractClimber(Climber climber)
   {
     super(climber, true);
   }
