@@ -31,22 +31,40 @@ public class Conveyors extends MustangSubsystemBase
  
     // ACTIONS
 
-    public void runIntakeConveyor (boolean intaking) {
-        intakeConveyor.run(intaking);
-        if (intaking) {
-            status = 1;
-        }
-
-        else {
-            status = 2;
+    public void runConveyor(boolean intaking, boolean shooting)
+    {
+        if(intaking)
+        {
+            intakeConveyor();
+        }else if (shooting)
+        {
+            shootConveyor();
+        }else 
+        {
+            outtakeConveyor();
         }
     }
+    private void intakeConveyor () {
+        intakeConveyor.run(true);
+        shooterConveyor.run(true);
+        status = 1;
+        
 
-    public void runShooterConveyor (boolean shooting) {
-        shooterConveyor.run(shooting);
-        if (shooting) {
-            status = 3;
-        }
+
+    }
+
+    private void shootConveyor () {
+        intakeConveyor.run(true);
+        shooterConveyor.run(true);
+        status = 3;
+        
+    }
+
+    private void outtakeConveyor()
+    {
+        intakeConveyor.run(false);
+        shooterConveyor.run(false);
+        status = 2;
     }
     private void changeState()
     {
@@ -61,8 +79,15 @@ public class Conveyors extends MustangSubsystemBase
                 }
             }           
 
-        }else if(status == (3)||status == (2)) 
+        }else if(status == 3||status == 2) 
         {
+            if(status == 3 && intakeConveyor.ballCount==0)
+            {
+                intakeConveyor.stop();
+            }else if(status == 2 && shooterConveyor.ballCount==0)
+            {
+                shooterConveyor.stop();
+            }
             if(ballCount() == 0)
             {
                 stopAll();
