@@ -15,7 +15,7 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.DriveBase;
 
 
-
+//split into 2 paths
 public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -31,7 +31,10 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
+            //drive forward
+            //intake
             getTrajectoryFollowerCommand(trajectory, driveBase)
+            //shoot 2 balls
         );
 
     }

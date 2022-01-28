@@ -11,12 +11,14 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 
+//change to ATarmacEdge4Ball for 2022 drivebase
 public class ATarmacEdge4BallTest extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
     public ATarmacEdge4BallTest(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge4BallTest", 1.0, 0.5);
+        //change to ATarmacEdge4Ball for 2022 drivebase
+        trajectory = PathPlanner.loadPath("test", 2.0, 1);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);

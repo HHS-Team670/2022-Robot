@@ -18,7 +18,6 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.ATarmacEdge4BallTest;
 import frc.team670.robot.commands.auton.ATarmacFlushed1Ball;
 import frc.team670.robot.commands.auton.LeftTarmac2Shoot;
-import frc.team670.robot.commands.auton.MoveForwards;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 

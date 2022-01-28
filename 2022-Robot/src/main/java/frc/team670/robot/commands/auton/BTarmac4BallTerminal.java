@@ -11,12 +11,12 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 
-public class NewYCoord extends SequentialCommandGroup implements MustangCommand {
+public class BTarmac4BallTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public NewYCoord(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("NewYCoord", 1.0, 0.5);
+    public BTarmac4BallTerminal(DriveBase driveBase) {
+        trajectory = PathPlanner.loadPath("BTarmac4BallTerminal", 2.0, 1);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
