@@ -14,6 +14,7 @@ import frc.team670.mustanglib.utils.Logger;
 public class Conveyors extends MustangSubsystemBase
 {
     public Conveyor intakeConveyor, shooterConveyor;
+    private String status="OFF"; 
  
  
     public Conveyors(){
@@ -27,16 +28,52 @@ public class Conveyors extends MustangSubsystemBase
     public void runConveyors(boolean intaking,boolean shooting)
     {
         
-        intakeConveyor.run(intaking);
+        intakeConveyor.run(intaking||shooting);
+        shooterConveyor.run(intaking||shooting);
         if(shooting||!intaking)
         {
-            shooterConveyor.run(intaking);
+            
+            if(!intaking)
+            {
+                status = "OUTTAKING";
+            }else 
+            {
+                status = "SHOOTING";
+            }
+        }else
+        {
+            status = "INTAKING";
         }
         
+        
+    }
+    public void changeState()
+    {
+        if(status.equals("INTAKING"))
+        {
+            if(shooterConveyor.ballCount==1)
+            {
+                shooterConveyor.stop();
+                if(intakeConveyor.ballCount==1)
+                {
+                    intakeConveyor.stop();
+                }
+            }           
+
+        }else if(status.equals("SHOOTING")||status.equals("OUTTAKING")) 
+        {
+            if(ballCount()==0)
+            {
+                stopAll();
+            }
+        }
+
+
     }
  
     public void stopAll()
     {
+        status="OFF";
         intakeConveyor.stop();
         shooterConveyor.stop();
     }
@@ -46,7 +83,7 @@ public class Conveyors extends MustangSubsystemBase
  
     public int ballCount()
     {
-        return intakeConveyor.ball + shooterConveyor.ball;
+        return intakeConveyor.ballCount + shooterConveyor.ballCount;
     }
  
  
@@ -64,6 +101,7 @@ public class Conveyors extends MustangSubsystemBase
     @Override
     public void mustangPeriodic() {
         checkHealth();
+        changeState();
        
     }
  
@@ -83,7 +121,7 @@ class Conveyor extends MustangSubsystemBase
     private double conveyorSpeed=1.0;
  
  
-    public int ball = 0;
+    public int ballCount = 0;
    
  
     BeamBreak beamBreak;
@@ -108,12 +146,12 @@ class Conveyor extends MustangSubsystemBase
     {
         if(beamBreak.isTriggered())
         {
-            ball = 1;
+            ballCount = 1;
             
             return true;
         }
  
-        ball = 0;
+        ballCount = 0;
         
  
         return false;
