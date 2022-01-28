@@ -15,8 +15,8 @@ public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangC
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacEdge2Ball(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 1.0, 0.5);
+    public BTarmacFlushed2InnerOuterBall(DriveBase driveBase) {
+        trajectory = PathPlanner.loadPath("BTarmacFlushed2InnerOuterBall", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
