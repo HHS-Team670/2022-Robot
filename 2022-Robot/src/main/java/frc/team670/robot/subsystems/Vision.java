@@ -30,6 +30,7 @@ public class Vision extends MustangSubsystemBase{
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
 
     PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+    Pose2d pose;
 
     double distance;
     double angle;
@@ -37,6 +38,11 @@ public class Vision extends MustangSubsystemBase{
     boolean hasTarget;
 
     boolean isBall;
+
+    public Vision(String cam)
+    {
+        pose = new Pose2d();
+    }
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -65,6 +71,7 @@ public class Vision extends MustangSubsystemBase{
             } else {
                 hasTarget = false;
             }
+            updatePose();
             
         } catch(Exception e){
             // MustangNotifications.reportWarning(e.toString());
@@ -93,16 +100,23 @@ public class Vision extends MustangSubsystemBase{
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
             Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
+            updatePose();
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
     }
 
-    public Pose2d genPose(Pose2d currPose)
+    public void updatePose()
     {
         // Get general pose on the field
         double[] poseStuff = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
-        return currPose.plus(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
+        pose = pose.plus(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
+    }
+
+    public Pose2d getPose()
+    {
+        updatePose();
+        return pose;
     }
 
     public double[] poseMath(double d_0, double d_f, double theta)
