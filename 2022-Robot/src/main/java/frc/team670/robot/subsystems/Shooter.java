@@ -26,6 +26,7 @@ import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.constants.RobotConstants;
 
 
@@ -40,13 +41,13 @@ public class Shooter extends MustangSubsystemBase {
   private SparkMAXLite mainController, followerController;
   private List<SparkMAXLite> controllers;
 
-  private RelativeEncoder stage2_mainEncoder;
-  private SparkMaxPIDController stage2_mainPIDController;
+  private RelativeEncoder shooter_mainEncoder;
+  private SparkMaxPIDController shooter_mainPIDController;
 
-  private double targetRPM = 2500; // Will change later if we adjust by distance
-  private static double DEFAULT_SPEED = 2500;
+  private double targetRPM = 0; // Will change later if we adjust by distance
+  private static double DEFAULT_SPEED = 0;
 
-  private static double MIN_RPM = 2125;
+  private static double MIN_RPM = 0;
   private static double MAX_RPM = 2725;
 
   private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
@@ -60,7 +61,6 @@ public class Shooter extends MustangSubsystemBase {
 
   private static final double NORMAL_CURRENT = 0; // TODO: unknown
 
-  // Stage 2 values, as of 2/17 testing Needs to be changed
   private static final double V_P = 0.000100;
   private static final double V_I = 0.0;
   private static final double V_D = 0.0;
@@ -96,11 +96,11 @@ public class Shooter extends MustangSubsystemBase {
   // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
 
    private static final double[] measuredDistancesMeters = {
-     3.32232,  // 10.9 ft  2125 rpm 
-     4.572, // 15 ft  2275 rpm 
-     7.3152, // 24 ft 2575 rpm
-     8.6868, 
-     9.4488,// trench (28-29ft)
+     0,  // 10.9 ft  2125 rpm 
+     0, // 15 ft  2275 rpm 
+     0, // 24 ft 2575 rpm
+     0, 
+     0,// trench (28-29ft)
   };
 
    private static final double[] measuredRPMs = {
@@ -117,11 +117,11 @@ public class Shooter extends MustangSubsystemBase {
 
   public Shooter(Vision vision) {
 
-    SmartDashboard.putNumber("Stage 2 Velocity Setpoint", 0.0);
-    SmartDashboard.putNumber("Stage 2 FF", 0.0);
-    SmartDashboard.putNumber("Stage 2 P", 0.0);
-    SmartDashboard.putNumber("Stage 2 Ramp Rate", 0.0);
-    SmartDashboard.putNumber("Stage 2 speed", 0.0);
+    SmartDashboard.putNumber("Shooter Velocity Setpoint", 0.0);
+    SmartDashboard.putNumber("Shooter FF", 0.0);
+    SmartDashboard.putNumber("Shooter P", 0.0);
+    SmartDashboard.putNumber("Shooter Ramp Rate", 0.0);
+    SmartDashboard.putNumber("Shooter speed", 0.0);
 
     this.vision = vision;
 
@@ -131,22 +131,22 @@ public class Shooter extends MustangSubsystemBase {
     mainController = controllers.get(0);
     followerController = controllers.get(1);
 
-    stage2_mainEncoder = mainController.getEncoder();
-    stage2_mainPIDController = mainController.getPIDController();
+    shooter_mainEncoder = mainController.getEncoder();
+    shooter_mainPIDController = mainController.getPIDController();
 
-    stage2_mainPIDController.setP(V_P, VELOCITY_SLOT);
-    stage2_mainPIDController.setI(V_I, VELOCITY_SLOT);
-    stage2_mainPIDController.setD(V_D, VELOCITY_SLOT);
-    stage2_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
+    shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
+    shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
+    shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
+    shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
   }
 
-  public double getStage2Velocity() {
-    return stage2_mainEncoder.getVelocity();
+  public double getVelocity() {
+    return shooter_mainEncoder.getVelocity();
   }
 
   public void run() {
     SmartDashboard.putNumber("Stage 2 speed", targetRPM + speedAdjust);
-    stage2_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
+    shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
   }
 
   /**
@@ -162,7 +162,7 @@ public class Shooter extends MustangSubsystemBase {
     }
   }
 
-  public void setVelocityTarget(double targetRPM) {
+  public void setTargetRPM(double targetRPM) {
     this.targetRPM = targetRPM;
   }
 
@@ -177,7 +177,7 @@ public class Shooter extends MustangSubsystemBase {
   public void adjustRPMAdjuster(double diff) {
     if(((diff > 0 && speedAdjust < 400) || (diff < 0 && speedAdjust > -400))){
       this.speedAdjust += diff;
-      if(stage2_mainEncoder.getVelocity() > 300){
+      if(shooter_mainEncoder.getVelocity() > 300){
         run();
       }
 
@@ -190,7 +190,7 @@ public class Shooter extends MustangSubsystemBase {
    * @return The predicted "best fit" RPM for the motors to spin at based on the distance,
    * calculated from the linear regression
    */
-  public double getTargetRPMForDistance(double distance){
+   double getTargetRPMForDistance(double distance){
     double predictedVal = speedAtDistance.predict(distance);
     double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
     SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
@@ -200,16 +200,16 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void stop() {
-    stage2_mainPIDController.setReference(0, ControlType.kDutyCycle);
-    setVelocityTarget(0);
+    shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
+    setTargetRPM(0);
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getStage2Velocity(), targetRPM + this.speedAdjust, 200); // TODO: margin of error
+    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, 200); // TODO: margin of error
   }
 
   public void test() {
-    stage2_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0), ControlType.kVelocity);
+    shooter_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0), ControlType.kVelocity);
     SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
@@ -228,15 +228,25 @@ public class Shooter extends MustangSubsystemBase {
     // } else if (!ballHasBeenShot && !isShooting()) {
     //   ballHasBeenShot = true;
     // }
-    if(targetRPM != 0){
+    //if(targetRPM != 0){
       double distance = vision.getDistanceToTargetM();
       if (distance != RobotConstants.VISION_ERROR_CODE) {
         double targetRPM = getTargetRPMForDistance(distance);
-        setVelocityTarget(targetRPM);
+        setTargetRPM(targetRPM);
         run();
       }
-    }   
-    // SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
+    //}   
+    // SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
+  }
+
+  /*
+  *Sets the RPM
+  */
+  public void setRPMForDistance(double distance) {
+    Logger.consoleLog("Shooter distance to target %s", distance);
+    double target = getTargetRPMForDistance(distance);
+    Logger.consoleLog("Shooter RPM should be %s", target);
+    setTargetRPM(target);
   }
 
   public boolean isShooting() {

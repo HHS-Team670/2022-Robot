@@ -33,7 +33,7 @@ public class SetRPMTarget extends InstantCommand implements MustangCommand {
     @Override
     public void initialize() {
         Logger.consoleLog("Setting shooter RPM to %s", target);
-        shooter.setVelocityTarget(target);
+        shooter.setTargetRPM(target);
     }
 
     @Override

@@ -35,6 +35,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
+        shooter.setRampRate(false);
         return shooter.isUpToSpeed();
     }
 
