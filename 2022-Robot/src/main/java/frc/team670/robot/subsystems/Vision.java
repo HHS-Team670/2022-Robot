@@ -97,10 +97,10 @@ public class Vision extends MustangSubsystemBase{
 
     public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
         if (hasTarget){
-            Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
-            Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
-            Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
             updatePose();
+            Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
+            Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, this.pose, Rotation2d.fromDegrees(heading));
+            Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
