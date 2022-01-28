@@ -10,59 +10,60 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
  
- 
+/*
+Note: Conveyor states are represented by the following numbers
+Off - 0
+Intaking - 1
+Outtaking - 2
+Shooting - 3
+*/
 public class Conveyors extends MustangSubsystemBase
 {
     public Conveyor intakeConveyor, shooterConveyor;
-    private String status="OFF"; 
+    private int status = 0; 
  
  
     public Conveyors(){
-        intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR);
-        shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR);
+        intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, 0); // 0 is the ID for the beamBreak. I doubt this will be final, so remember to change it
+        shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, 1);  // 1 is the ID for the beamBreak. I doubt this will be final, so remember to change it
  
     }
  
     // ACTIONS
- 
-    public void runConveyors(boolean intaking,boolean shooting)
-    {
-        
-        intakeConveyor.run(intaking||shooting);
-        shooterConveyor.run(intaking||shooting);
-        if(shooting||!intaking)
-        {
-            
-            if(!intaking)
-            {
-                status = "OUTTAKING";
-            }else 
-            {
-                status = "SHOOTING";
-            }
-        }else
-        {
-            status = "INTAKING";
+
+    public void runIntakeConveyor (boolean intaking) {
+        intakeConveyor.run(intaking);
+        if (intaking) {
+            status = 1;
         }
-        
-        
+
+        else {
+            status = 2;
+        }
     }
-    public void changeState()
+
+    public void runShooterConveyor (boolean shooting) {
+        shooterConveyor.run(shooting);
+        if (shooting) {
+            status = 3;
+        }
+    }
+    private void changeState()
     {
-        if(status.equals("INTAKING"))
+        if(status == 1)
         {
-            if(shooterConveyor.ballCount==1)
+            if(shooterConveyor.ballCount == 1)
             {
                 shooterConveyor.stop();
-                if(intakeConveyor.ballCount==1)
+                if(intakeConveyor.ballCount == 1)
                 {
                     intakeConveyor.stop();
                 }
             }           
 
-        }else if(status.equals("SHOOTING")||status.equals("OUTTAKING")) 
+        }else if(status == (3)||status == (2)) 
         {
-            if(ballCount()==0)
+            if(ballCount() == 0)
             {
                 stopAll();
             }
@@ -73,12 +74,15 @@ public class Conveyors extends MustangSubsystemBase
  
     public void stopAll()
     {
-        status="OFF";
+        status = 0;
         intakeConveyor.stop();
         shooterConveyor.stop();
     }
- 
- 
+
+    public void setSpeed(double intakeConveyorSpeed, double shooterConveyorSpeed) {
+        intakeConveyor.setSpeed(intakeConveyorSpeed);
+        shooterConveyor.setSpeed(shooterConveyorSpeed);
+    }
     //DataCollection
  
     public int ballCount()
@@ -128,14 +132,14 @@ class Conveyor extends MustangSubsystemBase
  
     double absConveyorSpeed=1.0;
  
-    public Conveyor(int id)
+    public Conveyor(int motorID, int beamBreakID)
     {
        
-        roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
+        roller=SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
  
         conveyorSpeed =0;
  
-        beamBreak = new BeamBreak(0);
+        beamBreak = new BeamBreak(beamBreakID);
  
         absConveyorSpeed = Math.abs(conveyorSpeed);
  
