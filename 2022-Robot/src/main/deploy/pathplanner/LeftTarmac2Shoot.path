@@ -1,1 +1,52 @@
-{"waypoints":[{"anchorPoint":{"x":6.458333333333333,"y":5.2515624999999995},"prevControl":null,"nextControl":{"x":5.833333333333333,"y":5.782812499999999},"holonomicAngle":-32.00538320808357,"isReversal":false,"velOverride":null,"isLocked":false},{"anchorPoint":{"x":5.508922623941379,"y":5.9623715964899695},"prevControl":{"x":6.305797623941379,"y":5.4779965964899695},"nextControl":{"x":6.305797623941379,"y":5.4779965964899695},"holonomicAngle":-32.7352262721076,"isReversal":true,"velOverride":null,"isLocked":false},{"anchorPoint":{"x":7.1104658035810795,"y":4.88181234275716},"prevControl":{"x":6.946452345425207,"y":5.007234398994004},"nextControl":null,"holonomicAngle":-21.801409486351904,"isReversal":false,"velOverride":null,"isLocked":false}]}
+{
+    "waypoints": [
+        {
+            "anchorPoint": {
+                "x": 6.458333333333333,
+                "y": 5.2515624999999995
+            },
+            "prevControl": null,
+            "nextControl": {
+                "x": 5.833333333333333,
+                "y": 5.782812499999999
+            },
+            "holonomicAngle": -32.00538320808357,
+            "isReversal": false,
+            "velOverride": null,
+            "isLocked": false
+        },
+        {
+            "anchorPoint": {
+                "x": 4.927083333333333,
+                "y": 6.329687499999999
+            },
+            "prevControl": {
+                "x": 5.723958333333333,
+                "y": 5.845312499999999
+            },
+            "nextControl": {
+                "x": 5.723958333333333,
+                "y": 5.845312499999999
+            },
+            "holonomicAngle": -32.7352262721076,
+            "isReversal": true,
+            "velOverride": null,
+            "isLocked": false
+        },
+        {
+            "anchorPoint": {
+                "x": 7.130208333333333,
+                "y": 4.8765624999999995
+            },
+            "prevControl": {
+                "x": 7.083333333333333,
+                "y": 4.9859374999999995
+            },
+            "nextControl": null,
+            "holonomicAngle": -21.801409486351904,
+            "isReversal": false,
+            "velOverride": null,
+            "isLocked": false
+        }
+    ]
+}

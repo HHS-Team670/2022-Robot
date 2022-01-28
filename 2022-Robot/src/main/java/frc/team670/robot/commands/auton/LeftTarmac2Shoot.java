@@ -19,11 +19,10 @@ import frc.team670.robot.subsystems.DriveBase;
 public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory, trajectory2;
+    private Trajectory trajectory;
 
     public LeftTarmac2Shoot(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("LeftTarmac2ShootPt1", 1.0, 0.5);
-        trajectory2 = PathPlanner.loadPath("LeftTarmac2ShootPt2", 1.0, 0.5);
+        trajectory = PathPlanner.loadPath("LeftTarmac2Shoot", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -33,9 +32,7 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             //drive forward
-            getTrajectoryFollowerCommand(trajectory, driveBase),
             //intake
-            //drive back
             getTrajectoryFollowerCommand(trajectory, driveBase)
             //shoot 2 balls
         );
