@@ -25,7 +25,6 @@ public class ExtendClimber extends ClimberBaseCommand {
   public void initialize() {
     super.initialize();
     telescopingClimber.climb(telescopingClimber.MAX_EXTENDING_HEIGHT_CM);
-    climber.oblique.climb(climber.oblique.MAX_EXTENDING_HEIGHT_CM);
   }
 
   // Returns true when the command should end.
