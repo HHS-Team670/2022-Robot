@@ -78,10 +78,10 @@ public class Shooter extends MustangSubsystemBase {
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
 
-    { 0, 0},  // 10.9 ft  2125 rpm 
-    { 0, 0 }, // 15 ft  2275 rpm 
-    { 0, 0 }, // 24 ft 2575 rpm 
-    { 0, 0 } // 28.5 ft 2725 rpm 
+    { 0, 0},  
+    { 0, 0 }, 
+    { 0, 0 },
+    { 0, 0 } 
 
   };
 
@@ -96,17 +96,17 @@ public class Shooter extends MustangSubsystemBase {
   // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
 
    private static final double[] measuredDistancesMeters = {
-     0,  // 10.9 ft  2125 rpm 
-     0, // 15 ft  2275 rpm 
-     0, // 24 ft 2575 rpm
      0, 
-     0,// trench (28-29ft)
+     0, 
+     0,
+     0, 
+     0,
   };
 
    private static final double[] measuredRPMs = {
-     0,  // 10.9 ft  2125 rpm 
-     0, // 15 ft  2275 rpm 
-     0, // 24 ft 2575 rpm 
+     0,  
+     0,  
+     0, 
      0, 
      0
    };
