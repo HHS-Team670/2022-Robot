@@ -78,10 +78,10 @@ public class Shooter extends MustangSubsystemBase {
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
 
-    { 3.32232, 2125},  // 10.9 ft  2125 rpm 
-    { 4.572,  2275 }, // 15 ft  2275 rpm 
-    { 7.3152, 2575 }, // 24 ft 2575 rpm 
-    { 8.6868, 2725 } // 28.5 ft 2725 rpm 
+    { 0, 0},  // 10.9 ft  2125 rpm 
+    { 0, 0 }, // 15 ft  2275 rpm 
+    { 0, 0 }, // 24 ft 2575 rpm 
+    { 0, 0 } // 28.5 ft 2725 rpm 
 
   };
 
@@ -104,11 +104,11 @@ public class Shooter extends MustangSubsystemBase {
   };
 
    private static final double[] measuredRPMs = {
-     2125,  // 10.9 ft  2125 rpm 
-     2275, // 15 ft  2275 rpm 
-     2575, // 24 ft 2575 rpm 
-     2800, 
-     3100
+     0,  // 10.9 ft  2125 rpm 
+     0, // 15 ft  2275 rpm 
+     0, // 24 ft 2575 rpm 
+     0, 
+     0
    };
 
   private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
