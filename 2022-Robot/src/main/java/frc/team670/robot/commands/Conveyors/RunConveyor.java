@@ -14,11 +14,11 @@ public class RunConveyor extends InstantCommand implements MustangCommand
     
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean intaking, shooting;
-    private double c1Speed, c2Speed;
+    
 
 
 
-    public RunConveyor(Conveyors conveyors, boolean intaking, boolean shooting, double c1Speed,double c2Speed)
+    public RunConveyor(Conveyors conveyors, boolean intaking, boolean shooting)
     {
         this.conveyors = conveyors;
         addRequirements(conveyors);
@@ -26,15 +26,14 @@ public class RunConveyor extends InstantCommand implements MustangCommand
         healthReqs.put(conveyors, HealthState.YELLOW);
         this.intaking = intaking;
         this.shooting = shooting;
-        this.c1Speed = c1Speed;
-        this.c2Speed = c2Speed;
+
     }
     
     public void initialize()
     {
-        conveyors.setSpeed(c1Speed, c2Speed);
-        conveyors.runIntakeConveyor(intaking);
-        conveyors.runShooterConveyor(shooting);
+        
+        conveyors.runConveyors(intaking,shooting);
+        
     }
 
 
