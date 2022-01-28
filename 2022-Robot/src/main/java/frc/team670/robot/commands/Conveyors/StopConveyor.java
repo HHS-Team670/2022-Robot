@@ -9,12 +9,12 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Conveyors;
 
-public class StopConveyors extends InstantCommand implements MustangCommand
+public class StopConveyor extends InstantCommand implements MustangCommand
 {
     private Conveyors conveyors;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StopConveyors(Conveyors conveyors)
+    public StopConveyor(Conveyors conveyors)
     {
         this.conveyors=conveyors;
         addRequirements(conveyors);
