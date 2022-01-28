@@ -543,22 +543,4 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
-  @Override
-  public void resetOdometry(frc.team670.mustanglib.subsystems.drivebase.Pose2d pose) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void resetOdometry(frc.team670.mustanglib.subsystems.drivebase.Pose2d pose) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void resetOdometry(frc.team670.mustanglib.subsystems.drivebase.Pose2d pose) {
-    // TODO Auto-generated method stub
-    
-  }
-
 }
