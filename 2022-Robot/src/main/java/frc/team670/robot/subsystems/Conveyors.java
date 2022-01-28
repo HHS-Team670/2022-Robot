@@ -31,30 +31,22 @@ public class Conveyors extends MustangSubsystemBase
  
     // ACTIONS
 
-    public void runConveyors(boolean intaking,boolean shooting)
-    {
-        
-        intakeConveyor.run(intaking||shooting);
-        shooterConveyor.run(intaking||shooting);
-        if(shooting||!intaking)
-        {
-            
-            if(!intaking)
-            {
-                status = 3;
-                Logger.consoleLog("Conveyor State: Outtaking");
-            }else 
-            {
-                status = 2;
-                Logger.consoleLog("Conveyor State: Shooting");
-            }
-        }else
-        {
+    public void runIntakeConveyor (boolean intaking) {
+        intakeConveyor.run(intaking);
+        if (intaking) {
             status = 1;
-            Logger.consoleLog("Conveyor State: Intaking");
         }
-        
-        
+
+        else {
+            status = 2;
+        }
+    }
+
+    public void runShooterConveyor (boolean shooting) {
+        shooterConveyor.run(shooting);
+        if (shooting) {
+            status = 3;
+        }
     }
     private void changeState()
     {
