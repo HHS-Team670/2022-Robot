@@ -11,12 +11,19 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 
-public class BTarmacTriangle extends SequentialCommandGroup implements MustangCommand {
+public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
     public BTarmacTriangle(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
+        //shoot balls
+        trajectory = PathPlanner.loadPath("BTarmacTriangleP1", 1.0, 0.5);
+        // pickup ball
+        trajectory = PathPlanner.loadPath("BTarmacTriangleP2", 1.0, 0.5);
+        //pickup ball
+        trajectory = PathPlanner.loadPath("BTarmacTriangleP3", 1.0, 0.5);
+        // shoot balls
+
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
