@@ -92,16 +92,29 @@ public class Vision extends MustangSubsystemBase{
         if (hasTarget){
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
-            // Get general pose on the field
-
             Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
     }
 
+    public Pose2d genPose(Pose2d currPose)
+    {
+        // Get general pose on the field
+        double[] poseStuff = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
+        return currPose.plus(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
+    }
+
     public double[] poseMath(double d_0, double d_f, double theta)
     {
+        // d_0 is the distance from the start position of the robot to the high hub
+        // d_f is the distance from the current position of the robot to the high hub
+        // theta is the angle from the current position of the robot to the high hub
+        // d_c is the distance from the start position of the robot to the current position (calculated by the Law of Cosines)
+        // gamma is the angle from the start position of the robot to the current position (calculated by the Law of Sines)
+        // x is the x-direction transformation of the current position from the starting position
+        // y is the y-direction transformation of the current position from the starting position
+
         double d_c = Math.sqrt((d_0 * d_0) + (d_f * d_f) - (2 * d_0 * d_f * Math.cos(theta)));
         double gamma = Math.asin((d_f * Math.sin(theta)) / d_c);
         double x = d_c * Math.cos(gamma);
