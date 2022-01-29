@@ -39,10 +39,6 @@ deploy {
     }
 }
 
-// test {
-//     use JUnit()
-// }
-
 test {
    useJUnit()
 }

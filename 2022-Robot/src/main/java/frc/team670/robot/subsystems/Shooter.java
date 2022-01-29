@@ -31,8 +31,7 @@ import frc.team670.robot.constants.RobotConstants;
 
 
 /**
- * Represents a shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
- * stage with SparkMax controllers.
+ * Represents a shooter with 2 NEOs
  * 
  * @author 
  */
@@ -67,11 +66,11 @@ public class Shooter extends MustangSubsystemBase {
   private static final double V_FF = 0.000183;
   private static final double RAMP_RATE = 1.0;
 
-  private double MIN_RPM = 300;
+  private double MIN_RUNNING_RPM = 300;
   private double MAX_RPM_ADJUSTMENT = 400;
   private double INITIAL_DIFF = 0;
 
-  private static double SPEED_ERROR = 200;
+  private static double SPEED_ALLOWED_ERROR = 200;
 
   private static double SHOOTING_CURRENT = 0.2;
 
@@ -168,7 +167,7 @@ public class Shooter extends MustangSubsystemBase {
   public void adjustRPMAdjuster(double diff) {
     if(((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT) || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))){
       this.speedAdjust += diff;
-      if(shooter_mainEncoder.getVelocity() > MIN_RPM){
+      if(shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM){
         run();
       }
 
@@ -179,9 +178,9 @@ public class Shooter extends MustangSubsystemBase {
    * 
    * @param distance In meters, the distance we are shooting at
    * @return The predicted "best fit" RPM for the motors to spin at based on the distance,
-   * calculated from the linear regression
+   * calculated from the linear regression.
    */
-   double getTargetRPMForDistance(double distance){
+   double getTargetRPMForLowGoal(double distance){
     double predictedVal = speedAtDistance.predict(distance);
     double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
     SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
@@ -196,7 +195,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, speedError); // TODO: margin of error
+    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // TODO: margin of error
   }
 
   public void test() {
@@ -216,7 +215,7 @@ public class Shooter extends MustangSubsystemBase {
   public void mustangPeriodic() {
     double distance = vision.getDistanceToTargetM();
     if (distance != RobotConstants.VISION_ERROR_CODE) {
-      double targetRPM = getTargetRPMForDistance(distance);
+      double targetRPM = getTargetRPMForLowGoal(distance);
       setTargetRPM(targetRPM);
       run();
     }
@@ -231,7 +230,7 @@ public class Shooter extends MustangSubsystemBase {
   *Sets the RPM
   */
   public void setRPMForDistance(double distance) {
-    double target = getTargetRPMForDistance(distance);
+    double target = getTargetRPMForLowGoal(distance);
     setTargetRPM(target);
   }
 
