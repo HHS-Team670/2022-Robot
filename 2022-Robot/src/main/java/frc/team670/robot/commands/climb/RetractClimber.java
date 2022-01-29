@@ -21,7 +21,7 @@ public class RetractClimber extends ClimberBaseCommand {
   @Override
   public void initialize() {
     super.initialize();
-    telescopingClimber.climb(telescopingClimber.MOTOR_ROTATIONS_AT_RETRACTED);
+    telescopingClimber.climb(0);
   }
 
 

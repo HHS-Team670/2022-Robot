@@ -39,7 +39,7 @@ public class TelescopingClimber {
 
   private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
   private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
-  private static final double HALF_CM = 0 * ROTATIONS_PER_CM;
+  private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
   private int SMARTMOTION_SLOT = 0;
 
