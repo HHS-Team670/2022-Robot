@@ -6,10 +6,8 @@ import org.photonvision.PhotonUtils;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -30,7 +28,7 @@ public class Vision extends MustangSubsystemBase{
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
 
     PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
-    Pose2d pose;
+    public Pose2d pose, transformedPose, targetPose;
 
     double distance;
     double angle;
@@ -42,6 +40,8 @@ public class Vision extends MustangSubsystemBase{
     public Vision(String cam)
     {
         pose = new Pose2d();
+        transformedPose = pose;
+        targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
     }
 
     // These are for sending vision health to dashboard
@@ -55,23 +55,28 @@ public class Vision extends MustangSubsystemBase{
      * 
      * @return distance, in inches, from the camera to the target
      */
-    private void processImage(boolean isBall) {
+    private void processImage(Boolean isBall) {
+        if (isBall == null)
+        {
+            isBall = false;
+        }
+
         try{
             var result = camera.getLatestResult();
 
             if(result.hasTargets()){
                 hasTarget = true;
                 distance = PhotonUtils.calculateDistanceToTargetMeters(
-                        RobotConstants.BALL_CAMERA_HEIGHT,
-                        isBall ? FieldConstants.BALL_CENTER_HEIGHT : FieldConstants.VISION_TARGET_CENTER_HEIGHT,
-                        Units.degreesToRadians(RobotConstants.BALL_CAMERA_ANGLE),
+                        RobotConstants.CAMERA_HEIGHT_METERS,
+                        FieldConstants.HEIGHT_OF_VISION_TARGET,
+                        Units.degreesToRadians(RobotConstants.CAMERA_ANGLE_DEGREES),
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
                 angle = camera.getLatestResult().getTargets().get(0).getYaw();
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
+                updatePose();
             } else {
                 hasTarget = false;
             }
-            updatePose();
             
         } catch(Exception e){
             // MustangNotifications.reportWarning(e.toString());
@@ -95,27 +100,31 @@ public class Vision extends MustangSubsystemBase{
         return hasTarget ? angle : RobotConstants.VISION_ERROR_CODE;
     }
 
-    public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
+    public VisionMeasurement getVisionMeasurements(double heading, Pose2d cameraOffset) {
         if (hasTarget){
-            updatePose();
-            Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
-            Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, this.pose, Rotation2d.fromDegrees(heading));
-            Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
+            Pose2d targetOffset = cameraOffset.transformBy(getCamToTargetTrans(heading).inverse());
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
     }
 
-    public void updatePose()
+    public Transform2d getCamToTargetTrans(double heading)
+    {
+        Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(this.distance, Rotation2d.fromDegrees(this.angle));
+        Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
+        return camToTargetTrans;
+    }
+
+    public void updatePose(double heading)
     {
         // Get general pose on the field
         double[] poseStuff = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
-        pose = pose.plus(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
+        this.pose = pose.transformBy(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
+        this.transformedPose = pose.transformBy(getCamToTargetTrans(heading).inverse());
     }
 
     public Pose2d getPose()
     {
-        updatePose();
         return pose;
     }
 

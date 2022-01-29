@@ -7,6 +7,8 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConst
 import frc.team670.mustanglib.constants.RobotConstantsBase;
 
 public class RobotConstants extends RobotConstantsBase {
+        public static final double CAMERA_HEIGHT_METERS = 1; // TODO: Change this when we get the robot
+        public static final double CAMERA_ANGLE_DEGREES = 45;
 
     /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
