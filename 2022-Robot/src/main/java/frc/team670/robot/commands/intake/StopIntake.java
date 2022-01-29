@@ -16,18 +16,24 @@ public class StopIntake extends InstantCommand implements MustangCommand {
 
 	Map<MustangSubsystemBase, HealthState> healthReqs;
 	private Intake intake;
-
+/*
+prepares everything to stop the intake
+*/
 	public StopIntake (Intake intake) {
 		this.intake = intake;
 		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
 		healthReqs.put(intake, HealthState.YELLOW);
 		addRequirements(intake);
 	}
-	
+	/*
+	stops the intake
+	*/
 	public void initialize() {
 		intake.stop();
 	}
-
+/*
+returns the health state
+*/
 	public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
 		return healthReqs;
 	}

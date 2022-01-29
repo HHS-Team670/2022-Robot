@@ -32,11 +32,15 @@ public class RunIntake extends CommandBase implements MustangCommand {
 		addRequirements(intake);
 		countWasJammed = 0;
 	}
-
+/*
+starts to roll the intake
+*/
 	public void initialize() {
 		intake.roll(reversed);
 	}
-
+/*
+If it's jammed it rolls the other way to unjam it, otherwise it rolls normally
+*/
 	public void execute() {
 		SmartDashboard.putNumber("count jammed", countWasJammed);
 		if (intake.isJammed()) {
@@ -49,7 +53,9 @@ public class RunIntake extends CommandBase implements MustangCommand {
 			intake.roll(reversed);
 		}
 	}
-
+/* 
+returns the health state
+*/
 	public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
 		return healthReqs;
 	}

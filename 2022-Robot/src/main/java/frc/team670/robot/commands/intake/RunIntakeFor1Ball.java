@@ -19,7 +19,9 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
     
     private Intake intake;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-
+/*
+sets up everything
+*/
     public RunIntakeFor1Ball(Intake i) {
         this.intake = i;
         addRequirements(i);
@@ -32,7 +34,9 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
                 new StopIntake(intake)
             );
     }
-    
+  /*
+  returns health state
+  */  
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;

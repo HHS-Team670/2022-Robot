@@ -17,7 +17,9 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
 
     /*
      * @param isDeploy true if it is to deploy, false if it is to pick up
-     */
+     * @param intake the intake 
+     Intakes the ball
+    */
     public DeployIntake(boolean isDeploy, Intake intake) {
         this.isDeploy = isDeploy;
         this.intake = intake;
@@ -25,13 +27,19 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
         healthReqs.put(intake, HealthState.GREEN);
         addRequirements(intake);
     }
+/*
 
+*/
     public void initialize() {}
-
+/*
+runs the intake
+*/
     public void execute(){
         intake.deploy(isDeploy);
     }
-
+/*
+returns the health state of the intake
+*/
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;

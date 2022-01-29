@@ -27,11 +27,15 @@ public class ToggleIntake extends InstantCommand implements MustangCommand {
         healthReqs.put(intake, HealthState.GREEN);
         addRequirements(intake);
     }
-
+/*
+toggles the intake, if it's on it turns it off, if it's off it turns it on
+*/
     public void execute(){
         intake.deploy(!intake.isDeployed());
     }
-
+/*
+returns the health state
+*/
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
