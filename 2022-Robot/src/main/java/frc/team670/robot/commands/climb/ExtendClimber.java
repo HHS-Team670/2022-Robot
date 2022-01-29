@@ -20,14 +20,13 @@ public class ExtendClimber extends ClimberBaseCommand {
     super(climber, straight);
   }
 
-  // Called when the command is initially scheduled.
+
   @Override
   public void initialize() {
     super.initialize();
     telescopingClimber.climb(telescopingClimber.MAX_EXTENDING_HEIGHT_CM);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return telescopingClimber.isAtTarget();

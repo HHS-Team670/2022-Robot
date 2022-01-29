@@ -23,7 +23,6 @@ public abstract class ClimberBaseCommand extends CommandBase implements MustangC
         healthReqs.put(climber, HealthState.GREEN);
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         climber.stop();

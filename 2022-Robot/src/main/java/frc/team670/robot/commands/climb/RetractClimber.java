@@ -19,14 +19,13 @@ public class RetractClimber extends ClimberBaseCommand {
     super(climber, true);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     super.initialize();
     telescopingClimber.climb(telescopingClimber.MOTOR_ROTATIONS_AT_RETRACTED);
   }
 
-  // Returns true when the command should end.
+
   @Override
   public boolean isFinished() {
     return telescopingClimber.isAtTarget();

@@ -46,7 +46,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     private ArrayList<SparkMAXLite> motors;
     
     private boolean onBar;
-    private double[] targets;
+    private ArrayList<Double> targets;
 
     private int currentAtHookedCount;
 
@@ -97,7 +97,8 @@ public class TelescopingClimber extends MustangSubsystemBase {
         setDefaultPID();
 
         onBar = false;
-        targets = new double[]{0.0};
+        targets = new ArrayList<Double>();
+        targets.add(0.0);
         currentAtHookedCount = 0;
         SmartDashboard.putNumber("Climber power", 0.0);
         SmartDashboard.putBoolean("Climber deploy", false);
@@ -164,9 +165,9 @@ public class TelescopingClimber extends MustangSubsystemBase {
     public void climb(double heightCM) {
         double rotations = heightCM * ROTATIONS_PER_CM;
         SmartDashboard.putNumber("Climber rotation target", rotations);
-        for (int i = 0; i < targets.length; i++)
+        for (int i = 0; i < targets.size(); i++)
         {
-            targets[i] = rotations;
+            targets.set(i, rotations);
         }
         for (CANPIDController controller : controllers)
         {
@@ -187,7 +188,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     }
 
     public boolean isAtTarget() {
-        return (Math.abs(encoders.get(0).getPosition() - targets[0]) < HALF_CM);
+        return (Math.abs(encoders.get(0).getPosition() - targets.get(0)) < HALF_CM);
     }
 
     /*protected double getUnadjustedAvgMotorRotations() {

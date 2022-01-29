@@ -33,8 +33,7 @@ public class Climber extends MustangSubsystemBase {
         oblique = new TelescopingClimber(RobotMap.OBLIQUE_CLIMBER_MOTOR, OBLIQUE_kP, OBLIQUE_kI, OBLIQUE_kD, OBLIQUE_kFF, OBLIQUE_MOTOR_ROTATIONS_AT_RETRACTED, OBLIQUE_MOTOR_ROTATIONS_AT_MAX_EXTENSION, 66.24);
     }
 
-    public void stop()
-    {
+    public void stop() {
         straight.setPower(0.0);
         oblique.setPower(0.0);
     }
@@ -48,6 +47,5 @@ public class Climber extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-        System.out.println("Sanatan Was Here");
     }
 }
