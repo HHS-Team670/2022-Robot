@@ -122,7 +122,7 @@ public class Intake extends MustangSubsystemBase {
 
   public void stop() {
     roller.stopMotor();
-    retractIntake();  
+    retractIntake();  // TODO: Do we need to do this here?
   }
 
   public void retractIntake () {
