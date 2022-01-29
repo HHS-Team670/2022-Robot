@@ -10,13 +10,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
  
-/*
-Note: Conveyor states are represented by the following numbers
-Off - 0
-Intaking - 1
-Outtaking - 2
-Shooting - 3
-*/
+//Conveyor Status
 enum Status
 {
     OFF,INTAKING,OUTTAKING,SHOOTING
@@ -35,6 +29,7 @@ public class Conveyors extends MustangSubsystemBase
  
     // ACTIONS
 
+    //Runs the conveyor the params are used to decide iuf you are intaking shooting or outtaking.
     public void runConveyor(boolean intaking, boolean shooting)
     {
         if(intaking)
@@ -48,28 +43,33 @@ public class Conveyors extends MustangSubsystemBase
             outtakeConveyor();
         }
     }
+    //Helper Method to runConveyor
     private void intakeConveyor () {
         intakeConveyor.run(true);
         shooterConveyor.run(true);
         status = Status.INTAKING;
+        Logger.consoleLog("Conveyor Status: INTAKING");
         
 
 
     }
-
+    //Helper method to runConveyor
     private void shootConveyor () {
         intakeConveyor.run(true);
         shooterConveyor.run(true);
         status = Status.SHOOTING;
+        Logger.consoleLog("Conveyor States: SHOOTING");
         
     }
-
+    //Helper method to runConveyor
     private void outtakeConveyor()
     {
         intakeConveyor.run(false);
         shooterConveyor.run(false);
         status = Status.OUTTAKING;
+        Logger.consoleLog("Conveyor States: OUTTAKING");
     }
+    //Uses the current state of the Conveyor to decide what parts of the conveyor should shut down
     private void changeState()
     {
         switch(status)
@@ -111,7 +111,7 @@ public class Conveyors extends MustangSubsystemBase
 
 
     }
- 
+    //Stops the conveyors
     public void stopAll()
     {
         status = Status.OFF;
@@ -119,12 +119,14 @@ public class Conveyors extends MustangSubsystemBase
         shooterConveyor.stop();
     }
 
+    //Sets the speed for the conveyors
     public void setSpeed(double intakeConveyorSpeed, double shooterConveyorSpeed) {
         intakeConveyor.setSpeed(intakeConveyorSpeed);
         shooterConveyor.setSpeed(shooterConveyorSpeed);
     }
     //DataCollection
  
+    //Returns the total number of balls in the conveyor subsystem
     public int ballCount()
     {
         return intakeConveyor.ballCount + shooterConveyor.ballCount;
@@ -146,7 +148,6 @@ public class Conveyors extends MustangSubsystemBase
     public void mustangPeriodic() {
         checkHealth();
         changeState();
-       
     }
  
  
@@ -186,7 +187,8 @@ class Conveyor extends MustangSubsystemBase
     }
  
  
-    public boolean running()
+    //returns if the conveyor is full
+    public boolean isFull()
     {
         if(beamBreak.isTriggered())
         {
@@ -194,9 +196,8 @@ class Conveyor extends MustangSubsystemBase
             
             return true;
         }
- 
+
         ballCount = 0;
-        
  
         return false;
        
@@ -205,9 +206,10 @@ class Conveyor extends MustangSubsystemBase
  
  
     //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
-    public void run(boolean intaking)
+    // runs the conveyor in the direction specified by the parameter
+    public void run(boolean notOuttaking)
     {
-        if (!intaking)
+        if (!notOuttaking)
         {
             conveyorSpeed = absConveyorSpeed * -1;
         } else
@@ -217,12 +219,14 @@ class Conveyor extends MustangSubsystemBase
        
         roller.set(conveyorSpeed);
     }
- 
+
+    //Stops the conveyor
     public void stop()
     {
         roller.stopMotor();;
     }
  
+    //Cahanges the speed of the conveyor
     public void setSpeed(double speed)
     {
         conveyorSpeed = speed;
@@ -246,7 +250,7 @@ class Conveyor extends MustangSubsystemBase
     @Override
     public void mustangPeriodic()
     {
-        running();
+        isFull();
     }
  
 }
