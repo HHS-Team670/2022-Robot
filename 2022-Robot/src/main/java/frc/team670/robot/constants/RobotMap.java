@@ -46,7 +46,8 @@ public class RobotMap {
   public static final int UPDRAW_SPINNER = 10;
 
   // Climber
-  public static final int CLIMBER_MOTOR = 14;
+  public static final int STRAIGHT_CLIMBER_MOTOR = -1; // TODO: Get the proper numbers
+  public static final int OBLIQUE_CLIMBER_MOTOR = -1;
 
   // PNEUMATICS
   public static final int PCMODULE = 2; // PCM CAN ID
