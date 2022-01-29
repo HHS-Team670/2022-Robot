@@ -19,8 +19,7 @@ public class DeployIntake extends CommandBase implements MustangCommand {
    * @param intake the intake 
    Intakes the ball
   */
-  public DeployIntake(boolean isDeploy, Intake intake) {
-    this.isDeploy = isDeploy;
+  public DeployIntake(Intake intake) {
     this.intake = intake;
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(intake, HealthState.GREEN);
