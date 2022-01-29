@@ -52,11 +52,11 @@ public class TelescopingClimber {
 
   private int currentAtHookedCount;
 
-  public float motorRotationsAtRetracted = 0;
-  public float motorRotationsAtMaxExtension = 0;
+  public float motorRotationsAtRetracted;
+  public float motorRotationsAtMaxExtension;
 
-  private float softLimitAtRetracted = motorRotationsAtRetracted + .5f;
-  private float softLimitAtExtension = motorRotationsAtMaxExtension - 10;
+  private float softLimitAtRetracted;
+  private float softLimitAtExtension;
 
   public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
