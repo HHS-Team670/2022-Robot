@@ -8,7 +8,6 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 
 /**
  * Sets the shooter's target RPM
@@ -32,7 +31,6 @@ public class SetRPMTarget extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
-        Logger.consoleLog("Setting shooter RPM to %s", target);
         shooter.setTargetRPM(target);
     }
 

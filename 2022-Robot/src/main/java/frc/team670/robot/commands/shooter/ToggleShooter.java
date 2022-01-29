@@ -17,8 +17,6 @@ public class ToggleShooter extends InstantCommand implements MustangCommand {
     private Shooter shooter;
     private Vision vision;
 
-    private double targetRPM;
-
     public ToggleShooter(Shooter shooter, Vision vision) {
         this.shooter = shooter;
         this.vision = vision;
@@ -33,9 +31,7 @@ public class ToggleShooter extends InstantCommand implements MustangCommand {
                 shooter.setRPMForDistance(distanceToTarget);
             }
             else{
-                targetRPM = shooter.getDefaultRPM();
-                Logger.consoleLog("Shooter RPM should be %s", targetRPM);
-                shooter.setTargetRPM(targetRPM);        
+                shooter.setTargetRPM(shooter.getDefaultRPM());        
             }
             shooter.run();
         } else {
