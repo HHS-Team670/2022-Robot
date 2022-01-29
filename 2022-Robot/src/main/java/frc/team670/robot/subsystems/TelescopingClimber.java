@@ -170,7 +170,7 @@ public class TelescopingClimber {
     return (Math.abs(leadEncoder.getPosition() - target) < HALF_CM);
   }
 
-  protected double getUnadjustedMotorRotations(int mtr) {
+  protected double getUnadjustedMotorRotations() {
     return this.leadEncoder.getPosition();
   }
 
@@ -180,7 +180,7 @@ public class TelescopingClimber {
 
   public void test() {
     setPower(SmartDashboard.getNumber("Climber power", 0.0));
-    SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations(0));
+    SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
   }
 
 }
