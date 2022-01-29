@@ -10,7 +10,7 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 
 /*
- * @author Khicken
+ * @author Khicken, Sanatan
 */
 public class Intake extends MustangSubsystemBase {
 
