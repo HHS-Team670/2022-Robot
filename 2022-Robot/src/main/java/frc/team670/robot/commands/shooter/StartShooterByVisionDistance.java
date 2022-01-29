@@ -30,7 +30,7 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     @Override
     public void initialize() {
-        if(vision.getHealth(true) == HealthState.GREEN){
+        if(vision.getHealth(true) == HealthState.GREEN) {
             double distanceToTarget = vision.getDistanceToTargetM();
             shooter.setRPMForDistance(distanceToTarget);
         }
@@ -39,7 +39,6 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
             Logger.consoleLog("Shooter RPM should be %s", targetRPM);
             shooter.setTargetRPM(targetRPM);
         }
-        shooter.setRampRate(true);
         shooter.run();
     }
 

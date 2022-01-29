@@ -30,15 +30,13 @@ public class ToggleShooter extends InstantCommand implements MustangCommand {
         if (MathUtils.doublesEqual(0.0, shooter.getVelocity(), 10)) {
             if(vision.getHealth(true) == HealthState.GREEN){
                 double distanceToTarget = vision.getDistanceToTargetM();
-                Logger.consoleLog("Shooter distance to target %s", distanceToTarget);
-                targetRPM = shooter.getTargetRPMForDistance(distanceToTarget);
+                shooter.setRPMForDistance(distanceToTarget);
             }
             else{
                 targetRPM = shooter.getDefaultRPM();
+                Logger.consoleLog("Shooter RPM should be %s", targetRPM);
+                shooter.setTargetRPM(targetRPM);        
             }
-            Logger.consoleLog("Shooter Stage 2 RPM should be %s", targetRPM);
-            shooter.setTargetRPM(targetRPM);
-            shooter.setRampRate(true);
             shooter.run();
         } else {
             shooter.stop();

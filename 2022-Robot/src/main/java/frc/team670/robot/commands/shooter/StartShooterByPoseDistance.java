@@ -29,9 +29,6 @@ public class StartShooterByPoseDistance extends CommandBase implements MustangCo
         double distanceToTarget = SmartDashboard.getNumber("Vision X", 5);
         //the new combined method
         shooter.setRPMForDistance(distanceToTarget);
-
-        shooter.setRampRate(true);
-
         shooter.run();
     }
 

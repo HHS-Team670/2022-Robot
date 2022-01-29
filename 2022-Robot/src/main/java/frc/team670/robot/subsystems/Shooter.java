@@ -146,6 +146,12 @@ public class Shooter extends MustangSubsystemBase {
 
   public void run() {
     SmartDashboard.putNumber("Stage 2 speed", targetRPM + speedAdjust);
+    if(getVelocity()<10) {
+      setRampRate(true);
+    }else{
+      setRampRate(false);
+    }
+
     shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
   }
 
@@ -235,6 +241,11 @@ public class Shooter extends MustangSubsystemBase {
         setTargetRPM(targetRPM);
         run();
       }
+
+      if(Math.abs(getVelocity()-targetRPM)<10) {
+        setRampRate(false);
+      }
+      
     //}   
     // SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
