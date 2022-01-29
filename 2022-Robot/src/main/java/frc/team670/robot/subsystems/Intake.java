@@ -37,6 +37,7 @@ public class Intake extends MustangSubsystemBase {
   private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
   private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
   private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
+  private static final double TICKS_PER_ROTATION_DEPLOYER = 1.0;
 
   private int SMARTMOTION_SLOT = 0;
   
