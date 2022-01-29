@@ -1,153 +1,259 @@
 package frc.team670.robot.subsystems;
-
+ 
 import com.revrobotics.REVLibError;
-
+ 
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import java.lang.AutoCloseable;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-
-
-import frc.team670.robot.constants.RobotMap;
-
-public class Conveyors extends MustangSubsystemBase 
+ 
+//Conveyor Status
+enum Status
 {
-    public Conveyor c1, c2;
-
-
+    OFF,INTAKING,OUTTAKING,SHOOTING
+}
+public class Conveyors extends MustangSubsystemBase
+{
+    public Conveyor intakeConveyor, shooterConveyor;
+    private Status status = Status.OFF; 
+ 
+ 
     public Conveyors(){
-        // c1 = new Conveyor();
-        // c2 = new Conveyor();
+        intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, 0); // 0 is the ID for the beamBreak. I doubt this will be final, so remember to change it
+        shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, 1);  // 1 is the ID for the beamBreak. I doubt this will be final, so remember to change it
+ 
     }
-    public void runConveyors(boolean intaking)
+ 
+    // ACTIONS
+
+    //Runs the conveyor the params are used to decide iuf you are intaking shooting or outtaking.
+    public void runConveyor(boolean intaking, boolean shooting)
     {
-        c1.run(intaking);
-        c2.run(intaking);
+        if(intaking)
+        {
+            intakeConveyor();
+        }else if (shooting)
+        {
+            shootConveyor();
+        }else 
+        {
+            outtakeConveyor();
+        }
     }
+    //Helper Method to runConveyor
+    private void intakeConveyor () {
+        intakeConveyor.run(true);
+        shooterConveyor.run(true);
+        status = Status.INTAKING;
+        Logger.consoleLog("Conveyor Status: INTAKING");
+        
+
+
+    }
+    //Helper method to runConveyor
+    private void shootConveyor () {
+        intakeConveyor.run(true);
+        shooterConveyor.run(true);
+        status = Status.SHOOTING;
+        Logger.consoleLog("Conveyor States: SHOOTING");
+        
+    }
+    //Helper method to runConveyor
+    private void outtakeConveyor()
+    {
+        intakeConveyor.run(false);
+        shooterConveyor.run(false);
+        status = Status.OUTTAKING;
+        Logger.consoleLog("Conveyor States: OUTTAKING");
+    }
+    //Uses the current state of the Conveyor to decide what parts of the conveyor should shut down
+    private void changeState()
+    {
+        switch(status)
+        {
+            case INTAKING:
+                if(shooterConveyor.ballCount == 1)
+                {
+                    shooterConveyor.stop();
+                    if(intakeConveyor.ballCount == 1)
+                    {
+                        intakeConveyor.stop();
+                    }
+                }
+                break;
+            case OUTTAKING:
+                if(shooterConveyor.ballCount==0)
+                {
+                    shooterConveyor.stop();
+                }
+                if(ballCount()==0)
+                {
+                    stopAll();
+                }
+                break;
+            case SHOOTING:
+                if(intakeConveyor.ballCount==0)
+                {
+                    intakeConveyor.stop();
+                }
+                if(ballCount()==0)
+                {
+                    stopAll();
+                }
+                break;
+            case OFF:
+                break;
+        }
+        
+
+
+    }
+    //Stops the conveyors
     public void stopAll()
     {
-        c1.stop();
-        c2.stop();
+        status = Status.OFF;
+        intakeConveyor.stop();
+        shooterConveyor.stop();
     }
+
+    //Sets the speed for the conveyors
+    public void setSpeed(double intakeConveyorSpeed, double shooterConveyorSpeed) {
+        intakeConveyor.setSpeed(intakeConveyorSpeed);
+        shooterConveyor.setSpeed(shooterConveyorSpeed);
+    }
+    //DataCollection
+ 
+    //Returns the total number of balls in the conveyor subsystem
+    public int ballCount()
+    {
+        return intakeConveyor.ballCount + shooterConveyor.ballCount;
+    }
+ 
+ 
+    //MUSTANGESUBSYSTEM
+ 
     @Override
     public HealthState checkHealth() {
-        if(c1.checkHealth()==HealthState.RED||c2.checkHealth()==HealthState.RED)
+        if(intakeConveyor.checkHealth()==HealthState.RED||shooterConveyor.checkHealth()==HealthState.RED)
         {
             return HealthState.RED;
         }
         return HealthState.GREEN;
     }
+ 
     @Override
     public void mustangPeriodic() {
         checkHealth();
-        
+        changeState();
     }
-
-
-
+ 
+ 
+ 
+ 
+ 
 }
-
-
-
+ 
+ 
+ 
 class Conveyor extends MustangSubsystemBase
 {
-
+ 
     private SparkMAXLite roller;
-
-    private double conveyorSpeed;
-
-    private boolean conveyorState = false;
-    
-
+ 
+    private double conveyorSpeed=1.0;
+ 
+ 
+    public int ballCount = 0;
+   
+ 
     BeamBreak beamBreak;
-
-    public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
+ 
+    double absConveyorSpeed=1.0;
+ 
+    public Conveyor(int motorID, int beamBreakID)
     {
-        
-        roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
-
-        conveyorSpeed = speed;
-
-        beamBreak = new BeamBreak(0);
-
+       
+        roller=SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
+ 
+        conveyorSpeed =0;
+ 
+        beamBreak = new BeamBreak(beamBreakID);
+ 
+        absConveyorSpeed = Math.abs(conveyorSpeed);
+ 
     }
-
-    //SENSOR SPECIAL FUNCTIONS
-    
-
-    // public void updateConveyorStates () 
-    // {
-    //     for (int i = 0; i < conveyorStates.length)
-    // }
-
-    public boolean active() 
+ 
+ 
+    //returns if the conveyor is full
+    public boolean isFull()
     {
         if(beamBreak.isTriggered())
         {
-            conveyorState=true;
-            return conveyorState;
+            ballCount = 1;
+            
+            return true;
         }
-        conveyorState=false;
-        return conveyorState;
-        
+
+        ballCount = 0;
+ 
+        return false;
+       
     }
-
-
-
+ 
+ 
+ 
     //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
-    public void run(boolean intaking) 
+    // runs the conveyor in the direction specified by the parameter
+    public void run(boolean notOuttaking)
     {
-        if (!intaking) 
+        if (!notOuttaking)
         {
-            conveyorSpeed = Math.abs(conveyorSpeed) * -1;
-        } else 
+            conveyorSpeed = absConveyorSpeed * -1;
+        } else
         {
-            conveyorSpeed = Math.abs(conveyorSpeed);
+            conveyorSpeed = absConveyorSpeed;
         }
-        
+       
         roller.set(conveyorSpeed);
     }
 
-    public void disable() 
+    //Stops the conveyor
+    public void stop()
     {
-        roller.disable();
+        roller.stopMotor();;
     }
-
-    public void stop() 
-    {
-        roller.stopMotor();
-    }
-
+ 
+    //Cahanges the speed of the conveyor
     public void setSpeed(double speed)
     {
         conveyorSpeed = speed;
+        Logger.consoleLog("Speed: " + conveyorSpeed);
     }
-
-
+ 
+ 
     @Override
-    public HealthState checkHealth() 
+    public HealthState checkHealth()
     {
-        if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
+        REVLibError rollerError=roller.getLastError();
+        if ( (rollerError != null) && (rollerError != REVLibError.kOk) ) {
             return HealthState.RED;
         }
         
-        
+       
+       
         return HealthState.GREEN;
     }
-
+ 
     @Override
-    public void mustangPeriodic() 
+    public void mustangPeriodic()
     {
-        Logger.consoleLog("Speed: " + conveyorSpeed);
-    } 
-
+        isFull();
+    }
+ 
 }
+ 
+ 
+
