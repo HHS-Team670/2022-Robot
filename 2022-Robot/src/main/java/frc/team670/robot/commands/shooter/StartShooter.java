@@ -28,7 +28,6 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-       shooter.setRampRate(true);
        shooter.run();
        Logger.consoleLog("StartShooter Initialized");
     }
