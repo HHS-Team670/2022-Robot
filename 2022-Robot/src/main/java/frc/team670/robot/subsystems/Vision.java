@@ -73,7 +73,7 @@ public class Vision extends MustangSubsystemBase{
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
                 angle = camera.getLatestResult().getTargets().get(0).getYaw();
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
-                updatePose();
+                updatePose(angle, RobotConstants.cameraOffset);
             } else {
                 hasTarget = false;
             }
@@ -115,12 +115,12 @@ public class Vision extends MustangSubsystemBase{
         return camToTargetTrans;
     }
 
-    public void updatePose(double heading)
+    public void updatePose(double heading, Pose2d cameraOffset)
     {
         // Get general pose on the field
         double[] poseStuff = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
         this.pose = pose.transformBy(new Transform2d(new Translation2d(poseStuff[0], poseStuff[1]), new Rotation2d(poseStuff[0], poseStuff[1])));
-        this.transformedPose = pose.transformBy(getCamToTargetTrans(heading).inverse());
+        this.transformedPose = pose.transformBy(new Transform2d(new Pose2d(), getVisionMeasurements(heading, cameraOffset).pose));
     }
 
     public Pose2d getPose()

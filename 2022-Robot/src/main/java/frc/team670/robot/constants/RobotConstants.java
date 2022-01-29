@@ -5,10 +5,12 @@ package frc.team670.robot.constants;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
+import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
         public static final double CAMERA_HEIGHT_METERS = 1; // TODO: Change this when we get the robot
         public static final double CAMERA_ANGLE_DEGREES = 45;
+        public static final Pose2d cameraOffset = new Pose2d();
 
     /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
