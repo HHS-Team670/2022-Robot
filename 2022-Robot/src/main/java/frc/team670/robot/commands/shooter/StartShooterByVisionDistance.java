@@ -35,9 +35,7 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
             shooter.setRPMForDistance(distanceToTarget);
         }
         else{
-            double targetRPM = shooter.getDefaultRPM();
-            Logger.consoleLog("Shooter RPM should be %s", targetRPM);
-            shooter.setTargetRPM(targetRPM);
+            shooter.setTargetRPM(shooter.getDefaultRPM(););
         }
         shooter.run();
     }

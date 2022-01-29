@@ -69,32 +69,6 @@ public class Shooter extends MustangSubsystemBase {
 
   private static Vision vision;
 
-  private static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> FLYWHEEL_RPM_MAP = new InterpolatingTreeMap<>();
-
-  // The following is for using fancy interpolation based on 254's 2017 code, where we sample 
-  // a ton and build a polynomial regression.
-
-  // Format: {Distance from target in meters, RPM}
-  // Distance currently from bumper
-  private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
-
-    { 0, 0},  
-    { 0, 0 }, 
-    { 0, 0 },
-    { 0, 0 } 
-
-  };
-
-  static {
-    for (double[] pair : FLYWHEEL_RPM_AT_DISTANCE) {
-      FLYWHEEL_RPM_MAP.put(new InterpolatingDouble(pair[0]), new InterpolatingDouble(pair[1]));
-    }
-    DEFAULT_SPEED = FLYWHEEL_RPM_MAP.getInterpolated(new InterpolatingDouble(MAX_SHOT_DISTANCE_METERS)).value;
-  }
-
-  // For now this should be enough: a linear regression for the relationship between distance
-  // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
-
    private static final double[] measuredDistancesMeters = {
      0, 
      0, 
@@ -171,6 +145,7 @@ public class Shooter extends MustangSubsystemBase {
   public void setTargetRPM(double targetRPM) {
     this.targetRPM = targetRPM;
   }
+
 
   public double getDefaultRPM(){
     return DEFAULT_SPEED;
@@ -254,9 +229,7 @@ public class Shooter extends MustangSubsystemBase {
   *Sets the RPM
   */
   public void setRPMForDistance(double distance) {
-    Logger.consoleLog("Shooter distance to target %s", distance);
     double target = getTargetRPMForDistance(distance);
-    Logger.consoleLog("Shooter RPM should be %s", target);
     setTargetRPM(target);
   }
 
