@@ -41,7 +41,11 @@ public class Climber extends MustangSubsystemBase {
     @Override
     public HealthState checkHealth() {
         // TODO Auto-generated method stub
-        return straight.checkHealth();
+        if (straight.checkHealth() == HealthState.GREEN & oblique.checkHealth() == HealthState.GREEN)
+        {
+            return HealthState.GREEN;
+        }
+        return HealthState.RED;
     }
 
     @Override
