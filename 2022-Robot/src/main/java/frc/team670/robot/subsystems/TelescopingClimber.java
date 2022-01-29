@@ -44,7 +44,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     private ArrayList<CANPIDController> controllers;
     private ArrayList<CANEncoder> encoders;
     private ArrayList<SparkMAXLite> motors;
-    
+
     private boolean onBar;
     private ArrayList<Double> targets;
 
@@ -58,7 +58,8 @@ public class TelescopingClimber extends MustangSubsystemBase {
 
     public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
-    public TelescopingClimber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted, float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
+    public TelescopingClimber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted,
+            float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
         kP = p;
         kI = i;
         kD = d;
@@ -69,27 +70,26 @@ public class TelescopingClimber extends MustangSubsystemBase {
         SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
         MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
-        
-        // motors = (ArrayList<SparkMAXLite>) SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false, Motor_Type.NEO); // Currently Broken as Mech changed something
+
+        // motors = (ArrayList<SparkMAXLite>)
+        // SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false,
+        // Motor_Type.NEO); // Currently Broken as Mech changed something
         motors = new ArrayList<SparkMAXLite>();
         motors.add(SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO));
-        for (SparkMAXLite motor : motors)
-        {
+        for (SparkMAXLite motor : motors) {
             motor.setIdleMode(IdleMode.kBrake);
-            motor.setInverted(true); 
+            motor.setInverted(true);
             motor.enableSoftLimit(SoftLimitDirection.kForward, true);
             motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
             motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
-            motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);  
+            motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);
         }
         controllers = new ArrayList<CANPIDController>(motors.size());
         encoders = new ArrayList<CANEncoder>(motors.size());
-        for (int ie = 0; ie < controllers.size(); ie++)
-        {
+        for (int ie = 0; ie < controllers.size(); ie++) {
             controllers.set(ie, motors.get(ie).getPIDController());
         }
-        for (int j = 0; j < encoders.size(); j++)
-        {
+        for (int j = 0; j < encoders.size(); j++) {
             encoders.set(j, motors.get(j).getEncoder());
             encoders.get(j).setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
         }
@@ -107,8 +107,7 @@ public class TelescopingClimber extends MustangSubsystemBase {
     }
 
     public void setDefaultPID() {
-        for (CANPIDController controller : controllers)
-        {
+        for (CANPIDController controller : controllers) {
             controller.setP(kP);
             controller.setI(kI);
             controller.setD(kD);
@@ -157,30 +156,25 @@ public class TelescopingClimber extends MustangSubsystemBase {
         return onBar;
     }
 
-    public void setPower(double power)
-    {
+    public void setPower(double power) {
         motors.get(0).set(power);
     }
 
     public void climb(double heightCM) {
         double rotations = heightCM * ROTATIONS_PER_CM;
         SmartDashboard.putNumber("Climber rotation target", rotations);
-        for (int i = 0; i < targets.size(); i++)
-        {
+        for (int i = 0; i < targets.size(); i++) {
             targets.set(i, rotations);
         }
-        for (CANPIDController controller : controllers)
-        {
+        for (CANPIDController controller : controllers) {
             controller.setReference(rotations, ControlType.kSmartMotion);
         }
     }
 
     @Override
     public HealthState checkHealth() {
-        for (SparkMAXLite motor : motors)
-        {
-            if (isSparkMaxErrored(motor))
-            {
+        for (SparkMAXLite motor : motors) {
+            if (isSparkMaxErrored(motor)) {
                 return HealthState.RED;
             }
         }
@@ -191,12 +185,14 @@ public class TelescopingClimber extends MustangSubsystemBase {
         return (Math.abs(encoders.get(0).getPosition() - targets.get(0)) < HALF_CM);
     }
 
-    /*protected double getUnadjustedAvgMotorRotations() {
-        return (getUnadjustedMotorRotations(0) + getUnadjustedMotorRotations(1)) / 2.0;
-    }*/ // Redundant method
+    /*
+     * protected double getUnadjustedAvgMotorRotations() {
+     * return (getUnadjustedMotorRotations(0) + getUnadjustedMotorRotations(1)) /
+     * 2.0;
+     * }
+     */ // Redundant method
 
-    protected double getUnadjustedMotorRotations(int mtr)
-    {
+    protected double getUnadjustedMotorRotations(int mtr) {
         return this.encoders.get(mtr).getPosition();
     }
 
@@ -204,14 +200,16 @@ public class TelescopingClimber extends MustangSubsystemBase {
         return this.motors.get(mtr).getOutputCurrent();
     }
 
-    /*protected double getAvgMotorCurrent() {
-        return (getMotorCurrent(0) + getMotorCurrent(1)) / 2.0;
-    }*/ // Redundant method
-
+    /*
+     * protected double getAvgMotorCurrent() {
+     * return (getMotorCurrent(0) + getMotorCurrent(1)) / 2.0;
+     * }
+     */ // Redundant method
 
     @Override
     public void mustangPeriodic() {
-        // SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
+        // SmartDashboard.putNumber("Climber motor rotations",
+        // getUnadjustedMotorRotations());
         // SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
     }
 

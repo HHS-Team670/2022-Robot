@@ -14,8 +14,7 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class RetractClimber extends ClimberBaseCommand {
 
-  public RetractClimber(Climber climber)
-  {
+  public RetractClimber(Climber climber) {
     super(climber, true);
   }
 
