@@ -7,10 +7,12 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -19,203 +21,166 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
  * 
  * @author Pallavi, Eugenia, Sofia, ctychen, Sanatan
  */
-public class TelescopingClimber extends MustangSubsystemBase {
+public class TelescopingClimber {
 
-    private double kP = 0;
-    private double kI = 0;
-    private double kD = 0;
-    private double kFF = 0;
+  private double kP = 0;
+  private double kI = 0;
+  private double kD = 0;
+  private double kFF = 0;
 
-    private double POW = 0.25;
+  private double POW = 0.25;
 
-    // SmartMotion constants
-    private static final double MAX_ACC = 0;
-    private static final double MIN_VEL = 0;
-    private static final double MAX_VEL = 0;
+  // SmartMotion constants
+  private static final double MAX_ACC = 0;
+  private static final double MIN_VEL = 0;
+  private static final double MAX_VEL = 0;
 
-    private static final double ALLOWED_ERR = 0;
+  private static final double ALLOWED_ERR = 0;
 
-    private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
-    private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
-    private static final double HALF_CM = 0 * ROTATIONS_PER_CM;
+  private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
+  private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
+  private static final double HALF_CM = 0 * ROTATIONS_PER_CM;
 
-    private int SMARTMOTION_SLOT = 0;
+  private int SMARTMOTION_SLOT = 0;
 
-    private ArrayList<CANPIDController> controllers;
-    private ArrayList<CANEncoder> encoders;
-    private ArrayList<SparkMAXLite> motors;
+  private CANPIDController leadController;
+  private CANEncoder leadEncoder;
+  private ArrayList<SparkMAXLite> motors;
 
-    private boolean onBar;
-    private ArrayList<Double> targets;
+  private boolean onBar;
+  private Double target;
 
-    private int currentAtHookedCount;
+  private int currentAtHookedCount;
 
-    public float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    public float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
+  public float MOTOR_ROTATIONS_AT_RETRACTED = 0;
+  public float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
 
-    private float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-    private float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+  private float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+  private float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
-    public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
+  public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
-    public TelescopingClimber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted,
-            float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
-        kP = p;
-        kI = i;
-        kD = d;
-        kFF = ff;
-        MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
-        MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
-        SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-        SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+  public TelescopingClimber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted,
+      float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
+    kP = p;
+    kI = i;
+    kD = d;
+    kFF = ff;
+    MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
+    MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
+    SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+    SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
-        MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
+    MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
 
-        // motors = (ArrayList<SparkMAXLite>)
-        // SparkMAXFactory.buildFactorySparkMAXPair(motor1, motor2, false,
-        // Motor_Type.NEO); // Currently Broken as Mech changed something
-        motors = new ArrayList<SparkMAXLite>();
-        motors.add(SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO));
-        for (SparkMAXLite motor : motors) {
-            motor.setIdleMode(IdleMode.kBrake);
-            motor.setInverted(true);
-            motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-            motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-            motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
-            motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);
-        }
-        controllers = new ArrayList<CANPIDController>(motors.size());
-        encoders = new ArrayList<CANEncoder>(motors.size());
-        for (int ie = 0; ie < controllers.size(); ie++) {
-            controllers.set(ie, motors.get(ie).getPIDController());
-        }
-        for (int j = 0; j < encoders.size(); j++) {
-            encoders.set(j, motors.get(j).getEncoder());
-            encoders.get(j).setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
-        }
+    motors = new ArrayList<SparkMAXLite>();
+    motors.add(SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO));
+    for (SparkMAXLite motor : motors) {
+      motor.setIdleMode(IdleMode.kBrake);
+      motor.setInverted(true);
+      motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+      motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+      motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
+      motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);
+    }
+    leadController = motors.get(0).getPIDController();
+    leadEncoder = motors.get(0).getEncoder();
+    leadEncoder.setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
 
-        setDefaultPID();
+    setDefaultPID();
 
-        onBar = false;
-        targets = new ArrayList<Double>();
-        targets.add(0.0);
+    onBar = false;
+    target = 0.0;
+    currentAtHookedCount = 0;
+    SmartDashboard.putNumber("Climber power", 0.0);
+    SmartDashboard.putBoolean("Climber deploy", false);
+    SmartDashboard.putNumber("Climber motor rotations", 0);
+    SmartDashboard.putNumber("Climber rotation target", 0);
+  }
+
+  public void setDefaultPID() {
+    leadController.setP(kP);
+    leadController.setI(kI);
+    leadController.setD(kD);
+    leadController.setFF(kFF);
+    leadController.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
+    leadController.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
+    leadController.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
+    leadController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
+  }
+
+  public void hookOnBar() {
+    if (isHooked() && !onBar) {
+      onBar = true;
+    }
+
+    if (!onBar) {
+      setPower(-1 * POW);
+    }
+  }
+
+  public void unhookFromBar() {
+    if (onBar) {
+      setPower(POW);
+      onBar = false;
+    }
+  }
+
+  private boolean isHooked() {
+    double current = motors.get(0).getOutputCurrent();
+    if (current > 0.2) {
+      if (current >= NORMAL_OUTPUT) {
+        currentAtHookedCount++;
+      } else {
         currentAtHookedCount = 0;
-        SmartDashboard.putNumber("Climber power", 0.0);
-        SmartDashboard.putBoolean("Climber deploy", false);
-        SmartDashboard.putNumber("Climber motor rotations", 0);
-        SmartDashboard.putNumber("Climber rotation target", 0);
+      }
+      if (currentAtHookedCount >= 4) { // 4 consecutive readings higher than peak
+        return true;
+      }
     }
+    return false;
 
-    public void setDefaultPID() {
-        for (CANPIDController controller : controllers) {
-            controller.setP(kP);
-            controller.setI(kI);
-            controller.setD(kD);
-            controller.setFF(kFF);
-            controller.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
-            controller.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
-            controller.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
-            controller.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
-        }
+  }
+
+  public boolean isHookedOnBar() {
+    return onBar;
+  }
+
+  public void setPower(double power) {
+    motors.get(0).set(power);
+  }
+
+  public void climb(double heightCM) {
+    double rotations = heightCM * ROTATIONS_PER_CM;
+    SmartDashboard.putNumber("Climber rotation target", rotations);
+    target = rotations;
+    leadController.setReference(rotations, ControlType.kSmartMotion);
+  }
+
+  public HealthState checkHealth() {
+    for (SparkMAXLite motor : motors) {
+      if ((motor == null || motor.getLastError() != REVLibError.kOk)) {
+        return HealthState.RED;
+      }
     }
+    return HealthState.GREEN;
+  }
 
-    public void hookOnBar() {
-        if (isHooked() && !onBar) {
-            onBar = true;
-        }
+  public boolean isAtTarget() {
+    return (Math.abs(leadEncoder.getPosition() - target) < HALF_CM);
+  }
 
-        if (!onBar) {
-            setPower(-1 * POW);
-        }
-    }
+  protected double getUnadjustedMotorRotations(int mtr) {
+    return this.leadEncoder.getPosition();
+  }
 
-    public void unhookFromBar() {
-        if (onBar) {
-            setPower(POW);
-            onBar = false;
-        }
-    }
+  protected double getMotorCurrent(int mtr) {
+    return this.motors.get(mtr).getOutputCurrent();
+  }
 
-    private boolean isHooked() {
-        double current = motors.get(0).getOutputCurrent();
-        if (current > 0.2) {
-            if (current >= NORMAL_OUTPUT) {
-                currentAtHookedCount++;
-            } else {
-                currentAtHookedCount = 0;
-            }
-            if (currentAtHookedCount >= 4) { // 4 consecutive readings higher than peak
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    public boolean isHookedOnBar() {
-        return onBar;
-    }
-
-    public void setPower(double power) {
-        motors.get(0).set(power);
-    }
-
-    public void climb(double heightCM) {
-        double rotations = heightCM * ROTATIONS_PER_CM;
-        SmartDashboard.putNumber("Climber rotation target", rotations);
-        for (int i = 0; i < targets.size(); i++) {
-            targets.set(i, rotations);
-        }
-        for (CANPIDController controller : controllers) {
-            controller.setReference(rotations, ControlType.kSmartMotion);
-        }
-    }
-
-    @Override
-    public HealthState checkHealth() {
-        for (SparkMAXLite motor : motors) {
-            if (isSparkMaxErrored(motor)) {
-                return HealthState.RED;
-            }
-        }
-        return HealthState.GREEN;
-    }
-
-    public boolean isAtTarget() {
-        return (Math.abs(encoders.get(0).getPosition() - targets.get(0)) < HALF_CM);
-    }
-
-    /*
-     * protected double getUnadjustedAvgMotorRotations() {
-     * return (getUnadjustedMotorRotations(0) + getUnadjustedMotorRotations(1)) /
-     * 2.0;
-     * }
-     */ // Redundant method
-
-    protected double getUnadjustedMotorRotations(int mtr) {
-        return this.encoders.get(mtr).getPosition();
-    }
-
-    protected double getMotorCurrent(int mtr) {
-        return this.motors.get(mtr).getOutputCurrent();
-    }
-
-    /*
-     * protected double getAvgMotorCurrent() {
-     * return (getMotorCurrent(0) + getMotorCurrent(1)) / 2.0;
-     * }
-     */ // Redundant method
-
-    @Override
-    public void mustangPeriodic() {
-        // SmartDashboard.putNumber("Climber motor rotations",
-        // getUnadjustedMotorRotations());
-        // SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
-    }
-
-    public void test() {
-        setPower(SmartDashboard.getNumber("Climber power", 0.0));
-        SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations(0));
-    }
+  public void test() {
+    setPower(SmartDashboard.getNumber("Climber power", 0.0));
+    SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations(0));
+  }
 
 }

@@ -14,6 +14,7 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.*;
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -23,6 +24,7 @@ public class RobotContainer extends RobotContainerBase {
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
+  private static Climber climber = new Climber();
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
@@ -33,7 +35,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    
+    addSubsystem(climber);
     
   }
 
