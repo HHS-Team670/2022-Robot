@@ -7,17 +7,17 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class HookOnBar extends ClimberBaseCommand {
 
-    public HookOnBar(Climber climber, boolean str) {
-        super(climber, str);
-    }
+  public HookOnBar(Climber climber, boolean str) {
+    super(climber, str);
+  }
 
-    @Override
-    public void initialize() {
-        telescopingClimber.hookOnBar();
-    }
+  @Override
+  public void initialize() {
+    telescopingClimber.hookOnBar();
+  }
 
-    @Override
-    public boolean isFinished() {
-        return telescopingClimber.isHookedOnBar();
-    }
+  @Override
+  public boolean isFinished() {
+    return telescopingClimber.isHookedOnBar();
+  }
 }

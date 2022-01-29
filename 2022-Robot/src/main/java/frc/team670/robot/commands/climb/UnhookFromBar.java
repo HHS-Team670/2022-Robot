@@ -7,17 +7,17 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class UnhookFromBar extends ClimberBaseCommand {
 
-    public UnhookFromBar(Climber climber) {
-        super(climber, true);
-    }
+  public UnhookFromBar(Climber climber) {
+    super(climber, true);
+  }
 
-    @Override
-    public void initialize() {
-        telescopingClimber.unhookFromBar();
-    }
+  @Override
+  public void initialize() {
+    telescopingClimber.unhookFromBar();
+  }
 
-    @Override
-    public boolean isFinished() {
-        return !telescopingClimber.isHookedOnBar();
-    }
+  @Override
+  public boolean isFinished() {
+    return !telescopingClimber.isHookedOnBar();
+  }
 }
