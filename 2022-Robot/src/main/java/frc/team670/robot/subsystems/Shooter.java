@@ -67,6 +67,14 @@ public class Shooter extends MustangSubsystemBase {
   private static final double V_FF = 0.000183;
   private static final double RAMP_RATE = 1.0;
 
+  private double minRPM = 300;
+  private double maxRPMAdjustment = 400;
+  private double initialDiff = 0;
+
+  private double speedError = 200;
+
+  private double shootingCurrent = 0.2;
+
   private static Vision vision;
 
    private static final double[] measuredDistancesMeters = {
@@ -156,9 +164,9 @@ public class Shooter extends MustangSubsystemBase {
    * @param diff The amount to change the current RPM adjust by, positive for increasing and negative to decrease
    */
   public void adjustRPMAdjuster(double diff) {
-    if(((diff > 0 && speedAdjust < 400) || (diff < 0 && speedAdjust > -400))){
+    if(((diff > initialDiff && speedAdjust < maxRPMAdjustment) || (diff < initialDiff && speedAdjust > -(maxRPMAdjustment)))){
       this.speedAdjust += diff;
-      if(shooter_mainEncoder.getVelocity() > 300){
+      if(shooter_mainEncoder.getVelocity() > minRPM){
         run();
       }
 
@@ -186,12 +194,12 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, 200); // TODO: margin of error
+    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, speedError); // TODO: margin of error
   }
 
   public void test() {
     shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", 0.0), ControlType.kVelocity);
-    SmartDashboard.putNumber("Shooter 2 speed", mainController.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
 
   @Override
@@ -227,7 +235,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public boolean isShooting() {
     double current = mainController.getOutputCurrent();
-    if (current > 0.2) {
+    if (shootingCurrent > 0.2) {
       if (current >= NORMAL_CURRENT) {
         shootingCurrentCount++;
       } else {

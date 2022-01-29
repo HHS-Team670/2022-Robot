@@ -38,11 +38,4 @@ public class ShooterTest {
         Assert.assertTrue(shooter.isShooting(),false);
     }
 
-    @Test
-    public void testSpeed() {
-        System.out.print(shooter.getTargetRPMForDistance(3));
-        //Assert.assertEquals(/*expected value*/, shooter.getTargetRPMForDistance(3), /* double delta*/);       
-    }
-
-
 }
