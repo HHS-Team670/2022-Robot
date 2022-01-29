@@ -12,7 +12,6 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 public class DeployIntake extends CommandBase implements MustangCommand {
 
   private Map<MustangSubsystemBase, HealthState> healthReqs;
-  private boolean isDeploy;
   private Intake intake;
 
   /*
