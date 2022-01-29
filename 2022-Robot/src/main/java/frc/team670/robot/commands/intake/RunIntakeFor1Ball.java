@@ -16,30 +16,30 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * drives straight to align with the climbing bar and extends the climber when in position.
  */
 public class RunIntakeFor1Ball extends SequentialCommandGroup implements MustangCommand {
-    
-    private Intake intake;
-    private Map<MustangSubsystemBase, HealthState> healthReqs;
+  
+  private Intake intake;
+  private Map<MustangSubsystemBase, HealthState> healthReqs;
 /*
 sets up everything
 */
-    public RunIntakeFor1Ball(Intake i) {
-        this.intake = i;
-        addRequirements(i);
-        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(i, HealthState.GREEN);
-        addCommands(
-                new DeployIntake(false, intake),
-                new RunIntake(false, intake),
-                new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S),
-                new StopIntake(intake)
-            );
-    }
+  public RunIntakeFor1Ball(Intake i) {
+    this.intake = i;
+    addRequirements(i);
+    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    healthReqs.put(i, HealthState.GREEN);
+    addCommands(
+        new DeployIntake(false, intake),
+        new RunIntake(false, intake),
+        new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S),
+        new StopIntake(intake)
+      );
+  }
   /*
   returns health state
   */  
-    @Override
-    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return healthReqs;
-    }
-    
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    return healthReqs;
+  }
+  
 }
