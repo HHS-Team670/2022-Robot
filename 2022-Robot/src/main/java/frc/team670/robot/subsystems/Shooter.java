@@ -31,7 +31,7 @@ import frc.team670.robot.constants.RobotConstants;
 
 
 /**
- * Represents a 2-stage shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
+ * Represents a shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
  * stage with SparkMax controllers.
  * 
  * @author 
@@ -119,7 +119,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void run() {
-    SmartDashboard.putNumber("Stage 2 speed", targetRPM + speedAdjust);
+    SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
     if(getVelocity()<10) {
       setRampRate(true);
     }else{
@@ -134,7 +134,7 @@ public class Shooter extends MustangSubsystemBase {
    *                up to speed), false when we're ready to shoot and don't need
    *                one
    */
-  public void setRampRate(boolean setRamp) {
+  private void setRampRate(boolean setRamp) {
     if (setRamp) {
       mainController.setClosedLoopRampRate(RAMP_RATE);
     } else {
@@ -190,8 +190,8 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void test() {
-    shooter_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0), ControlType.kVelocity);
-    SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
+    shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", 0.0), ControlType.kVelocity);
+    SmartDashboard.putNumber("Shooter 2 speed", mainController.getEncoder().getVelocity());
   }
 
   @Override
@@ -204,25 +204,17 @@ public class Shooter extends MustangSubsystemBase {
 
   @Override
   public void mustangPeriodic() {
-    // if (isShooting()){
-    //   ballHasBeenShot = false;
-    // } else if (!ballHasBeenShot && !isShooting()) {
-    //   ballHasBeenShot = true;
-    // }
-    //if(targetRPM != 0){
-      double distance = vision.getDistanceToTargetM();
-      if (distance != RobotConstants.VISION_ERROR_CODE) {
-        double targetRPM = getTargetRPMForDistance(distance);
-        setTargetRPM(targetRPM);
-        run();
-      }
+    double distance = vision.getDistanceToTargetM();
+    if (distance != RobotConstants.VISION_ERROR_CODE) {
+      double targetRPM = getTargetRPMForDistance(distance);
+      setTargetRPM(targetRPM);
+      run();
+    }
 
-      if(Math.abs(getVelocity()-targetRPM)<10) {
-        setRampRate(false);
-      }
-      
-    //}   
-    // SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
+    if(Math.abs(getVelocity()-targetRPM)<10) {
+      setRampRate(false);
+    }
+
   }
 
   /*

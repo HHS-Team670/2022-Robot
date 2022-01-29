@@ -33,14 +33,13 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        shooter.setRampRate(false);
         return shooter.isUpToSpeed();
     }
 
-    @Override
-    public void end(boolean interrupted){
-        Logger.consoleLog("StartShooter Ended");
-    }
+    // @Override
+    // public void end(boolean interrupted){
+    //     Logger.consoleLog("StartShooter Ended");
+    // }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
