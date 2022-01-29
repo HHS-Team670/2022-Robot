@@ -67,13 +67,15 @@ public class Shooter extends MustangSubsystemBase {
   private static final double V_FF = 0.000183;
   private static final double RAMP_RATE = 1.0;
 
-  private double minRPM = 300;
-  private double maxRPMAdjustment = 400;
-  private double initialDiff = 0;
+  private double MIN_RPM = 300;
+  private double MAX_RPM_ADJUSTMENT = 400;
+  private double INITIAL_DIFF = 0;
 
-  private double speedError = 200;
+  private static double SPEED_ERROR = 200;
 
-  private double shootingCurrent = 0.2;
+  private static double SHOOTING_CURRENT = 0.2;
+
+  private static double VELOCITY_ALLOWED_ERROR = 10.0;
 
   private static Vision vision;
 
@@ -164,9 +166,9 @@ public class Shooter extends MustangSubsystemBase {
    * @param diff The amount to change the current RPM adjust by, positive for increasing and negative to decrease
    */
   public void adjustRPMAdjuster(double diff) {
-    if(((diff > initialDiff && speedAdjust < maxRPMAdjustment) || (diff < initialDiff && speedAdjust > -(maxRPMAdjustment)))){
+    if(((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT) || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))){
       this.speedAdjust += diff;
-      if(shooter_mainEncoder.getVelocity() > minRPM){
+      if(shooter_mainEncoder.getVelocity() > MIN_RPM){
         run();
       }
 
@@ -219,7 +221,7 @@ public class Shooter extends MustangSubsystemBase {
       run();
     }
 
-    if(Math.abs(getVelocity()-targetRPM)<10) {
+    if(Math.abs(getVelocity()-targetRPM)<VELOCITY_ALLOWED_ERROR) {
       setRampRate(false);
     }
 
@@ -235,7 +237,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public boolean isShooting() {
     double current = mainController.getOutputCurrent();
-    if (shootingCurrent > 0.2) {
+    if (current > SHOOTING_CURRENT) {
       if (current >= NORMAL_CURRENT) {
         shootingCurrentCount++;
       } else {
