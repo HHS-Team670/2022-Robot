@@ -3,13 +3,13 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
-public class DeployIntake extends InstantCommand implements MustangCommand {
+public class DeployIntake extends CommandBase implements MustangCommand {
 
   private Map<MustangSubsystemBase, HealthState> healthReqs;
   private boolean isDeploy;
@@ -31,12 +31,23 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
 
 runs the intake
 */
-  public void execute(){
-    intake.deploy(isDeploy);
+  public void initialize(){
+    intake.deploy();
   }
+
+  public void end(){
+    intake.stopDeployer();
+  }
+
+  public boolean isFinished() {
+    return intake.isDeployed();
+  }
+
+
 /*
 returns the health state of the intake
 */
+
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     return healthReqs;

@@ -3,7 +3,7 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -13,7 +13,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 /*
 Duplicate class (similar functionality in DeployIntake and StopIntake)
 */
-public class ToggleIntake extends InstantCommand implements MustangCommand {
+public class ToggleIntake extends CommandBase implements MustangCommand {
 
   private Map<MustangSubsystemBase, HealthState> healthReqs;
   private Intake intake;
@@ -30,8 +30,20 @@ public class ToggleIntake extends InstantCommand implements MustangCommand {
 /*
 toggles the intake, if it's on it turns it off, if it's off it turns it on
 */
-  public void execute(){
-    intake.deploy(!intake.isDeployed());
+  public void initialize(){
+    if (intake.isDeployed()) {
+      intake.deploy();
+    } else {
+      intake.retractIntake();
+    }
+  }
+
+  public void end(){
+    intake.stopDeployer();
+  }
+
+  public boolean isFinished(){
+    return intake.reachedTarget();
   }
 /*
 returns the health state

@@ -11,9 +11,10 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Intake;
 
 /**
- * Runs the intake, controlls the direction based on wheter or not it is jammed
+ * Runs the intake, controls the direction based on whether or not it is jammed
  */
 public class RunIntake extends CommandBase implements MustangCommand {
+  // TODO: Add conveyor to this
 
   Map<MustangSubsystemBase, HealthState> healthReqs;
   private boolean reversed;

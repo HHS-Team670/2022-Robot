@@ -22,6 +22,8 @@ public class RobotContainer extends RobotContainerBase {
 
   int i = 0;
 
+  private static Intake intake = new Intake();
+
   private MustangCommand m_autonomousCommand;
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
@@ -33,7 +35,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    
+    addSubsystems(intake);
     
   }
 

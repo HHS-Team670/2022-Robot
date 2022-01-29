@@ -29,8 +29,8 @@ sets up everything
     healthReqs.put(i, HealthState.GREEN);
     addCommands(
         new DeployIntake(false, intake),
-        new RunIntake(false, intake),
-        new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S),
+        new RunIntake(false, intake), // TODO: Add conveyor
+        new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S), // TODO: use Conveyor sensors when Conveyor comes
         new StopIntake(intake)
       );
   }

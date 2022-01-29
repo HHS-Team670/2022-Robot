@@ -3,7 +3,7 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -12,7 +12,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Stops the intake
  */
-public class StopIntake extends InstantCommand implements MustangCommand {
+public class StopIntake extends CommandBase implements MustangCommand {
 
   Map<MustangSubsystemBase, HealthState> healthReqs;
   private Intake intake;
@@ -31,6 +31,15 @@ prepares everything to stop the intake
   public void initialize() {
     intake.stop();
   }
+
+  public void end() {
+    intake.stopDeployer();
+  }
+
+  public boolean isFinished() {
+    return intake.reachedTarget();
+  }
+
 /*
 returns the health state
 */

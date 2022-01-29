@@ -44,6 +44,7 @@ public class Intake extends MustangSubsystemBase {
   private int exceededCurrentLimitCount = 0;
   private SparkMAXLite roller;
   private SparkMAXLite deployer;
+  private double target;
 
   private CANEncoder deployerEncoder;
   private CANPIDController deployerController;
@@ -74,14 +75,22 @@ public class Intake extends MustangSubsystemBase {
     return roller.get() != 0;
   }
 
-  public void deploy(boolean isDeployed) {
-    this.isDeployed = isDeployed;
+  public void deploy() {
     deployer.set(INTAKE_DEPLOYER_SPEED);
-    deployerController.setReference(DEPLOYER_TICKS_DEPLOYED, ControlType.kSmartMotion);
+    target = DEPLOYER_TICKS_DEPLOYED;
+    deployerController.setReference(target, ControlType.kSmartMotion);
   }
 
   public boolean isDeployed() {
     return isDeployed;
+  }
+
+  public void stopDeployer() {
+    deployer.set(0.0);
+  }
+
+  public boolean reachedTarget() {
+    return Math.abs(deployerEncoder.getPosition() - target) < HALF_CM;
   }
 
   public void roll(boolean reversed) {
@@ -118,12 +127,13 @@ public class Intake extends MustangSubsystemBase {
 
   public void retractIntake () {
     deployer.set(INTAKE_DEPLOYER_SPEED * -1);
-    deployerController.setReference(DEPLOYER_TICKS_NOT_DEPLOYED, ControlType.kSmartMotion);
+    target = DEPLOYER_TICKS_NOT_DEPLOYED;
+    deployerController.setReference(target, ControlType.kSmartMotion);
   }
 
   /**
    * @return RED if the roller has issues, or the intake isn't deployed but the
-   *     pneumatics have issues
+   *     intake motors have issues
    */
   @Override
   public HealthState checkHealth() {
@@ -142,8 +152,8 @@ public class Intake extends MustangSubsystemBase {
   }
 
   @Override
-  public void mustangPeriodic() {
-    checkHealth();
+  public void mustangPeriodic() { 
+    
   }
 
 }
