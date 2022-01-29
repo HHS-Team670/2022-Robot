@@ -19,7 +19,7 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
  * 
- * @author Pallavi, Eugenia, Sofia, ctychen, Sanatan
+ * @author Pallavi, ctychen, Sanatan
  */
 public class TelescopingClimber {
 
@@ -52,11 +52,11 @@ public class TelescopingClimber {
 
   private int currentAtHookedCount;
 
-  public float MOTOR_ROTATIONS_AT_RETRACTED = 0;
-  public float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0;
+  public float motorRotationsAtRetracted = 0;
+  public float motorRotationsAtMaxExtension = 0;
 
-  private float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-  private float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+  private float softLimitAtRetracted = motorRotationsAtRetracted + .5f;
+  private float softLimitAtExtension = motorRotationsAtMaxExtension - 10;
 
   public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
 
@@ -66,10 +66,10 @@ public class TelescopingClimber {
     kI = i;
     kD = d;
     kFF = ff;
-    MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
-    MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
-    SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
-    SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+    this.motorRotationsAtRetracted = motorRotationsAtRetracted;
+    this.motorRotationsAtMaxExtension = motorRotationsAtMaxExtension;
+    this.softLimitAtRetracted = this.motorRotationsAtRetracted + .5f;
+    this.softLimitAtExtension = motorRotationsAtMaxExtension - 10;
 
     MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
 
@@ -80,12 +80,12 @@ public class TelescopingClimber {
       motor.setInverted(true);
       motor.enableSoftLimit(SoftLimitDirection.kForward, true);
       motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-      motor.setSoftLimit(SoftLimitDirection.kForward, SOFT_LIMIT_AT_EXTENSION);
-      motor.setSoftLimit(SoftLimitDirection.kReverse, SOFT_LIMIT_AT_RETRACTED);
+      motor.setSoftLimit(SoftLimitDirection.kForward, softLimitAtExtension);
+      motor.setSoftLimit(SoftLimitDirection.kReverse, softLimitAtRetracted);
     }
     leadController = motors.get(0).getPIDController();
     leadEncoder = motors.get(0).getEncoder();
-    leadEncoder.setPosition(MOTOR_ROTATIONS_AT_RETRACTED);
+    leadEncoder.setPosition(this.motorRotationsAtRetracted);
 
     setDefaultPID();
 
@@ -174,8 +174,8 @@ public class TelescopingClimber {
     return this.leadEncoder.getPosition();
   }
 
-  protected double getMotorCurrent(int mtr) {
-    return this.motors.get(mtr).getOutputCurrent();
+  protected double getMotorCurrent(int motor) {
+    return this.motors.get(motor).getOutputCurrent();
   }
 
   public void test() {

@@ -5,7 +5,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 
 /**
  * 
- * @author Pallavi, Eugenia, Sofia, ctychen, Sanatan
+ * @author Pallavi, ctychen, Sanatan
  */
 public class Climber extends MustangSubsystemBase {
 
@@ -41,8 +41,7 @@ public class Climber extends MustangSubsystemBase {
   @Override
   public HealthState checkHealth() {
     // TODO Auto-generated method stub
-    if (straight.checkHealth() == HealthState.GREEN && oblique.checkHealth() == HealthState.GREEN)
-    {
+    if (straight.checkHealth() == HealthState.GREEN && oblique.checkHealth() == HealthState.GREEN) {
       return HealthState.GREEN;
     }
     return HealthState.RED;
