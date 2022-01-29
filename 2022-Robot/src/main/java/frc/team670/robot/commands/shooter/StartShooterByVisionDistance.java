@@ -18,11 +18,13 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     private Shooter shooter;
     private Vision vision;
+    private boolean toggle;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StartShooterByVisionDistance(Shooter shooter, Vision vision){
+    public StartShooterByVisionDistance(Shooter shooter, Vision vision, boolean toggle){
         this.shooter = shooter;
         this.vision = vision;
+        this.toggle = toggle;
         addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
@@ -30,14 +32,29 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     @Override
     public void initialize() {
-        if(vision.getHealth(true) == HealthState.GREEN) {
-            double distanceToTarget = vision.getDistanceToTargetM();
-            shooter.setRPMForDistance(distanceToTarget);
+        if(toggle) {
+            if (MathUtils.doublesEqual(0.0, shooter.getVelocity(), 10)) {
+                if(vision.getHealth(true) == HealthState.GREEN){
+                    double distanceToTarget = vision.getDistanceToTargetM();
+                    shooter.setRPMForDistance(distanceToTarget);
+                }
+                else{
+                    shooter.setTargetRPM(shooter.getDefaultRPM());        
+                }
+                shooter.run();
+            } else {
+                shooter.stop();
+            }
+        }else {
+            if(vision.getHealth(true) == HealthState.GREEN) {
+                double distanceToTarget = vision.getDistanceToTargetM();
+                shooter.setRPMForDistance(distanceToTarget);
+            }
+            else{
+                shooter.setTargetRPM(shooter.getDefaultRPM());
+            }
+            shooter.run();
         }
-        else{
-            shooter.setTargetRPM(shooter.getDefaultRPM());
-        }
-        shooter.run();
     }
 
     @Override
