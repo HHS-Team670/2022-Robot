@@ -14,11 +14,13 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
-
+import frc.team670.robot.subsystems.*;
 
 public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
+  private static Vision vision = new Vision();
+  private static Shooter shooter = new Shooter(vision);
 
   int i = 0;
 
@@ -33,7 +35,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    
+    addSubsystem(shooter, vision);
     
   }
 
