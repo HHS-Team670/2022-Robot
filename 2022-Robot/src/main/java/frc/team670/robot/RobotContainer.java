@@ -73,6 +73,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void teleopInit() {
     Logger.consoleLog(driveBase.getPose().toString());
+    driveBase.initDefaultCommand();
     
   }
 

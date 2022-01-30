@@ -33,12 +33,11 @@ import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
-import frc.team670.mustanglib.subsystems.drivebase.HDrive;
+import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -47,9 +46,9 @@ import frc.team670.robot.constants.RobotMap;
  * 
  * @author lakshbhambhani
  */
-public class DriveBase extends HDrive {
-  private SparkMAXLite left1, left2, right1, right2, middle;
-  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
+public class DriveBase extends TankDrive {
+  private SparkMAXLite left1, left2, right1, right2;
+  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
   private MustangController mController;
 
@@ -72,11 +71,12 @@ public class DriveBase extends HDrive {
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController) {
+    mController = mustangController;
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
         RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
-    middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
+    // middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -87,24 +87,25 @@ public class DriveBase extends HDrive {
     right1Encoder = right1.getEncoder();
     left2Encoder = left2.getEncoder();
     right2Encoder = right2.getEncoder();
-    middleEncoder = middle.getEncoder();
+    // middleEncoder = middle.getEncoder();
+    // super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, false,false, .1, true);
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
     left2Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
     // Do not invert for right side
     right1Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
     right2Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
-    middleEncoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR); //this would change middle wheel size not same as tank wheels
+    // middleEncoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR); //this would change middle wheel size not same as tank wheels
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    middleEncoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION); //this would change middle wheel size not same as tank wheels
+    // middleEncoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION); //this would change middle wheel size not same as tank wheels
 
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
-    allMotors.add(middle);
+    // allMotors.add(middle);
 
     // The DifferentialDrive inverts the right side automatically, however we want
     // invert straight
@@ -114,7 +115,7 @@ public class DriveBase extends HDrive {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
+    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 } ,
         false,
         false, .1, true);
 
@@ -122,6 +123,12 @@ public class DriveBase extends HDrive {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
 
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(START_X, START_Y, START_ANGLE_RAD),
+      VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+      VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    ); //vision
   }
 
   /**
@@ -138,8 +145,7 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
-        middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored());
   }
 
   /**
@@ -346,7 +352,8 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    getDriveTrain().feedWatchdog();
+    // poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
   /**
@@ -415,7 +422,6 @@ public class DriveBase extends HDrive {
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
-    getDriveTrain().feed();
   }
 
   @Override
