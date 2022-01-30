@@ -76,6 +76,8 @@ public class Shooter extends MustangSubsystemBase {
 
   private static double VELOCITY_ALLOWED_ERROR = 0.0;
 
+  private static double VELOCITY_FOR_RAMP_RATE= 10.0;
+
   private static double manual_velocity;
 
   private static Vision vision;
@@ -131,7 +133,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public void run() {
       SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
-      if(getVelocity()<10) {
+      if(getVelocity()<VELOCITY_FOR_RAMP_RATE) {
           setRampRate(true);
       }else{
           setRampRate(false);
@@ -200,7 +202,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void test() {
-      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", VELOCITY_SETPOINT), ControlType.kVelocity);//TODO: this is hardcoded
+      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);//TODO: this is hardcoded
       SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
 
@@ -220,7 +222,6 @@ public class Shooter extends MustangSubsystemBase {
           setTargetRPM(targetRPM);
           run();
       }
-
       if(Math.abs(getVelocity()-targetRPM)<VELOCITY_ALLOWED_ERROR) {
           setRampRate(false);
       }
