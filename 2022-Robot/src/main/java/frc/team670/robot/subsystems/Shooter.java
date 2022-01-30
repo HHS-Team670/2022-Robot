@@ -79,19 +79,19 @@ public class Shooter extends MustangSubsystemBase {
   private static Vision vision;
 
    private static final double[] measuredDistancesMeters = {
-     0, 
-     0, 
-     0,
-     0, 
-     0,
+      0, 
+      0, 
+      0,
+      0, 
+      0,
   };
 
    private static final double[] measuredRPMs = {
-     0,  
-     0,  
-     0, 
-     0, 
-     0
+      0,  
+      0,  
+      0, 
+      0, 
+      0
    };
 
   private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
@@ -99,43 +99,42 @@ public class Shooter extends MustangSubsystemBase {
   private static final int VELOCITY_SLOT = 0;
 
   public Shooter(Vision vision) {
+      SmartDashboard.putNumber("Shooter Velocity Setpoint", 0.0);
+      SmartDashboard.putNumber("Shooter FF", 0.0);
+      SmartDashboard.putNumber("Shooter P", 0.0);
+      SmartDashboard.putNumber("Shooter Ramp Rate", 0.0);
+      SmartDashboard.putNumber("Shooter speed", 0.0);
 
-    SmartDashboard.putNumber("Shooter Velocity Setpoint", 0.0);
-    SmartDashboard.putNumber("Shooter FF", 0.0);
-    SmartDashboard.putNumber("Shooter P", 0.0);
-    SmartDashboard.putNumber("Shooter Ramp Rate", 0.0);
-    SmartDashboard.putNumber("Shooter speed", 0.0);
+      this.vision = vision;
 
-    this.vision = vision;
-
-    controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
+      controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
         RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
 
-    mainController = controllers.get(0);
-    followerController = controllers.get(1);
+      mainController = controllers.get(0);
+      followerController = controllers.get(1);
 
-    shooter_mainEncoder = mainController.getEncoder();
-    shooter_mainPIDController = mainController.getPIDController();
+      shooter_mainEncoder = mainController.getEncoder();
+      shooter_mainPIDController = mainController.getPIDController();
 
-    shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
-    shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
-    shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
-    shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
+      shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
+      shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
+      shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
+      shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
   }
 
   public double getVelocity() {
-    return shooter_mainEncoder.getVelocity();
+      return shooter_mainEncoder.getVelocity();
   }
 
   public void run() {
-    SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
-    if(getVelocity()<10) {
-      setRampRate(true);
-    }else{
-      setRampRate(false);
-    }
+      SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
+      if(getVelocity()<10) {
+          setRampRate(true);
+      }else{
+          setRampRate(false);
+      }
 
-    shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
+      shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
   }
 
   /**
@@ -144,20 +143,20 @@ public class Shooter extends MustangSubsystemBase {
    *                one
    */
   private void setRampRate(boolean setRamp) {
-    if (setRamp) {
-      mainController.setClosedLoopRampRate(RAMP_RATE);
-    } else {
-      mainController.setClosedLoopRampRate(0);
-    }
+      if (setRamp) {
+          mainController.setClosedLoopRampRate(RAMP_RATE);
+      } else {
+          mainController.setClosedLoopRampRate(0);
+      }  
   }
 
   public void setTargetRPM(double targetRPM) {
-    this.targetRPM = targetRPM;
+      this.targetRPM = targetRPM;
   }
 
 
   public double getDefaultRPM(){
-    return DEFAULT_SPEED;
+      return DEFAULT_SPEED;
   }
 
   /**
@@ -166,11 +165,10 @@ public class Shooter extends MustangSubsystemBase {
    */
   public void adjustRPMAdjuster(double diff) {
     if(((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT) || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))){
-      this.speedAdjust += diff;
-      if(shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM){
-        run();
-      }
-
+        this.speedAdjust += diff;
+        if(shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM){
+            run();
+        }
     }
   }
 
@@ -180,49 +178,49 @@ public class Shooter extends MustangSubsystemBase {
    * @return The predicted "best fit" RPM for the motors to spin at based on the distance,
    * calculated from the linear regression.
    */
-   double getTargetRPMForLowGoal(double distance){
-    double predictedVal = speedAtDistance.predict(distance);
-    double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
-    SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
-    SmartDashboard.putNumber("predictedVal", predictedVal);
-    SmartDashboard.putNumber("distance", distance);
-    return expectedSpeed;
+   double getTargetRPMForLowGoalDistance(double distance){
+      double predictedVal = speedAtDistance.predict(distance);
+      double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
+      SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
+      SmartDashboard.putNumber("predictedVal", predictedVal);
+      SmartDashboard.putNumber("distance", distance);
+      return expectedSpeed;
   }
 
   public void stop() {
-    shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
-    setTargetRPM(0);
+      shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
+      setTargetRPM(0);
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // TODO: margin of error
+      return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // TODO: margin of error
   }
 
   public void test() {
-    shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", 0.0), ControlType.kVelocity);
-    SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
+      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", 0.0), ControlType.kVelocity);
+      SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
 
   @Override
   public HealthState checkHealth() {
-    if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
-      return HealthState.RED;
-    }
-    return HealthState.GREEN;
+      if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
+          return HealthState.RED;
+      }
+      return HealthState.GREEN;
   }
 
   @Override
   public void mustangPeriodic() {
-    double distance = vision.getDistanceToTargetM();
-    if (distance != RobotConstants.VISION_ERROR_CODE) {
-      double targetRPM = getTargetRPMForLowGoal(distance);
-      setTargetRPM(targetRPM);
-      run();
-    }
+      double distance = vision.getDistanceToTargetM();
+      if (distance != RobotConstants.VISION_ERROR_CODE) {
+          double targetRPM = getTargetRPMForLowGoalDistance(distance);
+          setTargetRPM(targetRPM);
+          run();
+      }
 
-    if(Math.abs(getVelocity()-targetRPM)<VELOCITY_ALLOWED_ERROR) {
-      setRampRate(false);
-    }
+      if(Math.abs(getVelocity()-targetRPM)<VELOCITY_ALLOWED_ERROR) {
+          setRampRate(false);
+      }
 
   }
 
@@ -230,22 +228,22 @@ public class Shooter extends MustangSubsystemBase {
   *Sets the RPM
   */
   public void setRPMForDistance(double distance) {
-    double target = getTargetRPMForLowGoal(distance);
-    setTargetRPM(target);
+      double target = getTargetRPMForLowGoalDistance(distance);
+      setTargetRPM(target);
   }
 
   public boolean isShooting() {
-    double current = mainController.getOutputCurrent();
-    if (current > SHOOTING_CURRENT) {
-      if (current >= NORMAL_CURRENT) {
-        shootingCurrentCount++;
-      } else {
-        shootingCurrentCount = 0;
-      }
-      if (shootingCurrentCount >= 1) {
-        return true;
-      }
-    }
-    return false;
-}
+        double current = mainController.getOutputCurrent();
+        if (current > SHOOTING_CURRENT) {
+            if (current >= NORMAL_CURRENT) {
+              shootingCurrentCount++;
+          } else {
+              shootingCurrentCount = 0;
+          }
+          if (shootingCurrentCount >= 1) {
+              return true;
+          }
+        }
+      return false;
+  }
 }

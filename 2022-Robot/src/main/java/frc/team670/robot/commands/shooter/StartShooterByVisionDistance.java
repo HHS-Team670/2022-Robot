@@ -8,6 +8,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 /*
@@ -18,6 +19,9 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     private Shooter shooter;
     private Vision vision;
+    /*
+    Toggle 
+    */
     private boolean toggle;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
