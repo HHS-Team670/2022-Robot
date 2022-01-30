@@ -33,7 +33,7 @@ import frc.team670.robot.constants.RobotConstants;
 /**
  * Represents a shooter with 2 NEOs
  * 
- * @author 
+ * @author wilsonpotato, gentleTiger123, arghunter, smishra467
  */
 public class Shooter extends MustangSubsystemBase {
 
@@ -103,7 +103,6 @@ public class Shooter extends MustangSubsystemBase {
   private static final int VELOCITY_SLOT = 0;
 
   public Shooter(Vision vision) {
-      //TODO: Fix hardcoded code
       SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
       SmartDashboard.putNumber("Shooter FF", V_FF);
       SmartDashboard.putNumber("Shooter P", V_P);
@@ -202,7 +201,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void test() {
-      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);//TODO: this is hardcoded
+      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);
       SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
 
@@ -228,9 +227,14 @@ public class Shooter extends MustangSubsystemBase {
 
   }
 
+  /**
+   * @param distance In meters, the distance we are shooting at
+   * Predicts the target RPM based off the distance 
+   * and sets it as the target RPM
+   */
   public void setRPMForDistance(double distance) {
-      double target = getTargetRPMForLowGoalDistance(distance);
-      setTargetRPM(target);
+      double RPMtarget = getTargetRPMForLowGoalDistance(distance);
+      setTargetRPM(RPMtarget);
   }
 
   public boolean isShooting() {

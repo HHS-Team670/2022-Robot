@@ -13,6 +13,8 @@ import frc.team670.mustanglib.utils.Logger;
 /**
  * Use this to set the "adjuster" for the shooter speed, for example when trying
  * to shoot a little bit faster or slower when needed in middle of a match
+ * 
+ * @author smishra467
  */
 public class SetRPMAdjuster extends InstantCommand implements MustangCommand {
 

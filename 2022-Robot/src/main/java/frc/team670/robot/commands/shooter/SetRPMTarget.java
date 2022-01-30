@@ -11,7 +11,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Sets the shooter's target RPM
- * @author 
+ * 
+ * @author wilsonpotato, palldas, smishra467
  */
 public class SetRPMTarget extends InstantCommand implements MustangCommand {
 

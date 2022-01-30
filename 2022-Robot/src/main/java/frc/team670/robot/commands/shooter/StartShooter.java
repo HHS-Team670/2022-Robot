@@ -11,15 +11,21 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 
-/*
+/** 
  * Starts ramping up the shooter and runs it
+ * 
+ * @author wilsonpotato, palldas
  */
 public class StartShooter extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private boolean useVision;// if the user wants to use vision
+    private boolean useVision;
 
+    /**
+     * 
+     * @param useVision if the user wants to use vision
+     */
     public StartShooter(Shooter shooter, boolean useVision){
         this.shooter = shooter;
         this.useVision = useVision;
@@ -47,13 +53,14 @@ public class StartShooter extends CommandBase implements MustangCommand {
         return healthReqs;
     }
 
-    /*
+    /**
     *Method for setting RPM:
     *If vision works, it gets the distance to target from vision, 
     *predicts the RPM based off the distance, 
     *and sets that as the Target RPM
     *If vision doesn't work, just sets the default RPM as the target RPM
-    */
+     */
+
     private void setRPM() {
         if(vision.getHealth(true) == HealthState.GREEN) {
             double distanceToTarget = vision.getDistanceToTargetM();
