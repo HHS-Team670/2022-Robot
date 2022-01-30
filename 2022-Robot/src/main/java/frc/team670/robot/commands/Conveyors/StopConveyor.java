@@ -19,8 +19,7 @@ public class StopConveyor extends InstantCommand implements MustangCommand
         this.conveyors=conveyors;
         addRequirements(conveyors);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-
-		healthReqs.put(conveyors, HealthState.YELLOW);
+		healthReqs.put(conveyors, HealthState.GREEN);
     }
 
     public void initialize()
