@@ -76,7 +76,7 @@ public class Shooter extends MustangSubsystemBase {
 
   private static double VELOCITY_ALLOWED_ERROR = 0.0;
 
-  private static double VELOCITY_SETPOINT = 0.0;
+  private static double manual_velocity;
 
   private static Vision vision;
 
@@ -102,7 +102,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public Shooter(Vision vision) {
       //TODO: Fix hardcoded code
-      SmartDashboard.putNumber("Shooter Velocity Setpoint", VELOCITY_SETPOINT);
+      SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
       SmartDashboard.putNumber("Shooter FF", V_FF);
       SmartDashboard.putNumber("Shooter P", V_P);
       SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
