@@ -10,32 +10,27 @@ import frc.team670.robot.subsystems.Conveyors;
 public class RunConveyor extends InstantCommand implements MustangCommand
 {
  
-  private Conveyors conveyors;
-   
+  private Conveyors conveyors;   
   private Map<MustangSubsystemBase, HealthState> healthReqs;
   private Conveyors.Status mode;
-   
  
- 
- 
-  public RunConveyor(Conveyors conveyors,Conveyors.Status mode)
+  public RunConveyor (Conveyors conveyors,Conveyors.Status mode)
   {
     this.conveyors = conveyors;
     addRequirements(conveyors);
     healthReqs = new HashMap < MustangSubsystemBase, HealthState>();
     healthReqs.put(conveyors, HealthState.GREEN);
-     this.mode=mode;
+    this.mode=mode;
  
   }
-   
-  public void initialize()
+  
+  public void initialize ()
   {
      conveyors.runConveyor(mode);
   }
  
- 
   @Override
-  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements () {
     return healthReqs;
   }
  
