@@ -1,4 +1,4 @@
-//Mangages the conveyor subsystem for 
+
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.REVLibError;
@@ -9,7 +9,13 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
-
+/**
+ * Connects the intake to the shooter
+ * 
+ * @author Armaan
+ * @author Soham
+ * @author Edward
+ */
 public class Conveyors extends MustangSubsystemBase {
 	// Conveyor status
 	public enum Status {

@@ -8,6 +8,15 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Conveyors;
 
+/**
+ * Runs the conveyor in the given mode
+ * 
+ * @author Armaan
+ * @author Soham
+ * @author Nancy
+ * @author Scintilla
+ * 
+ */
 public class RunConveyor extends InstantCommand implements MustangCommand {
 
   private Conveyors conveyors;
