@@ -11,23 +11,27 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Stops the intake
+ * @author Santan
+ * @author Armaan
  */
 public class StopIntake extends CommandBase implements MustangCommand {
 
   Map<MustangSubsystemBase, HealthState> healthReqs;
   private Intake intake;
-/*
-prepares everything to stop the intake
-*/
-  public StopIntake (Intake intake) {
+
+  
+  //  Prepares everything to stop the intake
+   
+  public StopIntake(Intake intake) {
     this.intake = intake;
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(intake, HealthState.YELLOW);
     addRequirements(intake);
   }
-  /*
-  stops the intake
-  */
+
+  
+  // Stops the intake
+   
   public void initialize() {
     intake.stop();
   }
@@ -40,9 +44,9 @@ prepares everything to stop the intake
     return intake.reachedTarget();
   }
 
-/*
-returns the health state
-*/
+  
+  //  Returns the health state
+   
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     return healthReqs;
   }

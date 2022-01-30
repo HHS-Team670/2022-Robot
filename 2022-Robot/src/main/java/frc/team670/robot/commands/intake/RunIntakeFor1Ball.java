@@ -11,35 +11,35 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+
 /**
- * Once the driver aligns the back wheels to the bars under the generator, 
- * drives straight to align with the climbing bar and extends the climber when in position.
+ * Runs the intake for the time required to intake one ball? Needs to be checked
+ * @author Santan
  */
 public class RunIntakeFor1Ball extends SequentialCommandGroup implements MustangCommand {
-  
+
   private Intake intake;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
-/*
-sets up everything
-*/
-  public RunIntakeFor1Ball(Intake i) {
-    this.intake = i;
-    addRequirements(i);
+
+  // Sets up everything
+
+  public RunIntakeFor1Ball(Intake intake) {
+    this.intake = intake;
+    addRequirements(this.intake);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-    healthReqs.put(i, HealthState.GREEN);
+    healthReqs.put(this.intake, HealthState.GREEN);
     addCommands(
-        new DeployIntake(intake),
-        new RunIntake(false, intake), // TODO: Add conveyor
+        new DeployIntake(this.intake),
+        new RunIntake(false, this.intake), // TODO: Add conveyor
         new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S), // TODO: use Conveyor sensors when Conveyor comes
-        new StopIntake(intake)
-      );
+        new StopIntake(this.intake));
   }
-  /*
-  returns health state
-  */  
+
+  // Returns health state
+
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     return healthReqs;
   }
-  
+
 }
