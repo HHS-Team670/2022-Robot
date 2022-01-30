@@ -32,7 +32,7 @@ NetworkTables.addKeyListener('/SmartDashboard/warnings', (key, value) => {
 
 NetworkTables.addGlobalListener((key, value) => {
     console.log(key + ": " + value);
-    //console.log("Network Table SmartDashboard content after", NetworkTables.getKeys());
+    console.log("Network Table content", NetworkTables.getKeys());
 })
 
 // updates status lights for driveBase
@@ -308,7 +308,10 @@ function sendAuton() {
     var delayTime = getDelayTime();
     console.log("SELECTED AUTON COMMAND", autonCommand);
     var connected = NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
+    //var connected = NetworkTables.putValue('/Test/auton-chooser', autonCommand);
     console.log("CONNECTED", connected);
     NetworkTables.putValue('/SmartDashboard/delayTime', delayTime);
+    //NetworkTables.putValue('/Test/delayTime', delayTime);
     console.log(NetworkTables.getValue('/SmartDashboard/auton-chooser', "didn't work"));
+    //console.log(NetworkTables.getValue('/Test/auton-chooser', "didn't work"));
 }

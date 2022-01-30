@@ -5,8 +5,10 @@ const electron = require('electron');
 const wpilib_NT = require('wpilib-nt-client');
 const client = new wpilib_NT.Client();
 
+client.startDebug("Debug");
+
 // The client will try to reconnect after 1 second
-client.setReconnectDelay(0);
+client.setReconnectDelay(25);
 
 /** Module to control application life. */
 const app = electron.app;
@@ -90,10 +92,16 @@ function createWindow() {
         }
     });
     ipc.on('add', (ev, mesg) => {
-        client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1);
+        console.log("inside ipc.on(add)");
+        console.log(client.Assign(mesg.val, mesg.key, (mesg.flags & 1) === 1));
+        console.log(mesg);
+        console.log(mesg.val + mesg.key);
     });
     ipc.on('update', (ev, mesg) => {
-        client.Update(mesg.id, mesg.val);
+        console.log("inside ipc.on(update)");
+        console.log(client.Update(mesg.id, mesg.val));
+        console.log(mesg);
+        console.log(mesg.id +  mesg.val);
     });
     ipc.on('windowError', (ev, error) => {
         console.log(error);
