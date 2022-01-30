@@ -19,6 +19,7 @@ import frc.team670.mustanglib.utils.Logger;
  */
 public class Conveyors extends MustangSubsystemBase {
 	// Conveyor status
+
 	public enum Status {
 		OFF,
 		INTAKING,
@@ -134,15 +135,16 @@ public class Conveyors extends MustangSubsystemBase {
 	public void mustangPeriodic() {
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
-		checkState();
+//		checkState();
 	}
 }
 
 class Conveyor {
 
 	private SparkMAXLite roller;
-	private double CONVEYOR_SPEED = 0.8;
+	private double CONVEYOR_SPEED = 0.5;
 	private int ballCount = 0;
+
 	BeamBreak beamBreak;
 
 	public Conveyor(int motorID, int beamBreakID) {
@@ -158,7 +160,7 @@ class Conveyor {
 	public void updateConveyorState() {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
-
+			return;
 		}
 		ballCount = 0;
 	}
