@@ -18,76 +18,76 @@ import frc.team670.robot.subsystems.*;
 
 public class RobotContainer extends RobotContainerBase {
 
-  private static OI oi = new OI();
-  private static Vision vision = new Vision();
-  private static Shooter shooter = new Shooter(vision);
+    private static OI oi = new OI();
+    private static Vision vision = new Vision();
+    private static Shooter shooter = new Shooter(vision);
 
-  int i = 0;
+    int i = 0;
 
-  private MustangCommand m_autonomousCommand;
+    private MustangCommand m_autonomousCommand;
 
-  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-  //     vision);
+    // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+    //     vision);
 
-  BeamBreak break1 = new BeamBreak(9);
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    super();
-    addSubsystem(shooter, vision);
-    
-  }
+    BeamBreak break1 = new BeamBreak(9);
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        super();
+        addSubsystem(shooter, vision);
+      
+    }
 
-  public void robotInit() {
-    
-  }
+    public void robotInit() {
+      
+    }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public MustangCommand getAutonomousCommand() {
-    return null;
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public MustangCommand getAutonomousCommand() {
+        return null;
+    }
 
-  public void autonomousInit() {
-    
-  }
+    public void autonomousInit() {
+      
+    }
 
-  public void teleopInit() {
-    
-    
-  }
+    public void teleopInit() {
+      
+      
+    }
 
-  @Override
-  public void disabled() {
-    
-  }
+    @Override
+    public void disabled() {
+      
+    }
 
-  public static Joystick getOperatorController() {
-    return OI.getOperatorController();
-  }
+    public static Joystick getOperatorController() {
+        return OI.getOperatorController();
+    }
 
-  public static void rumbleDriverController() {
-    notifyDriverController(1.0, 0.3);
-  }
+    public static void rumbleDriverController() {
+        notifyDriverController(1.0, 0.3);
+    }
 
-  public static void rumbleDriverController(double power, double time) {
-    oi.rumbleDriverController(power, time);
-  }
+    public static void rumbleDriverController(double power, double time) {
+        oi.rumbleDriverController(power, time);
+    }
 
-  public static void notifyDriverController(double power, double time) {
-    oi.rumbleDriverController(power, time);
-  }
+    public static void notifyDriverController(double power, double time) {
+        oi.rumbleDriverController(power, time);
+    }
 
-  public static MustangController getDriverController() {
-    return OI.getDriverController();
-  }
+    public static MustangController getDriverController() {
+        return OI.getDriverController();
+    }
 
-  public void periodic() {
-   break1.sendBeamBreakDataToDashboard();
-  }
+    public void periodic() {
+        break1.sendBeamBreakDataToDashboard();
+    }
 
 }
