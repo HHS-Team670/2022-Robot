@@ -21,7 +21,8 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
     private Vision vision;
 
     /*
-    Toggle: If the shooter is running then it stops it. If the shotter is stopping then it runs it.
+    * Toggle: If the shooter is running then it stops it.
+    * If the shotter is stopping then it runs it.
     */
     private boolean toggle;
 

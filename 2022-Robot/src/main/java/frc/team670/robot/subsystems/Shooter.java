@@ -224,9 +224,6 @@ public class Shooter extends MustangSubsystemBase {
 
   }
 
-  /*
-  *Sets the RPM
-  */
   public void setRPMForDistance(double distance) {
       double target = getTargetRPMForLowGoalDistance(distance);
       setTargetRPM(target);
