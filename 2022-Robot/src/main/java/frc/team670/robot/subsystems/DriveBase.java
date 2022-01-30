@@ -34,11 +34,11 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
+import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -72,11 +72,27 @@ public class DriveBase extends HDrive {
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController) {
-    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
-        false, MotorConfig.Motor_Type.NEO);
-    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
-        RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
-    middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
+    mController = mustangController;
+
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_LEFT_MOTOR_1, 
+      RobotMap.SPARK_LEFT_MOTOR_2,
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
+
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_RIGHT_MOTOR_1, 
+      RobotMap.SPARK_RIGHT_MOTOR_2, 
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
+
+    middle = SparkMAXFactory.buildSparkMAX(
+      RobotMap.SPARK_MIDDLE_MOTOR, 
+      SparkMAXFactory.defaultConfig, 
+      MotorConfig.Motor_Type.NEO
+    );
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -114,14 +130,26 @@ public class DriveBase extends HDrive {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
-        false,
-        false, .1, true);
+    super.setMotorControllers(
+      new MotorController[] { left1, left2 },
+      new MotorController[] { right1, right2 },
+      middle,
+      false,
+      false, 
+      .1, 
+      true
+    );
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
 
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(START_X, START_Y, START_ANGLE_RAD),
+      VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+      VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    ); //vision
   }
 
   /**
@@ -138,8 +166,7 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
-        middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(), middle.isErrored());
   }
 
   /**
@@ -346,6 +373,7 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
+    getDriveTrain().feedWatchdog();
     poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
@@ -384,11 +412,13 @@ public class DriveBase extends HDrive {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
-        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
-
+    poseEstimator = new DifferentialDrivePoseEstimator(
+      Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(0, 0, new Rotation2d()), 
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
+      VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))
+    ); // TODO: find correct values
   }
 
   /**
@@ -415,7 +445,6 @@ public class DriveBase extends HDrive {
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
-    getDriveTrain().feed();
   }
 
   @Override
