@@ -17,15 +17,12 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
 
     public BTarmac4BallTerminal(DriveBase driveBase) {
         trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
-        //pickup ball
+        //trajectory = PathPlanner.loadPath("New Path", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
-        //shoot ball
+        //extend further to get to terminal ball
         trajectory3 = PathPlanner.loadPath("BTarmac4BallTerminalP3", 2.0, 1);
-        //pickup ball
         trajectory4 = PathPlanner.loadPath("BTarmac4BallTerminalP4", 2.0, 1);
-        //pickup ball
         trajectory5 = PathPlanner.loadPath("BTarmac4BallTerminalP5", 2.0, 1);
-        //shoot ball
         
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -35,7 +32,11 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            getTrajectoryFollowerCommand(trajectory, driveBase)
+            //pickup ball then go back and shoot 2
+            getTrajectoryFollowerCommand(trajectory, driveBase),
+            //pick up other ball then pick up terminal ball then go back and shoot 2
+            getTrajectoryFollowerCommand(trajectory3, driveBase)
+
         );
     }
 

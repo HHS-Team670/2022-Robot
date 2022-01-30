@@ -11,7 +11,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 
-public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangCommand {
+public class BTarmacTriangle extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2, trajectory3;
 
