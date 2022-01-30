@@ -31,7 +31,7 @@ NetworkTables.addKeyListener('/SmartDashboard/warnings', (key, value) => {
 });
 
 NetworkTables.addGlobalListener((key, value) => {
-    console.log(key + ": " + value);
+    // console.log(key + ": " + value);
     //console.log("Network Table SmartDashboard content after", NetworkTables.getKeys());
 })
 
@@ -306,9 +306,11 @@ function getDelayTime() {
 function sendAuton() {
     var autonCommand = getAutonFromMap();
     var delayTime = getDelayTime();
-    console.log("SELECTED AUTON COMMAND", autonCommand);
+    console.log("AUTON COMMANDS TRANSLATES TO #", autonCommand);
     var connected = NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
-    console.log("CONNECTED", connected);
+    console.log("CONNECTED TO 2020?", connected);
     NetworkTables.putValue('/SmartDashboard/delayTime', delayTime);
-    console.log(NetworkTables.getValue('/SmartDashboard/auton-chooser', "didn't work"));
+    console.log("NETWORKTABLES AUTON-CHOOSER VAL: " + NetworkTables.getValue('/SmartDashboard/auton-chooser', "didn't work"));
+    console.log("ALL KEYS IN SMARTDASHBOARD FROM NT:", NetworkTables.getKeys());
+    console.log("NETWORKTABLES NAVX VAL: " + NetworkTables.getValue('/SmartDashboard/navX', -1));
 }
