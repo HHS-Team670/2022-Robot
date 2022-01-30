@@ -17,8 +17,8 @@ import frc.team670.robot.subsystems.Shooter;
 public class StartShooter extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
-    private Map<MustangSubsystemBase, HealthState> healthReqs;\
-    private boolean useVision;
+    private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private boolean useVision;// if the user wants to use vision
 
     public StartShooter(Shooter shooter, boolean useVision){
         this.shooter = shooter;
