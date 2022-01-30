@@ -29,7 +29,6 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.constants.RobotConstants;
 
-
 /**
  * Represents a shooter with 2 NEOs
  * 
@@ -37,218 +36,222 @@ import frc.team670.robot.constants.RobotConstants;
  */
 public class Shooter extends MustangSubsystemBase {
 
-  private SparkMAXLite mainController, followerController;
-  private List<SparkMAXLite> controllers;
+    private SparkMAXLite mainController, followerController;
+    private List<SparkMAXLite> controllers;
 
-  private RelativeEncoder shooter_mainEncoder;
-  private SparkMaxPIDController shooter_mainPIDController;
+    private RelativeEncoder shooter_mainEncoder;
+    private SparkMaxPIDController shooter_mainPIDController;
 
-  private double targetRPM = 0; 
-  private static double DEFAULT_SPEED = 0;
+    private double targetRPM = 0;
+    private static double DEFAULT_SPEED = 0;
 
-  private static double MIN_RPM = 0;
-  private static double MAX_RPM = 0;
+    private static double MIN_RPM = 0;
+    private static double MAX_RPM = 0;
 
-  private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
+    private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
-  private static double MAX_SHOT_DISTANCE_METERS = 0; 
+    private static double MAX_SHOT_DISTANCE_METERS = 0;
 
-  private static final double PULLEY_RATIO = 0; 
+    private static final double PULLEY_RATIO = 0;
 
-  private boolean ballHasBeenShot;
-  private int shootingCurrentCount = 0;
+    private boolean ballHasBeenShot;
+    private int shootingCurrentCount = 0;
 
-  private static final double NORMAL_CURRENT = 0; 
+    private static final double NORMAL_CURRENT = 0;
 
-  private static final double V_P = 0.0;
-  private static final double V_I = 0.0;
-  private static final double V_D = 0.0;
-  private static final double V_FF = 0.0;
-  private static final double RAMP_RATE = 0.0;
+    private static final double V_P = 0.0;
+    private static final double V_I = 0.0;
+    private static final double V_D = 0.0;
+    private static final double V_FF = 0.0;
+    private static final double RAMP_RATE = 0.0;
 
-  private double MIN_RUNNING_RPM = 0.0;
-  private double MAX_RPM_ADJUSTMENT = 0.0;
-  private double INITIAL_DIFF = 0;
+    private double MIN_RUNNING_RPM = 0.0;
+    private double MAX_RPM_ADJUSTMENT = 0.0;
+    private double INITIAL_DIFF = 0;
 
-  private static double SPEED_ALLOWED_ERROR = 0.0;
+    private static double SPEED_ALLOWED_ERROR = 0.0;
 
-  private static double SHOOTING_CURRENT = 0.0;
+    private static double SHOOTING_CURRENT = 0.0;
 
-  private static double VELOCITY_ALLOWED_ERROR = 0.0;
+    private static double VELOCITY_ALLOWED_ERROR = 0.0;
 
-  private static double VELOCITY_FOR_RAMP_RATE= 10.0;
+    private static double VELOCITY_FOR_RAMP_RATE = 10.0;
 
-  private static double manual_velocity;
+    private static double manual_velocity;
 
-  private static Vision vision;
+    private static Vision vision;
 
-   private static final double[] measuredDistancesMeters = {
-      0, 
-      0, 
-      0,
-      0, 
-      0,
-  };
+    private static final double[] measuredDistancesMeters = {
+            0,
+            0,
+            0,
+            0,
+            0,
+    };
 
-   private static final double[] measuredRPMs = {
-      0,  
-      0,  
-      0, 
-      0, 
-      0
-   };
+    private static final double[] measuredRPMs = {
+            0,
+            0,
+            0,
+            0,
+            0
+    };
 
-  private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
+    private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
 
-  private static final int VELOCITY_SLOT = 0;
+    private static final int VELOCITY_SLOT = 0;
 
-  public Shooter(Vision vision) {
-      SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
-      SmartDashboard.putNumber("Shooter FF", V_FF);
-      SmartDashboard.putNumber("Shooter P", V_P);
-      SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
-      SmartDashboard.putNumber("Shooter speed", targetRPM);
+    public Shooter(Vision vision) {
+        SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
+        SmartDashboard.putNumber("Shooter FF", V_FF);
+        SmartDashboard.putNumber("Shooter P", V_P);
+        SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
+        SmartDashboard.putNumber("Shooter speed", targetRPM);
 
-      this.vision = vision;
+        this.vision = vision;
 
-      controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
-        RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
+        controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
+                RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
 
-      mainController = controllers.get(0);
-      followerController = controllers.get(1);
+        mainController = controllers.get(0);
+        followerController = controllers.get(1);
 
-      shooter_mainEncoder = mainController.getEncoder();
-      shooter_mainPIDController = mainController.getPIDController();
+        shooter_mainEncoder = mainController.getEncoder();
+        shooter_mainPIDController = mainController.getPIDController();
 
-      shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
-      shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
-      shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
-      shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
-  }
+        shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
+        shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
+        shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
+        shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
+    }
 
-  public double getVelocity() {
-      return shooter_mainEncoder.getVelocity();
-  }
+    public double getVelocity() {
+        return shooter_mainEncoder.getVelocity();
+    }
 
-  public void run() {
-      SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
-      if(getVelocity()<VELOCITY_FOR_RAMP_RATE) {
-          setRampRate(true);
-      }else{
-          setRampRate(false);
-      }
+    public void run() {
+        SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
+        if (getVelocity() < VELOCITY_FOR_RAMP_RATE) {
+            setRampRate(true);
+        } else {
+            setRampRate(false);
+        }
 
-      shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
-  }
+        shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
+    }
 
-  /**
-   * @param setRamp true if we want a ramp rate (use this for getting the shooter
-   *                up to speed), false when we're ready to shoot and don't need
-   *                one
-   */
-  private void setRampRate(boolean setRamp) {
-      if (setRamp) {
-          mainController.setClosedLoopRampRate(RAMP_RATE);
-      } else {
-          mainController.setClosedLoopRampRate(0);
-      }  
-  }
-
-  public void setTargetRPM(double targetRPM) {
-      this.targetRPM = targetRPM;
-  }
-
-
-  public double getDefaultRPM(){
-      return DEFAULT_SPEED;
-  }
-
-  /**
-   * 
-   * @param diff The amount to change the current RPM adjust by, positive for increasing and negative to decrease
-   */
-  public void adjustRPMAdjuster(double diff) {
-    if(((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT) || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))){
-        this.speedAdjust += diff;
-        if(shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM){
-            run();
+    /**
+     * @param setRamp true if we want a ramp rate (use this for getting the shooter
+     *                up to speed), false when we're ready to shoot and don't need
+     *                one
+     */
+    private void setRampRate(boolean setRamp) {
+        if (setRamp) {
+            mainController.setClosedLoopRampRate(RAMP_RATE);
+        } else {
+            mainController.setClosedLoopRampRate(0);
         }
     }
-  }
 
-  /**
-   * 
-   * @param distance In meters, the distance we are shooting at
-   * @return The predicted "best fit" RPM for the motors to spin at based on the distance,
-   * calculated from the linear regression.
-   */
-   double getTargetRPMForLowGoalDistance(double distance){
-      double predictedVal = speedAtDistance.predict(distance);
-      double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
-      SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
-      SmartDashboard.putNumber("predictedVal", predictedVal);
-      SmartDashboard.putNumber("distance", distance);
-      return expectedSpeed;
-  }
+    public void setTargetRPM(double targetRPM) {
+        this.targetRPM = targetRPM;
+    }
 
-  public void stop() {
-      shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
-      setTargetRPM(0);
-  }
+    public double getDefaultRPM() {
+        return DEFAULT_SPEED;
+    }
 
-  public boolean isUpToSpeed() {
-      return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // margin of error
-  }
+    /**
+     * 
+     * @param diff The amount to change the current RPM adjust by, positive for
+     *             increasing and negative to decrease
+     */
+    public void adjustRPMAdjuster(double diff) {
+        if (((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT)
+                || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))) {
+            this.speedAdjust += diff;
+            if (shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM) {
+                run();
+            }
+        }
+    }
 
-  public void test() {
-      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);
-      SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
-  }
+    /**
+     * 
+     * @param distance In meters, the distance we are shooting at
+     * @return The predicted "best fit" RPM for the motors to spin at based on the
+     *         distance,
+     *         calculated from the linear regression.
+     */
+    double getTargetRPMForLowGoalDistance(double distance) {
+        double predictedVal = speedAtDistance.predict(distance);
+        double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
+        SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
+        SmartDashboard.putNumber("predictedVal", predictedVal);
+        SmartDashboard.putNumber("distance", distance);
+        return expectedSpeed;
+    }
 
-  @Override
-  public HealthState checkHealth() {
-      if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
-          return HealthState.RED;
-      }
-      return HealthState.GREEN;
-  }
+    public void stop() {
+        shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
+        setTargetRPM(0);
+    }
 
-  @Override
-  public void mustangPeriodic() {
-      double distance = vision.getDistanceToTargetM();
-      if (distance != RobotConstants.VISION_ERROR_CODE) {
-          double targetRPM = getTargetRPMForLowGoalDistance(distance);
-          setTargetRPM(targetRPM);
-          run();
-      }
-      if(Math.abs(getVelocity()-targetRPM)<VELOCITY_ALLOWED_ERROR) {
-          setRampRate(false);
-      }
+    public boolean isUpToSpeed() {
+        return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // margin of
+                                                                                                         // error
+    }
 
-  }
+    public void test() {
+        shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity),
+                ControlType.kVelocity);
+        SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
+    }
 
-  /**
-   * @param distance In meters, the distance we are shooting at
-   * Predicts the target RPM based off the distance 
-   * and sets it as the target RPM
-   */
-  public void setRPMForDistance(double distance) {
-      double RPMtarget = getTargetRPMForLowGoalDistance(distance);
-      setTargetRPM(RPMtarget);
-  }
+    @Override
+    public HealthState checkHealth() {
+        if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
+            return HealthState.RED;
+        }
+        return HealthState.GREEN;
+    }
 
-  public boolean isShooting() {
+    @Override
+    public void mustangPeriodic() {
+        double distance = vision.getDistanceToTargetM();
+        if (distance != RobotConstants.VISION_ERROR_CODE) {
+            double targetRPM = getTargetRPMForLowGoalDistance(distance);
+            setTargetRPM(targetRPM);
+            run();
+        }
+        if (Math.abs(getVelocity() - targetRPM) < VELOCITY_ALLOWED_ERROR) {
+            setRampRate(false);
+        }
+
+    }
+
+    /**
+     * @param distance In meters, the distance we are shooting at
+     *                 Predicts the target RPM based off the distance
+     *                 and sets it as the target RPM
+     */
+    public void setRPMForDistance(double distance) {
+        double RPMtarget = getTargetRPMForLowGoalDistance(distance);
+        setTargetRPM(RPMtarget);
+    }
+
+    public boolean isShooting() {
         double current = mainController.getOutputCurrent();
         if (current > SHOOTING_CURRENT) {
             if (current >= NORMAL_CURRENT) {
-              shootingCurrentCount++;
-          } else {
-              shootingCurrentCount = 0;
-          }
-          if (shootingCurrentCount >= 1) {
-              return true;
-          }
+                shootingCurrentCount++;
+            } else {
+                shootingCurrentCount = 0;
+            }
+            if (shootingCurrentCount >= 1) {
+                return true;
+            }
         }
-      return false;
-  }
+        return false;
+    }
 }

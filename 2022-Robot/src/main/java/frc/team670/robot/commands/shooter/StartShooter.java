@@ -11,7 +11,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 
-/** 
+/**
  * Starts ramping up the shooter and runs it
  * 
  * @author wilsonpotato, palldas
@@ -26,7 +26,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
      * 
      * @param useVision if the user wants to use vision
      */
-    public StartShooter(Shooter shooter, boolean useVision){
+    public StartShooter(Shooter shooter, boolean useVision) {
         this.shooter = shooter;
         this.useVision = useVision;
         addRequirements(shooter);
@@ -36,7 +36,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        if(useVision) {
+        if (useVision) {
             setRPM();
         }
         shooter.run();
@@ -47,27 +47,25 @@ public class StartShooter extends CommandBase implements MustangCommand {
         return shooter.isUpToSpeed();
     }
 
-
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
 
     /**
-    *Method for setting RPM:
-    *If vision works, it gets the distance to target from vision, 
-    *predicts the RPM based off the distance, 
-    *and sets that as the Target RPM
-    *If vision doesn't work, just sets the default RPM as the target RPM
+     * If vision works, it gets the distance to target from vision,
+     * predicts the RPM based off the distance,
+     * and sets that as the Target RPM
+     * If vision doesn't work, just sets the default RPM as the target RPM
      */
 
     private void setRPM() {
-        if(vision.getHealth(true) == HealthState.GREEN) {
+        if (vision.getHealth(true) == HealthState.GREEN) {
             double distanceToTarget = vision.getDistanceToTargetM();
             shooter.setRPMForDistance(distanceToTarget);
-        }else{
+        } else {
             shooter.setTargetRPM(shooter.getDefaultRPM());
         }
     }
-    
+
 }
