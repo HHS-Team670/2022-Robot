@@ -19,10 +19,12 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     private Shooter shooter;
     private Vision vision;
+
     /*
-    Toggle 
+    Toggle: If the shooter is running then it stops it. If the shotter is stopping then it runs it.
     */
     private boolean toggle;
+    
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public StartShooterByVisionDistance(Shooter shooter, Vision vision, boolean toggle){
@@ -57,6 +59,8 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
         return healthReqs;
     }
 
+
+    //method for setting rpm
     private void setRPM() {
         if(vision.getHealth(true) == HealthState.GREEN) {
             double distanceToTarget = vision.getDistanceToTargetM();
