@@ -38,26 +38,12 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
     public void initialize() {
         if(toggle) {
             if (MathUtils.doublesEqual(0.0, shooter.getVelocity(), 10)) {
-                if(vision.getHealth(true) == HealthState.GREEN){
-                    double distanceToTarget = vision.getDistanceToTargetM();
-                    shooter.setRPMForDistance(distanceToTarget);
-                }
-                else{
-                    shooter.setTargetRPM(shooter.getDefaultRPM());        
-                }
-                shooter.run();
+                setRPM();
             } else {
                 shooter.stop();
             }
         }else {
-            if(vision.getHealth(true) == HealthState.GREEN) {
-                double distanceToTarget = vision.getDistanceToTargetM();
-                shooter.setRPMForDistance(distanceToTarget);
-            }
-            else{
-                shooter.setTargetRPM(shooter.getDefaultRPM());
-            }
-            shooter.run();
+            setRPM();
         }
     }
 
@@ -69,6 +55,16 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
+    }
+
+    private void setRPM() {
+        if(vision.getHealth(true) == HealthState.GREEN) {
+            double distanceToTarget = vision.getDistanceToTargetM();
+            shooter.setRPMForDistance(distanceToTarget);
+        }else{
+            shooter.setTargetRPM(shooter.getDefaultRPM());
+        }
+        shooter.run();
     }
     
 }
