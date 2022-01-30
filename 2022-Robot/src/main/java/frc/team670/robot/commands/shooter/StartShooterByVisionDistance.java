@@ -62,7 +62,7 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
 
     /*
     *Method for setting RPM:
-    *If vision works, it gets the distance from target and sets that as the target RPM 
+    *If vision works, it gets the distance to target from vision, predicts the RPM based off the distance, and sets that as the Target RPM
     *If vision doesn't work, just sets the default RPM as the target RPM
     */
     private void setRPM() {
