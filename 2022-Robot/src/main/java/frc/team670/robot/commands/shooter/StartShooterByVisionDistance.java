@@ -24,7 +24,7 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
     Toggle: If the shooter is running then it stops it. If the shotter is stopping then it runs it.
     */
     private boolean toggle;
-    
+
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public StartShooterByVisionDistance(Shooter shooter, Vision vision, boolean toggle){
@@ -60,7 +60,11 @@ public class StartShooterByVisionDistance extends CommandBase implements Mustang
     }
 
 
-    //method for setting rpm
+    /*
+    *Method for setting RPM:
+    *If vision works, it gets the distance from target and sets that as the target RPM 
+    *If vision doesn't work, just sets the default RPM as the target RPM
+    */
     private void setRPM() {
         if(vision.getHealth(true) == HealthState.GREEN) {
             double distanceToTarget = vision.getDistanceToTargetM();
