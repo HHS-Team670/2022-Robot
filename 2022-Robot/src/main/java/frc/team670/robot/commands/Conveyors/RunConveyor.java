@@ -29,7 +29,6 @@ public class RunConveyor extends InstantCommand implements MustangCommand {
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(conveyors, HealthState.GREEN);
     this.mode = mode;
-
   }
 
   public void initialize() {
