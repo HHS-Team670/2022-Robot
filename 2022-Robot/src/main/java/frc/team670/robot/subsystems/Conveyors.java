@@ -9,6 +9,7 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
+
 /**
  * Connects the intake to the shooter
  * 
@@ -32,6 +33,7 @@ public class Conveyors extends MustangSubsystemBase {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
 	}
+
 	// Actions
 	// Runs the Conveyor in the given mode
 	public void runConveyor(Status mode) {
@@ -45,6 +47,7 @@ public class Conveyors extends MustangSubsystemBase {
 			stopAll();
 		}
 	}
+
 	// Helper method of runconveyor
 	private void intakeConveyor() {
 		intakeConveyor.run(true);
@@ -52,6 +55,7 @@ public class Conveyors extends MustangSubsystemBase {
 		status = Status.INTAKING;
 		Logger.consoleLog("Conveyor Status: INTAKING");
 	}
+
 	// Helper method of runconveyor
 	private void shootConveyor() {
 		intakeConveyor.run(true);
@@ -59,6 +63,7 @@ public class Conveyors extends MustangSubsystemBase {
 		status = Status.SHOOTING;
 		Logger.consoleLog("Conveyor Status: SHOOTING");
 	}
+
 	// Helper method of runconveyor
 	private void outtakeConveyor() {
 		intakeConveyor.run(false);
@@ -66,7 +71,9 @@ public class Conveyors extends MustangSubsystemBase {
 		status = Status.OUTTAKING;
 		Logger.consoleLog("Conveyor Status: OUTTAKING");
 	}
-	// Uses the current state of the conveyor to determine what parts need to be shut down
+
+	// Uses the current state of the conveyor to determine what parts need to be
+	// shut down
 	private void checkState() {
 		switch (status) {
 			case INTAKING:
@@ -97,17 +104,20 @@ public class Conveyors extends MustangSubsystemBase {
 				break;
 		}
 	}
+
 	// Stops the conveyors
 	public void stopAll() {
 		status = Status.OFF;
 		intakeConveyor.stop();
 		shooterConveyor.stop();
 	}
+
 	// Data collection
 	// Returns the total number of balls in the conveyor
 	public int ballCount() {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
+
 	// Mustang Subsystem
 	@Override
 	public HealthState checkHealth() {
@@ -119,6 +129,7 @@ public class Conveyors extends MustangSubsystemBase {
 		}
 		return HealthState.GREEN;
 	}
+
 	@Override
 	public void mustangPeriodic() {
 		intakeConveyor.updateConveyorState();
@@ -133,13 +144,16 @@ class Conveyor {
 	private double CONVEYOR_SPEED = 0.8;
 	private int ballCount = 0;
 	BeamBreak beamBreak;
+
 	public Conveyor(int motorID, int beamBreakID) {
 		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
 		beamBreak = new BeamBreak(beamBreakID);
 	}
+
 	public int getBallCount() {
 		return ballCount;
 	}
+
 	// Updates the ball count of the conveyor
 	public void updateConveyorState() {
 		if (beamBreak.isTriggered()) {
@@ -148,6 +162,7 @@ class Conveyor {
 		}
 		ballCount = 0;
 	}
+
 	// Runs the conveyor in the specified direction
 	public void run(boolean intaking) {
 		if (!intaking) {
@@ -156,10 +171,12 @@ class Conveyor {
 			roller.set(CONVEYOR_SPEED);
 		}
 	}
+
 	// Stops the conveyor
 	public void stop() {
 		roller.stopMotor();
 	}
+
 	// Returns the current roller error
 	public REVLibError getRollerError() {
 		return roller.getLastError();
