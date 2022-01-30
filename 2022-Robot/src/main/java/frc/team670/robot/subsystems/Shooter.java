@@ -43,38 +43,40 @@ public class Shooter extends MustangSubsystemBase {
   private RelativeEncoder shooter_mainEncoder;
   private SparkMaxPIDController shooter_mainPIDController;
 
-  private double targetRPM = 0; // Will change later if we adjust by distance
+  private double targetRPM = 0; 
   private static double DEFAULT_SPEED = 0;
 
   private static double MIN_RPM = 0;
-  private static double MAX_RPM = 2725;
+  private static double MAX_RPM = 0;
 
   private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
-  private static double MAX_SHOT_DISTANCE_METERS = 8.6868; // = 28-29ish feet
+  private static double MAX_SHOT_DISTANCE_METERS = 0; 
 
-  private static final double PULLEY_RATIO = 2; // Need to check this
+  private static final double PULLEY_RATIO = 0; 
 
   private boolean ballHasBeenShot;
   private int shootingCurrentCount = 0;
 
-  private static final double NORMAL_CURRENT = 0; // TODO: unknown
+  private static final double NORMAL_CURRENT = 0; 
 
-  private static final double V_P = 0.000100;
+  private static final double V_P = 0.0;
   private static final double V_I = 0.0;
   private static final double V_D = 0.0;
-  private static final double V_FF = 0.000183;
-  private static final double RAMP_RATE = 1.0;
+  private static final double V_FF = 0.0;
+  private static final double RAMP_RATE = 0.0;
 
-  private double MIN_RUNNING_RPM = 300;
-  private double MAX_RPM_ADJUSTMENT = 400;
+  private double MIN_RUNNING_RPM = 0.0;
+  private double MAX_RPM_ADJUSTMENT = 0.0;
   private double INITIAL_DIFF = 0;
 
-  private static double SPEED_ALLOWED_ERROR = 200;
+  private static double SPEED_ALLOWED_ERROR = 0.0;
 
-  private static double SHOOTING_CURRENT = 0.2;
+  private static double SHOOTING_CURRENT = 0.0;
 
-  private static double VELOCITY_ALLOWED_ERROR = 10.0;
+  private static double VELOCITY_ALLOWED_ERROR = 0.0;
+
+  private static double VELOCITY_SETPOINT = 0.0;
 
   private static Vision vision;
 
@@ -99,11 +101,12 @@ public class Shooter extends MustangSubsystemBase {
   private static final int VELOCITY_SLOT = 0;
 
   public Shooter(Vision vision) {
-      SmartDashboard.putNumber("Shooter Velocity Setpoint", 0.0);
-      SmartDashboard.putNumber("Shooter FF", 0.0);
-      SmartDashboard.putNumber("Shooter P", 0.0);
-      SmartDashboard.putNumber("Shooter Ramp Rate", 0.0);
-      SmartDashboard.putNumber("Shooter speed", 0.0);
+      //TODO: Fix hardcoded code
+      SmartDashboard.putNumber("Shooter Velocity Setpoint", VELOCITY_SETPOINT);
+      SmartDashboard.putNumber("Shooter FF", V_FF);
+      SmartDashboard.putNumber("Shooter P", V_P);
+      SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
+      SmartDashboard.putNumber("Shooter speed", targetRPM);
 
       this.vision = vision;
 
@@ -193,11 +196,11 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-      return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // TODO: margin of error
+      return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // margin of error
   }
 
   public void test() {
-      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", 0.0), ControlType.kVelocity);
+      shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", VELOCITY_SETPOINT), ControlType.kVelocity);//TODO: this is hardcoded
       SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
   }
 
