@@ -4,8 +4,6 @@ Code for FRC Team 670's 2022 Robot
 ## Branching and Workflow on this Repository
 [Refer to this document for our team's procedures for contributing code on Github.](https://docs.google.com/document/d/1vO_dtVTDw3-l0x0BabiAE5C45O6bJlQeLL1Uy9McOcQ/edit?usp=sharing)
 
-[Refer to this document for our team's code formatting guide.](https://docs.google.com/document/d/1QcQ6axK7_NlwfcMCYOQGbd1EbBldkaCWZRJJ6zqElsk/edit?usp=sharing)
-
 **Note that you cannot commit directly to master or dev!**
 
 - The master branch is the stable branch of this project. It may only be updated via pull request from student developer, with the Tech Lead's approval.

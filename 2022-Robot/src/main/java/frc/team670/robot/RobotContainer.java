@@ -8,42 +8,31 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
-import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.right.RightThroughTrench;
-import frc.team670.robot.commands.auton.MoveForwards;
-import frc.team670.robot.commands.auton.NewYCoord;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.*;
+
 public class RobotContainer extends RobotContainerBase {
 
     private static OI oi = new OI();
     private static Vision vision = new Vision();
     private static Shooter shooter = new Shooter(vision);
-    private DriveBase driveBase = new DriveBase(getDriverController());
-
 
     int i = 0;
 
     private MustangCommand m_autonomousCommand;
-    private static Climber climber = new Climber();
-  
-    // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-    //     vision);
-    
-    BeamBreak break1 = new BeamBreak(9);
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         super();
         addSubsystem(shooter, vision);
-        addSubsystem(climber);
+      
     }
 
     public void robotInit() {
@@ -56,23 +45,16 @@ public class RobotContainer extends RobotContainerBase {
      * @return the command to run in autonomous
      */
     public MustangCommand getAutonomousCommand() {
-        MustangCommand autonCommand = new MoveForwards(driveBase);
-        //  MustangCommand autonCommand = new RightShootTrench(driveBase);
-
-        Logger.consoleLog("autonCommand: %s", autonCommand);
-        return autonCommand;
+        return null;
     }
 
     public void autonomousInit() {
-        Logger.consoleLog("autoInit called");
-        m_autonomousCommand = getAutonomousCommand();
-        if (m_autonomousCommand != null) {
-            MustangScheduler.getInstance().schedule(m_autonomousCommand);
-        }
+      
     }
 
     public void teleopInit() {
-        Logger.consoleLog(driveBase.getPose().toString());
+      
+      
     }
 
     @Override
@@ -102,8 +84,6 @@ public class RobotContainer extends RobotContainerBase {
 
     public void periodic() {
         break1.sendBeamBreakDataToDashboard();
-        SmartDashboard.putNumber("navX", driveBase.getHeading());
-        SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
     }
 
 }
