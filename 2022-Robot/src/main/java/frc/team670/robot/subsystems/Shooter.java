@@ -210,7 +210,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
+        if (mainController.isErrored() || followerController.isErrored()) {
             return HealthState.RED;
         }
         return HealthState.GREEN;
