@@ -16,13 +16,14 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
     private Trajectory trajectory, trajectory2, trajectory3, trajectory4, trajectory5;
 
     public BTarmac4BallTerminal(DriveBase driveBase) {
+        //start with heading 60
         trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
         //trajectory = PathPlanner.loadPath("New Path", 2.0, 1);
-        trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
+        //trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
         //extend further to get to terminal ball
         trajectory3 = PathPlanner.loadPath("BTarmac4BallTerminalP3", 2.0, 1);
-        trajectory4 = PathPlanner.loadPath("BTarmac4BallTerminalP4", 2.0, 1);
-        trajectory5 = PathPlanner.loadPath("BTarmac4BallTerminalP5", 2.0, 1);
+        //trajectory4 = PathPlanner.loadPath("BTarmac4BallTerminalP4", 2.0, 1);
+        //trajectory5 = PathPlanner.loadPath("BTarmac4BallTerminalP5", 2.0, 1);
         
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

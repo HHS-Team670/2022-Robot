@@ -18,6 +18,7 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.ATarmacEdge4Ball;
 import frc.team670.robot.commands.auton.ATarmacFlushed1Ball;
 import frc.team670.robot.commands.auton.BTarmac4BallTerminal;
+import frc.team670.robot.commands.auton.BTarmacTriangle;
 import frc.team670.robot.commands.auton.LeftTarmac2Shoot;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
@@ -56,7 +57,7 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new BTarmac4BallTerminal(driveBase);
+    MustangCommand autonCommand = new BTarmacTriangle(driveBase);
 
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
