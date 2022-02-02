@@ -26,10 +26,6 @@ public class RobotContainer extends RobotContainerBase {
 
     private MustangCommand m_autonomousCommand;
 
-    // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-    //     vision);
-
-    BeamBreak break1 = new BeamBreak(9);
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */

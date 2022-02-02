@@ -69,11 +69,11 @@ public class Shooter extends MustangSubsystemBase {
     private double MAX_RPM_ADJUSTMENT = 0.0;
     private double INITIAL_DIFF = 0;
 
-    private static double SPEED_ALLOWED_ERROR = 0.0;
+    private static double SPEED_ALLOWED_ERROR = 10.0;
 
     private static double SHOOTING_CURRENT = 0.0;
 
-    private static double VELOCITY_ALLOWED_ERROR = 0.0;
+    private static double VELOCITY_ALLOWED_ERROR = 10.0;
 
     private static double VELOCITY_FOR_RAMP_RATE = 10.0;
 
