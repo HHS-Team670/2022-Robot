@@ -1,14 +1,16 @@
-
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.REVLibError;
+
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.constants.RobotMap;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Connects the intake to the shooter
@@ -33,6 +35,11 @@ public class Conveyors extends MustangSubsystemBase {
 	public Conveyors() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+	}
+
+	public void debugBeamBreaks(){
+		intakeConveyor.debugBeamBreaks();
+		shooterConveyor.debugBeamBreaks();
 	}
 
 	// Actions
@@ -135,6 +142,8 @@ public class Conveyors extends MustangSubsystemBase {
 	public void mustangPeriodic() {
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
+		// intakeConveyor.debugBeamBreaks();
+		// shooterConveyor.debugBeamBreaks();
 //		checkState();
 	}
 }
@@ -142,10 +151,10 @@ public class Conveyors extends MustangSubsystemBase {
 class Conveyor {
 
 	private SparkMAXLite roller;
-	private double CONVEYOR_SPEED = 0.5;
+	private double CONVEYOR_SPEED = 0.3;
 	private int ballCount = 0;
 
-	BeamBreak beamBreak;
+	private BeamBreak beamBreak;
 
 	public Conveyor(int motorID, int beamBreakID) {
 		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
@@ -182,5 +191,9 @@ class Conveyor {
 	// Returns the current roller error
 	public REVLibError getRollerError() {
 		return roller.getLastError();
+	}
+
+	public void debugBeamBreaks(){
+		beamBreak.sendBeamBreakDataToDashboard();
 	}
 }

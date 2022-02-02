@@ -13,11 +13,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.Conveyors;
+import frc.team670.robot.commands.Conveyors.RunConveyor;
+
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -32,11 +35,14 @@ public class RobotContainer extends RobotContainerBase {
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
+  BeamBreak beam = new BeamBreak(2);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
+    addSubsystem(conveyors);
     
     
   }
@@ -58,10 +64,9 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    Timer.delay(1);
-    Logger.consoleLog("WORKSSS??");
   
-    conveyors.runConveyor(Conveyors.Status.INTAKING);
+  //  conveyors.runConveyor(Conveyors.Status.INTAKING);
+  MustangScheduler.getInstance().schedule(new RunConveyor(conveyors, Conveyors.Status.INTAKING));
   
   }
 
@@ -92,6 +97,9 @@ public class RobotContainer extends RobotContainerBase {
 
   public void periodic() {
    //break1.sendBeamBreakDataToDashboard();
+    // conveyors.debugBeamBreaks();
+    // beam.sendBeamBreakDataToDashboard();
+    conveyors.debugBeamBreaks();
   }
 
 }
