@@ -31,13 +31,14 @@ public class Conveyors extends MustangSubsystemBase {
 
 	private Conveyor intakeConveyor, shooterConveyor;
 	private Status status = Status.OFF;
-	private Timer timer=new Timer();
+	private Timer timer = new Timer();
+
 	public Conveyors() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
 	}
 
-	public void debugBeamBreaks(){
+	public void debugBeamBreaks() {
 		intakeConveyor.debugBeamBreaks();
 		shooterConveyor.debugBeamBreaks();
 	}
@@ -94,25 +95,21 @@ public class Conveyors extends MustangSubsystemBase {
 				break;
 			case OUTTAKING:
 				if (shooterConveyor.getBallCount() == 0) {
-					if(timer.get()==0)
-					{
+					if (timer.get() == 0) {
 						timer.start();
 					}
-					if(timer.hasElapsed(2.0))
-					{
+					if (timer.hasElapsed(2.0)) {
 						shooterConveyor.stop();
 						timer.reset();
 						timer.stop();
 					}
-					
+
 				}
 				if (ballCount() == 0) {
-					if(timer.get()==0)
-					{
+					if (timer.get() == 0) {
 						timer.start();
 					}
-					if(timer.hasElapsed(2.0))
-					{
+					if (timer.hasElapsed(2.0)) {
 						intakeConveyor.stop();
 						timer.reset();
 						timer.stop();
@@ -121,27 +118,22 @@ public class Conveyors extends MustangSubsystemBase {
 				break;
 			case SHOOTING:
 				if (intakeConveyor.getBallCount() == 0) {
-					if(timer.get()==0)
-					{
+					if (timer.get() == 0) {
 						timer.start();
 					}
-					if(timer.hasElapsed(2))
-					{
+					if (timer.hasElapsed(2)) {
 						intakeConveyor.stop();
 						timer.reset();
 						timer.stop();
 					}
-					
+
 				}
 				if (ballCount() == 0) {
 
-					
-					if(timer.get()==0)
-					{
+					if (timer.get() == 0) {
 						timer.start();
 					}
-					if(timer.hasElapsed(2))
-					{
+					if (timer.hasElapsed(2)) {
 						shooterConveyor.stop();
 						timer.reset();
 						timer.stop();
@@ -210,8 +202,7 @@ class Conveyor {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
 
-
-		} 
+		}
 		ballCount = 0;
 	}
 
@@ -234,7 +225,7 @@ class Conveyor {
 		return roller.getLastError();
 	}
 
-	public void debugBeamBreaks(){
+	public void debugBeamBreaks() {
 		beamBreak.sendBeamBreakDataToDashboard();
 	}
 }
