@@ -9,7 +9,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.constants.RobotMap;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -31,7 +31,7 @@ public class Conveyors extends MustangSubsystemBase {
 
 	private Conveyor intakeConveyor, shooterConveyor;
 	private Status status = Status.OFF;
-
+	private Timer timer=new Timer();
 	public Conveyors() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
@@ -94,18 +94,58 @@ public class Conveyors extends MustangSubsystemBase {
 				break;
 			case OUTTAKING:
 				if (shooterConveyor.getBallCount() == 0) {
-					shooterConveyor.stop();
+					if(timer.get()==0)
+					{
+						timer.start();
+					}
+					if(timer.hasElapsed(2))
+					{
+						shooterConveyor.stop();
+						timer.reset();
+						timer.stop();
+					}
+					
 				}
 				if (ballCount() == 0) {
-					intakeConveyor.stop();
+					if(timer.get()==0)
+					{
+						timer.start();
+					}
+					if(timer.hasElapsed(2))
+					{
+						intakeConveyor.stop();
+						timer.reset();
+						timer.stop();
+					}
 				}
 				break;
 			case SHOOTING:
 				if (intakeConveyor.getBallCount() == 0) {
-					intakeConveyor.stop();
+					if(timer.get()==0)
+					{
+						timer.start();
+					}
+					if(timer.hasElapsed(2))
+					{
+						intakeConveyor.stop();
+						timer.reset();
+						timer.stop();
+					}
+					
 				}
 				if (ballCount() == 0) {
-					shooterConveyor.stop();
+
+					
+					if(timer.get()==0)
+					{
+						timer.start();
+					}
+					if(timer.hasElapsed(2))
+					{
+						shooterConveyor.stop();
+						timer.reset();
+						timer.stop();
+					}
 				}
 				break;
 			case OFF:
@@ -144,7 +184,7 @@ public class Conveyors extends MustangSubsystemBase {
 		shooterConveyor.updateConveyorState();
 		// intakeConveyor.debugBeamBreaks();
 		// shooterConveyor.debugBeamBreaks();
-//		checkState();
+		checkState();
 	}
 }
 
