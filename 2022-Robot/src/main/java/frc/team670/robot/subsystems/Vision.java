@@ -139,10 +139,10 @@ public class Vision extends MustangSubsystemBase{
         // y is the y-direction transformation of the current position from the starting position
 
         double d_c = Math.sqrt((d_0 * d_0) + (d_f * d_f) - (2 * d_0 * d_f * Math.cos(theta)));
-        double gamma = Math.asin((d_f * Math.sin(theta)) / d_c);
-        double x = d_c * Math.cos(gamma);
-        double y = d_c * Math.sin(gamma);
-        return new double[]{x, y, d_c, gamma};
+        double angleStartToCurr = Math.asin((d_f * Math.sin(theta)) / d_c);
+        double x = d_c * Math.cos(angleStartToCurr);
+        double y = d_c * Math.sin(angleStartToCurr);
+        return new double[]{x, y, d_c};
     }
 
     public double getVisionCaptureTime() {
