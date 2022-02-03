@@ -15,12 +15,15 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.*;
+import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.robot.commands.shooter.StartShooter;
+
 
 public class RobotContainer extends RobotContainerBase {
 
     private static OI oi = new OI();
-    private static Vision vision = new Vision();
-    private static Shooter shooter = new Shooter(vision);
+    //private static Vision vision = new Vision();
+    private static Shooter shooter = new Shooter();
 
     int i = 0;
 
@@ -31,7 +34,7 @@ public class RobotContainer extends RobotContainerBase {
      */
     public RobotContainer() {
         super();
-        addSubsystem(shooter, vision);
+        addSubsystem(shooter);
       
     }
 
@@ -53,7 +56,7 @@ public class RobotContainer extends RobotContainerBase {
     }
 
     public void teleopInit() {
-      
+      MustangScheduler.getInstance().schedule(new StartShooter(shooter, false));
       
     }
 
@@ -83,7 +86,7 @@ public class RobotContainer extends RobotContainerBase {
     }
 
     public void periodic() {
-        break1.sendBeamBreakDataToDashboard();
+        //break1.sendBeamBreakDataToDashboard();
     }
 
 }

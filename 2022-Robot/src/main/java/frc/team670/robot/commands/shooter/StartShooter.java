@@ -36,9 +36,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        if (useVision) {
-            setRPM();
-        }
+        setRPM();
         shooter.run();
     }
 
@@ -60,12 +58,12 @@ public class StartShooter extends CommandBase implements MustangCommand {
      */
 
     private void setRPM() {
-        if (vision.getHealth(true) == HealthState.GREEN) {
-            double distanceToTarget = vision.getDistanceToTargetM();
-            shooter.setRPMForDistance(distanceToTarget);
-        } else {
+        // if (vision.getHealth(true) == HealthState.GREEN) {
+        //     double distanceToTarget = vision.getDistanceToTargetM();
+        //     shooter.setRPMForDistance(distanceToTarget);
+        // } else {
             shooter.setTargetRPM(shooter.getDefaultRPM());
-        }
+       // }
     }
 
 }

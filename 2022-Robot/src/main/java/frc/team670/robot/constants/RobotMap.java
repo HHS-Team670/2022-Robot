@@ -24,8 +24,8 @@ public class RobotMap {
   public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
-  public final static int SHOOTER_MAIN = 11;
-  public final static int SHOOTER_FOLLOWER = 12;
+  public final static int SHOOTER_MAIN = 5;
+  public final static int SHOOTER_FOLLOWER = 4;
 
   // Turret
   public static final int TURRET_ROTATOR = 24;
