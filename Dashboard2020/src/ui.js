@@ -92,18 +92,6 @@ NetworkTables.addKeyListener('/SmartDashboard/DriveBase', (key, value) => {
     }
 });
 
-// updates status lights for turret
-NetworkTables.addKeyListener('/SmartDashboard/Turret', (key, value) => {
-    var statusLights = document.getElementById('status-lights-subsystems');
-    var commands = statusLights.contentDocument;
-    if (value === 'GREEN') {
-        document.getElementById('turret-status').style.fill = "rgb(0,255,0)";
-        document.getElementById('turret-status').style.stroke = "rgb(0,255,0)";
-    } else if (value === 'RED') {
-        document.getElementById('turret-status').style.fill = "rgb(255,0,0)";
-        document.getElementById('turret-status').style.stroke = "rgb(255,0,0)";
-    }
-});
 
 // updates status lights for indexer
 NetworkTables.addKeyListener('/SmartDashboard/Indexer', (key, value) => {
@@ -137,21 +125,6 @@ NetworkTables.addKeyListener('/SmartDashboard/Shooter', (key, value) => {
     }
 });
 
-// updates status lights for Wheel Of Fortune
-NetworkTables.addKeyListener('/SmartDashboard/ColorWheelSpinner', (key, value) => {
-    var statusLights = document.getElementById('status-lights-subsystems');
-    var commands = statusLights.contentDocument;
-    if (value === 'GREEN') {
-        document.getElementById('wof-status').style.fill = "rgb(0,255,0)";
-        document.getElementById('wof-status').style.stroke = "rgb(0,255,0)";
-    } else if (value === 'YELLOW') {
-        document.getElementById('wof-status').style.fill = "rgb(255,255,0)";
-        document.getElementById('wof-status').style.stroke = "rgb(255,255,0)";
-    } else if (value === 'RED') {
-        document.getElementById('wof-status').style.fill = "rgb(255,0,0)";
-        document.getElementById('wof-status').style.stroke = "rgb(255,0,0)";
-    }
-});
 
 // updates status lights for Climber
 NetworkTables.addKeyListener('/SmartDashboard/Climber', (key, value) => {
