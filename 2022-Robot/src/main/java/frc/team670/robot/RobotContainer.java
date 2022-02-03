@@ -7,13 +7,24 @@
 
 package frc.team670.robot;
 
+import com.fasterxml.jackson.databind.util.Converter;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.Conveyors;
+import frc.team670.robot.commands.Conveyors.RunConveyor;
+import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+
+
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -23,22 +34,24 @@ public class RobotContainer extends RobotContainerBase {
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
+  private Conveyors conveyors = new Conveyors();
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
-  BeamBreak break1 = new BeamBreak(9);
+  BeamBreak beam = new BeamBreak(2);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
+    addSubsystem(conveyors);
     
     
   }
 
   public void robotInit() {
-    
   }
 
   /**
@@ -55,8 +68,11 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    
-    
+  
+  //  conveyors.runConveyor(Conveyors.Status.INTAKING);
+  // MustangScheduler.getInstance().schedule);
+  configureButtonBindings();
+  
   }
 
   @Override
@@ -85,7 +101,20 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   break1.sendBeamBreakDataToDashboard();
+   //break1.sendBeamBreakDataToDashboard();
+    // conveyors.debugBeamBreaks();
+    // beam.sendBeamBreakDataToDashboard();
+    conveyors.debugBeamBreaks();
+  }
+
+  private void configureButtonBindings(){
+    JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
+    JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
+    JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+    triggerIntaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new RunConveyor(conveyors, Conveyors.Status.SHOOTING)));
+
   }
 
 }

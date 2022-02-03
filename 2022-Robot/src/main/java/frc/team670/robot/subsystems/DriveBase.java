@@ -5,8 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-// COPIED FROM 2020
-
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer; 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -34,7 +32,7 @@ import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
-import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
+import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangNotifications;
@@ -49,7 +47,7 @@ import frc.team670.robot.constants.RobotMap;
  * 
  * @author lakshbhambhani
  */
-public class DriveBase extends TankDriveBase {
+public class DriveBase extends TankDrive {
   private SparkMAXLite left1, left2, right1, right2;
   private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -541,6 +539,12 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   public SimpleMotorFeedforward getRightSimpleMotorFeedforward() {
     return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
+  }
+
+  @Override
+  public void toggleIdleMode() {
+    // TODO Auto-generated method stub
+    
   }
 
 }
