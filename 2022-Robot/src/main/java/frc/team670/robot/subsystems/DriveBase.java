@@ -359,6 +359,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   @Override
   public void mustangPeriodic() {
+    Logger.consoleLog("in Periodic");
     if (!timer.hasElapsed(5)) {
       AutoRoutine routine = autoSelector.getSelection();
       double time = autoSelector.getDelayTime();

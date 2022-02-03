@@ -108,7 +108,7 @@ public class AutoSelector {
 
       // RETURNED FALSE
       Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys(0));
-      Logger.consoleLog("contains auton-chooser key %s", SmartDashboard.containsKey("auton-chooser"));
+      Logger.consoleLog("contains auton-chooser key: %s", SmartDashboard.containsKey("auton-chooser"));
       
         Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
         
@@ -120,10 +120,10 @@ public class AutoSelector {
         //   return this.selectedRoutine;
         // }
         // Number autoID = value.getNumber(-1);
-        Logger.consoleLog("auton selector id: %s", autoID);
+        Logger.consoleLog("auto path number: %s", autoID);
 
         this.selectedRoutine = AutoRoutine.getById((int)(autoID.intValue()));
-        Logger.consoleLog("auton selector routine: %s", this.selectedRoutine);
+        Logger.consoleLog("auto path routine: %s", this.selectedRoutine);
         return this.selectedRoutine;
     }
 
