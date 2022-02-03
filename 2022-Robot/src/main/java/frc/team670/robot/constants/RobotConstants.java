@@ -1,7 +1,3 @@
-// COPIED FROM 2020
-
-
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
