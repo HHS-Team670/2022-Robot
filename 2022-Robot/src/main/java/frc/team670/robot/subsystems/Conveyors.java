@@ -172,7 +172,7 @@ class Conveyor {
 <<<<<<< HEAD
 			timer.reset();
 			timer.start();
-		} else if (timer.hasElapsed(2.0)) {
+		} else if (timer.hasElapsed(SmartDashboard.getNumber("Conveyor Delay", 2.0))) {
 			timer.stop();
 			ballPassed=false;
 			ballCount = 0;
