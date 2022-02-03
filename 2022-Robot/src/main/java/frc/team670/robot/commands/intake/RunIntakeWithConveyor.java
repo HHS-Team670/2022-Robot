@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 
  /*
-public class RunIntakeFor1Ball extends SequentialCommandGroup implements MustangCommand {
+public class RunIntakeWithConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Intake intake;
     private Conveyors conveyor;
@@ -26,17 +26,15 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
 
     // Sets up everything
 
-    public RunIntakeFor1Ball(Intake intake, Conveyors conveyor) {
+    public EmptyIntake(Intake intake, Conveyors conveyor) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(this.intake, HealthState.GREEN);
         addCommands(
-                new DeployIntake(this.intake),
-                new RunIntakeWithConveyor(this.intake, this.conveyor),
-                new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S), 
-                new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyor(conveyor)));
+            new RunIntake(false, this.intake),
+            new RunConveyor(conveyor, Conveyors.Status.INTAKING));
     }
 
     // Returns health state

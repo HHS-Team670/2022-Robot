@@ -15,40 +15,40 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
  */
 public class DeployIntake extends CommandBase implements MustangCommand {
 
-  private Map<MustangSubsystemBase, HealthState> healthReqs;
-  private Intake intake;
+    private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private Intake intake;
 
-  
-  // Deploys the intake
-  public DeployIntake(Intake intake) {
-    this.intake = intake;
-    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-    healthReqs.put(intake, HealthState.GREEN);
-    addRequirements(intake);
-  }
+    
+    // Deploys the intake
+    public DeployIntake(Intake intake) {
+        this.intake = intake;
+        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+        healthReqs.put(intake, HealthState.GREEN);
+        addRequirements(intake);
+    }
 
-  /*
-   * 
-   * runs the intake
-   */
-  public void initialize() {
-    intake.deploy();
-  }
+    /*
+     * 
+     * runs the intake
+     */
+    public void initialize() {
+        intake.deploy();
+    }
 
-  public void end() {
-    intake.stopDeployer();
-  }
+    public void end() {
+        intake.stopDeployer();
+    }
 
-  public boolean isFinished() {
-    return !intake.isDeployed();
-  }
+    public boolean isFinished() {
+        return !intake.isDeployed();
+    }
 
-  /*
-   * returns the health state of the intake
-   */
+    /*
+     * returns the health state of the intake
+     */
 
-  @Override
-  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    return healthReqs;
-  }
+    @Override
+    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+        return healthReqs;
+    }
 }
