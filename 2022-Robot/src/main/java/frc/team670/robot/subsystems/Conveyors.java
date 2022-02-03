@@ -98,7 +98,7 @@ public class Conveyors extends MustangSubsystemBase {
 					{
 						timer.start();
 					}
-					if(timer.hasElapsed(2))
+					if(timer.hasElapsed(2.0))
 					{
 						shooterConveyor.stop();
 						timer.reset();
@@ -111,7 +111,7 @@ public class Conveyors extends MustangSubsystemBase {
 					{
 						timer.start();
 					}
-					if(timer.hasElapsed(2))
+					if(timer.hasElapsed(2.0))
 					{
 						intakeConveyor.stop();
 						timer.reset();
