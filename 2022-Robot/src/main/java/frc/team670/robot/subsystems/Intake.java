@@ -44,7 +44,7 @@ public class Intake extends MustangSubsystemBase {
     private int exceededCurrentLimitCount = 0;
     private SparkMAXLite roller;
     private SparkMAXLite deployer;
-    private double target;
+    private double deployerTarget;
     private CANEncoder deployerEncoder;
     private CANPIDController deployerController;
     private boolean isDeployed = false; // TODO: true for testing, change this
@@ -54,7 +54,6 @@ public class Intake extends MustangSubsystemBase {
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         deployer = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
         roller.setInverted(true);
-        roller.setOpenLoopRampRate(1.0);
         deployerEncoder = deployer.getEncoder();
         deployerEncoder.setPosition(DEPLOYER_TICKS_NOT_DEPLOYED);
         deployerController = deployer.getPIDController();
@@ -74,8 +73,8 @@ public class Intake extends MustangSubsystemBase {
     // Deploys the intake
     public void deploy() {
         deployer.set(INTAKE_DEPLOYER_SPEED);
-        target = DEPLOYER_TICKS_DEPLOYED;
-        deployerController.setReference(target, ControlType.kSmartMotion);
+        deployerTarget = DEPLOYER_TICKS_DEPLOYED;
+        deployerController.setReference(deployerTarget, ControlType.kSmartMotion);
     }
     // Returns true if the intake is deployed
     public boolean isDeployed() {
@@ -83,11 +82,11 @@ public class Intake extends MustangSubsystemBase {
     }
     // Stops the deployer motor
     public void stopDeployer() {
-        deployer.set(0.0);
+        deployer.set(0.0); // TODO: Change this later when Tarini makes the change
     }
-    // Returns true if the deployer has reached its target
-    public boolean reachedTarget() {
-        return Math.abs(deployerEncoder.getPosition() - target) < HALF_CM;
+    // Returns true if the deployer has reached its deployerTarget
+    public boolean deployerReachedTarget() {
+        return Math.abs(deployerEncoder.getPosition() - deployerTarget) < HALF_CM;
     }
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
@@ -124,8 +123,8 @@ public class Intake extends MustangSubsystemBase {
     // Retracts the intake
     public void retractIntake() {
         deployer.set(INTAKE_DEPLOYER_SPEED * -1);
-        target = DEPLOYER_TICKS_NOT_DEPLOYED;
-        deployerController.setReference(target, ControlType.kSmartMotion);
+        deployerTarget = DEPLOYER_TICKS_NOT_DEPLOYED;
+        deployerController.setReference(deployerTarget, ControlType.kSmartMotion);
     }
 
     /**
