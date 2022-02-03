@@ -1,6 +1,3 @@
-// COPIED FROM 2020
-
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.SerialPort;
@@ -65,5 +62,12 @@ public class RobotMap {
   // LEDs (connected on RoboRIO PWM)
   public static final int LEFT_SIDE_LEDS_PWM = 0;
   public static final int RIGHT_SIDE_LEDS_PWM = 1;
+
+  //CONVEYOR Vars
+  public static final int INTAKE_CONVEYOR_MOTOR = 7;//Needs to be changed
+  public static final int SHOOTER_CONVEYOR_MOTOR = 6;//Needs to be changed
+
+  public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;//Needs to be changed
+  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;//Needs to be changed
 
 }

@@ -8,85 +8,113 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.subsystems.*;
-import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.subsystems.Conveyors;
+import frc.team670.robot.subsystems.DriveBase;
+
+
+
 
 
 public class RobotContainer extends RobotContainerBase {
 
-    private static OI oi = new OI();
-    //private static Vision vision = new Vision();
-    private static Shooter shooter = new Shooter();
+  private static OI oi = new OI();
+  private DriveBase driveBase = new DriveBase(getDriverController());
+  int i = 0;
 
-    int i = 0;
+  private MustangCommand m_autonomousCommand;
+  private Conveyors conveyors = new Conveyors();
 
-    private MustangCommand m_autonomousCommand;
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+  //     vision);
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
-    public RobotContainer() {
-        super();
-        addSubsystem(shooter);
-      
-    }
 
-    public void robotInit() {
-      
-    }
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+  public RobotContainer() {
+    super();
+    addSubsystem(conveyors);
+    
+    
+  }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public MustangCommand getAutonomousCommand() {
-        return null;
-    }
+  public void robotInit() {
+  }
 
-    public void autonomousInit() {
-      
-    }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public MustangCommand getAutonomousCommand() {
+    MustangCommand autonCommand = new MoveForwards(driveBase);
+      //  MustangCommand autonCommand = new RightShootTrench(driveBase);
 
-    public void teleopInit() {
-      MustangScheduler.getInstance().schedule(new StartShooter(shooter, false));
-      
-    }
+    Logger.consoleLog("autonCommand: %s", autonCommand);
+    return autonCommand;
+  }
 
-    @Override
-    public void disabled() {
-      
-    }
+  public void autonomousInit() {
+    Logger.consoleLog("autoInit called");
 
-    public static Joystick getOperatorController() {
-        return OI.getOperatorController();
-    }
+  }
 
-    public static void rumbleDriverController() {
-        notifyDriverController(1.0, 0.3);
-    }
+  public void teleopInit() {
+  
+  //  conveyors.runConveyor(Conveyors.Status.INTAKING);
+  // MustangScheduler.getInstance().schedule);
+  configureButtonBindings();
+  
+  }
 
-    public static void rumbleDriverController(double power, double time) {
-        oi.rumbleDriverController(power, time);
-    }
+  @Override
+  public void disabled() {
+    
+  }
 
-    public static void notifyDriverController(double power, double time) {
-        oi.rumbleDriverController(power, time);
-    }
+  public static Joystick getOperatorController() {
+    return OI.getOperatorController();
+  }
 
-    public static MustangController getDriverController() {
-        return OI.getDriverController();
-    }
+  public static void rumbleDriverController() {
+    notifyDriverController(1.0, 0.3);
+  }
 
-    public void periodic() {
-        //break1.sendBeamBreakDataToDashboard();
-    }
+  public static void rumbleDriverController(double power, double time) {
+    oi.rumbleDriverController(power, time);
+  }
+
+  public static void notifyDriverController(double power, double time) {
+    oi.rumbleDriverController(power, time);
+  }
+
+  public static MustangController getDriverController() {
+    return OI.getDriverController();
+  }
+
+  public void periodic() {
+   //break1.sendBeamBreakDataToDashboard();
+    // conveyors.debugBeamBreaks();
+    // beam.sendBeamBreakDataToDashboard();
+    conveyors.debugBeamBreaks();
+  }
+
+  private void configureButtonBindings(){
+    JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
+    JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
+    JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+    triggerIntaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new RunConveyor(conveyors, Conveyors.Status.SHOOTING)));
+
+  }
 
 }
