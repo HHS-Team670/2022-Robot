@@ -356,7 +356,8 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
       double matchTime = DriverStation.getMatchTime();
       boolean isAutonRn = DriverStation.isAutonomous();
       NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime").forceSetDouble(matchTime);
-      NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").forceSetBoolean(isAutonRn);
+      if (isAutonRn != NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").getBoolean(false))
+        NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").forceSetBoolean(isAutonRn);
       
   }
 

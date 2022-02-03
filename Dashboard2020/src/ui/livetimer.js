@@ -6,6 +6,7 @@ var timer = document.getElementById("timer");
 var timerPrefixString = "Time of Match: ";
 var phasePrefixString = "Match Phase: ";
 var timeoutFunc = null;
+var phaseCache = MatchPhases.NOT_STARTED;
 var seconds;
 var minutes;
 const MatchPhases = Object.freeze ({
@@ -14,23 +15,33 @@ const MatchPhases = Object.freeze ({
     TELEOP: Object.freeze({text:"TELEOP",color:"rgb(0,200,0)"}),
     ENDED: Object.freeze({text:"ENDED",color:"rgb(200,0,0)"})
 });
+
+setMatchPhase(MatchPhases.NOT_STARTED);
+timer.textContent = timerPrefixString;
+
 NetworkTables.addKeyListener("/SmartDashboard/MatchTime", (key, value) => {
     updateTimer(value);
     var timeString = getTimeString(minutes, seconds);
-
+    timer.textContent = timerPrefixString + timeString;
+    if (time < 0 && phase == MatchPhases.TELEOP) {
+        setMatchPhase(MatchPhases.ENDED);
+        timeoutFunc = setTimeout(() => {
+            setMatchPhase(MatchPhases.NOT_STARTED); 
+            clearTimeout(timeoutFunc);
+            timeoutFunc = null;
+        }, 5000);
+    }
 });
 
 NetworkTables.addKeyListener("/SmartDashboard/IsAuton", (key, value) => {
-    
+    if (value) {
+        setMatchPhase(MatchPhases.AUTON);
+    } else {
+        setMatchPhase(MatchPhases.TELEOP);
+    }
 
 });
 
-
-function stopTimer () {
-    if (countDownTimer != null) clearInterval(countDownTimer);
-    timer.textContent = timerPrefixString;
-    runtimer = false;
-}
 
 function getTimeString (minutes, seconds) {
     return (seconds == 60 ? minutes + 1 : minutes) + ':' 
@@ -45,6 +56,7 @@ function updateTimer(time) {
 }
 
 function setMatchPhase(phase) {
+    phaseCache = phase;
     
     matchPhase.textContent = phasePrefixString + phase.text;
     matchPhase.style.backgroundColor = phase.color;
@@ -56,44 +68,3 @@ function setMatchPhase(phase) {
     }
 }
 
-
-document.getElementById("timer-stopper").onmouseup = function() {
-    stopTimer();
-    setMatchPhase(MatchPhases.NOT_STARTED);
-}
-
-
-document.getElementById("timer-starter").onmouseup = function() {
-    if (runtimer) return;
-    runtimer = true;
-    endTime = new Date().getTime() + FULL_MATCH_LENGTH_MILLIS;
-    
-    updateTimer(endTime);
-
-    timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
-    if (timeoutFunc != null) clearTimeout(timeoutFunc);
-    setMatchPhase(MatchPhases.AUTON);
-    
-    countDownTimer = setInterval(function() {
-        
-        updateTimer(endTime);
-
-
-        // TODO regex format the time
-        timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
-            
-        // If the count down is over, write some text 
-        if (timeDifference < 0) {
-            stopTimer();
-            setMatchPhase(MatchPhases.ENDED);
-            timeoutFunc = setTimeout(() => {
-                setMatchPhase(MatchPhases.NOT_STARTED); 
-                clearTimeout(timeoutFunc);
-                timeoutFunc = null;
-            }, 5000);
-        } else if (timeDifference <= FULL_MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
-            setMatchPhase(MatchPhases.TELEOP);
-        }
-    }, 1000);
-    runtimer = true;
-};
