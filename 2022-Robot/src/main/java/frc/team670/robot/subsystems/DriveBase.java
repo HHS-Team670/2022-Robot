@@ -5,8 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-// COPIED FROM 2020
-
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;

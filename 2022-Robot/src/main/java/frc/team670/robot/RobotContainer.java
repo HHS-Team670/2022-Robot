@@ -9,17 +9,22 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.right.RightThroughTrench;
+import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.auton.MoveForwards;
-import frc.team670.robot.commands.auton.NewYCoord;
+import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.subsystems.*;
+import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.Conveyors;
+import frc.team670.robot.subsystems.DriveBase;
+
+
+
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -29,23 +34,23 @@ public class RobotContainer extends RobotContainerBase {
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
-  private static Climber climber = new Climber();
+  private Conveyors conveyors = new Conveyors();
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
-  BeamBreak break1 = new BeamBreak(9);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
-    addSubsystem(climber);
+    addSubsystem(conveyors);
+    
     
   }
 
   public void robotInit() {
-    
   }
 
   /**
@@ -64,15 +69,14 @@ public class RobotContainer extends RobotContainerBase {
   public void autonomousInit() {
     Logger.consoleLog("autoInit called");
 
-    m_autonomousCommand = getAutonomousCommand();
-    if (m_autonomousCommand != null) {
-      MustangScheduler.getInstance().schedule(m_autonomousCommand);
-    }
   }
 
   public void teleopInit() {
-    Logger.consoleLog(driveBase.getPose().toString());
-    
+  
+  //  conveyors.runConveyor(Conveyors.Status.INTAKING);
+  // MustangScheduler.getInstance().schedule);
+  configureButtonBindings();
+  
   }
 
   @Override
@@ -101,10 +105,20 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    break1.sendBeamBreakDataToDashboard();
-    // driveBase.getHeading();
-    SmartDashboard.putNumber("navX", driveBase.getHeading());
-    SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
+   //break1.sendBeamBreakDataToDashboard();
+    // conveyors.debugBeamBreaks();
+    // beam.sendBeamBreakDataToDashboard();
+    conveyors.debugBeamBreaks();
+  }
+
+  private void configureButtonBindings(){
+    JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
+    JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
+    JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+    triggerIntaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new RunConveyor(conveyors, Conveyors.Status.SHOOTING)));
+
   }
 
 }
