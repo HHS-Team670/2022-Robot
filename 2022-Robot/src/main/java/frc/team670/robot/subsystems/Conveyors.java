@@ -169,28 +169,9 @@ class Conveyor {
 	public void updateConveyorState() {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
-<<<<<<< HEAD
-			timer.reset();
-			timer.start();
-		} else if (timer.hasElapsed(SmartDashboard.getNumber("Conveyor Delay", 2.0))) {
-			timer.stop();
-			ballPassed=false;
-			ballCount = 0;
-			if (shooterConveyor != null) {
-				if(shooterConveyor.getBallCount() == 1)
-				{
-					ballPassed = true;
-				}
-				if(!ballPassed)
-				{
-					shooterConveyor.ballCount = 1;
-				}
-				
-			}
-=======
-			return;
->>>>>>> parent of 490f1fa (Implemented delay logic)
-		}
+
+
+		} 
 		ballCount = 0;
 	}
 
