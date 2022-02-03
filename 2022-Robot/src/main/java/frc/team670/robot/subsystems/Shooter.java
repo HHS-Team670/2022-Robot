@@ -101,14 +101,14 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final int VELOCITY_SLOT = 0;
 
-    public Shooter() {
+    public Shooter(Vision vision) {
         SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
         SmartDashboard.putNumber("Shooter FF", V_FF);
         SmartDashboard.putNumber("Shooter P", V_P);
         SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
         SmartDashboard.putNumber("Shooter speed", targetRPM);
 
-        //this.vision = vision;
+        this.vision = vision;
 
         controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
                 RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
@@ -218,12 +218,12 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        // double distance = vision.getDistanceToTargetM();
-        // if (distance != RobotConstants.VISION_ERROR_CODE) {
-        //     double targetRPM = getTargetRPMForLowGoalDistance(distance);
-        //     setTargetRPM(targetRPM);
-        //     run();
-        // }
+        double distance = vision.getDistanceToTargetM();
+        if (distance != RobotConstants.VISION_ERROR_CODE) {
+            double targetRPM = getTargetRPMForLowGoalDistance(distance);
+            setTargetRPM(targetRPM);
+            run();
+        }
         if (Math.abs(getVelocity() - targetRPM) < VELOCITY_ALLOWED_ERROR) {
             setRampRate(false);
         }

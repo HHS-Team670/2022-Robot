@@ -20,15 +20,15 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    //private boolean useVision;
+    private boolean useVision;
 
     /**
      * 
      * @param useVision if the user wants to use vision
      */
-    public StartShooter(Shooter shooter) {
+    public StartShooter(Shooter shooter, boolean useVision) {
         this.shooter = shooter;
-        //this.useVision = useVision;
+        this.useVision = useVision;
         addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
@@ -36,9 +36,9 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        //if (useVision) {
+        if (useVision) {
             setRPM();
-        //}
+        }
         shooter.run();
     }
 
@@ -60,12 +60,12 @@ public class StartShooter extends CommandBase implements MustangCommand {
      */
 
     private void setRPM() {
-        // if (vision.getHealth(true) == HealthState.GREEN) {
-        //     double distanceToTarget = vision.getDistanceToTargetM();
-        //     shooter.setRPMForDistance(distanceToTarget);
-        // } else {
+        if (vision.getHealth(true) == HealthState.GREEN) {
+            double distanceToTarget = vision.getDistanceToTargetM();
+            shooter.setRPMForDistance(distanceToTarget);
+        } else {
             shooter.setTargetRPM(shooter.getDefaultRPM());
-       // }
+        }
     }
 
 }
