@@ -15,15 +15,14 @@ public class RobotMap {
   public static final int SPARK_LEFT_MOTOR_2 = 21;
   public static final int SPARK_RIGHT_MOTOR_1 = 22;
   public static final int SPARK_RIGHT_MOTOR_2 = 23;
-  public static final int SPARK_MIDDLE_MOTOR = 8;
 
   // NavX
   public final static I2C.Port NAVX_PORT = I2C.Port.kOnboard;
   public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
-  public final static int SHOOTER_MAIN = 11;
-  public final static int SHOOTER_FOLLOWER = 12;
+  public final static int SHOOTER_MAIN = 5;
+  public final static int SHOOTER_FOLLOWER = 4;
 
   // Turret
   public static final int TURRET_ROTATOR = 24;
@@ -43,8 +42,7 @@ public class RobotMap {
   public static final int UPDRAW_SPINNER = 10;
 
   // Climber
-  public static final int STRAIGHT_CLIMBER_MOTOR = -1; // TODO: Get the proper numbers
-  public static final int OBLIQUE_CLIMBER_MOTOR = -1;
+  public static final int CLIMBER_MOTOR = 14;
 
   // PNEUMATICS
   public static final int PCMODULE = 2; // PCM CAN ID
