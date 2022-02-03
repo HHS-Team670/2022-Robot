@@ -188,7 +188,7 @@ class Conveyor {
 				{
 					ballPassed = true;
 				}
-				if(!ballPassed)
+				if(!ballPassed && roller.get() > 0)
 				{
 					shooterConveyor.ballCount = 1;
 				}
