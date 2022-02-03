@@ -9,7 +9,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.constants.RobotMap;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -33,11 +33,11 @@ public class Conveyors extends MustangSubsystemBase {
 	private Status status = Status.OFF;
 
 	public Conveyors() {
-		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK, shooterConveyor);
 	}
 
-	public void debugBeamBreaks(){
+	public void debugBeamBreaks() {
 		intakeConveyor.debugBeamBreaks();
 		shooterConveyor.debugBeamBreaks();
 	}
@@ -72,7 +72,7 @@ public class Conveyors extends MustangSubsystemBase {
 		Logger.consoleLog("Conveyor Status: SHOOTING");
 	}
 
-	// Helper method of runconveyor
+	// Helper method of runConveyor
 	private void outtakeConveyor() {
 		intakeConveyor.run(false);
 		shooterConveyor.run(false);
@@ -144,7 +144,7 @@ public class Conveyors extends MustangSubsystemBase {
 		shooterConveyor.updateConveyorState();
 		// intakeConveyor.debugBeamBreaks();
 		// shooterConveyor.debugBeamBreaks();
-//		checkState();
+		checkState();
 	}
 }
 
@@ -152,13 +152,21 @@ class Conveyor {
 
 	private SparkMAXLite roller;
 	private double CONVEYOR_SPEED = 0.3;
-	private int ballCount = 0;
-
+	protected int ballCount = 0;
+	protected Timer timer = new Timer();
 	private BeamBreak beamBreak;
+	private Conveyor shooterConveyor;
+	private boolean ballPassed;
 
 	public Conveyor(int motorID, int beamBreakID) {
 		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
 		beamBreak = new BeamBreak(beamBreakID);
+	}
+
+	public Conveyor(int motorID, int beamBreakID, Conveyor shooterConveyor) {
+		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
+		beamBreak = new BeamBreak(beamBreakID);
+		this.shooterConveyor = shooterConveyor;
 	}
 
 	public int getBallCount() {
@@ -169,9 +177,25 @@ class Conveyor {
 	public void updateConveyorState() {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
-			return;
+			timer.reset();
+			timer.start();
+		} else if (timer.hasElapsed(SmartDashboard.getNumber("Conveyor Delay", 2.0))) {
+			timer.stop();
+			ballPassed=false;
+			ballCount = 0;
+			if (shooterConveyor != null) {
+				if(shooterConveyor.getBallCount() == 1)
+				{
+					ballPassed = true;
+				}
+				if(!ballPassed)
+				{
+					shooterConveyor.ballCount = 1;
+				}
+				
+			}
 		}
-		ballCount = 0;
+
 	}
 
 	// Runs the conveyor in the specified direction
@@ -193,7 +217,7 @@ class Conveyor {
 		return roller.getLastError();
 	}
 
-	public void debugBeamBreaks(){
+	public void debugBeamBreaks() {
 		beamBreak.sendBeamBreakDataToDashboard();
 	}
 }
