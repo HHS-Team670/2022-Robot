@@ -72,7 +72,7 @@ public class RobotMap {
   public static final int INTAKE_CONVEYOR_MOTOR = 7;//Needs to be changed
   public static final int SHOOTER_CONVEYOR_MOTOR = 6;//Needs to be changed
 
-  public static final int INTAKE_CONVEYOR_BEAMBREAK = 0;//Needs to be changed
-  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 1;//Needs to be changed
+  public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;//Needs to be changed
+  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;//Needs to be changed
 
 }

@@ -32,6 +32,7 @@ public class Conveyors extends MustangSubsystemBase {
 	private Conveyor intakeConveyor, shooterConveyor;
 	private Status status = Status.OFF;
 	private Timer timer = new Timer();
+	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
 
 	public Conveyors() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
@@ -50,8 +51,10 @@ public class Conveyors extends MustangSubsystemBase {
 			intakeConveyor();
 		} else if (mode == Status.SHOOTING) {
 			shootConveyor();
+			timer.start();
 		} else if (mode == Status.OUTTAKING) {
 			outtakeConveyor();
+			timer.start();
 		} else if (mode == Status.OFF) {
 			stopAll();
 		}
@@ -94,49 +97,16 @@ public class Conveyors extends MustangSubsystemBase {
 				}
 				break;
 			case OUTTAKING:
-				if (shooterConveyor.getBallCount() == 0) {
-					if (timer.get() == 0) {
-						timer.start();
-					}
-					if (timer.hasElapsed(2.0)) {
-						shooterConveyor.stop();
-						timer.reset();
-						timer.stop();
-					}
-
-				}
 				if (ballCount() == 0) {
-					if (timer.get() == 0) {
-						timer.start();
-					}
-					if (timer.hasElapsed(2.0)) {
-						intakeConveyor.stop();
-						timer.reset();
-						timer.stop();
+					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+						stopAll();
 					}
 				}
 				break;
 			case SHOOTING:
-				if (intakeConveyor.getBallCount() == 0) {
-					if (timer.get() == 0) {
-						timer.start();
-					}
-					if (timer.hasElapsed(2)) {
-						intakeConveyor.stop();
-						timer.reset();
-						timer.stop();
-					}
-
-				}
 				if (ballCount() == 0) {
-
-					if (timer.get() == 0) {
-						timer.start();
-					}
-					if (timer.hasElapsed(2)) {
-						shooterConveyor.stop();
-						timer.reset();
-						timer.stop();
+					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+						stopAll();
 					}
 				}
 				break;
@@ -150,6 +120,8 @@ public class Conveyors extends MustangSubsystemBase {
 		status = Status.OFF;
 		intakeConveyor.stop();
 		shooterConveyor.stop();
+		timer.reset();
+		timer.stop();
 	}
 
 	// Data collection
@@ -201,6 +173,7 @@ class Conveyor {
 	public void updateConveyorState() {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
+			return;
 
 		}
 		ballCount = 0;

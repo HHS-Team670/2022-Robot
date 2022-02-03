@@ -20,6 +20,10 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.Conveyors;
 import frc.team670.robot.commands.Conveyors.RunConveyor;
+import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+
 
 
 
@@ -66,7 +70,8 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
   
   //  conveyors.runConveyor(Conveyors.Status.INTAKING);
-  MustangScheduler.getInstance().schedule(new RunConveyor(conveyors, Conveyors.Status.INTAKING));
+  // MustangScheduler.getInstance().schedule);
+  configureButtonBindings();
   
   }
 
@@ -100,6 +105,16 @@ public class RobotContainer extends RobotContainerBase {
     // conveyors.debugBeamBreaks();
     // beam.sendBeamBreakDataToDashboard();
     conveyors.debugBeamBreaks();
+  }
+
+  private void configureButtonBindings(){
+    JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
+    JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
+    JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+    triggerIntaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new RunConveyor(conveyors, Conveyors.Status.SHOOTING)));
+
   }
 
 }
