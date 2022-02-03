@@ -8,18 +8,15 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.auton.MoveForwards;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyors;
 import frc.team670.robot.subsystems.DriveBase;
 
