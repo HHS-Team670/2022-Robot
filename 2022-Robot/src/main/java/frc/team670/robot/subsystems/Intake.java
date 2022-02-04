@@ -18,7 +18,6 @@ public class Intake extends MustangSubsystemBase {
     private static final double INTAKE_DEPLOYER_SPEED = 1;
     private static final double INTAKE_ROLLER_SPEED = 1;
 
-
     private static final double DEPLOYER_TICKS_NOT_DEPLOYED = 0; // TODO: change this later when we get the motor and subsystem
     private static final double DEPLOYER_TICKS_DEPLOYED = 0;
 	public static final int JAMMED_COUNT_DEF = 150;
@@ -33,16 +32,19 @@ public class Intake extends MustangSubsystemBase {
     private static final double MIN_VEL = 0;
     private static final double MAX_VEL = 0;
     private static final double ALLOWED_ERR = 0;
+    
     private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
     private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
     private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
     private static final double TICKS_PER_ROTATION_DEPLOYER = 1.0;
     private int SMARTMOTION_SLOT = 0;
     private double INTAKE_PEAK_CURRENT = 35; // Testing
+    
     private int exceededCurrentLimitCount = 0;
+    private double deployerTarget;
+
     private SparkMAXLite roller;
     private SparkMAXLite deployer;
-    private double deployerTarget;
     private RelativeEncoder deployerEncoder;
     private SparkMaxPIDController deployerController;
     private boolean isDeployed = false; // TODO: true for testing, change this
@@ -54,6 +56,7 @@ public class Intake extends MustangSubsystemBase {
         roller.setInverted(true);
         deployerEncoder = deployer.getEncoder();
         deployerEncoder.setPosition(DEPLOYER_TICKS_NOT_DEPLOYED);
+        
         deployerController = deployer.getPIDController();
         deployerController.setP(kP);
         deployerController.setI(kI);
@@ -68,34 +71,45 @@ public class Intake extends MustangSubsystemBase {
     public boolean isRolling() {
         return (roller.get() != 0);
     }
+
     // Deploys the intake
     public void deploy() {
+
         deployer.set(INTAKE_DEPLOYER_SPEED);
         deployerTarget = DEPLOYER_TICKS_DEPLOYED;
-        deployerController.setReference(deployerTarget, ControlType.kSmartMotion);
+        deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
+        isDeployed = true;
     }
+
     // Returns true if the intake is deployed
     public boolean isDeployed() {
         return isDeployed;
     }
+
     // Stops the deployer motor
     public void stopDeployer() {
         deployer.set(0.0); // TODO: Change this later when Tarini makes the change
     }
+
     // Returns true if the deployer has reached its deployerTarget
     public boolean deployerReachedTarget() {
         return Math.abs(deployerEncoder.getPosition() - deployerTarget) < HALF_CM;
     }
+
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
         if (isDeployed) {
             if (reversed) {
                 roller.set(INTAKE_ROLLER_SPEED * -1);
+
             } else {
                 roller.set(INTAKE_ROLLER_SPEED);
             }
         }
+        Logger.consoleLog("Running intake at: %s", roller.get());
+
     }
+
     // Returns true if the intake is jammed
     public boolean isJammed() {
         double intakeCurrent = roller.getOutputCurrent();
@@ -113,22 +127,28 @@ public class Intake extends MustangSubsystemBase {
         return false;
 
     }
+
     // Stops the intake
     public void stop() {
         roller.stopMotor();
         retractIntake();
+        Logger.consoleLog("Intake stopped");
     }
+
     // Retracts the intake
     public void retractIntake() {
         deployer.set(-INTAKE_DEPLOYER_SPEED);
         deployerTarget = DEPLOYER_TICKS_NOT_DEPLOYED;
-        deployerController.setReference(deployerTarget, ControlType.kSmartMotion);
+        deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
+        isDeployed = false;
+
     }
 
     /**
      * @return RED if the roller has issues, or the intake isn't deployed but the
      *         intake motors have issues
      */
+
     @Override
     public HealthState checkHealth() {
         if (roller == null || isSparkMaxErrored(roller)) {
@@ -145,9 +165,24 @@ public class Intake extends MustangSubsystemBase {
         return HealthState.GREEN;
     }
 
+    public void checkStatus () {
+        if (roller.get() != 0 && isDeployed == true) {
+            Logger.consoleLog("Intake is running");
+        }
+        else if (roller.get() == 0 && isDeployed == true) {
+            Logger.consoleLog("Intake has been deployed");
+        }
+        else if (roller.get() != 0 && isDeployed == false) {
+            roller.stopMotor();
+        }
+        else {
+            Logger.consoleLog("Intake is not running");
+        }
+    }
+
     @Override
     public void mustangPeriodic() {
-
+        checkHealth();
     }
 
 }
