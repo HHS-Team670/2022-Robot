@@ -26,21 +26,17 @@ public class DeployIntake extends CommandBase implements MustangCommand {
         healthReqs.put(intake, HealthState.GREEN);
         addRequirements(intake);
     }
-
-    /*
-     * 
-     * runs the intake
-     */
+    
     public void initialize() {
-        intake.deploy();
+        intake.deployer.deployIntake();
     }
 
     public void end() {
-        intake.stopDeployer();
+        intake.deployer.stop();
     }
 
     public boolean isFinished() {
-        return !intake.isDeployed();
+        return !intake.deployer.isAtTarget();
     }
 
     /*
