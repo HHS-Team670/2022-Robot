@@ -15,9 +15,13 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.conveyor.StopConveyor;
+import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.Conveyors;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Shooter;
 
 
 
@@ -26,11 +30,12 @@ import frc.team670.robot.subsystems.DriveBase;
 public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
-  private DriveBase driveBase = new DriveBase(getDriverController());
+  // private DriveBase driveBase = new DriveBase(getDriverController());
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
   private Conveyors conveyors = new Conveyors();
+  private Shooter shooter = new Shooter();
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
@@ -41,7 +46,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyors);
+    addSubsystem(conveyors, shooter);
     
     
   }
@@ -111,10 +116,13 @@ public class RobotContainer extends RobotContainerBase {
     JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
     JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
     JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+    JoystickButton startShooter = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+    JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
     triggerIntaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.INTAKING)));
     triggerOuttaking.whenPressed((new RunConveyor(conveyors, Conveyors.Status.OUTTAKING)));
     triggerShooting.whenPressed((new RunConveyor(conveyors, Conveyors.Status.SHOOTING)));
-
+    startShooter.whenPressed((new StartShooter(shooter)));
+    stopShooter.whenPressed((new StopShooter(shooter)));
   }
 
 }
