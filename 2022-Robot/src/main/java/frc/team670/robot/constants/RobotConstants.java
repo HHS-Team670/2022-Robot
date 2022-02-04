@@ -11,6 +11,7 @@ import frc.team670.mustanglib.constants.RobotConstantsBase;
 public class RobotConstants extends RobotConstantsBase{
 
     public static final double TIME_TO_COLLECT_1_BALL_S = 2.0; // TODO: Change this later
+    public static final double DEPLOYER_MASS = 10.0; // In kilograms, change later
 
     /**  the id for the camera that tells you how to shoot the ball*/
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";

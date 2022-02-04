@@ -15,8 +15,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 */
 public class Intake extends MustangSubsystemBase {
 
-    private static final double INTAKE_DEPLOYER_SPEED = 1;
-    private static final double INTAKE_ROLLER_SPEED = 1;
+    private static final double INTAKE_ROLLER_SPEED = 0.84; // Experimentally found
 
     private static final double DEPLOYER_TICKS_NOT_DEPLOYED = 0; // TODO: change this later when we get the motor and subsystem
     private static final double DEPLOYER_TICKS_DEPLOYED = 0;
@@ -39,12 +38,13 @@ public class Intake extends MustangSubsystemBase {
     private static final double TICKS_PER_ROTATION_DEPLOYER = 1.0;
     private int SMARTMOTION_SLOT = 0;
     private double INTAKE_PEAK_CURRENT = 35; // Testing
-    
+    private static final int PID_SLOT = 0; // Change later
+
     private int exceededCurrentLimitCount = 0;
     private double deployerTarget;
 
     private SparkMAXLite roller;
-    private SparkMAXLite deployer;
+    private SparkMAXLite deployerMtr;
     private RelativeEncoder deployerEncoder;
     private SparkMaxPIDController deployerController;
     private boolean isDeployed = false; // TODO: true for testing, change this
@@ -52,12 +52,13 @@ public class Intake extends MustangSubsystemBase {
     public Intake() {
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
-        deployer = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
+        deployerMtr = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
+        // deployer = new Deployer(deployerMtr, PID_SLOT);
         roller.setInverted(true);
-        deployerEncoder = deployer.getEncoder();
+        deployerEncoder = deployerMtr.getEncoder();
         deployerEncoder.setPosition(DEPLOYER_TICKS_NOT_DEPLOYED);
         
-        deployerController = deployer.getPIDController();
+        deployerController = deployerMtr.getPIDController();
         deployerController.setP(kP);
         deployerController.setI(kI);
         deployerController.setD(kD);
@@ -75,7 +76,6 @@ public class Intake extends MustangSubsystemBase {
     // Deploys the intake
     public void deploy() {
 
-        deployer.set(INTAKE_DEPLOYER_SPEED);
         deployerTarget = DEPLOYER_TICKS_DEPLOYED;
         deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
         isDeployed = true;
@@ -88,7 +88,7 @@ public class Intake extends MustangSubsystemBase {
 
     // Stops the deployer motor
     public void stopDeployer() {
-        deployer.set(0.0); // TODO: Change this later when Tarini makes the change
+        deployerMtr.set(0.0); // TODO: Change this later when Tarini makes the change
     }
 
     // Returns true if the deployer has reached its deployerTarget
@@ -137,7 +137,6 @@ public class Intake extends MustangSubsystemBase {
 
     // Retracts the intake
     public void retractIntake() {
-        deployer.set(-INTAKE_DEPLOYER_SPEED);
         deployerTarget = DEPLOYER_TICKS_NOT_DEPLOYED;
         deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
         isDeployed = false;
@@ -154,7 +153,7 @@ public class Intake extends MustangSubsystemBase {
         if (roller == null || isSparkMaxErrored(roller)) {
             return HealthState.RED;
         }
-        if (deployer == null) {
+        if (deployerMtr == null) {
             if (isDeployed) {
 
                 return HealthState.YELLOW;

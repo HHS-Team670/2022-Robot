@@ -34,14 +34,11 @@ public class StopIntake extends CommandBase implements MustangCommand {
      
     public void initialize() {
         intake.stop();
-    }
-
-    public void end() {
-        intake.stopDeployer();
+        intake.deployer.retractIntake();
     }
 
     public boolean isFinished() {
-        return intake.deployerReachedTarget();
+        return !intake.deployer.isAtTarget();
     }
 
     
