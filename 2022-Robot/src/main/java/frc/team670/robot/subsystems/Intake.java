@@ -15,8 +15,8 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 */
 public class Intake extends MustangSubsystemBase {
 
-    private static final double INTAKE_DEPLOYER_SPEED = 0.84; // Experimentally determined
-    private static final double INTAKE_ROLLER_SPEED = 0.84;
+    private static final double INTAKE_DEPLOYER_SPEED = 1;
+    private static final double INTAKE_ROLLER_SPEED = 1;
 
 
     private static final double DEPLOYER_TICKS_NOT_DEPLOYED = 0; // TODO: change this later when we get the motor and subsystem
@@ -27,8 +27,6 @@ public class Intake extends MustangSubsystemBase {
     private double kI = 0;
     private double kD = 0;
     private double kFF = 0;
-
-    private double POW = 0.25;
 
     // SmartMotion constants
     private static final double MAX_ACC = 0;
@@ -45,8 +43,8 @@ public class Intake extends MustangSubsystemBase {
     private SparkMAXLite roller;
     private SparkMAXLite deployer;
     private double deployerTarget;
-    private CANEncoder deployerEncoder;
-    private CANPIDController deployerController;
+    private RelativeEncoder deployerEncoder;
+    private SparkMaxPIDController deployerController;
     private boolean isDeployed = false; // TODO: true for testing, change this
 
     public Intake() {
@@ -68,7 +66,7 @@ public class Intake extends MustangSubsystemBase {
     }
     // Returns true if the intake is rolling
     public boolean isRolling() {
-        return roller.get() != 0;
+        return (roller.get() != 0);
     }
     // Deploys the intake
     public void deploy() {
@@ -122,7 +120,7 @@ public class Intake extends MustangSubsystemBase {
     }
     // Retracts the intake
     public void retractIntake() {
-        deployer.set(INTAKE_DEPLOYER_SPEED * -1);
+        deployer.set(-INTAKE_DEPLOYER_SPEED);
         deployerTarget = DEPLOYER_TICKS_NOT_DEPLOYED;
         deployerController.setReference(deployerTarget, ControlType.kSmartMotion);
     }
