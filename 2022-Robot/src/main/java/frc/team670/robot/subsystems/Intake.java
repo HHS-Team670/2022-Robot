@@ -17,83 +17,34 @@ public class Intake extends MustangSubsystemBase {
 
     private static final double INTAKE_ROLLER_SPEED = 0.84; // Experimentally found
 
-    private static final double DEPLOYER_TICKS_NOT_DEPLOYED = 0; // TODO: change this later when we get the motor and subsystem
-    private static final double DEPLOYER_TICKS_DEPLOYED = 0;
 	public static final int JAMMED_COUNT_DEF = 150;
 
-    private double kP = 0;
-    private double kI = 0;
-    private double kD = 0;
-    private double kFF = 0;
-
-    // SmartMotion constants
-    private static final double MAX_ACC = 0;
-    private static final double MIN_VEL = 0;
-    private static final double MAX_VEL = 0;
-    private static final double ALLOWED_ERR = 0;
-    
-    private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
-    private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
-    private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
-    private static final double TICKS_PER_ROTATION_DEPLOYER = 1.0;
-    private int SMARTMOTION_SLOT = 0;
     private double INTAKE_PEAK_CURRENT = 35; // Testing
     private static final int PID_SLOT = 0; // Change later
 
     private int exceededCurrentLimitCount = 0;
-    private double deployerTarget;
 
     private SparkMAXLite roller;
     private SparkMAXLite deployerMtr;
-    private RelativeEncoder deployerEncoder;
-    private SparkMaxPIDController deployerController;
+    public Deployer deployer;
     private boolean isDeployed = false; // TODO: true for testing, change this
 
     public Intake() {
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         deployerMtr = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
-        // deployer = new Deployer(deployerMtr, PID_SLOT);
+        deployer = new Deployer(deployerMtr, PID_SLOT);
         roller.setInverted(true);
-        deployerEncoder = deployerMtr.getEncoder();
-        deployerEncoder.setPosition(DEPLOYER_TICKS_NOT_DEPLOYED);
-        
-        deployerController = deployerMtr.getPIDController();
-        deployerController.setP(kP);
-        deployerController.setI(kI);
-        deployerController.setD(kD);
-        deployerController.setFF(kFF);
-        deployerController.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
-        deployerController.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
-        deployerController.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
-        deployerController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
     }
+
     // Returns true if the intake is rolling
     public boolean isRolling() {
         return (roller.get() != 0);
     }
 
-    // Deploys the intake
-    public void deploy() {
-
-        deployerTarget = DEPLOYER_TICKS_DEPLOYED;
-        deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
-        isDeployed = true;
-    }
-
     // Returns true if the intake is deployed
     public boolean isDeployed() {
-        return isDeployed;
-    }
-
-    // Stops the deployer motor
-    public void stopDeployer() {
-        deployerMtr.set(0.0); // TODO: Change this later when Tarini makes the change
-    }
-
-    // Returns true if the deployer has reached its deployerTarget
-    public boolean deployerReachedTarget() {
-        return Math.abs(deployerEncoder.getPosition() - deployerTarget) < HALF_CM;
+        return deployer.isDeployed();
     }
 
     // Runs the main intake motor in the specified direction
@@ -131,16 +82,7 @@ public class Intake extends MustangSubsystemBase {
     // Stops the intake
     public void stop() {
         roller.stopMotor();
-        retractIntake();
         Logger.consoleLog("Intake stopped");
-    }
-
-    // Retracts the intake
-    public void retractIntake() {
-        deployerTarget = DEPLOYER_TICKS_NOT_DEPLOYED;
-        deployerController.setReference(deployerTarget, CANSparkMax.ControlType.kSmartMotion);
-        isDeployed = false;
-
     }
 
     /**
