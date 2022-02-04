@@ -18,7 +18,7 @@ import frc.team670.robot.constants.RobotMap;
  * @author Soham
  * @author Edward
  */
-public class Conveyors extends MustangSubsystemBase {
+public class ConveyorSystem extends MustangSubsystemBase {
 	// Conveyor status
 
 	public enum Status {
@@ -33,7 +33,7 @@ public class Conveyors extends MustangSubsystemBase {
 	private Timer timer = new Timer();
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
 
-	public Conveyors() {
+	public ConveyorSystem() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
 	}
@@ -148,6 +148,10 @@ public class Conveyors extends MustangSubsystemBase {
 		// intakeConveyor.debugBeamBreaks();
 		// shooterConveyor.debugBeamBreaks();
 		checkState();
+	}
+
+	public Status getStatus() {
+		return status;
 	}
 }
 

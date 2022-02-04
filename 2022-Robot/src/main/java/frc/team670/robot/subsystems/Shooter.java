@@ -62,7 +62,7 @@ public class Shooter extends MustangSubsystemBase {
     private static final double V_P = 0.00009;
     private static final double V_I = 0.0;
     private static final double V_D = 0.0;
-    private static final double V_FF = 0.00017;
+    private static final double V_FF = 0.00017618;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -130,7 +130,7 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public void run() {
-        SmartDashboard.putNumber("Shooter speed", targetRPM + speedAdjust);
+        SmartDashboard.putNumber("Shooter target speed", targetRPM + speedAdjust);
         if (getVelocity() < VELOCITY_FOR_RAMP_RATE) {
             setRampRate(true);
         } else {
@@ -198,7 +198,7 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public boolean isUpToSpeed() {
-        return MathUtils.doublesEqual(getVelocity(), targetRPM + this.speedAdjust, SPEED_ALLOWED_ERROR); // margin of
+        return Math.abs(getVelocity() - (targetRPM + this.speedAdjust)) < SPEED_ALLOWED_ERROR; // margin of
                                                                                                          // error
     }
 
@@ -224,6 +224,8 @@ public class Shooter extends MustangSubsystemBase {
         //     setTargetRPM(targetRPM);
         //     run();
         // }
+        SmartDashboard.putNumber("Shooter velocity", getVelocity());
+
         if (Math.abs(getVelocity() - targetRPM) < VELOCITY_ALLOWED_ERROR) {
             setRampRate(false);
         }
