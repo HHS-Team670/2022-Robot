@@ -123,7 +123,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        checkHealth();
+        
     }
 
 }
