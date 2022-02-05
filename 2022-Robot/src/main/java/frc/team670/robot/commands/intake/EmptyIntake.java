@@ -30,8 +30,10 @@ public class EmptyIntake extends ParallelCommandGroup implements MustangCommand 
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
+        addRequirements(this.conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(this.intake, HealthState.GREEN);
+        healthReqs.put(this.intake, HealthState.YELLOW);
+        healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(true, this.intake),
             new RunConveyor(conveyor, Conveyors.Status.OUTTAKING));

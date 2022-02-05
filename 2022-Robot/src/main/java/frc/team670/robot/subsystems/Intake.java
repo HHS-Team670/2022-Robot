@@ -11,7 +11,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 
 /*
  * Governs the intake subsystem
- * @author Khicken, Sanatan, Armaan
+ * @author Khicken, Sanatan, Armaan, Soham
 */
 public class Intake extends MustangSubsystemBase {
 

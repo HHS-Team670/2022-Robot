@@ -14,6 +14,7 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.Intake;
 
 
 public class RobotContainer extends RobotContainerBase {
@@ -35,7 +36,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystems(intake);
+    addSubsystem(intake);
     
   }
 

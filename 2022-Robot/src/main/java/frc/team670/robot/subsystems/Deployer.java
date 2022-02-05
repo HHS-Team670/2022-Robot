@@ -14,7 +14,7 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     private static final int STOWED_SETPOINT = 0;
     private static final int DEPLOYED_SETPOINT = 4;
     private static final int DEPLOYED_DISTANCE_FROM_INTAKE = 0; // Determine experimentally like all the other constants
-
+    
     private double theta;
 
     public Deployer(SparkMAXLite motor, int PIDSlot){
@@ -25,7 +25,7 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     public void deployIntake() {
         super.setpoint = DEPLOYED_SETPOINT;
     }
-
+    
     public void retractIntake() {
         super.setpoint = STOWED_SETPOINT;
     }

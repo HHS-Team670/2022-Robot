@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * Runs the intake for the time required to intake one ball? Needs to be checked
- * @author Sanatan
+ * @author Sanatan, Armaan
  */
 
  /*
@@ -26,12 +26,14 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
 
     // Sets up everything
 
-    public EmptyIntake(Intake intake, Conveyors conveyor) {
+    public RunIntakeWithConveyor(Intake intake, Conveyors conveyor) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
+        addRequirements(this.conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(this.intake, HealthState.GREEN);
+        healthReqs.put(this.intake, HealthState.YELLOW);
+        healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(false, this.intake),
             new RunConveyor(conveyor, Conveyors.Status.INTAKING));

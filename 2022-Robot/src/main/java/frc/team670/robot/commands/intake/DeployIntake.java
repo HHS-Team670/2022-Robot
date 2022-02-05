@@ -36,7 +36,7 @@ public class DeployIntake extends CommandBase implements MustangCommand {
     }
 
     public boolean isFinished() {
-        return !intake.deployer.isAtTarget();
+        return intake.deployer.isAtTarget();
     }
 
     /*
