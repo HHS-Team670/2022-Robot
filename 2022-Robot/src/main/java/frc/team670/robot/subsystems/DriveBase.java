@@ -10,6 +10,7 @@
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.revrobotics.RelativeEncoder;
@@ -353,12 +354,14 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   @Override
   public void mustangPeriodic() {
       /**TODO We literally have no clue if any of this works */
-      double matchTime = DriverStation.getMatchTime();
+      // DUMMY VARIABLE, CHANGE LATER!!!
+      double matchTime = new Date().getTime()/1000.0; // DriverStation.getMatchTime();
       boolean isAutonRn = DriverStation.isAutonomous();
-      NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime").forceSetDouble(matchTime);
-      if (isAutonRn != NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").getBoolean(false))
-        NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").forceSetBoolean(isAutonRn);
-      
+      if (matchTime - (int) matchTime < 0.00001) {
+        NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime").forceSetDouble(matchTime);
+        if (isAutonRn != NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").getBoolean(isAutonRn))
+          NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").forceSetBoolean(isAutonRn);
+      }
   }
 
   

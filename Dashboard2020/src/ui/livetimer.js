@@ -23,7 +23,7 @@ NetworkTables.addKeyListener("/SmartDashboard/MatchTime", (key, value) => {
     updateTimer(value);
     var timeString = getTimeString(minutes, seconds);
     timer.textContent = timerPrefixString + timeString;
-    if (time < 0 && phase == MatchPhases.TELEOP) {
+    if (time < 0 && phaseCache == MatchPhases.TELEOP) {
         setMatchPhase(MatchPhases.ENDED);
         timeoutFunc = setTimeout(() => {
             setMatchPhase(MatchPhases.NOT_STARTED); 
@@ -60,7 +60,7 @@ function setMatchPhase(phase) {
     
     matchPhase.textContent = phasePrefixString + phase.text;
     matchPhase.style.backgroundColor = phase.color;
-    if (phase == MatchPhases.AUTON || phase == MatchPhases.NOT_STARTED) {
+    if (phase == MatchPhases.AUTON || phase == MatchPhases.NOT_STARTED || phase == MatchPhases.ENDED) {
         document.getElementById("auton-chooser").style.display = "block";
     } else {
         
