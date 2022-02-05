@@ -13,11 +13,10 @@ import frc.team670.robot.subsystems.DriveBase;
 
 public class BTarmacTriangle extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory, trajectory2, trajectory3;
+    private Trajectory trajectory;
 
     public BTarmacTriangle(DriveBase driveBase) {
         //shoot balls then go pick up balls
-        // start with heading 33
         trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
         // pickup ball
         //trajectory2 = PathPlanner.loadPath("BTarmacTriangleP2", 1.0, 0.5);
@@ -33,7 +32,8 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            getTrajectoryFollowerCommand(trajectory, driveBase)
+            getTrajectoryFollowerCommand(trajectory, driveBase),
+            new StopDriveBase(driveBase)
         );
     }
 
