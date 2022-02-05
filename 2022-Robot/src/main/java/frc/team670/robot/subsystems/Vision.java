@@ -161,7 +161,7 @@ public class Vision extends MustangSubsystemBase{
         double angleStartToCurr = Math.asin((d_f * Math.sin(theta)) / d_c);
         double x = d_c * Math.cos(angleStartToCurr);
         double y = d_c * Math.sin(angleStartToCurr);
-        return new double[]{x, y, d_c};
+        return new double[]{x, y, d_c, angleStartToCurr};
     }
 
     public double getVisionCaptureTime() {
