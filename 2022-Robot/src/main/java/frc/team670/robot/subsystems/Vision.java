@@ -129,7 +129,7 @@ public class Vision extends MustangSubsystemBase{
     }
 
     public Pose2d getPose() {
-        return pose;
+        return transformedPose;
     }
 
     public Pose2d poseMath(double d_0, double d_f, double theta) {
@@ -175,6 +175,8 @@ public class Vision extends MustangSubsystemBase{
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
             SmartDashboard.putNumber("Angle", angle);
+            SmartDashboard.putNumber("Vision New Pose X", transformedPose.getX());
+            SmartDashboard.putNumber("Vision New Pose Y", transformedPose.getY());
         }
     }
 

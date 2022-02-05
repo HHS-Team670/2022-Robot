@@ -20,12 +20,13 @@ import frc.team670.robot.commands.auton.MoveForwards;
 import frc.team670.robot.commands.auton.NewYCoord;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Vision;
 
 
 public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
-  private DriveBase driveBase = new DriveBase(getDriverController());
+  
   int i = 0;
 
   private MustangCommand m_autonomousCommand;
@@ -33,20 +34,22 @@ public class RobotContainer extends RobotContainerBase {
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
-  BeamBreak break1 = new BeamBreak(9);
+  private DriveBase driveBase = new DriveBase(getDriverController());
+  private Vision vision = new Vision();
+
+  // BeamBreak break1 = new BeamBreak(9); //TODO: (if not already) put in conveyor
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase);
-    oi.configureButtonBindings(driveBase);
-    
-    
+    addSubsystem(driveBase, vision);
+    oi.configureButtonBindings(driveBase, vision);
   }
 
   public void robotInit() {
-    
+    // vision.turnOnLEDs();
+    // driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
   }
 
   /**

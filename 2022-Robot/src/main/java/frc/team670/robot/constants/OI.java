@@ -36,6 +36,29 @@ public class OI extends OIBase {
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
+    // Subsystem declaration
+    DriveBase drivebase = (DriveBase) subsystemBases[0];
+    Vision vision = (Vision) subsystemBases[1];
+
+    // Command directing
+    // toggleIntake.whenPressed(new ToggleIntake(intake));
+    // runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, false)));
+    // runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, true)));
+    // toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, vision));
+    // extendClimb.whenPressed(new ExtendClimber(climber));
+    // retractClimb.whenPressed(new Climb(climber));
+    // autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, vision));
+    // autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
+    // manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
+    // manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));
+
+    // Xbox related commands
+    // xboxVision.whenPressed(new RotateTurret(turret, drivebase, vision));
+    // xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(50, shooter));
+    // xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-50, shooter));
+    // xboxLowerClimber.whenPressed(new Climb(climber));
+    // xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
+    // toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
   }
 }
