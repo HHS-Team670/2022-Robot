@@ -38,7 +38,7 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
             getTrajectoryFollowerCommand(trajectory, driveBase),
             //pick up other ball then pick up terminal ball then go back and shoot 2
             getTrajectoryFollowerCommand(trajectory2, driveBase),
-            (Command) new StopDriveBase(driveBase)
+            new StopDriveBase(driveBase)
         );
     }
 
