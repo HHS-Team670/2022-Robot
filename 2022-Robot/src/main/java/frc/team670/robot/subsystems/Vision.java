@@ -89,6 +89,7 @@ public class Vision extends MustangSubsystemBase{
     }
 
     public double getDistanceToTargetM() {
+        processImage();
         return hasTarget ? distance : RobotConstants.VISION_ERROR_CODE;
     }
 
