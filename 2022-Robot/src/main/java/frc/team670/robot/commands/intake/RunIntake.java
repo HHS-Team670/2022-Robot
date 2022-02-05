@@ -32,6 +32,7 @@ public class RunIntake extends CommandBase implements MustangCommand {
         addRequirements(intake);
         countWasJammed = 0;
     }
+    
     /*
     starts to roll the intake
     */

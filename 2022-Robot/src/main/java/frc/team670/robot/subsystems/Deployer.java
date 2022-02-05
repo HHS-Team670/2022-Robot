@@ -1,8 +1,9 @@
 package frc.team670.robot.subsystems;
 
-import frc.team670.mustanglib.subsystems.*;
+import frc.team670.mustanglib.subsystems.GravitySparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
+
 
 public class Deployer extends GravitySparkMaxRotatingSubsystem {
     private static final int FORWARD_SOFT_LIMIT = 0;

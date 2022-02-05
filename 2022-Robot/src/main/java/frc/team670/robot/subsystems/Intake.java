@@ -92,7 +92,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (roller == null || isSparkMaxErrored(roller)) {
+        if (roller == null || roller.isErrored()) {
             return HealthState.RED;
         }
         if (deployerMtr == null) {

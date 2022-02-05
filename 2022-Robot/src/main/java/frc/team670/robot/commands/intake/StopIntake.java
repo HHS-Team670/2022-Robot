@@ -36,11 +36,6 @@ public class StopIntake extends CommandBase implements MustangCommand {
         intake.deployer.retractIntake();
     }
 
-    public boolean isFinished() {
-        return !intake.deployer.isAtTarget();
-    }
-
-
     // Returns the health state
 
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
