@@ -26,7 +26,7 @@ onkeydown = key => {
  */
 function onRobotConnection(connected) {
   var state = connected ? 'Robot connected!' : 'Robot disconnected.';
-  console.log(state);
+  // console.log(state);
   // ui.robotState.textContent = state;
 
   if (connected) {

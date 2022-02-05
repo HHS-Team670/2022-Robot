@@ -31,8 +31,7 @@ NetworkTables.addKeyListener('/SmartDashboard/warnings', (key, value) => {
 });
 
 NetworkTables.addGlobalListener((key, value) => {
-    console.log(key + ": " + value);
-    console.log("Network Table content", NetworkTables.getKeys());
+    // console.log(key + ": " + value);
 })
 
 // updates status lights for driveBase
