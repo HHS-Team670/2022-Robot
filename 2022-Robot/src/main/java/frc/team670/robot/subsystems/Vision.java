@@ -55,12 +55,31 @@ public class Vision extends MustangSubsystemBase{
      * 
      * @return distance, in inches, from the camera to the target
      */
-    private void processImage(Boolean isBall) {
-        if (isBall == null)
-        {
-            isBall = false;
-        }
+    private void processImage() {
+        try{
+            var result = camera.getLatestResult();
 
+            if(result.hasTargets()){
+                hasTarget = true;
+                distance = PhotonUtils.calculateDistanceToTargetMeters(
+                        RobotConstants.CAMERA_HEIGHT_METERS,
+                        FieldConstants.HEIGHT_OF_VISION_TARGET,
+                        Units.degreesToRadians(RobotConstants.CAMERA_ANGLE_DEGREES),
+                        Units.degreesToRadians(result.getBestTarget().getPitch()));
+                angle = camera.getLatestResult().getTargets().get(0).getYaw();
+                visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
+                updatePose(angle, RobotConstants.cameraOffset);
+            } else {
+                hasTarget = false;
+            }
+            
+        } catch(Exception e){
+            // MustangNotifications.reportWarning(e.toString());
+            Logger.consoleLog("NT for vision not found %s", e.getStackTrace());
+        }
+    }
+
+    private void processImage(boolean isBall) {
         try{
             var result = camera.getLatestResult();
 
@@ -169,8 +188,8 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        boolean isBall = SmartDashboard.getBoolean("Is Ball", false);
-        processImage(isBall);
+        // boolean isBall = SmartDashboard.getBoolean("Is Ball", false);
+        processImage();
 
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
