@@ -28,15 +28,15 @@ public class DeployIntake extends CommandBase implements MustangCommand {
     }
     
     public void initialize() {
-        intake.deployer.deployIntake();
+        // intake.deployer.deployIntake();
     }
 
     public void end() {
-        intake.deployer.stop();
+        // intake.deployer.stop();
     }
 
     public boolean isFinished() {
-        return !intake.deployer.isAtTarget();
+        return false;//!intake.deployer.isAtTarget();
     }
 
     /*
