@@ -137,7 +137,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
+    //MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
   }
 
   /**
@@ -358,6 +358,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   @Override
   public void mustangPeriodic() {
     poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    SmartDashboard.putNumber("motor controller", left1Encoder.getPosition());
 
   }
 
@@ -379,8 +380,9 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    zeroHeading();
-    poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(0));
+    navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
+    SmartDashboard.putNumber("starting heading", getHeading());
+    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());

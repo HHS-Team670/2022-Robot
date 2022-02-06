@@ -5,24 +5,25 @@ import java.util.Map;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.DriveBase;
 
-
-
-public class MoveForwards extends SequentialCommandGroup implements MustangCommand {
-
+public class BTarmacTriangle extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public MoveForwards(DriveBase driveBase) {
-        trajectory = PathPlanner.loadPath("MoveForwards", 1.0, 0.5);
+    public BTarmacTriangle(DriveBase driveBase) {
+        //shoot balls then go pick up balls
+        trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
+        // pickup ball
+        //trajectory2 = PathPlanner.loadPath("BTarmacTriangleP2", 1.0, 0.5);
+        //pickup ball
+        //trajectory3 = PathPlanner.loadPath("BTarmacTriangleP3", 1.0, 0.5);
+        // shoot balls
+
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -31,9 +32,9 @@ public class MoveForwards extends SequentialCommandGroup implements MustangComma
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            getTrajectoryFollowerCommand(trajectory, driveBase)
+            getTrajectoryFollowerCommand(trajectory, driveBase),
+            new StopDriveBase(driveBase)
         );
-
     }
 
     @Override
@@ -47,5 +48,5 @@ public class MoveForwards extends SequentialCommandGroup implements MustangComma
         // TODO Auto-generated method stub
         return healthReqs;
     }
-    
+
 }
