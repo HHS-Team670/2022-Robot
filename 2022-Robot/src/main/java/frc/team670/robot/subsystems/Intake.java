@@ -25,15 +25,15 @@ public class Intake extends MustangSubsystemBase {
     private int exceededCurrentLimitCount = 0;
 
     private SparkMAXLite roller;
-    private SparkMAXLite deployerMtr;
+    private SparkMAXLite deployerMotor;
     public Deployer deployer;
     private boolean isDeployed = false; // TODO: true for testing, change this
 
     public Intake() {
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
-        deployerMtr = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
-        deployer = new Deployer(deployerMtr, PID_SLOT);
+        deployerMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
+        deployer = new Deployer(deployerMotor, PID_SLOT);
         roller.setInverted(true);
     }
 
@@ -95,7 +95,7 @@ public class Intake extends MustangSubsystemBase {
         if (roller == null || roller.isErrored()) {
             return HealthState.RED;
         }
-        if (deployerMtr == null) {
+        if (deployerMotor == null) {
             if (isDeployed) {
 
                 return HealthState.YELLOW;
@@ -123,7 +123,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        checkHealth();
+        
     }
 
 }
