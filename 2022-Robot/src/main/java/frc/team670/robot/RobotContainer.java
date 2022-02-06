@@ -34,10 +34,11 @@ public class RobotContainer extends RobotContainerBase {
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
-  private DriveBase driveBase = new DriveBase(getDriverController());
   private Vision vision = new Vision();
+  private DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
-  // BeamBreak break1 = new BeamBreak(9); //TODO: (if not already) put in conveyor
+
+  private BeamBreak break1 = new BeamBreak(9); //TODO: (if not already) put in conveyor
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -76,6 +77,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void teleopInit() {
     Logger.consoleLog(driveBase.getPose().toString());
+    vision.turnOnLEDs();
     
   }
 

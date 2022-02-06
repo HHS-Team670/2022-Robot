@@ -4,7 +4,7 @@ package frc.team670.robot.constants;
  * All values in meters unless otherwise specified
  */
 public class FieldConstants {
-    public static double DISTANCE_TO_GOAL_FROM_START = 1.0; // TODO: Change this later when we find out
+    public static double DISTANCE_TO_GOAL_FROM_START = 3.24;//1.0; // TODO: Change this later when we find out
     public static double HEIGHT_OF_VISION_TARGET = 1;
 
     // from game manual:

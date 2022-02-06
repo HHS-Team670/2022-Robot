@@ -50,7 +50,7 @@ public class RobotMap {
   public static final int CLIMBER_MOTOR = 14;
 
   // PNEUMATICS
-  public static final PneumaticsModuleType PCMODULE = 2; // PCM CAN ID
+  public static final int PCMODULE = 2; // PCM CAN ID
 
   // Solenoids. Using 24V
 

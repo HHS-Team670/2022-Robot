@@ -4,6 +4,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.*;
@@ -24,7 +25,7 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class Vision extends MustangSubsystemBase{
 
-    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
+    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, PneumaticsModuleType.CTREPCM, RobotMap.VISION_LED_PCM);
 
     private PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
     public Pose2d pose, transformedPose, targetPose;
@@ -33,6 +34,19 @@ public class Vision extends MustangSubsystemBase{
     private double angle;
     private double visionCapTime;
     private boolean hasTarget;
+
+    /*
+    * 11' 8" --> trying to do 35 feet --tested with 30 feet
+    * 2020 camera to target closest distance: 250 in
+    * Input:
+    * Exposure: 0; Brightness: 24
+    * Resolution: 
+    * Threshold:
+    * H: 27-100; S: 100-255; V: 126-255
+    * Contours:
+    * Area: 0-100; Ratio: 0-8.7; Fullness: 60-100
+    * Speckle Rejection: 100; Target Grouping: 2ormore
+    */ 
 
     // private boolean isBallTracking;
 
@@ -73,10 +87,6 @@ public class Vision extends MustangSubsystemBase{
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
                 angle = camera.getLatestResult().getTargets().get(0).getYaw();
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
-                
-                //
-                updatePose(angle, RobotConstants.cameraOffset);
-                //
             } else {
                 hasTarget = false;
             }
@@ -88,7 +98,6 @@ public class Vision extends MustangSubsystemBase{
     }
 
     public double getDistanceToTargetM() {
-        processImage();
         return hasTarget ? distance : RobotConstants.VISION_ERROR_CODE;
     }
 
@@ -106,18 +115,29 @@ public class Vision extends MustangSubsystemBase{
 
     public VisionMeasurement getVisionMeasurements(double heading, Pose2d cameraOffset) {
         if (hasTarget){
-            Pose2d targetOffset = cameraOffset.transformBy(getCamToTargetTrans(heading).inverse());
+            Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
+            Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
+            Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
     }
 
-    public Transform2d getCamToTargetTrans(double heading) {
-        // TOOD: make sure this is correct math (check with Mr.Dias)
-        Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
-        Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
-        return camToTargetTrans;
+    public void turnOnLEDs() {
+        cameraLEDs.set(true);
     }
+
+    public void turnOffLEDs() {
+        cameraLEDs.set(false);
+    }
+
+
+    // public Transform2d getCamToTargetTrans(double heading) {
+    //     // TOOD: make sure this is correct math (check with Mr.Dias)
+    //     Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
+    //     Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
+    //     return camToTargetTrans;
+    // }
 
     public void updatePose(double heading, Pose2d cameraOffset) {
         // Get general pose on the field
@@ -171,7 +191,8 @@ public class Vision extends MustangSubsystemBase{
     @Override
     public void mustangPeriodic() {
         // boolean isBall = SmartDashboard.getBoolean("Is Ball", false);
-        // processImage(isBall);
+        processImage();
+
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
             SmartDashboard.putNumber("Angle", angle);
