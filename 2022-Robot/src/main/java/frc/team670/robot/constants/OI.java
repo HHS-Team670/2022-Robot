@@ -2,12 +2,17 @@
 
 package frc.team670.robot.constants;
 
+import javax.security.auth.x500.X500Principal;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import frc.team670.robot.commands.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.intake.StopIntakeConveyor;
+import frc.team670.robot.subsystems.*;
 
 public class OI extends OIBase {
 
@@ -20,6 +25,9 @@ public class OI extends OIBase {
   
 
   // xbox buttons
+  private static JoystickButton xboxRunIntakeWithConveyor= new JoystickButton(getDriverController(),XboxButtons.Y);
+  private static JoystickButton xboxStopIntakeConveyor= new JoystickButton(getDriverController(),XboxButtons.B);
+
   
 
   public boolean isQuickTurnPressed() {
@@ -45,6 +53,10 @@ public class OI extends OIBase {
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
-
+    Intake intake = (Intake) subsystemBases[1];
+    Conveyor conveyor = (Conveyor) subsystemBases[2];
+    //XboxButtons
+    xboxRunIntakeWithConveyor.whenPressed(new RunIntakeWithConveyor(intake,conveyor));
+    xboxStopIntakeConveyor.whenPressed(new StopIntakeConveyor(intake,conveyor));
   }
 }
