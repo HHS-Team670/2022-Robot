@@ -10,24 +10,17 @@ package frc.team670.robot.subsystems;
 
 import java.util.List;
 
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
-import frc.team670.robot.subsystems.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.constants.RobotMap;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.functions.MathUtils;
-import frc.team670.mustanglib.utils.math.interpolable.InterpolatingDouble;
-import frc.team670.mustanglib.utils.math.interpolable.InterpolatingTreeMap;
 import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.robot.commands.shooter.SetRPMTarget;
-import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
 
 /**
  * Represents a shooter with 2 NEOs
