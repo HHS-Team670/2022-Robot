@@ -1,6 +1,6 @@
 package frc.team670.robot.constants;
 
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotMap {
 
@@ -14,10 +14,11 @@ public class RobotMap {
   public static final int SPARK_LEFT_MOTOR_2 = 21;
   public static final int SPARK_RIGHT_MOTOR_1 = 22;
   public static final int SPARK_RIGHT_MOTOR_2 = 23;
-  public static final int SPARK_MIDDLE_MOTOR = 24;
+  public static final int SPARK_MIDDLE_MOTOR = 8;
 
   // NavX
-  public final static I2C.Port NAVX_PORT = I2C.Port.kOnboard;
+  public final static SerialPort.Port NAVX_PORT = SerialPort.Port.kUSB;
+  public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
   public final static int SHOOTER_MAIN = 5;
