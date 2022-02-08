@@ -66,7 +66,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    configureButtonBindings();
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter);
     driveBase.initDefaultCommand();
   }
 
@@ -97,22 +97,6 @@ public class RobotContainer extends RobotContainerBase {
 
   public void periodic() {
     conveyorSystem.debugBeamBreaks();
-  }
-
-  private void configureButtonBindings() {
-    JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
-    JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
-    JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
-    JoystickButton startShooter = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
-    JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
-    JoystickButton shootAllBalls = new JoystickButton(getDriverController(), XboxButtons.Y);
-
-    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
-    triggerIntaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.INTAKING)));
-    triggerOuttaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.OUTTAKING)));
-    triggerShooting.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING)));
-    startShooter.whenPressed((new StartShooter(shooter)));
-    stopShooter.whenPressed((new StopShooter(shooter)));
   }
 
 }
