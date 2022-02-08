@@ -1,5 +1,3 @@
-// COPIED FROM 2020
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -8,20 +6,18 @@ import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Shooter;
 
 public class OI extends OIBase {
 
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   private static Joystick operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
 
-  // private static XKeys xkeys;
-
-  // operator buttons
-  
-
-  // xbox buttons
-  
-
+  public OI(ConveyorSystem conveyorSystem, Shooter shooter) {
+    
+  }
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
   }
