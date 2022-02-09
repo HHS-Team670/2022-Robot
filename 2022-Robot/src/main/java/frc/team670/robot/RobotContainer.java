@@ -92,7 +92,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    conveyorSystem.debugBeamBreaks();
+    
   }
 
 }

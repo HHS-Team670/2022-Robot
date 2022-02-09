@@ -153,6 +153,11 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	public Status getStatus() {
 		return status;
 	}
+
+	@Override
+	public void debugSubsystem() {
+		debugBeamBreaks();
+	}
 }
 
 class Conveyor {
