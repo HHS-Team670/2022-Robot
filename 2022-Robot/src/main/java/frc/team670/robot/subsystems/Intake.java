@@ -1,13 +1,11 @@
 package frc.team670.robot.subsystems;
 
-import frc.team670.robot.constants.RobotMap;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import com.revrobotics.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.RobotMap;
 
 /*
  * Governs the intake subsystem
@@ -20,20 +18,16 @@ public class Intake extends MustangSubsystemBase {
 	public static final int JAMMED_COUNT_DEF = 150;
 
     private double INTAKE_PEAK_CURRENT = 35; // Testing
-    private static final int PID_SLOT = 0; // Change later
 
     private int exceededCurrentLimitCount = 0;
 
     private SparkMAXLite roller;
-    private SparkMAXLite deployerMotor;
-    // public Deployer deployer;
-    private boolean isDeployed = false; // TODO: true for testing, change this
+
+    private boolean isDeployed = true;
 
     public Intake() {
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
-        deployerMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_DEPLOYER, Motor_Type.NEO_550);
-        // deployer = new Deployer(deployerMotor, PID_SLOT);
         roller.setInverted(true);
     }
 
@@ -41,11 +35,6 @@ public class Intake extends MustangSubsystemBase {
     public boolean isRolling() {
         return (roller.get() != 0);
     }
-
-    // Returns true if the intake is deployed
-    // public boolean isDeployed() {
-    //     return deployer.isDeployed();
-    // }
 
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
@@ -58,7 +47,6 @@ public class Intake extends MustangSubsystemBase {
             }
         }
         Logger.consoleLog("Running intake at: %s", roller.get());
-
     }
 
     // Returns true if the intake is jammed
@@ -74,9 +62,7 @@ public class Intake extends MustangSubsystemBase {
                 return true;
             }
         }
-
         return false;
-
     }
 
     // Stops the intake
@@ -95,30 +81,7 @@ public class Intake extends MustangSubsystemBase {
         if (roller == null || roller.isErrored()) {
             return HealthState.RED;
         }
-        if (deployerMotor == null) {
-            if (isDeployed) {
-
-                return HealthState.YELLOW;
-            }
-
-            return HealthState.RED;
-        }
         return HealthState.GREEN;
-    }
-
-    public void checkStatus () {
-        if (roller.get() != 0 && isDeployed == true) {
-            Logger.consoleLog("Intake is running");
-        }
-        else if (roller.get() == 0 && isDeployed == true) {
-            Logger.consoleLog("Intake has been deployed");
-        }
-        else if (roller.get() != 0 && isDeployed == false) {
-            roller.stopMotor();
-        }
-        else {
-            Logger.consoleLog("Intake is not running");
-        }
     }
 
     @Override

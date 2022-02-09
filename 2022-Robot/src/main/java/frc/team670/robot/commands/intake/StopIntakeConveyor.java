@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * @author Sanatan
  */
 
- /*
+
 public class StopIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Intake intake;
@@ -44,4 +44,4 @@ public class StopIntakeConveyor extends ParallelCommandGroup implements MustangC
         return healthReqs;
     }
 
-}*/
+}

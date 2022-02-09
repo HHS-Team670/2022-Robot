@@ -24,13 +24,21 @@ public class RunIntake extends CommandBase implements MustangCommand {
      * @param reversed true to run the intake in reverse (out), 
      * false to run it normally (in)
      */
-    public RunIntake(boolean reversed, Intake intake) {
+    public RunIntake(Intake intake, boolean reversed) {
         this.reversed = reversed;
         this.intake = intake;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.YELLOW);
         addRequirements(intake);
         countWasJammed = 0;
+    }
+
+    /**
+     * Runs the intake normally (in to intake a ball)
+     * @param intake the intake object
+     */
+    public RunIntake(Intake intake){
+        this(intake, false);
     }
     
     /*
