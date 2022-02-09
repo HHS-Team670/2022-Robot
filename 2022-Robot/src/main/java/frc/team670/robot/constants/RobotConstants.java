@@ -1,5 +1,3 @@
-// COPIED FROM 2020
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -14,7 +12,8 @@ public class RobotConstants extends RobotConstantsBase {
     /**  the id for the camera that tells you how to shoot the ball*/
     /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-    public static final double SPARK_MAX_VELOCITY_CONVERSION_FACTOR = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
+    public static final double DRIVEBASE_VELOCITY_CONVERSION_FACTOR = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
+    public static final double HDRIVE_VELOCITY_CONVERSION_FACTOR = RobotConstants.HDRIVE_METERS_PER_ROTATION / 60;
 
     // Robot Dimensions in Inches
     public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.5, DRIVEBASE_TO_GROUND = 2.03;
@@ -22,10 +21,16 @@ public class RobotConstants extends RobotConstantsBase {
     public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
     // Drive Base Gearing
-    public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which
-                                                            // one it is
+    public static final double DRIVEBASE_GEAR_RATIO = 8.45; 
+    
+    // Drive Base Gearing
+    public static final double HDRIVE_GEAR_RATIO = 8.45;  //TODO: Check with mech
+
     /** Drive Base Wheel Diameter in Inches */
     public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
+
+    /** HDrive Base Wheel Diameter in Inches */
+    public static final double HDRIVE_WHEEL_DIAMETER = 4; //TODO: Check with mech
 
     /** Inches per rotation of the NEO motors on the drivebase */
     public static final double DRIVEBASE_INCHES_PER_ROTATION = 1 / DRIVEBASE_GEAR_RATIO * DRIVE_BASE_WHEEL_DIAMETER
@@ -36,6 +41,10 @@ public class RobotConstants extends RobotConstantsBase {
 
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER
+            * Math.PI * 0.0254;
+
+    /** The number of meters per roatation of a drivebase wheel */
+    public static final double HDRIVE_METERS_PER_ROTATION = (1 / HDRIVE_GEAR_RATIO) * HDRIVE_WHEEL_DIAMETER
             * Math.PI * 0.0254;
 
     // Talon PID Constants
@@ -53,12 +62,12 @@ public class RobotConstants extends RobotConstantsBase {
     // VISION Constants
 
     public static final int VISION_ERROR_CODE = -99999;
-    public static final double kHorizontalFOV = 61; // degrees
-    public static final double kVerticalFOV = 34.3; // degrees
-    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV / 2.0));
-    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV / 2.0));
-    public static final double TILT_ANGLE = 13; // degrees
-    public static final double CAMERA_HEIGHT = 0.9525; // meters
+    public static final double kHorizontalFOV_DEGREES = 61;
+    public static final double kVerticalFOV_DEGREES = 34.3;
+    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV_DEGREES / 2.0));
+    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV_DEGREES / 2.0));
+    public static final double TILT_ANGLE_DEGREES = 13;
+    public static final double CAMERA_HEIGHT_METERS = 0.9525;
 
     // Autonomous Constants
 

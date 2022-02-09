@@ -5,31 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-// COPIED FROM 2020
-
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
@@ -38,7 +30,6 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -58,25 +49,28 @@ public class DriveBase extends HDrive {
 
   private NavX navXMicro;
 
-  private DifferentialDrivePoseEstimator poseEstimator;
-
-  public static final double START_Y = 2.4;
-  public static final double START_X = 15.983 - 3.8;
-  public static final double START_ANGLE_DEG = 180;
-  public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
-
-  // Constants used for doing robot to target pose conversion
-  public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
-
-  public static final Pose2d CAMERA_OFFSET = TARGET_POSE
-      .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
-
   public DriveBase(MustangController mustangController) {
-    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
-        false, MotorConfig.Motor_Type.NEO);
-    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
-        RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
-    middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
+    mController = mustangController;
+
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_LEFT_MOTOR_1, 
+      RobotMap.SPARK_LEFT_MOTOR_2,
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
+
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_RIGHT_MOTOR_1, 
+      RobotMap.SPARK_RIGHT_MOTOR_2, 
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
+
+    middle = SparkMAXFactory.buildSparkMAX(
+      RobotMap.SPARK_MIDDLE_MOTOR, 
+      SparkMAXFactory.defaultConfig, 
+      MotorConfig.Motor_Type.NEO
+    );
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -85,22 +79,15 @@ public class DriveBase extends HDrive {
 
     left1Encoder = left1.getEncoder();
     right1Encoder = right1.getEncoder();
-    left2Encoder = left2.getEncoder();
-    right2Encoder = right2.getEncoder();
     middleEncoder = middle.getEncoder();
 
-    left1Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
-    left2Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
-    // Do not invert for right side
-    right1Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
-    right2Encoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR);
-    middleEncoder.setVelocityConversionFactor(RobotConstants.SPARK_MAX_VELOCITY_CONVERSION_FACTOR); //this would change middle wheel size not same as tank wheels
+    left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
+    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for right side
+    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR); 
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    middleEncoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION); //this would change middle wheel size not same as tank wheels
+    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION); 
 
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
@@ -114,14 +101,18 @@ public class DriveBase extends HDrive {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
-        false,
-        false, .1, true);
+    super.setMotorControllers(
+      new MotorController[] { left1, left2 },
+      new MotorController[] { right1, right2 },
+      middle,
+      false,
+      false, 
+      .1, 
+      true
+    );
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
-    // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-
   }
 
   /**
@@ -138,8 +129,7 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
-        middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(), middle.isErrored());
   }
 
   /**
@@ -346,16 +336,7 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
-  }
-
-  /**
-   * Returns the currently-estimated pose of the robot.
-   *
-   * @return The pose.
-   */
-  public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
+    getDriveTrain().feedWatchdog();
   }
 
   /**
@@ -365,7 +346,6 @@ public class DriveBase extends HDrive {
    */
   public void resetOdometry(Pose2d pose2d) {
     zeroHeading();
-    poseEstimator.resetPosition(pose2d, Rotation2d.fromDegrees(0));
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
@@ -384,11 +364,6 @@ public class DriveBase extends HDrive {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
-        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
-
   }
 
   /**
@@ -415,7 +390,6 @@ public class DriveBase extends HDrive {
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
-    getDriveTrain().feed();
   }
 
   @Override
@@ -525,6 +499,12 @@ public class DriveBase extends HDrive {
         motor.setIdleMode(IdleMode.kBrake);
       }
     }
+  }
+
+  @Override
+  public Pose2d getPose() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

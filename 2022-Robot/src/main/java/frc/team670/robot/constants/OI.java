@@ -1,10 +1,10 @@
-// COPIED FROM 2020
-
 package frc.team670.robot.constants;
 
 import javax.security.auth.x500.X500Principal;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
@@ -12,6 +12,12 @@ import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.intake.StopIntakeConveyor;
 import frc.team670.robot.subsystems.*;
+import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Shooter;
 
 public class OI extends OIBase {
 
@@ -27,6 +33,17 @@ public class OI extends OIBase {
   private static JoystickButton xboxStopIntakeConveyor= new JoystickButton(getDriverController(),XboxButtons.B);
 
 
+
+  private static JoystickButton triggerIntaking = new JoystickButton(getDriverController(), XboxButtons.A);
+  private static JoystickButton triggerOuttaking = new JoystickButton(getDriverController(), XboxButtons.B);
+  private static JoystickButton triggerShooting = new JoystickButton(getDriverController(), XboxButtons.X);
+  private static JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton shootAllBalls = new JoystickButton(getDriverController(), XboxButtons.Y);
+  private static JoystickButton toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
+
+  public OI(ConveyorSystem conveyorSystem, Shooter shooter) {
+    
+  }
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
   }
@@ -51,9 +68,21 @@ public class OI extends OIBase {
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
     Intake intake = (Intake) subsystemBases[1];
-    Conveyor conveyor = (Conveyor) subsystemBases[2];
+    ConveyorSystem conveyor = (ConveyorSystem) subsystemBases[2];
     //XboxButtons
     xboxRunIntakeWithConveyor.whenPressed(new RunIntakeWithConveyor(intake,conveyor));
     xboxStopIntakeConveyor.whenPressed(new StopIntakeConveyor(intake,conveyor));
+    DriveBase drivebase = (DriveBase) subsystemBases[0];
+    ConveyorSystem conveyorSystem = (ConveyorSystem) subsystemBases[0];
+    Shooter shooter = (Shooter) subsystemBases[0];
+
+    toggleReverseDrive.whenPressed(new FlipDriveDirection());
+
+    triggerIntaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING)));
+
+    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
+    stopShooter.whenPressed((new StopShooter(shooter)));
   }
 }
