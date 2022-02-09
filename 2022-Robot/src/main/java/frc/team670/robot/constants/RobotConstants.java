@@ -5,8 +5,7 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConst
 import frc.team670.mustanglib.constants.RobotConstantsBase;
 
 public class RobotConstants extends RobotConstantsBase {
-
-    public static final double DEPLOYER_MASS = 10.0; // In kilograms, change later
+        
     public static final double ARBITRARY_FF_DEPLOYER = 0.0; // TODO: Change later
 
     /**  the id for the camera that tells you how to shoot the ball*/

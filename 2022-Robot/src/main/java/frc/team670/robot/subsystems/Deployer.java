@@ -27,14 +27,16 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
 
     public void deployIntake() {
         super.setpoint = DEPLOYED_SETPOINT;
+        super.updateArbitraryFeedForward();
     }
     
     public void retractIntake() {
         super.setpoint = STOWED_SETPOINT;
+        super.updateArbitraryFeedForward();
     }
 
     public void setIntakeAngleDegreesFromVertical() {
-        intakeAngleDegreesFromVertical = (((double) super.offsetFromEncoderZero) / DEPLOYED_DISTANCE_FROM_INTAKE) * 90.0;
+        intakeAngleDegreesFromVertical = (((double) super.rotator.getPosition()) / DEPLOYED_DISTANCE_FROM_INTAKE) * 90.0;
     }
 
     public boolean isDeployed() {

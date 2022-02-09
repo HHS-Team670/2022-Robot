@@ -36,7 +36,7 @@ public class StopIntakeConveyor extends ParallelCommandGroup implements MustangC
         healthReqs.put(this.intake, HealthState.YELLOW);
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
-            new StopIntake(intake),
+            new StopIntake(intake, conveyor),
             new StopConveyor(conveyor));
     }
 

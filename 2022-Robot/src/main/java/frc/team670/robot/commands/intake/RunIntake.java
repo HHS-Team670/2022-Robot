@@ -8,11 +8,10 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
 
 /**
- * Runs the intake for 1 ball, unjams it too
+ * Runs the intake
  */
 public class RunIntake extends InstantCommand implements MustangCommand {
 
@@ -35,7 +34,6 @@ public class RunIntake extends InstantCommand implements MustangCommand {
     starts to roll the intake
     */
     public void initialize() {
-        intake.countWasJammed = 0;
         intake.roll(reversed);
     }
 

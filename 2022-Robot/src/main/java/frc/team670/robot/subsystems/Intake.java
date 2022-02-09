@@ -48,6 +48,7 @@ public class Intake extends MustangSubsystemBase {
 
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
+        countWasJammed = 0;
         if (isDeployed) {
             if (reversed) {
                 roller.set(INTAKE_ROLLER_SPEED * -1);

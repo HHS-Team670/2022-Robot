@@ -40,7 +40,7 @@ public class EmptyIntakeConveyor extends SequentialCommandGroup implements Musta
                 new RunIntake(true, this.intake),
                 new RunConveyor(this.conveyor, ConveyorSystem.Status.OUTTAKING)),
             new StopAtNBalls(this.conveyor, 0),
-            new StopIntake(this.intake));
+            new StopIntake(this.intake, this.conveyor));
     }
 
     // Returns health state
