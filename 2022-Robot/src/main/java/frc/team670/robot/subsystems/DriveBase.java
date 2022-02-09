@@ -112,7 +112,7 @@ public class DriveBase extends HDrive {
     );
 
     // initialized NavX and sets Odometry
-    navXMicro = new NavX(RobotMap.NAVX_PORT);
+    // navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
 
   /**
