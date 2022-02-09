@@ -13,11 +13,11 @@ import frc.team670.robot.constants.RobotMap;
 */
 public class Intake extends MustangSubsystemBase {
 
-    private static final double INTAKE_ROLLER_SPEED = 0.84; // Experimentally found
+    private static final double INTAKE_ROLLER_SPEED = 0.6; // Experimentally found
 
 	public static final int JAMMED_COUNT_DEF = 150;
 
-    private double INTAKE_PEAK_CURRENT = 35; // Testing
+    private double INTAKE_PEAK_CURRENT = 50; // Testing
 
     private int exceededCurrentLimitCount = 0;
 

@@ -8,28 +8,24 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.MustangController.XboxButtons;
-import frc.team670.robot.commands.conveyor.RunConveyor;
-import frc.team670.robot.commands.routines.ShootAllBalls;
-import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
 
-  private DriveBase driveBase = new DriveBase(getDriverController());
+  private static DriveBase driveBase = new DriveBase(getDriverController());
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
   private static Shooter shooter = new Shooter();
+  private static Intake intake = new Intake();
 
   private static OI oi = new OI(conveyorSystem, shooter);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
@@ -41,7 +37,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase, conveyorSystem, shooter);
+    addSubsystem(conveyorSystem, shooter, intake);
   }
 
   public void robotInit() {
@@ -66,7 +62,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake);
     driveBase.initDefaultCommand();
   }
 
@@ -75,7 +71,7 @@ public class RobotContainer extends RobotContainerBase {
 
   }
 
-  public static Joystick getOperatorController() {
+  public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
 

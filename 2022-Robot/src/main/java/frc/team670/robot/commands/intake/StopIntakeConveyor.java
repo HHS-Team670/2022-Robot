@@ -1,47 +1,47 @@
-package frc.team670.robot.commands.intake;
+// package frc.team670.robot.commands.intake;
 
-import java.util.HashMap;
-import java.util.Map;
+// import java.util.HashMap;
+// import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.*;
-import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-
-
-/**
- * Runs the intake for the time required to intake one ball? Needs to be checked
- * @author Sanatan
- */
+// import edu.wpi.first.wpilibj2.command.*;
+// import frc.team670.mustanglib.commands.MustangCommand;
+// import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+// import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+// import frc.team670.robot.constants.RobotConstants;
+// import frc.team670.robot.subsystems.*;
+// import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
-public class StopIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
+// /**
+//  * Runs the intake for the time required to intake one ball? Needs to be checked
+//  * @author Sanatan
+//  */
 
-    private Intake intake;
-    private Conveyors conveyor;
-    private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    // Sets up everything
+// public class StopIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
-    public EmptyIntake(Intake intake, Conveyors conveyor) {
-        this.intake = intake;
-        this.conveyor = conveyor;
-        addRequirements(this.intake);
-        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(this.intake, HealthState.GREEN);
-        addCommands(
-            new StopIntake(true),
-            new StopConveyor(conveyor));
-    }
+//     private Intake intake;
+//     private Conveyors conveyor;
+//     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    // Returns health state
+//     // Sets up everything
 
-    @Override
-    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return healthReqs;
-    }
+//     public EmptyIntake(Intake intake, Conveyors conveyor) {
+//         this.intake = intake;
+//         this.conveyor = conveyor;
+//         addRequirements(this.intake);
+//         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+//         healthReqs.put(this.intake, HealthState.GREEN);
+//         addCommands(
+//             new StopIntake(true),
+//             new StopConveyor(conveyor));
+//     }
 
-}
+//     // Returns health state
+
+//     @Override
+//     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+//         return healthReqs;
+//     }
+
+// }
