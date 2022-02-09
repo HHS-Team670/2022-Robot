@@ -46,7 +46,7 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     }
 
     public boolean isAtTarget() {
-        if (super.setpoint > super.offsetFromEncoderZero + TOLERANCE && super.setpoint < super.offsetFromEncoderZero - TOLERANCE) {
+        if (Math.abs(super.setpoint - super.rotator.getPosition()) < TOLERANCE) {
             return true;
         }
         return false;
@@ -57,11 +57,11 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
         return Math.sin(intakeAngleDegreesFromVertical);
     }
 
-    public Notifier updateConstants(Deployer deployer) {
+    public Notifier updateIntakeAngle() {
         Notifier notifier = new Notifier(new Runnable() {
             public void run() {
-                deployer.isAtTarget();
-                deployer.getArbitraryFeedForwardAngleMultiplier();
+                isAtTarget();
+                getArbitraryFeedForwardAngleMultiplier();
             }
         });
         notifier.startPeriodic(0.01);

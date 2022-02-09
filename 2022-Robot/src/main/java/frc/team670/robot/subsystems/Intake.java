@@ -15,7 +15,7 @@ public class Intake extends MustangSubsystemBase {
 
     private static final double INTAKE_ROLLER_SPEED = 0.84; // Experimentally found
 
-	private static final int JAMMED_COUNT_DEF = 150;
+    private static final int JAMMED_COUNT_DEF = 150;
 
     private double INTAKE_PEAK_CURRENT = 35; // Testing
 

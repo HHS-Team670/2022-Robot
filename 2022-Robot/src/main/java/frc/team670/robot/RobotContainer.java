@@ -43,12 +43,8 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(intake);
-    addSubsystem(driveBase);
-    oi.configureButtonBindings(driveBase);
     
-    
-    addSubsystem(driveBase, conveyorSystem, shooter);
+    addSubsystem(driveBase, conveyorSystem, shooter, intake);
   }
 
   public void robotInit() {

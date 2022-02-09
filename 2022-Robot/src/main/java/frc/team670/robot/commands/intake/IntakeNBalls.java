@@ -12,7 +12,7 @@ import frc.team670.robot.commands.conveyor.*;
 
 
 /** 
- * Runs the intake for the time required to intake one ball? Needs to be checked
+ * Intakes n balls where N is specified by whoever calls it
  * @author Sanatan
  */
 
