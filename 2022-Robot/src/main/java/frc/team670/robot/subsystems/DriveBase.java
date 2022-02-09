@@ -111,6 +111,8 @@ public class DriveBase extends HDrive {
       true
     );
 
+    initBrakeMode();
+
     // initialized NavX and sets Odometry
     // navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
@@ -505,6 +507,12 @@ public class DriveBase extends HDrive {
   public Pose2d getPose() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
   }
 
 }

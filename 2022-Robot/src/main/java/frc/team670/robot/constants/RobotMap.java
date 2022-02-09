@@ -33,4 +33,7 @@ public class RobotMap {
   public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;
   public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;
 
+  public static final int SHOOTER_ULTRASONIC_TPIN = 0;
+  public static final int SHOOTER_ULTRASONIC_EPIN = 0;
+
 }
