@@ -17,7 +17,7 @@ import frc.team670.robot.commands.conveyor.*;
  */
 
  
-public class Intake1Ball extends SequentialCommandGroup implements MustangCommand {
+public class IntakeNBalls extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
     private ConveyorSystem conveyor;
@@ -25,7 +25,7 @@ public class Intake1Ball extends SequentialCommandGroup implements MustangComman
 
     // Sets up everything
 
-    public Intake1Ball(Intake intake, ConveyorSystem conveyor) {
+    public IntakeNBalls(Intake intake, ConveyorSystem conveyor, int nBalls) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
@@ -34,6 +34,7 @@ public class Intake1Ball extends SequentialCommandGroup implements MustangComman
         addCommands(
                 new DeployIntake(this.intake),
                 new RunIntakeWithConveyor(this.intake, this.conveyor),
+                new StopAtNBalls(this.conveyor, nBalls),
                 new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyor(conveyor)));
     }
 

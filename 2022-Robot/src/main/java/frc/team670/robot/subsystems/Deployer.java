@@ -1,5 +1,6 @@
 package frc.team670.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Notifier;
 import frc.team670.mustanglib.subsystems.GravitySparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
@@ -14,6 +15,8 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     private static final int STOWED_SETPOINT = 0;
     private static final int DEPLOYED_SETPOINT = 4;
     private static final int DEPLOYED_DISTANCE_FROM_INTAKE = 0; // Determine experimentally like all the other constants
+
+    private static final int TOLERANCE = 1; // TODO: Determine experimentally
     
     private double intakeAngleDegreesFromVertical;
 
@@ -43,7 +46,7 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     }
 
     public boolean isAtTarget() {
-        if (super.setpoint == super.offsetFromEncoderZero) {
+        if (super.setpoint > super.offsetFromEncoderZero + TOLERANCE && super.setpoint < super.offsetFromEncoderZero - TOLERANCE) {
             return true;
         }
         return false;
@@ -52,5 +55,16 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     @Override
     protected double getArbitraryFeedForwardAngleMultiplier() {
         return Math.sin(intakeAngleDegreesFromVertical);
+    }
+
+    public Notifier updateConstants(Deployer deployer) {
+        Notifier notifier = new Notifier(new Runnable() {
+            public void run() {
+                deployer.isAtTarget();
+                deployer.getArbitraryFeedForwardAngleMultiplier();
+            }
+        });
+        notifier.startPeriodic(0.01);
+        return notifier;
     }
 }

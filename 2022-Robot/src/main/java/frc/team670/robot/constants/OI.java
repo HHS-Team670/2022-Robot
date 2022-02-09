@@ -9,10 +9,10 @@ import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
+import frc.team670.robot.commands.intake.StopAtNBalls;
 import frc.team670.robot.commands.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.intake.StopIntakeConveyor;
 import frc.team670.robot.subsystems.*;
-import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -78,9 +78,9 @@ public class OI extends OIBase {
 
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
-    triggerIntaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.INTAKING)));
-    triggerOuttaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.OUTTAKING)));
-    triggerShooting.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING)));
+    triggerIntaking.whenPressed((new StopAtNBalls(conveyorSystem, ConveyorSystem.Status.INTAKING)));
+    triggerOuttaking.whenPressed((new StopAtNBalls(conveyorSystem, ConveyorSystem.Status.OUTTAKING)));
+    triggerShooting.whenPressed((new StopAtNBalls(conveyorSystem, ConveyorSystem.Status.SHOOTING)));
 
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     stopShooter.whenPressed((new StopShooter(shooter)));

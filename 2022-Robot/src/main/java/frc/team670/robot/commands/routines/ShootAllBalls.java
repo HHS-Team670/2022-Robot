@@ -11,8 +11,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.shooter.*;
+import frc.team670.robot.commands.conveyor.*;
 
 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {

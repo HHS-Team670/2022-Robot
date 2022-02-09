@@ -36,7 +36,7 @@ public class EmptyIntakeConveyor extends ParallelCommandGroup implements Mustang
         healthReqs.put(this.intake, HealthState.YELLOW);
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
-            new RunIntake(true, this.intake, this.conveyor),
+            new RunIntake(true, this.intake),
             new RunConveyor(conveyor, ConveyorSystem.Status.OUTTAKING));
     }
 
