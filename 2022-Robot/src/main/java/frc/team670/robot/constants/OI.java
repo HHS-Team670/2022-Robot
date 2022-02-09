@@ -9,7 +9,7 @@ import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
-import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
