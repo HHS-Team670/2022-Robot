@@ -9,6 +9,8 @@ import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
+import frc.team670.robot.commands.routines.intake.EmptyRobot;
+import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -26,12 +28,11 @@ public class OI extends OIBase {
   private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   
-  private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.A);
   
   private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
-  public OI(ConveyorSystem conveyorSystem, Shooter shooter) {
+  public OI() {
     
   }
   public boolean isQuickTurnPressed() {
@@ -57,17 +58,15 @@ public class OI extends OIBase {
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
-    DriveBase drivebase = (DriveBase) subsystemBases[0];
     ConveyorSystem conveyorSystem = (ConveyorSystem) subsystemBases[1];
     Shooter shooter = (Shooter) subsystemBases[2];
     Intake intake = (Intake) subsystemBases[3];
 
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
-    triggerIntaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.INTAKING)));
-    triggerOuttaking.whenPressed((new RunConveyor(conveyorSystem, ConveyorSystem.Status.OUTTAKING)));
+    triggerIntaking.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
+    triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem));
 
-    runIntake.toggleWhenPressed((new RunIntake(intake)));
     stopIntake.whenPressed((new StopIntake(intake)));
 
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));

@@ -28,8 +28,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		SHOOTING
 	}
 
-	private Conveyor intakeConveyor, shooterConveyor;
-	private Status status = Status.OFF;
+	private static Conveyor intakeConveyor, shooterConveyor;
+	private static Status status = Status.OFF;
 	private Timer timer = new Timer();
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
 
@@ -96,14 +96,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
 				}
 				break;
 			case OUTTAKING:
-				if (ballCount() == 0) {
+				if (getBallCount() == 0) {
 					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
 						stopAll();
 					}
 				}
 				break;
 			case SHOOTING:
-				if (ballCount() == 0) {
+				if (getBallCount() == 0) {
 					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
 						stopAll();
 					}
@@ -125,7 +125,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	// Data collection
 	// Returns the total number of balls in the conveyor
-	public int ballCount() {
+	public static int getBallCount() {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
 
@@ -150,7 +150,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		checkState();
 	}
 
-	public Status getStatus() {
+	public static Status getStatus() {
 		return status;
 	}
 

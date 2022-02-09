@@ -68,7 +68,6 @@ public class Intake extends MustangSubsystemBase {
     // Stops the intake
     public void stop() {
         roller.stopMotor();
-        Logger.consoleLog("Intake stopped");
     }
 
     /**
@@ -86,7 +85,9 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        
+        if(ConveyorSystem.getStatus() != ConveyorSystem.Status.OUTTAKING && ConveyorSystem.getBallCount() == 2){
+            stop();
+        }
     }
 
     @Override
