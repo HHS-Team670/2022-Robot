@@ -17,7 +17,7 @@ public class Intake extends MustangSubsystemBase {
 
     private static final double INTAKE_ROLLER_SPEED = 0.84; // Experimentally found
 
-	public static final int JAMMED_COUNT_DEF = 150;
+	private static final int JAMMED_COUNT_DEF = 150;
 
     private double INTAKE_PEAK_CURRENT = 35; // Testing
     private static final int PID_SLOT = 0; // Change later
@@ -28,6 +28,8 @@ public class Intake extends MustangSubsystemBase {
     private SparkMAXLite deployerMotor;
     public Deployer deployer;
     private boolean isDeployed = false; // TODO: true for testing, change this
+
+    public int countWasJammed = 0;
 
     public Intake() {
         // Intake roller should be inverted
@@ -79,6 +81,19 @@ public class Intake extends MustangSubsystemBase {
 
     }
 
+    public int unjam(boolean reversed) {
+        if (isJammed()) {
+            countWasJammed = Intake.JAMMED_COUNT_DEF;
+        }
+        if (countWasJammed > 0) {
+            roll(!reversed);
+            countWasJammed--;
+        } else {
+            roll(reversed);
+        }
+        return countWasJammed;
+    }
+
     // Stops the intake
     public void stop() {
         roller.stopMotor();
@@ -106,24 +121,13 @@ public class Intake extends MustangSubsystemBase {
         return HealthState.GREEN;
     }
 
-    public void checkStatus () {
-        if (roller.get() != 0 && isDeployed == true) {
-            Logger.consoleLog("Intake is running");
-        }
-        else if (roller.get() == 0 && isDeployed == true) {
-            Logger.consoleLog("Intake has been deployed");
-        }
-        else if (roller.get() != 0 && isDeployed == false) {
-            roller.stopMotor();
-        }
-        else {
-            Logger.consoleLog("Intake is not running");
-        }
-    }
-
     @Override
     public void mustangPeriodic() {
-        
+        boolean reversed = false;
+        do {
+            unjam(reversed);
+            reversed = !reversed;
+        } while (isJammed());
     }
 
 }

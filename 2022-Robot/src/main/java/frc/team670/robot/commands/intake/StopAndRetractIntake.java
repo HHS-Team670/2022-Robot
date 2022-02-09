@@ -10,40 +10,34 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * Deploys the intake
- * @author Santan, Armaan
+ * Stops the intake
+ * 
+ * @author Sanatan
+ * @author Armaan
  */
-public class DeployIntake extends CommandBase implements MustangCommand {
+public class StopAndRetractIntake extends CommandBase implements MustangCommand {
 
-    private Map<MustangSubsystemBase, HealthState> healthReqs;
+    Map<MustangSubsystemBase, HealthState> healthReqs;
     private Intake intake;
 
-    
-    // Deploys the intake
-    public DeployIntake(Intake intake) {
+    // Prepares everything to stop the intake
+
+    public StopAndRetractIntake(Intake intake) {
         this.intake = intake;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(intake, HealthState.GREEN);
+        healthReqs.put(intake, HealthState.YELLOW);
         addRequirements(intake);
     }
-    
+
+    // Stops the intake
+
     public void initialize() {
-        intake.deployer.deployIntake();
+        intake.stop();
+        intake.deployer.retractIntake();
     }
 
-    public void end() {
-        intake.deployer.stop();
-    }
+    // Returns the health state
 
-    public boolean isFinished() {
-        return intake.deployer.isAtTarget();
-    }
-
-    /*
-     * returns the health state of the intake
-     */
-
-    @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }

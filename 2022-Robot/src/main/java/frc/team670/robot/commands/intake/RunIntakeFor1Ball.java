@@ -10,14 +10,15 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team670.robot.commands.Conveyors.*;
 
 
-/**
+/** 
  * Runs the intake for the time required to intake one ball? Needs to be checked
  * @author Sanatan
  */
 
- /*
+ 
 public class RunIntakeFor1Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
@@ -36,7 +37,7 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
                 new DeployIntake(this.intake),
                 new RunIntakeWithConveyor(this.intake, this.conveyor),
                 new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S), 
-                new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyor(conveyor)));
+                new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyors(conveyor)));
     }
 
     // Returns health state
@@ -46,4 +47,4 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
         return healthReqs;
     }
 
-}*/
+}

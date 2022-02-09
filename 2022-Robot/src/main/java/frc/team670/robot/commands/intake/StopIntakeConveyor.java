@@ -9,11 +9,12 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
+import frc.team670.robot.commands.Conveyors.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
 /**
- * Runs the intake for the time required to intake one ball? Needs to be checked
+ * Stops the intake and the conveyor
  * @author Sanatan, Armaan
  */
 
@@ -36,7 +37,7 @@ public class StopIntakeConveyor extends ParallelCommandGroup implements MustangC
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
             new StopIntake(intake),
-            new StopConveyor(conveyor));
+            new StopConveyors(conveyor));
     }
 
     // Returns health state

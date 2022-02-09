@@ -33,7 +33,6 @@ public class StopIntake extends CommandBase implements MustangCommand {
 
     public void initialize() {
         intake.stop();
-        intake.deployer.retractIntake();
     }
 
     // Returns the health state

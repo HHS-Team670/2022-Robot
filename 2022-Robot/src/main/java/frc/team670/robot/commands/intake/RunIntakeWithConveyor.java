@@ -9,11 +9,12 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
+import frc.team670.robot.commands.Conveyors.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
 /**
- * Runs the intake for the time required to intake one ball? Needs to be checked
+ * Runs the intake and the conveyor at the same time.
  * @author Sanatan, Armaan
  */
 
@@ -35,8 +36,8 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
         healthReqs.put(this.intake, HealthState.YELLOW);
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
-            new RunIntake(false, this.intake),
-            new RunConveyor(conveyor, Conveyors.Status.INTAKING));
+            new RunIntake(false, this.intake, RobotConstants.TIME_TO_COLLECT_1_BALL_S),
+            new RunConveyor(conveyor, true));
     }
 
     // Returns health state

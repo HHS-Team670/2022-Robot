@@ -9,16 +9,17 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
+import frc.team670.robot.commands.Conveyors.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
 /**
- * Runs the intake for the time required to intake one ball? Needs to be checked
+ * Empties intake and conveyor
  * @author Sanatan
  */
 
- /*
-public class EmptyIntake extends ParallelCommandGroup implements MustangCommand {
+ 
+public class EmptyIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Intake intake;
     private Conveyors conveyor;
@@ -26,7 +27,7 @@ public class EmptyIntake extends ParallelCommandGroup implements MustangCommand 
 
     // Sets up everything
 
-    public EmptyIntake(Intake intake, Conveyors conveyor) {
+    public EmptyIntakeConveyor(Intake intake, Conveyors conveyor) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
@@ -35,8 +36,8 @@ public class EmptyIntake extends ParallelCommandGroup implements MustangCommand 
         healthReqs.put(this.intake, HealthState.YELLOW);
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
-            new RunIntake(true, this.intake),
-            new RunConveyor(conveyor, Conveyors.Status.OUTTAKING));
+            new RunIntake(true, this.intake, RobotConstants.TIME_TO_COLLECT_1_BALL_S),
+            new RunConveyor(conveyor, false));
     }
 
     // Returns health state
@@ -46,4 +47,4 @@ public class EmptyIntake extends ParallelCommandGroup implements MustangCommand 
         return healthReqs;
     }
 
-}*/
+}
