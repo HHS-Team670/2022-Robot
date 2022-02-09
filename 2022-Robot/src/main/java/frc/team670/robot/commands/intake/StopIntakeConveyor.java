@@ -9,7 +9,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
-import frc.team670.robot.commands.Conveyors.*;
+import frc.team670.robot.commands.conveyor.*;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 
@@ -22,12 +22,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class StopIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Intake intake;
-    private Conveyors conveyor;
+    private ConveyorSystem conveyor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     // Sets up everything
 
-    public StopIntakeConveyor(Intake intake, Conveyors conveyor) {
+    public StopIntakeConveyor(Intake intake, ConveyorSystem conveyor) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
@@ -37,7 +37,7 @@ public class StopIntakeConveyor extends ParallelCommandGroup implements MustangC
         healthReqs.put(this.conveyor, HealthState.GREEN);
         addCommands(
             new StopIntake(intake),
-            new StopConveyors(conveyor));
+            new StopConveyor(conveyor));
     }
 
     // Returns health state

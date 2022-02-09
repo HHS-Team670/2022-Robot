@@ -7,10 +7,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.team670.robot.commands.Conveyors.*;
+import frc.team670.robot.commands.conveyor.*;
 
 
 /** 
@@ -19,15 +17,15 @@ import frc.team670.robot.commands.Conveyors.*;
  */
 
  
-public class RunIntakeFor1Ball extends SequentialCommandGroup implements MustangCommand {
+public class Intake1Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
-    private Conveyors conveyor;
+    private ConveyorSystem conveyor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     // Sets up everything
 
-    public RunIntakeFor1Ball(Intake intake, Conveyors conveyor) {
+    public Intake1Ball(Intake intake, ConveyorSystem conveyor) {
         this.intake = intake;
         this.conveyor = conveyor;
         addRequirements(this.intake);
@@ -36,8 +34,7 @@ public class RunIntakeFor1Ball extends SequentialCommandGroup implements Mustang
         addCommands(
                 new DeployIntake(this.intake),
                 new RunIntakeWithConveyor(this.intake, this.conveyor),
-                new WaitCommand(RobotConstants.TIME_TO_COLLECT_1_BALL_S), 
-                new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyors(conveyor)));
+                new ParallelCommandGroup(new StopIntake(this.intake), new StopConveyor(conveyor)));
     }
 
     // Returns health state

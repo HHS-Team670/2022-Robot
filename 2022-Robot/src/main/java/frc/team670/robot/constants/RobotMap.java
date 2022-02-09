@@ -34,5 +34,6 @@ public class RobotMap {
 
   // Intake
   public static final int INTAKE_ROLLER = 0;
+  public static final int DEPLOYER_MOTOR = 0;
 
 }

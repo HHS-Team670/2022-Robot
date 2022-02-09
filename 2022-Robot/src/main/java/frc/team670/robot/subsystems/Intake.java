@@ -23,13 +23,18 @@ public class Intake extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
+    public Deployer deployer;
+
     private boolean isDeployed = true;
 
     public int countWasJammed = 0;
 
+    private final int PIDSlot = 0;
+
     public Intake() {
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
+        deployer = new Deployer(SparkMAXFactory.buildFactorySparkMAX(RobotMap.DEPLOYER_MOTOR, Motor_Type.NEO), PIDSlot);
         roller.setInverted(true);
     }
 
