@@ -25,6 +25,8 @@ public class Intake extends MustangSubsystemBase {
 
     public Deployer deployer;
 
+    private boolean isReversed;
+
     private boolean isDeployed = true;
 
     public int countWasJammed = 0;
@@ -36,6 +38,7 @@ public class Intake extends MustangSubsystemBase {
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         deployer = new Deployer(SparkMAXFactory.buildFactorySparkMAX(RobotMap.DEPLOYER_MOTOR, Motor_Type.NEO), PIDSlot);
         roller.setInverted(true);
+        isReversed = false;
     }
 
     // Returns true if the intake is rolling
@@ -48,9 +51,11 @@ public class Intake extends MustangSubsystemBase {
         if (isDeployed) {
             if (reversed) {
                 roller.set(INTAKE_ROLLER_SPEED * -1);
+                isReversed = reversed;
 
             } else {
                 roller.set(INTAKE_ROLLER_SPEED);
+                isReversed = reversed;
             }
         }
         Logger.consoleLog("Running intake at: %s", roller.get());
@@ -79,6 +84,7 @@ public class Intake extends MustangSubsystemBase {
         if (countWasJammed > 0) {
             roll(!reversed);
             countWasJammed--;
+            isReversed = reversed;
         } else {
             roll(reversed);
         }
@@ -106,11 +112,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        boolean reversed = false;
-        do {
-            unjam(reversed);
-            reversed = !reversed;
-        } while (isJammed());
+        unjam(isReversed);
     }
 
 }
