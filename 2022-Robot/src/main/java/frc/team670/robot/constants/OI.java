@@ -5,7 +5,6 @@ package frc.team670.robot.constants;
 import javax.security.auth.x500.X500Principal;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
@@ -18,7 +17,6 @@ public class OI extends OIBase {
 
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   private static Joystick operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
-
   // private static XKeys xkeys;
 
   // operator buttons
@@ -28,7 +26,6 @@ public class OI extends OIBase {
   private static JoystickButton xboxRunIntakeWithConveyor= new JoystickButton(getDriverController(),XboxButtons.Y);
   private static JoystickButton xboxStopIntakeConveyor= new JoystickButton(getDriverController(),XboxButtons.B);
 
-  
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();

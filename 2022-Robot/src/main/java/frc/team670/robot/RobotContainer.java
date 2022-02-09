@@ -8,19 +8,25 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.paths.right.RightThroughTrench;
+import frc.team670.robot.commands.auton.MoveForwards;
+import frc.team670.robot.commands.auton.NewYCoord;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.DriveBase;
 
 
 public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
-
+  private DriveBase driveBase = new DriveBase(getDriverController());
   int i = 0;
 
   private static Intake intake = new Intake();
@@ -37,6 +43,9 @@ public class RobotContainer extends RobotContainerBase {
   public RobotContainer() {
     super();
     addSubsystem(intake);
+    addSubsystem(driveBase);
+    oi.configureButtonBindings(driveBase);
+    
     
   }
 
@@ -50,15 +59,24 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return null;
+    MustangCommand autonCommand = new MoveForwards(driveBase);
+      //  MustangCommand autonCommand = new RightShootTrench(driveBase);
+
+    Logger.consoleLog("autonCommand: %s", autonCommand);
+    return autonCommand;
   }
 
   public void autonomousInit() {
-    
+    Logger.consoleLog("autoInit called");
+
+    m_autonomousCommand = getAutonomousCommand();
+    if (m_autonomousCommand != null) {
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
+    }
   }
 
   public void teleopInit() {
-    
+    Logger.consoleLog(driveBase.getPose().toString());
     
   }
 
@@ -88,7 +106,10 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   break1.sendBeamBreakDataToDashboard();
+    break1.sendBeamBreakDataToDashboard();
+    // driveBase.getHeading();
+    SmartDashboard.putNumber("navX", driveBase.getHeading());
+    SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
   }
 
 }
