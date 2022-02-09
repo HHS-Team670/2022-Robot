@@ -7,9 +7,9 @@ const client = new wpilib_NT.Client();
 
 client.startDebug("Debug");
 
-// The client will try to reconnect after 15 milliseconds
+// The client will try to reconnect after 1 second
 //COMMENTED THIS OUT AND IT SEEMS TO WORK. TECHNICALLY SHOULDN'T BE COMMENTED OUT?
-client.setReconnectDelay(15);
+client.setReconnectDelay(25);
 
 /** Module to control application life. */
 const app = electron.app;
