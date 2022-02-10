@@ -89,6 +89,7 @@ public class Vision extends MustangSubsystemBase{
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
             } else {
                 hasTarget = false;
+                // Logger.consoleLog("NO TARGET DETECTED");
             }
             
         } catch(Exception e){
@@ -133,7 +134,7 @@ public class Vision extends MustangSubsystemBase{
 
 
     // public Transform2d getCamToTargetTrans(double heading) {
-    //     // TOOD: make sure this is correct math (check with Mr.Dias)
+    //     // TODO: make sure this is correct math (check with Mr.Dias)
     //     Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
     //     Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
     //     return camToTargetTrans;
@@ -193,6 +194,11 @@ public class Vision extends MustangSubsystemBase{
         // boolean isBall = SmartDashboard.getBoolean("Is Ball", false);
         processImage();
 
+        // SmartDashboard.putNumber("Distance", distance);
+        // SmartDashboard.putNumber("Angle", angle);
+        // SmartDashboard.putNumber("Vision New Pose X", transformedPose.getX());
+        // SmartDashboard.putNumber("Vision New Pose Y", transformedPose.getY());
+        
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
             SmartDashboard.putNumber("Angle", angle);
