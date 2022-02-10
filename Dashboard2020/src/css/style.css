@@ -205,7 +205,7 @@ body.login #login {
 }
 #auton-chooser {
     position: relative;
-    transform: translate(10vw, 60vh);
+    transform: translate(10vw, 10vh);
     width: 40vw;
     height: 30vh;
 }
@@ -274,7 +274,24 @@ body.login #login {
     position: absolute;
     width: 30vw;
     /*height: 8vh; */
-    transform: translate(10vw, 90vh);
+    transform: translate(10vw, 50vh);
+}
+
+#match-phase {
+    background-color: rgb(25, 67, 75);
+}
+
+.timer-button { 
+    background-color: rgb(25, 105, 25);
+    font-size: 100%;
+}
+
+.timer-button:hover {
+    background-color:rgb(23, 167, 23);
+}
+
+.timer-button:active {
+    background-color:rgb(8, 218, 8);
 }
 
 #shooter-values  {
@@ -285,8 +302,14 @@ body.login #login {
     height: 10vh;
 }
 
-#delay {
-    position: absolute;
-    bottom: 150px;
-    left: 150px;
+#camera-streams {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.camera-stream {
+    width: 32vw;
 }

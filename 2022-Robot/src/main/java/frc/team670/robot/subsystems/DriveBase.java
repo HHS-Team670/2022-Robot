@@ -10,6 +10,7 @@
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.revrobotics.RelativeEncoder;
@@ -18,6 +19,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -30,6 +32,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
@@ -86,7 +90,15 @@ public class DriveBase extends TankDriveBase {
 
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+
+  private NetworkTableEntry matchTimeEntry;
+  private NetworkTableEntry isAutonEntry;
+
 public DriveBase(MustangController mustangController) {
+  matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
+  isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
+
+
   leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
   false, MotorConfig.Motor_Type.NEO);
 rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -372,6 +384,15 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
       Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
     }
 
+      /**TODO We literally have no clue if any of this works */
+      // DUMMY VARIABLE, CHANGE LATER!!!
+      double matchTime = new Date().getTime()/1000.0; // DriverStation.getMatchTime();
+      boolean isAutonRn = DriverStation.isAutonomous();
+      if (matchTime - (int) matchTime < 0.00001) {
+        matchTimeEntry.forceSetDouble(matchTime);
+        if (isAutonRn != isAutonEntry.getBoolean(isAutonRn))
+          isAutonEntry.forceSetBoolean(isAutonRn);
+      }
   }
 
   
