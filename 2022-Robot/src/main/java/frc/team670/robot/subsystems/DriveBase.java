@@ -32,6 +32,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
@@ -82,7 +83,15 @@ public class DriveBase extends TankDriveBase {
 
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+
+  private NetworkTableEntry matchTimeEntry;
+  private NetworkTableEntry isAutonEntry;
+
 public DriveBase(MustangController mustangController) {
+  matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
+  isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
+
+
   leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
   false, MotorConfig.Motor_Type.NEO);
 rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -358,9 +367,9 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
       double matchTime = new Date().getTime()/1000.0; // DriverStation.getMatchTime();
       boolean isAutonRn = DriverStation.isAutonomous();
       if (matchTime - (int) matchTime < 0.00001) {
-        NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime").forceSetDouble(matchTime);
-        if (isAutonRn != NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").getBoolean(isAutonRn))
-          NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton").forceSetBoolean(isAutonRn);
+        matchTimeEntry.forceSetDouble(matchTime);
+        if (isAutonRn != isAutonEntry.getBoolean(isAutonRn))
+          isAutonEntry.forceSetBoolean(isAutonRn);
       }
   }
 
