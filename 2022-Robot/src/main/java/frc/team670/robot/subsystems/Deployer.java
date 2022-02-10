@@ -16,6 +16,8 @@ public class Deployer extends GravitySparkMaxRotatingSubsystem {
     private static final int DEPLOYED_SETPOINT = 4;
     private static final int DEPLOYED_DISTANCE_FROM_INTAKE = 0; // Determine experimentally like all the other constants
 
+    public 
+
     private static final int TOLERANCE = 1; // TODO: Determine experimentally
     
     private double intakeAngleDegreesFromVertical;
