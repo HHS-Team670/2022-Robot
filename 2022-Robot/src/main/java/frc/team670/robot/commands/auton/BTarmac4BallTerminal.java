@@ -11,7 +11,6 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.commands.auton.StopDriveBase;
 
 public class BTarmac4BallTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;

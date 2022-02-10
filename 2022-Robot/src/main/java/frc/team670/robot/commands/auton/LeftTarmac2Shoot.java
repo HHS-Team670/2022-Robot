@@ -35,7 +35,8 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
             //drive forward
             //intake
             //drive back
-            getTrajectoryFollowerCommand(trajectory2, driveBase)
+            getTrajectoryFollowerCommand(trajectory2, driveBase), 
+            new StopDriveBase(driveBase)
             //shoot 2 balls
         );
 
