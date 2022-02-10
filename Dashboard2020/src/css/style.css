@@ -206,15 +206,23 @@ body.login #login {
 #auton-chooser {
     position: relative;
     transform: translate(10vw, 10vh);
-    width: 40vw;
-    height: 30vh;
+    display: flex;
+    flex-direction: column wrap;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgb(8, 218, 8);
+    width: 430px;
 }
+
+#delay {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 #start-holding {
     position: absolute;
 }
 #position {
-    position: absolute;
-    transform: translate(0px, 50px);
     width:400px;
 }
 #path {
@@ -228,8 +236,6 @@ body.login #login {
     width:400px;
 }
 #confirm-button {
-    position: absolute;
-    transform: translate(0, 170px);
     width:400px;
 }
 
@@ -273,24 +279,23 @@ body.login #login {
 #current-text {
     position: absolute;
     width: 30vw;
-    /*height: 8vh; */
-    transform: translate(10vw, 50vh);
+    transform: translate(20vw, 70vh);
 }
 
 #match-phase {
     background-color: rgb(25, 67, 75);
 }
 
-.timer-button { 
+.general-button { 
     background-color: rgb(25, 105, 25);
     font-size: 100%;
 }
 
-.timer-button:hover {
+.general-button:hover {
     background-color:rgb(23, 167, 23);
 }
 
-.timer-button:active {
+.general-button:active {
     background-color:rgb(8, 218, 8);
 }
 
@@ -313,3 +318,4 @@ body.login #login {
 .camera-stream {
     width: 32vw;
 }
+

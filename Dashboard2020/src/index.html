@@ -108,11 +108,11 @@
       <p>Match Phase: NOT STARTED</p>
     </div>
 <div id = "current-text">
-  <div><button class = "timer-button" id="timer-starter" style = "margin-bottom:1%">Start Timer</button>
-    <button class = "timer-button" id="timer-stopper" style = "margin-bottom:1%">Stop Timer</button></div>
+  <div><button class = "general-button" id="timer-starter" style = "margin-top:1%">Start Timer</button>
+    <button class = "general-button" id="timer-stopper" style = "margin-top:1%">Stop Timer</button></div>
     <svg id="current-text-svg" width="400" height="200">
-    <rect x="0%" y="0%" width="100%" height="50%" style="stroke:rgb(0,200,0)" />
-    <text id="timer" x="20%" y="25%" style="text-anchor: start" alignment-baseline="top">Time of Match:</text>
+    <rect x="0%" y="30%" width="100%" height="30%" style="stroke:rgb(0,200,0)" />
+    <text id="timer" x="20%" y="45%" style="text-anchor: start" alignment-baseline="top">Time of Match:</text>
     <rect x="0%" y="50%" width="100%" height="50%" style="stroke:rgb(0,200,0)" />
     <text id="balls-in-robot" x="20%" y="75%" style="text-anchor: start" alignment-baseline="top">Balls in Robot:</text>
     <circle id="indicator1" cx="63%" cy="75%" r="10%" />
@@ -156,13 +156,14 @@
 
             <!-- </fieldset> -->
         </form>
-        <button style="margin-bottom:10px;" id="confirm-button" onclick="sendAuton();">OK</button>
+        <div id="delay">
+          <label for="delay-time">Delay Time</label>
+          <input type="number" min="0" max="15" name="delay-time" value="0" />
+        </div>
+        <button class="general-button" id="confirm-button" onclick="sendAuton();">OK</button>
     </div>
 
-    <div id="delay">
-      <label for="delay-time">Delay Time</label>
-      <input style="margin:5px;" type="number" min="0" max="15" name="delay-time" value="0" />
-    </div>
+    
 
 
 
@@ -170,7 +171,7 @@
     <script src="networktables/networktables.js"></script>
     <script src="connection.js"></script>
     <script src="ui.js"></script>
-    <script src="ui/livetimer.js"></script>
+    <script src="ui/manualtimer.js"></script>
 
 
 </body>
