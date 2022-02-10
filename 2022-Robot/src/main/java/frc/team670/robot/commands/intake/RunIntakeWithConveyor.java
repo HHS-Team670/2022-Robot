@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 
 
+
+// @Laksh PLEASE IGNORE THE NEW CODE
 public class RunIntakeWithConveyor extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
@@ -38,8 +40,7 @@ public class RunIntakeWithConveyor extends SequentialCommandGroup implements Mus
         addCommands(
             new ParallelCommandGroup(
                 new RunIntake(false, this.intake),
-                new RunConveyor(this.conveyor, ConveyorSystem.Status.INTAKING)),
-            new StopAtNBalls(this.conveyor, 2));
+                new RunConveyor(this.conveyor, ConveyorSystem.Status.INTAKING)));
     }
 
     // Returns health state

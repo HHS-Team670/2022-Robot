@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.intake;
+package frc.team670.robot.commands.routines;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
 import frc.team670.robot.commands.conveyor.*;
+import frc.team670.robot.commands.intake.StopIntake;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 

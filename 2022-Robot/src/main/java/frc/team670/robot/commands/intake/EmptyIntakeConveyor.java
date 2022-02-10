@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * @author Sanatan
  */
 
- 
+
+// Whoever's merging this, delete the class (redundant, replaced by EmptyRobot) 
 public class EmptyIntakeConveyor extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
@@ -39,7 +40,6 @@ public class EmptyIntakeConveyor extends SequentialCommandGroup implements Musta
             new ParallelCommandGroup(
                 new RunIntake(true, this.intake),
                 new RunConveyor(this.conveyor, ConveyorSystem.Status.OUTTAKING)),
-            new StopAtNBalls(this.conveyor, 0),
             new StopIntake(this.intake, this.conveyor));
     }
 
