@@ -17,7 +17,9 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -48,6 +50,8 @@ public class DriveBase extends HDrive {
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
+
+  private DifferentialDrivePoseEstimator poseEstimator;
 
   public DriveBase(MustangController mustangController) {
     mController = mustangController;
@@ -338,9 +342,17 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
+    //from auton:
     poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
     SmartDashboard.putNumber("motor controller", left1Encoder.getPosition());
 
+    //from dev:
+    getDriveTrain().feedWatchdog();
+    if(Math.abs(mController.getRightStickX()) > 0.1) {
+      strafe(mController.getRightStickX());
+    } else {
+      strafe(0);
+    }
   }
 
   
@@ -352,12 +364,6 @@ public class DriveBase extends HDrive {
    */
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
-    getDriveTrain().feedWatchdog();
-    if(Math.abs(mController.getRightStickX()) > 0.1) {
-      strafe(mController.getRightStickX());
-    } else {
-      strafe(0);
-    }
   }
 
   /**
