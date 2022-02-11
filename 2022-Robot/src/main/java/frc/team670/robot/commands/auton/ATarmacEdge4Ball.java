@@ -10,7 +10,6 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
-
 //change to ATarmacEdge4Ball for 2022 drivebase
 public class ATarmacEdge4Ball extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -23,13 +22,13 @@ public class ATarmacEdge4Ball extends SequentialCommandGroup implements MustangC
         //pickup ball
         trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
         //shooting balls
-        trajectory3 = PathPlanner.loadPath("ATarmacEdge4BallP3", 2.0, 1);
-        //pickup ball
-        trajectory4 = PathPlanner.loadPath("ATarmacEdge4BallP4", 2.0, 1);
-        //pickup ball
-        trajectory5 = PathPlanner.loadPath("ATarmacEdge4BallP5", 2.0, 1);
-        //pickup ball
-        trajectory6 = PathPlanner.loadPath("ATarmacEdge4BallP6", 2.0, 1);
+        // trajectory3 = PathPlanner.loadPath("ATarmacEdge4BallP3", 2.0, 1);
+        // //pickup ball
+        // trajectory4 = PathPlanner.loadPath("ATarmacEdge4BallP4", 2.0, 1);
+        // //pickup ball
+        // trajectory5 = PathPlanner.loadPath("ATarmacEdge4BallP5", 2.0, 1);
+        // //pickup ball
+        // trajectory6 = PathPlanner.loadPath("ATarmacEdge4BallP6", 2.0, 1);
         //shoot ball
         
         //Logger.consoleLog("Loaded path " + trajectory.toString());
@@ -40,7 +39,9 @@ public class ATarmacEdge4Ball extends SequentialCommandGroup implements MustangC
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            getTrajectoryFollowerCommand(trajectory, driveBase)
+            getTrajectoryFollowerCommand(trajectory, driveBase),
+            getTrajectoryFollowerCommand(trajectory2, driveBase), 
+            new StopDriveBase(driveBase)
         );
     }
 

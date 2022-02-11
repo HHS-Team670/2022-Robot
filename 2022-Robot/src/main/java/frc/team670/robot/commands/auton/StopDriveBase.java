@@ -27,6 +27,10 @@ public class StopDriveBase extends CommandBase implements MustangCommand{
         driveBase.stop();
     }
 
+    public boolean isFinished() {
+        return true;
+    }
+
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         // TODO Auto-generated method stub
