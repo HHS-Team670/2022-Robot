@@ -5,40 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-// COPIED FROM 2020
-
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
-import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
-import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -46,14 +34,13 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a tank drive base.
+ * Represents a H drive base.
  * 
  * @author lakshbhambhani
  */
-public class DriveBase extends TankDriveBase {
-  
-  private SparkMAXLite left1, left2, right1, right2;
-  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
+public class DriveBase extends HDrive {
+  private SparkMAXLite left1, left2, right1, right2, middle;
+  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
   private MustangController mController;
 
@@ -62,75 +49,72 @@ public class DriveBase extends TankDriveBase {
 
   private NavX navXMicro;
 
-  private DifferentialDrivePoseEstimator poseEstimator;
+  public DriveBase(MustangController mustangController) {
+    mController = mustangController;
 
-  private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
-  private int againstBarCount = 0;
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_LEFT_MOTOR_1, 
+      RobotMap.SPARK_LEFT_MOTOR_2,
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
 
-  public static final double START_Y = 2.4;
-  public static final double START_X = 15.983 - 3.8;
-  public static final double START_ANGLE_DEG = 180;
-  public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(
+      RobotMap.SPARK_RIGHT_MOTOR_1, 
+      RobotMap.SPARK_RIGHT_MOTOR_2, 
+      false, 
+      MotorConfig.Motor_Type.NEO
+    );
 
+    middle = SparkMAXFactory.buildSparkMAX(
+      RobotMap.SPARK_MIDDLE_MOTOR, 
+      SparkMAXFactory.defaultConfig, 
+      MotorConfig.Motor_Type.NEO
+    );
 
-  // public static final double 
+    left1 = leftControllers.get(0);
+    left2 = leftControllers.get(1);
+    right1 = rightControllers.get(0);
+    right2 = rightControllers.get(1);
 
-  // Constants used for doing robot to target pose conversion
+    left1Encoder = left1.getEncoder();
+    right1Encoder = right1.getEncoder();
+    middleEncoder = middle.getEncoder();
 
-  public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
+    left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
+    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for right side
+    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR); 
 
-  public static final Pose2d CAMERA_OFFSET = 
-    TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
-public DriveBase(MustangController mustangController) {
-  leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
-  false, MotorConfig.Motor_Type.NEO);
-rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
-  RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
+    left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION); 
 
-  poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(0),
-  new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
-  VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-  VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
+    allMotors.addAll(leftControllers);
+    allMotors.addAll(rightControllers);
+    allMotors.add(middle);
 
-left1 = leftControllers.get(0);
-left2 = leftControllers.get(1);
-right1 = rightControllers.get(0);
-right2 = rightControllers.get(1);
+    // The DifferentialDrive inverts the right side automatically, however we want
+    // invert straight
+    // from the Spark so that we can still use it properly with the
+    // CANPIDController, so we need to tell
+    // differenetial drive to not invert.
+    setMotorsInvert(leftControllers, false);
+    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-left1Encoder = left1.getEncoder();
-right1Encoder = right1.getEncoder();
-left2Encoder = left2.getEncoder();
-right2Encoder = right2.getEncoder();
+    super.setMotorControllers(
+      new MotorController[] { left1, left2 },
+      new MotorController[] { right1, right2 },
+      middle,
+      false,
+      false, 
+      .1, 
+      true
+    );
 
-left1Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
-left2Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor); // Do not invert for
-                                                                                         // right side
-right1Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
-right2Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
+    initBrakeMode();
 
-left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-
-allMotors.addAll(leftControllers);
-allMotors.addAll(rightControllers);
-
-// The DifferentialDrive inverts the right side automatically, however we want
-// invert straight
-// from the Spark so that we can still use it properly with the
-// CANPIDController, so we need to tell
-// differenetial drive to not invert.
-setMotorsInvert(leftControllers, false);
-setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
-
-super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, false,
-  false, .1, true);
-
-// initialized NavX and sets Odometry
-navXMicro = new NavX(RobotMap.NAVX_PORT);
-// AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-    
+    // initialized NavX and sets Odometry
+    // navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
 
   /**
@@ -147,10 +131,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
    */
   @Override
   public HealthState checkHealth() {
-    HealthState state = HealthState.GREEN;
-
-    
-    return state;
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(), middle.isErrored());
   }
 
   /**
@@ -371,8 +352,13 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
    */
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
+    getDriveTrain().feedWatchdog();
+    if(Math.abs(mController.getRightStickX()) > 0.1) {
+      strafe(mController.getRightStickX());
+    } else {
+      strafe(0);
+    }
   }
-  
 
   /**
    * Resets the odometry to the specified pose.
@@ -387,28 +373,20 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
-    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition()); 
-    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition()); 
+    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
     }
-    // Logger.consoleLog("Drivebase pose reset %s", pose);
-    // Logger.consoleLog("Drivebase get position after reset %s %s",
-    // left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
   public void resetOdometry() {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
-        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
-
   }
 
   /**
@@ -435,23 +413,6 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
-    getDriveTrain().feed();
-  }
-
-  public boolean isAlignedOnFloorBars() {
-    double backLeftCurrent = left2.getOutputCurrent();
-    double backRightCurrent = right2.getOutputCurrent();
-    if (backLeftCurrent > 0.2 && backRightCurrent > 0.2) {
-      if (backLeftCurrent >= CURRENT_WHEN_AGAINST_BAR && backRightCurrent >= CURRENT_WHEN_AGAINST_BAR) {
-        againstBarCount++;
-      } else {
-        againstBarCount = 0;
-      }
-      if (againstBarCount >= 4) { // 4 consecutive readings higher than peak
-        return true;
-      }
-    }
-    return false;
   }
 
   @Override
@@ -551,5 +512,27 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
+
+  @Override
+  public void toggleIdleMode() {
+    for (SparkMAXLite motor : allMotors) {
+      if (motor.getIdleMode() == IdleMode.kBrake) {
+        motor.setIdleMode(IdleMode.kCoast);
+      } else {
+        motor.setIdleMode(IdleMode.kBrake);
+      }
+    }
+  }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public static double getLinearSpeed(){
+    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  }
+
 
 }

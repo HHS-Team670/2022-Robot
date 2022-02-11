@@ -1,35 +1,32 @@
-// COPIED FROM 2020
-
-
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
 
-public class RobotConstants extends RobotConstantsBase{
+public class RobotConstants extends RobotConstantsBase {
 
-    /**  the id for the camera that tells you how to shoot the ball*/
+    /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-    public static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
-  
+    public static final double DRIVEBASE_VELOCITY_CONVERSION_FACTOR = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
+    public static final double HDRIVE_VELOCITY_CONVERSION_FACTOR = RobotConstants.HDRIVE_METERS_PER_ROTATION / 60;
 
     // Robot Dimensions in Inches
-    public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.3, DRIVEBASE_TO_GROUND = 2.03;
+    public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.5, DRIVEBASE_TO_GROUND = 2.03;
 
     public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
-    public static final double TURRET_CENTER_TO_FRONT = 20;
-
-    // Needed for vision. In meters
-    public static final double TURRET_CAMERA_HEIGHT = 20; //TODO: FIGURE THIS OUT
-
     // Drive Base Gearing
-    public static final double DRIVEBASE_GEAR_RATIO = 10.71; // 8.45 if low gear, 10.71 if high gear. TODO check which
-                                                            // one it is
+    public static final double DRIVEBASE_GEAR_RATIO = 8.45; 
+    
+    // Drive Base Gearing
+    public static final double HDRIVE_GEAR_RATIO = 8.45;  //TODO: Check with mech
+
     /** Drive Base Wheel Diameter in Inches */
     public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
+
+    /** HDrive Base Wheel Diameter in Inches */
+    public static final double HDRIVE_WHEEL_DIAMETER = 4; //TODO: Check with mech
 
     /** Inches per rotation of the NEO motors on the drivebase */
     public static final double DRIVEBASE_INCHES_PER_ROTATION = 1 / DRIVEBASE_GEAR_RATIO * DRIVE_BASE_WHEEL_DIAMETER
@@ -38,20 +35,16 @@ public class RobotConstants extends RobotConstantsBase{
     /** The number of ticks per inch of wheel travel */
     public static final int DIO_TICKS_PER_INCH = (int) (DIO_TICKS_PER_ROTATION / (Math.PI * DRIVE_BASE_WHEEL_DIAMETER));
 
-
-
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER
             * Math.PI * 0.0254;
 
-    public static final double INDEXER_WIDTH = 203.2; // in mm
-    public static final double SENSOR_TO_BALL = 127; // the distance from ToF sensor to middle of the ball, in mm
-    public static final double MIN_BALL_DETECTED_WIDTH_INDEXER = 70;
-    public static final double MIN_BALL_DETECTED_WIDTH_TUNNEL = 70;
+    /** The number of meters per roatation of a drivebase wheel */
+    public static final double HDRIVE_METERS_PER_ROTATION = (1 / HDRIVE_GEAR_RATIO) * HDRIVE_WHEEL_DIAMETER
+            * Math.PI * 0.0254;
 
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
-
     public static final double leftKsVolts = 0.246;
     public static final double leftKvVoltSecondsPerMeter = 2.1;
     public static final double leftKaVoltSecondsSquaredPerMeter = 0.2;
@@ -65,17 +58,17 @@ public class RobotConstants extends RobotConstantsBase{
     // VISION Constants
 
     public static final int VISION_ERROR_CODE = -99999;
-    public static final double kHorizontalFOV = 61; // degrees
-    public static final double kVerticalFOV = 34.3; // degrees
-    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV / 2.0));
-    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV / 2.0));
-    public static final double TILT_ANGLE = 13; //degrees
-    public static final double CAMERA_HEIGHT = 0.9525; //meters
+    public static final double kHorizontalFOV_DEGREES = 61;
+    public static final double kVerticalFOV_DEGREES = 34.3;
+    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV_DEGREES / 2.0));
+    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV_DEGREES / 2.0));
+    public static final double TILT_ANGLE_DEGREES = 13;
+    public static final double CAMERA_HEIGHT_METERS = 0.9525;
 
     // Autonomous Constants
 
-    public static final DifferentialDriveKinematics 
-        kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
+            kTrackwidthMeters);
     public static final double leftKPDriveVel = 6;
     public static final double leftKIDriveVel = 0.00;
     public static final double leftKDDriveVel = 0.0;
@@ -96,23 +89,10 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double endVelocityMetersPerSecond2 = 0.2;
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
-            kDriveKinematics, kMaxSpeedMetersPerSecond2);
+            kDriveKinematics, kMaxSpeedMetersPerSecond);
 
-        public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
-                kDriveKinematics, kMaxSpeedMetersPerSecond);
-
-    //The turret angles depending on the robot start position 
-    public static final double leftTurretAng = 0;
-    public static final double rightTurretAng = -25;
-
-    public static final double kMaxSpeedMetersPerSecond3 = 0.6;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared3 = 0.6;// 1; //0.305;
-
-    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsCenter3Line = new DifferentialDriveKinematicsConstraint(
-        kDriveKinematics, kMaxSpeedMetersPerSecond3);
-        
-        public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsLeft3Line = new DifferentialDriveKinematicsConstraint(
-        kDriveKinematics, kMaxSpeedMetersPerSecond3);
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
+            kDriveKinematics, kMaxSpeedMetersPerSecond);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and
     // seconds

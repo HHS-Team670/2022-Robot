@@ -8,11 +8,8 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
-import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.ATarmacEdge4Ball;
@@ -21,30 +18,31 @@ import frc.team670.robot.commands.auton.BTarmac4BallTerminal;
 import frc.team670.robot.commands.auton.BTarmacTriangle;
 import frc.team670.robot.commands.auton.LeftTarmac2Shoot;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
-
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 
 public class RobotContainer extends RobotContainerBase {
 
+  private static MustangCommand m_autonomousCommand;
+
+  private static DriveBase driveBase = new DriveBase(getDriverController());
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Intake intake = new Intake(conveyorSystem);
+  private static Shooter shooter = new Shooter();
+
   private static OI oi = new OI();
-  private DriveBase driveBase = new DriveBase(getDriverController());
-  int i = 0;
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase,
+  // intake, conveyor, indexer, shooter, turret,
+  // vision);
 
-  private MustangCommand m_autonomousCommand;
-
-  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-  //     vision);
-
-  BeamBreak break1 = new BeamBreak(9);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase);
-    oi.configureButtonBindings(driveBase);
-    
-    
+    addSubsystem(conveyorSystem, shooter, intake);
   }
 
   public void robotInit() {
@@ -59,31 +57,27 @@ public class RobotContainer extends RobotContainerBase {
   public MustangCommand getAutonomousCommand() {
     MustangCommand autonCommand = new ATarmacEdge4Ball(driveBase);
 
-    Logger.consoleLog("autonCommand: %s", autonCommand);
-    return autonCommand;
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    return null;
   }
 
 
   public void autonomousInit() {
     Logger.consoleLog("autoInit called");
 
-    m_autonomousCommand = getAutonomousCommand();
-    if (m_autonomousCommand != null) {
-      MustangScheduler.getInstance().schedule(m_autonomousCommand);
-    }
   }
 
   public void teleopInit() {
-    Logger.consoleLog(driveBase.getPose().toString());
-    
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake);
+    driveBase.initDefaultCommand();
   }
 
   @Override
   public void disabled() {
-    
+
   }
 
-  public static Joystick getOperatorController() {
+  public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
 
@@ -104,10 +98,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    break1.sendBeamBreakDataToDashboard();
-    // driveBase.getHeading();
-    SmartDashboard.putNumber("navX", driveBase.getHeading());
-    SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
+    
   }
 
 }
