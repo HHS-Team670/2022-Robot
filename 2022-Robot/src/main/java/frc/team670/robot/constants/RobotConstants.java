@@ -26,7 +26,7 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double TURRET_CAMERA_HEIGHT = 20; //TODO: FIGURE THIS OUT
 
     // Drive Base Gearing
-    public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which
+    public static final double DRIVEBASE_GEAR_RATIO = 10.71; // 8.45 if low gear, 10.71 if high gear. TODO check which
                                                             // one it is
     /** Drive Base Wheel Diameter in Inches */
     public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
