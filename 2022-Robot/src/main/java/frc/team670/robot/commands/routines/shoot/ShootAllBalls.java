@@ -20,10 +20,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
-    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {
-     
-      addRequirements(shooter, conveyorSystem);
-      
+    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);

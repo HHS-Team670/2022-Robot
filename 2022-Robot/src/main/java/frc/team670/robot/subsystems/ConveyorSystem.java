@@ -92,6 +92,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 					shooterConveyor.stop();
 					if (intakeConveyor.getBallCount() == 1) {
 						intakeConveyor.stop();
+						status = Status.OFF;
 					}
 				}
 				break;
@@ -148,6 +149,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		// intakeConveyor.debugBeamBreaks();
 		// shooterConveyor.debugBeamBreaks();
 		checkState();
+		debugSubsystem();
 	}
 
 	public static Status getStatus() {

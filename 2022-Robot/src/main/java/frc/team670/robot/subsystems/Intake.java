@@ -1,6 +1,8 @@
 package frc.team670.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -13,7 +15,7 @@ import frc.team670.robot.constants.RobotMap;
 */
 public class Intake extends MustangSubsystemBase {
 
-    private static final double INTAKE_ROLLER_SPEED = 0.6; // Experimentally found
+    private static double intake_roller_speed = 0.6; // Experimentally found
 
 	public static final int JAMMED_COUNT_DEF = 150;
 
@@ -25,7 +27,10 @@ public class Intake extends MustangSubsystemBase {
 
     private boolean isDeployed = true;
 
-    public Intake() {
+    private ConveyorSystem conveyor;
+
+    public Intake(ConveyorSystem conveyor) {
+        this.conveyor = conveyor;
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
@@ -40,13 +45,12 @@ public class Intake extends MustangSubsystemBase {
     public void roll(boolean reversed) {
         if (isDeployed) {
             if (reversed) {
-                roller.set(INTAKE_ROLLER_SPEED * -1);
+                roller.set(intake_roller_speed * -1);
 
             } else {
-                roller.set(INTAKE_ROLLER_SPEED);
+                roller.set(intake_roller_speed);
             }
         }
-        Logger.consoleLog("Running intake at: %s", roller.get());
     }
 
     // Returns true if the intake is jammed
@@ -85,7 +89,9 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        if(ConveyorSystem.getStatus() != ConveyorSystem.Status.OUTTAKING && ConveyorSystem.getBallCount() == 2){
+        SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+        if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
             stop();
         }
     }
@@ -94,6 +100,11 @@ public class Intake extends MustangSubsystemBase {
     public void debugSubsystem() {
         // TODO Auto-generated method stub
         
+    }
+
+    public void adjustLinearSpeedBasedOnDrivebaseSpeed(){
+        double drivebaseSpeed = DriveBase.getLinearSpeed();
+        intake_roller_speed = drivebaseSpeed/4; //TODO: COMPLETE MATH BASED ON GEARING
     }
 
 }

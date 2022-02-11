@@ -26,7 +26,6 @@ public class EmptyRobot extends ParallelCommandGroup implements MustangCommand {
     // Sets up everything
 
     public EmptyRobot(Intake intake, ConveyorSystem conveyor) {
-        addRequirements(intake, conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);

@@ -26,7 +26,6 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
     // Sets up everything
 
     public RunIntakeWithConveyor(Intake intake, ConveyorSystem conveyor) {
-        addRequirements(intake, conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);

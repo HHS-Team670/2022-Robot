@@ -34,13 +34,13 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a tank drive base.
+ * Represents a H drive base.
  * 
  * @author lakshbhambhani
  */
 public class DriveBase extends HDrive {
   private SparkMAXLite left1, left2, right1, right2, middle;
-  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
+  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
   private MustangController mController;
 
@@ -339,6 +339,11 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     getDriveTrain().feedWatchdog();
+    if(Math.abs(mController.getRightStickX()) > 0.1) {
+      strafe(mController.getRightStickX());
+    } else {
+      strafe(0);
+    }
   }
 
   /**
@@ -514,5 +519,10 @@ public class DriveBase extends HDrive {
     // TODO Auto-generated method stub
     
   }
+
+  public static double getLinearSpeed(){
+    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  }
+
 
 }

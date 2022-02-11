@@ -245,7 +245,8 @@ public class Shooter extends MustangSubsystemBase {
         if (Math.abs(getVelocity() - targetRPM) < VELOCITY_ALLOWED_ERROR) {
             setRampRate(false);
         }
-        setTargetRPM(targetRPM);
+        // setTargetRPM(targetRPM);
+        SmartDashboard.putNumber("Ultrasonic Distance", distance);
     }
 
     /**
