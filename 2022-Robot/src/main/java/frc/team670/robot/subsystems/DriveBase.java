@@ -30,6 +30,7 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.commands.teleop.XboxFieldOrientedDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -114,14 +115,14 @@ public class DriveBase extends HDrive {
     initBrakeMode();
 
     // initialized NavX and sets Odometry
-    // navXMicro = new NavX(RobotMap.NAVX_PORT);
+    navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
 
   /**
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxFieldOrientedDrive(this, navXMicro, mController));
   }
 
   /**
@@ -339,11 +340,12 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     getDriveTrain().feedWatchdog();
-    if(Math.abs(mController.getRightStickX()) > 0.1) {
-      strafe(mController.getRightStickX());
-    } else {
-      strafe(0);
-    }
+    // if(Math.abs(mController.getRightStickX()) > 0.1) {
+    //   strafe(mController.getRightStickX());
+    // } else {
+    //   strafe(0);
+    // }
+    SmartDashboard.putNumber("Nax X", getHeading());
   }
 
   /**
@@ -522,6 +524,14 @@ public class DriveBase extends HDrive {
 
   public static double getLinearSpeed(){
     return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  }
+
+  public void setCenterDrive(double speed) {
+    middle.set(speed);
+  }
+
+  public NavX getNavX() {
+    return navXMicro;
   }
 
 
