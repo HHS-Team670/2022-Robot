@@ -30,18 +30,9 @@ public class XboxFieldOrientedDrive extends CommandBase implements MustangComman
         addRequirements(driveBase);
     }
 
-    public void initialize() {
-        SmartDashboard.putNumber("Strafe clamp", 0.00);
-        SmartDashboard.putNumber("Forward clamp", 0.00);
-    }
-
     @Override
     public void execute() {
         
-
-       
-        // SmartDashboard.putNumber("Heading angle", headingAngle);
-
         // double[] speeds = FieldOrientedDriveOmni.getComponentSpeeds(xSpeed, ySpeed, headingAngle);
 
         // driveBase.setCenterDrive(speeds[1]);
@@ -69,13 +60,9 @@ public class XboxFieldOrientedDrive extends CommandBase implements MustangComman
         }
         
         
-        SmartDashboard.putNumber("xboxXSpeed", xSpeed);
-        SmartDashboard.putNumber("xboxYSpeed", ySpeed);
         
         // get angle formed by field and robot heading
         double navXAngle = navX.getYawDouble(); 
-
-        SmartDashboard.putNumber("Heading angle", navXAngle);
 
         // twist from triggers
         // double zRotation = -1 * (xbox.getLeftTriggerAxis()
@@ -85,14 +72,8 @@ public class XboxFieldOrientedDrive extends CommandBase implements MustangComman
 
         // twist from right joystick
         double zRotation = xbox.getRightStickX();
-
-        SmartDashboard.putNumber("Twist", zRotation);
-
         double[] speeds = getComponentSpeeds(xSpeed, ySpeed, navXAngle);
 
-        SmartDashboard.putNumber("Center Speed", speeds[1]);
-
-        SmartDashboard.putNumber("Forward/back speed", speeds[0]);
         //TODO: when centerDrive is going forward/backward, direction is swapped, but normal in strafe.
 
         // if (speeds[1] > 0) {
@@ -113,16 +94,6 @@ public class XboxFieldOrientedDrive extends CommandBase implements MustangComman
         //frwrd y, strafe x
         double frwd = -xSpeed * Math.sin(angle_radians) + ySpeed * Math.cos(angle_radians);
         double strafe = xSpeed * Math.cos(angle_radians) + ySpeed * Math.sin(angle_radians);
-
-        SmartDashboard.putNumber("Heading radians", angle_radians);
-
-        // clamp strafe speed to avoid rapid switching
-        if(Math.abs(strafe) <= SmartDashboard.getNumber("Strafe clamp", 0.00)) {
-        strafe = 0;
-        }
-        if (Math.abs(frwd) <= SmartDashboard.getNumber("Forward clamp", 0.00)) {
-            frwd = 0;
-        }
 
         return new double[] {-frwd, strafe};
     }
