@@ -17,10 +17,10 @@ public class RobotConstants extends RobotConstantsBase {
     public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
     // Drive Base Gearing
-    public static final double DRIVEBASE_GEAR_RATIO = 8.45; 
+    public static final double DRIVEBASE_GEAR_RATIO = 10.71; 
     
     // Drive Base Gearing
-    public static final double HDRIVE_GEAR_RATIO = 8.45;  //TODO: Check with mech
+    public static final double HDRIVE_GEAR_RATIO = 10.71;  //TODO: Check with mech
 
     /** Drive Base Wheel Diameter in Inches */
     public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
@@ -45,12 +45,12 @@ public class RobotConstants extends RobotConstantsBase {
 
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
-    public static final double leftKsVolts = 0.246;
-    public static final double leftKvVoltSecondsPerMeter = 2.1;
-    public static final double leftKaVoltSecondsSquaredPerMeter = 0.2;
-    public static final double rightKsVolts = 0.12;
-    public static final double rightKvVoltSecondsPerMeter = 2.1;
-    public static final double rightKaVoltSecondsSquaredPerMeter = 0.1;
+    public static final double leftKsVolts = 0.27186;
+    public static final double leftKvVoltSecondsPerMeter = 2.7453;
+    public static final double leftKaVoltSecondsSquaredPerMeter = 0.42573;
+    public static final double rightKsVolts = leftKsVolts;
+    public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
+    public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
 
     // "WHEEL_BASE" is really track width
     public static final double kTrackwidthMeters = 0.702;

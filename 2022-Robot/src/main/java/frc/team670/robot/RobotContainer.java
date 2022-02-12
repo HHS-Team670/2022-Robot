@@ -55,10 +55,10 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new ATarmacEdge4Ball(driveBase);
+    MustangCommand autonCommand = new ATarmacFlushed1Ball(driveBase);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    return null;
+    return autonCommand;
   }
 
 
