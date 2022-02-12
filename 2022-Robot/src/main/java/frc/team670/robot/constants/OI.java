@@ -11,6 +11,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -29,7 +30,8 @@ public class OI extends OIBase {
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   
   private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.A);
-  
+  private static JoystickButton autoShootToIntake = new JoystickButton(getOperatorController(), XboxButtons.A);
+
   private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
   public OI() {
@@ -67,7 +69,10 @@ public class OI extends OIBase {
     triggerIntaking.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem));
 
+
     stopIntake.whenPressed((new StopIntake(intake)));
+
+    autoShootToIntake.whenPressed(new AutoShootToIntake(conveyorSystem, shooter, intake));
 
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     stopShooter.whenPressed((new StopShooter(shooter)));
