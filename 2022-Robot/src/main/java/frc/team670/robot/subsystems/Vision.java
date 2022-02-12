@@ -3,16 +3,17 @@ package frc.team670.robot.subsystems;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.math.Rotation;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -27,9 +28,12 @@ import frc.team670.robot.constants.RobotMap;
 public class Vision extends MustangSubsystemBase{
 
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, PneumaticsModuleType.CTREPCM, RobotMap.VISION_LED_PCM);
+    private PhotonCamera camera = new PhotonCamera(RobotConstants.VISION_CAMERA);
 
-    private PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
-    public Pose2d pose, transformedPose, targetPose;
+    public Pose2d pose, transformedPose;
+
+    public Pose2d targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
+
 
     private double distance;
     private double angle;
@@ -49,23 +53,24 @@ public class Vision extends MustangSubsystemBase{
     * Speckle Rejection: 100; Target Grouping: 2ormore
     */ 
 
-    // private boolean isBallTracking;
+    //should not have a constructor
 
-    public Vision(){
-        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        transformedPose = pose;
-        targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
-    }
+    // public Vision(){
+    //     // pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    //     // transformedPose = pose;
+    //     // targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
+    // }
 
-    public Vision(String cameraName){
+    // public Vision(String cameraType){
+    //     camera = new PhotonCamera(cameraType);
+    //     // pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    //     transformedPose = pose;
+    //     targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
+    // }
+
+    public void setCameraName (String cameraName) {
         camera = new PhotonCamera(cameraName);
-        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        transformedPose = pose;
-        targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
     }
-
-    // These are for sending vision health to dashboard
-    // private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
     public boolean hasTarget(){
         return hasTarget;
@@ -115,7 +120,7 @@ public class Vision extends MustangSubsystemBase{
         return hasTarget ? angle : RobotConstants.VISION_ERROR_CODE;
     }
 
-    public VisionMeasurement getVisionMeasurements(double heading, Pose2d cameraOffset) {
+    public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
         if (hasTarget){
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
@@ -123,6 +128,10 @@ public class Vision extends MustangSubsystemBase{
             return new VisionMeasurement(targetOffset, visionCapTime);
         }
         return null;
+    }
+
+    public double getVisionCaptureTime() {
+        return visionCapTime;
     }
 
     public void turnOnLEDs() {
@@ -133,6 +142,13 @@ public class Vision extends MustangSubsystemBase{
         cameraLEDs.set(false);
     }
 
+    public void LEDSwitch(boolean on) {
+        cameraLEDs.set(on);
+    }
+
+    public void testLEDS() {
+        cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
+    }
 
     // public Transform2d getCamToTargetTrans(double heading) {
     //     // TODO: make sure this is correct math (check with Mr.Dias)
@@ -150,10 +166,6 @@ public class Vision extends MustangSubsystemBase{
         this.transformedPose = pose.transformBy(new Transform2d(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), getVisionMeasurements(heading, cameraOffset).pose));
     }
 
-    public Pose2d getPose() {
-        return transformedPose;
-    }
-
     public Pose2d poseMath(double d_0, double d_f, double theta) {
         // d_0 is the distance from the start position of the robot to the high hub
         // d_f is the distance from the current position of the robot to the high hub
@@ -168,21 +180,11 @@ public class Vision extends MustangSubsystemBase{
         double x = d_c * Math.cos(angleStartToCurr);
         double y = d_c * Math.sin(angleStartToCurr);
 
-        // distance = d_c;
+        // distanceAtoB = d_c;
         return new Pose2d(x, y, new Rotation2d(angleStartToCurr));
     }
 
-    public double getVisionCaptureTime() {
-        return visionCapTime;
-    }
-
-    public void LEDSwitch(boolean on) {
-        cameraLEDs.set(on);
-    }
-
-    public void testLEDS() {
-        cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
-    }
+    
 
     @Override
     public HealthState checkHealth() {
@@ -192,13 +194,7 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        // boolean isBall = SmartDashboard.getBoolean("Is Ball", false);
         processImage();
-
-        // SmartDashboard.putNumber("Distance", distance);
-        // SmartDashboard.putNumber("Angle", angle);
-        // SmartDashboard.putNumber("Vision New Pose X", transformedPose.getX());
-        // SmartDashboard.putNumber("Vision New Pose Y", transformedPose.getY());
         
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
@@ -217,5 +213,8 @@ public class Vision extends MustangSubsystemBase{
             this.pose = pose;
         }
     }
+
+    @Override
+    public void debugSubsystem() {}
 
 }

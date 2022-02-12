@@ -4,23 +4,13 @@ import com.revrobotics.REVLibError;
 
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import java.lang.AutoCloseable;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
-
-import frc.team670.robot.constants.RobotMap;
-
-public class Conveyors extends MustangSubsystemBase 
-{
+public class Conveyors extends MustangSubsystemBase {
     public Conveyor c1, c2;
 
 
@@ -51,6 +41,11 @@ public class Conveyors extends MustangSubsystemBase
         checkHealth();
         
     }
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
+    }
 
 
 
@@ -58,8 +53,7 @@ public class Conveyors extends MustangSubsystemBase
 
 
 
-class Conveyor extends MustangSubsystemBase
-{
+class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
@@ -148,6 +142,12 @@ class Conveyor extends MustangSubsystemBase
     public void mustangPeriodic() 
     {
         Logger.consoleLog("Speed: " + conveyorSpeed);
+    }
+
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
     } 
 
 }

@@ -35,7 +35,6 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -553,6 +552,12 @@ public class DriveBase extends HDrive {
         motor.setIdleMode(IdleMode.kBrake);
       }
     }
+  }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
   }
 
 }

@@ -60,6 +60,8 @@ public class RobotConstants extends RobotConstantsBase {
     public static final double TILT_ANGLE = 13; // degrees
     public static final double CAMERA_HEIGHT = 0.9525; // meters
 
+    public static final String VISION_CAMERA = "Microsoft_LifeCam_HD-3000";
+
     // Autonomous Constants
 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
