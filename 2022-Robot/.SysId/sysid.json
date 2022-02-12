@@ -1,5 +1,11 @@
 {
   "SysId": {
-    "Analysis Type": "General Mechanism"
+    "Analysis Type": "Drivetrain",
+    "AnalyzerJSONLocation": "C:\\Robotics\\2022-Robot\\.SysId\\sysid_data20220212-135000.json",
+    "NetworkTables Settings": {
+      "serverTeam": "670"
+    },
+    "mode": "Client",
+    "serverTeam": "670"
   }
 }
