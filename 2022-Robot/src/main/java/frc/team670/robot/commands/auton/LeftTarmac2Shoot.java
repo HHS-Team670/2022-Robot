@@ -33,14 +33,10 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            //drive forward
-            //intake
-            //drive back
             new RunIntakeWithConveyor(intake, conveyor),
             getTrajectoryFollowerCommand(trajectory, driveBase), 
             new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
-            //shoot 2 balls
         );
 
     }
