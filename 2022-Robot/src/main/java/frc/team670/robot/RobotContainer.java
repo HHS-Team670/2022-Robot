@@ -55,9 +55,9 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new ATarmacFlushed1Ball(driveBase);
+    MustangCommand autonCommand = new BTarmacTriangle(driveBase);
 
-    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    // Logger.consoleLog("autonCommand: %s", autonCommand
     return autonCommand;
   }
 
@@ -80,7 +80,6 @@ public class RobotContainer extends RobotContainerBase {
   public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
-
   public static void rumbleDriverController() {
     notifyDriverController(1.0, 0.3);
   }

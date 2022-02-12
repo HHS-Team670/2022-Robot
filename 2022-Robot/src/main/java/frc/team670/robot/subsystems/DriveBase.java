@@ -34,6 +34,8 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.util.Units;
 
 /**
  * Represents a H drive base.
@@ -119,7 +121,11 @@ public class DriveBase extends HDrive {
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
-    poseEstimator = 
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(0),
+    new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
+    VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
+  
   }
 
   /**
