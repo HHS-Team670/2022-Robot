@@ -27,7 +27,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Intake intake = new Intake(conveyorSystem);
   private static Shooter shooter = new Shooter();
 
-  private static OI oi = new OI();
+  private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
   // vision);
