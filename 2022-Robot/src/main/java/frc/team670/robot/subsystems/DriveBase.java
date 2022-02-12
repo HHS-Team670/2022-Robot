@@ -365,6 +365,7 @@ public class DriveBase extends HDrive {
 
     if (visionMeasurement != null) {
       poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
+      vision.updatePose(getHeading(), CAMERA_OFFSET);
 
       SmartDashboard.putNumber("Vision Pose X", visionMeasurement.pose.getTranslation().getX());
       SmartDashboard.putNumber("Vision Pose Y", visionMeasurement.pose.getTranslation().getY());

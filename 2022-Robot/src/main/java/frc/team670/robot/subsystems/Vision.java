@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.math.Rotation;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -51,14 +52,14 @@ public class Vision extends MustangSubsystemBase{
     // private boolean isBallTracking;
 
     public Vision(){
-        pose = new Pose2d();
+        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         transformedPose = pose;
         targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
     }
 
     public Vision(String cameraName){
         camera = new PhotonCamera(cameraName);
-        pose = new Pose2d();
+        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         transformedPose = pose;
         targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
     }
@@ -142,11 +143,11 @@ public class Vision extends MustangSubsystemBase{
 
     public void updatePose(double heading, Pose2d cameraOffset) {
         // Get general pose on the field
-        Pose2d newPose = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
-        this.pose = pose.transformBy(
-            new Transform2d(new Translation2d(newPose.getX(), newPose.getY()), 
-            new Rotation2d(newPose.getX(),newPose.getY())));
-        this.transformedPose = pose.transformBy(new Transform2d(new Pose2d(), getVisionMeasurements(heading, cameraOffset).pose));
+        pose = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
+        // this.pose = pose.transformBy(
+        //     new Transform2d(new Translation2d(newPose.getX(), newPose.getY()), 
+        //     new Rotation2d(newPose.getX(),newPose.getY())));
+        this.transformedPose = pose.transformBy(new Transform2d(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), getVisionMeasurements(heading, cameraOffset).pose));
     }
 
     public Pose2d getPose() {
@@ -167,7 +168,7 @@ public class Vision extends MustangSubsystemBase{
         double x = d_c * Math.cos(angleStartToCurr);
         double y = d_c * Math.sin(angleStartToCurr);
 
-        distance = d_c;
+        // distance = d_c;
         return new Pose2d(x, y, new Rotation2d(angleStartToCurr));
     }
 
@@ -202,8 +203,8 @@ public class Vision extends MustangSubsystemBase{
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
             SmartDashboard.putNumber("Angle", angle);
-            SmartDashboard.putNumber("Vision New Pose X", transformedPose.getX());
-            SmartDashboard.putNumber("Vision New Pose Y", transformedPose.getY());
+            SmartDashboard.putNumber("Vision New Pose X", pose.getX());
+            SmartDashboard.putNumber("Vision New Pose Y", pose.getY());
         }
     }
 
