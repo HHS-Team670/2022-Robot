@@ -4,23 +4,13 @@ import com.revrobotics.REVLibError;
 
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.Logger;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import java.lang.AutoCloseable;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
-
-import frc.team670.robot.constants.RobotMap;
-
-public class Conveyors extends MustangSubsystemBase 
-{
+public class Conveyors extends MustangSubsystemBase {
     public Conveyor c1, c2;
 
 
@@ -51,6 +41,11 @@ public class Conveyors extends MustangSubsystemBase
         checkHealth();
         
     }
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
+    }
 
 
 
@@ -58,8 +53,7 @@ public class Conveyors extends MustangSubsystemBase
 
 
 
-class Conveyor extends MustangSubsystemBase
-{
+class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
@@ -70,8 +64,7 @@ class Conveyor extends MustangSubsystemBase
 
     BeamBreak beamBreak;
 
-    public Conveyor(int id, MotorConfig.Motor_Type type, double speed) 
-    {
+    public Conveyor(int id, MotorConfig.Motor_Type type, double speed) {
         
         roller=SparkMAXFactory.buildSparkMAX(id, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
 
@@ -89,8 +82,7 @@ class Conveyor extends MustangSubsystemBase
     //     for (int i = 0; i < conveyorStates.length)
     // }
 
-    public boolean active() 
-    {
+    public boolean active() {
         if(beamBreak.isTriggered())
         {
             conveyorState=true;
@@ -104,8 +96,7 @@ class Conveyor extends MustangSubsystemBase
 
 
     //CONVERY SPECIAL FUNCTIONS !!!KEEP SEPERATE...
-    public void run(boolean intaking) 
-    {
+    public void run(boolean intaking) {
         if (!intaking) 
         {
             conveyorSpeed = Math.abs(conveyorSpeed) * -1;
@@ -117,25 +108,21 @@ class Conveyor extends MustangSubsystemBase
         roller.set(conveyorSpeed);
     }
 
-    public void disable() 
-    {
+    public void disable() {
         roller.disable();
     }
 
-    public void stop() 
-    {
+    public void stop() {
         roller.stopMotor();
     }
 
-    public void setSpeed(double speed)
-    {
+    public void setSpeed(double speed) {
         conveyorSpeed = speed;
     }
 
 
     @Override
-    public HealthState checkHealth() 
-    {
+    public HealthState checkHealth() {
         if ( (roller.getLastError() != null) && (roller.getLastError() != REVLibError.kOk) ) {
             return HealthState.RED;
         }
@@ -145,9 +132,14 @@ class Conveyor extends MustangSubsystemBase
     }
 
     @Override
-    public void mustangPeriodic() 
-    {
+    public void mustangPeriodic() {
         Logger.consoleLog("Speed: " + conveyorSpeed);
+    }
+
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
     } 
 
 }

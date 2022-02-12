@@ -217,4 +217,10 @@ public class Vision extends MustangSubsystemBase{
         }
     }
 
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

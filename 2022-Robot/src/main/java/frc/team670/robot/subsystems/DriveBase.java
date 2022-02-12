@@ -554,4 +554,10 @@ public class DriveBase extends HDrive {
     }
   }
 
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
