@@ -9,7 +9,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 
 
 //split into 2 paths
@@ -18,7 +23,7 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public LeftTarmac2Shoot(DriveBase driveBase) {
+    public LeftTarmac2Shoot(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("LeftTarmac2Shoot", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -31,7 +36,9 @@ public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangC
             //drive forward
             //intake
             //drive back
+            new RunIntakeWithConveyor(intake, conveyor),
             getTrajectoryFollowerCommand(trajectory, driveBase), 
+            new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
             //shoot 2 balls
         );

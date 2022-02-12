@@ -10,13 +10,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 
 public class BTarmac4BallTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
 
-    public BTarmac4BallTerminal(DriveBase driveBase) {
+    public BTarmac4BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
         //trajectory = PathPlanner.loadPath("New Path", 2.0, 1);
         //trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
@@ -34,9 +40,12 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             //pickup ball then go back and shoot 2
+            new RunIntakeWithConveyor(intake, conveyor),
             getTrajectoryFollowerCommand(trajectory, driveBase),
+            new AutoShootToIntake(conveyor, shooter, intake),
             //pick up other ball then pick up terminal ball then go back and shoot 2
             getTrajectoryFollowerCommand(trajectory2, driveBase),
+            new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
     }

@@ -12,7 +12,11 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 
 
 
@@ -21,7 +25,7 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacFlushed1Ball(DriveBase driveBase) {
+    public ATarmacFlushed1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("ATarmacFlushed1Ball", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -32,6 +36,7 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             //shoot
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             //intake
             new StopDriveBase(driveBase)
