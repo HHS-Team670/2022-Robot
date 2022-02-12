@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.commands.PutMessageAfterDelay;
 import frc.team670.robot.commands.auton.PutMessage;
 import frc.team670.robot.constants.FieldConstants;
 
@@ -143,14 +144,14 @@ public class AutoSelector {
 
           switch(routine) {
             case LogMessage1:
-              return new PutMessage(delayTime, "message1"); 
+              return new PutMessageAfterDelay(delayTime, "message1"); 
             case LogMessage2:
-              return new PutMessage(delayTime, "message2");
+              return new PutMessageAfterDelay(delayTime, "message2");
             case LogMessage3:
-              return new PutMessage(delayTime, "message3");
+              return new PutMessageAfterDelay(delayTime, "message3");
             
             default:
-              return new PutMessage(delayTime, "DEFAULT");
+              return new PutMessageAfterDelay(delayTime, "DEFAULT");
           }
     }
 
