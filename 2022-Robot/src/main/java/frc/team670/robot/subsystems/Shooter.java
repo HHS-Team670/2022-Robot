@@ -38,7 +38,8 @@ public class Shooter extends MustangSubsystemBase {
     private SparkMaxPIDController shooter_mainPIDController;
 
     private double targetRPM = 0;
-    private static double DEFAULT_SPEED = 3150;
+    //private static double DEFAULT_SPEED = 3150;
+    private static double DEFAULT_SPEED = 1600;
 
     private static double MIN_RPM = 0;
     private static double MAX_RPM = 0;
