@@ -17,6 +17,11 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
+/**
+ * Starts flush with lower hub in B tarmac
+ * Shoots lower hub, picks up 2 more, then shoots both into the lower hub
+ * https://miro.com/app/board/uXjVOWE2OxQ=/
+ */
 public class BTarmacTriangle extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
@@ -27,17 +32,12 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
     public BTarmacTriangle(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor) {
         //shoot balls then go pick up balls
         trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
-        // pickup ball
-        //trajectory2 = PathPlanner.loadPath("BTarmacTriangleP2", 1.0, 0.5);
-        //pickup ball
-        //trajectory3 = PathPlanner.loadPath("BTarmacTriangleP3", 1.0, 0.5);
-        // shoot balls
 
-        //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
-
-        //Logger.consoleLog("Initial Pose " + trajectory.getStates().get(0).poseMeters);
+        healthReqs.put(intake, HealthState.GREEN);
+        healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(conveyor, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
@@ -57,7 +57,6 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
         return healthReqs;
     }
 

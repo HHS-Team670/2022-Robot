@@ -18,31 +18,30 @@ import frc.team670.robot.subsystems.Shooter;
 
 
 /**
- * Starts on edge of the A tarmac, picks up 1 additional ball
- * and shoots both to the lower hub.
+ * Starts at the edge of the B tarmac, picks up 1 ball, and scores 2 lower
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangCommand {
-
+public class BTarmac2BallLower extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacEdge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 1.0, 0.5);
+    public BTarmac2BallLower(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+        trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
+        
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
-        healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
+        healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
+            //pickup ball then go back and shoot 2
             new RunIntakeWithConveyor(intake, conveyor),
-            getTrajectoryFollowerCommand(trajectory, driveBase), 
+            getTrajectoryFollowerCommand(trajectory, driveBase),
             new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
-
     }
 
     @Override
@@ -55,5 +54,5 @@ public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangC
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
-    
+
 }
