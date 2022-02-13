@@ -260,11 +260,11 @@ function getAutonFromMap() {
     console.log("SELECTED VALUE", document.querySelector('input[name="start-position"]:checked').value);
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Message1":
-            return 0;
+            return 0.0;
         case "Message2":
-            return 1;
+            return 1.0;
         case "Message3":
-            return 2;
+            return 2.0;
         // case "Left":
         //     return getLocation(0, document.querySelector('input[name="location"]:checked').value)
         // case "Center":
@@ -277,7 +277,7 @@ function getAutonFromMap() {
 }
 
 function getDelayTime() {
-    return ((parseInt(document.querySelector('#delay input[name="delay-time"]').value)))
+    return ((parseFloat(document.querySelector('#delay input[name="delay-time"]').value)))
 }
 
 // function getLocation(offset, value) {
