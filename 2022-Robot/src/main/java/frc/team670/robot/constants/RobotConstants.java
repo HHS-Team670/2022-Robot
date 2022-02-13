@@ -8,9 +8,9 @@ import frc.team670.mustanglib.constants.RobotConstantsBase;
 import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
-        public static final double CAMERA_HEIGHT_METERS = 1; // TODO: Change this when we get the robot
-        public static final double CAMERA_ANGLE_DEGREES = 45;
-        public static final Pose2d cameraOffset = new Pose2d();
+        public static final double CAMERA_HEIGHT_METERS = 0.95; // TODO: Change this when we get the robot
+        public static final double CAMERA_ANGLE_DEGREES = 13;
+        public static final double CAMERA_DISTANCE_TO_FRONT = 0.2; //TODO: Change for 2022
 
     /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";

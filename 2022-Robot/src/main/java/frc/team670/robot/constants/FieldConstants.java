@@ -25,6 +25,7 @@ public class FieldConstants {
 
     public static double HUB_WIDTH = 2.72;
     public static double HUB_HEIGHT = 2.64;
+    public static double HUB_RADIUS = (2.72 + 2.64) / 2;
 
     // field dimensions
     // Each FIELD for RAPID REACT is a 27 ft. (~823 cm) by 54 ft. (~1646 cm) carpeted area

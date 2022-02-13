@@ -65,7 +65,8 @@ public class DriveBase extends HDrive {
   private DifferentialDrivePoseEstimator poseEstimator;
 
   // Start pose variables
-  public static final double START_X = FieldConstants.HUB_POSE_X - 3;//15.983 - 3.8;
+  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 2.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;//15.983 - 3.8;
+  //distance got 3.8m for actual value 3.5m away from hub, 3.15m for actual value 2.75m, 4.9m for 4.5m
   public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
   public static final double START_ANGLE_DEG = 0; //180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
