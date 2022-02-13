@@ -65,13 +65,14 @@ public class DriveBase extends HDrive {
   private DifferentialDrivePoseEstimator poseEstimator;
 
   // Start pose variables
-  public static final double START_Y = 2.4;
-  public static final double START_X = 15.983 - 3.8;
-  public static final double START_ANGLE_DEG = 180;
+  public static final double START_X = FieldConstants.HUB_POSE_X - 3;//15.983 - 3.8;
+  public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
+  public static final double START_ANGLE_DEG = 0; //180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
   // Constants used for doing robot to target pose conversion
-  public static final Pose2d TARGET_POSE = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
+  public static final Pose2d TARGET_POSE = 
+    new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
   //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
 
   //2020 robot camera offset

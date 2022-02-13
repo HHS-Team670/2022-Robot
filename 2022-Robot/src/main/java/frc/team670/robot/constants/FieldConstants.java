@@ -7,8 +7,8 @@ public class FieldConstants {
     public static double DISTANCE_TO_GOAL_FROM_START = 3.24;//1.0; // TODO: Change this later when we find out
 
     // from game manual:
-    public static double HEIGHT_LOW_GOAL = 1.04;
-    public static double HEIGHT_HIGH_GOAL = 2.64;
+    public static double LOW_GOAL_HEIGHT = 1.04;
+    public static double HIGH_HUB_HEIGHT = 2.64;
     public static double HEIGHT_HIGH_PLATE = 1.71;
     public static double WIDTH_BASE = 2.72;
     public static double SMALL_WHATEVER_LEFT_OF_LOGO_ON_PG_26 = 0.34;
@@ -32,8 +32,9 @@ public class FieldConstants {
     public static double FIELD_WIDTH = 16.46;
 
     // hub pose
-    public static double HUB_POSE_Y = FIELD_HEIGHT / 2;
     public static double HUB_POSE_X = FIELD_WIDTH / 2;
+    public static double HUB_POSE_Y = FIELD_HEIGHT / 2;
+
 
     
 }
