@@ -370,7 +370,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
   @Override
   public void mustangPeriodic() {
     Logger.consoleLog("in Periodic");
-    if (!timer.hasElapsed(5)) {
+    if (!timer.hasElapsed(10)) {
       AutoRoutine routine = autoSelector.getSelection();
       double time = autoSelector.getDelayTime();
       if (routine != AutoRoutine.UNKNOWN) {
@@ -501,7 +501,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   public AutoRoutine getSelectedRoutine() {
       while (autoRoutine == AutoRoutine.UNKNOWN) {
-        if (timer.hasElapsed(5)) {
+        if (timer.hasElapsed(10)) {
           Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
           break;
         }
@@ -512,7 +512,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   public double getDelayTime() {
     while (delayTime == -1) {
-      if (timer.hasElapsed(5)) {
+      if (timer.hasElapsed(10)) {
         Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
         break;
       }
