@@ -178,8 +178,6 @@ public class Vision extends MustangSubsystemBase{
         if (hasTarget) {
             SmartDashboard.putNumber("Distance", distance);
             SmartDashboard.putNumber("Angle", angle);
-            SmartDashboard.putNumber("Vision New Pose X", pose.getX());
-            SmartDashboard.putNumber("Vision New Pose Y", pose.getY());
         }
     }
 
