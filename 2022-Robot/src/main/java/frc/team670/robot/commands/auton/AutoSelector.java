@@ -111,7 +111,8 @@ public class AutoSelector {
       Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys(0));
       Logger.consoleLog("contains auton-chooser key: %s", SmartDashboard.containsKey("auton-chooser"));
       
-        Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
+        Number autoID = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("auton-chooser").getDouble(-1);
+
         
         // timer.start();
       
@@ -130,7 +131,7 @@ public class AutoSelector {
 
     public double getDelayTime() {
       Logger.consoleLog("Inside AutoSelector delay time:" + SmartDashboard.getNumber("delayTime", -1));
-      return SmartDashboard.getNumber("delayTime", -1);
+      return NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("delayTime").getDouble(-1);
     }
 
     /**
