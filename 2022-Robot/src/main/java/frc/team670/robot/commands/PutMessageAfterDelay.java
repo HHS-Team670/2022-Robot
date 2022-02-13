@@ -1,33 +1,39 @@
 package frc.team670.robot.commands;
 
-import java.util.Date;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.auton.PutMessage;
+import frc.team670.mustanglib.utils.Logger;
 
-public class PutMessageAfterDelay extends SequentialCommandGroup implements MustangCommand{
+public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
 
 
     private double targetTimeMillis;
+    private double delaySeconds;
+    private String message;
 
     public PutMessageAfterDelay(double delay, String message) {
+        super(delay);
+        this.message = message;
+        this.delaySeconds = delay;
         targetTimeMillis = System.currentTimeMillis() + delay*1000;
+    }
 
-
-        addCommands(new PutMessage("Delay countdown for " + delay + " seconds"), 
-                        new WaitCommand(delay), 
-                            new PutMessage(message));
+    public void initialize() {
+        Logger.consoleLog("Delay countdown for " + delaySeconds + " seconds");
     }
 
     public void execute() {
         SmartDashboard.putNumber( "countdown", (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
         
+    }
+
+    public void end() {
+        SmartDashboard.putString("message", message);
     }
 
     @Override
