@@ -18,6 +18,8 @@ public class FieldConstants {
     public static double WIDTH_HIGH_GOAL = 1.22;
     public static double FENDER_TO_LOW_GOAL_OPENING = 0.1;
     public static double FENDER_TO_CENTER_OF_LOW_GOAL = 0.86;
+    public static double TARMAC_TO_CENTER_OF_GOAL = 2.15;
+    public static double 
 
     // Position of the hub
 //     e HUB is 8 ft. 11 in.
