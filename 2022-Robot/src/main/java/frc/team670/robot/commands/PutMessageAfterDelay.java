@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 
 public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
 
@@ -24,10 +23,14 @@ public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
     }
 
     public void initialize() {
-        Logger.consoleLog("Delay countdown for " + delaySeconds + " seconds");
+        SmartDashboard.putNumber("target delay seconds", delaySeconds);
+        SmartDashboard.putNumber("target delay millis", targetTimeMillis);
+
     }
 
     public void execute() {
+        super.execute();
+        SmartDashboard.putNumber("current time millis", System.currentTimeMillis());
         SmartDashboard.putNumber( "countdown", (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
         
     }
