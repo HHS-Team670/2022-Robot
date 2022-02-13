@@ -59,6 +59,8 @@ public class RobotContainer extends RobotContainerBase {
   public MustangCommand getAutonomousCommand() {
     AutoSelector.AutoRoutine autonRoutine = driveBase.getSelectedRoutine();
     double delayTime = driveBase.getDelayTime();
+
+    Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
     
     MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, 
     delayTime);

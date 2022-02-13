@@ -373,6 +373,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     if (!timer.hasElapsed(10)) {
       AutoRoutine routine = autoSelector.getSelection();
       double time = autoSelector.getDelayTime();
+      Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
       if (routine != AutoRoutine.UNKNOWN) {
         autoRoutine = routine;
       }
@@ -518,6 +519,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
       }
       continue;
     }
+    Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ", delayTime);
     return delayTime;
   }
 

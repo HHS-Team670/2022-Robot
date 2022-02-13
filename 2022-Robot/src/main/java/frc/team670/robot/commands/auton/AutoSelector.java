@@ -129,6 +129,7 @@ public class AutoSelector {
     }
 
     public double getDelayTime() {
+      Logger.consoleLog("Inside AutoSelector delay time:" + SmartDashboard.getNumber("delayTime", -1));
       return SmartDashboard.getNumber("delayTime", -1);
     }
 
@@ -141,7 +142,7 @@ public class AutoSelector {
     double delayTime){
         // AutoRoutine result = select();
         Logger.consoleLog("Inside getCommandFromRoutine() Auton %s", routine);
-
+        Logger.consoleLog("Inside getCommandFromRoutine - delay time: " + delayTime);
           switch(routine) {
             case LogMessage1:
               return new PutMessageAfterDelay(delayTime, "message1"); 
