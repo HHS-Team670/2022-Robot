@@ -24,16 +24,16 @@ public class FieldConstants {
 // (~272 cm) wide by 8 ft. 11 in. (~272 cm) deep by 8 ft. 8 in. (~264 cm) tall
 
     public static double HUB_WIDTH = 2.72;
-    public static double HUB_WIDE = 2.64;
+    public static double HUB_HEIGHT = 2.64;
 
     // field dimensions
     // Each FIELD for RAPID REACT is a 27 ft. (~823 cm) by 54 ft. (~1646 cm) carpeted area
-    public static double FIELD_WIDTH = 8.23;
-    public static double FIELD_LENGTH = 16.46;
+    public static double FIELD_HEIGHT = 8.23;
+    public static double FIELD_WIDTH = 16.46;
 
     // hub pose
-    public static double HUB_POSE_Y = FIELD_WIDTH / 2;
-    public static double HUB_POSE_X = FIELD_LENGTH / 2;
+    public static double HUB_POSE_Y = FIELD_HEIGHT / 2;
+    public static double HUB_POSE_X = FIELD_WIDTH / 2;
 
     
 }
