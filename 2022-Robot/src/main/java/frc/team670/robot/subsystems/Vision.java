@@ -29,11 +29,7 @@ public class Vision extends MustangSubsystemBase{
 
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, PneumaticsModuleType.CTREPCM, RobotMap.VISION_LED_PCM);
     private PhotonCamera camera = new PhotonCamera(RobotConstants.VISION_CAMERA);
-
-    public Pose2d pose, transformedPose;
-
-    public Pose2d targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
-
+    private Pose2d startPose = new Pose2d(0, 0, new Rotation2d(0));
 
     private double distance;
     private double angle;
@@ -88,7 +84,7 @@ public class Vision extends MustangSubsystemBase{
                 hasTarget = true;
                 distance = PhotonUtils.calculateDistanceToTargetMeters(
                         RobotConstants.CAMERA_HEIGHT_METERS,
-                        FieldConstants.HEIGHT_OF_VISION_TARGET,
+                        FieldConstants.HEIGHT_HIGH_GOAL,
                         Units.degreesToRadians(RobotConstants.CAMERA_ANGLE_DEGREES),
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
                 angle = camera.getLatestResult().getTargets().get(0).getYaw();
@@ -125,9 +121,28 @@ public class Vision extends MustangSubsystemBase{
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
             Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
-            return new VisionMeasurement(targetOffset, visionCapTime);
+            Pose2d newPose = targetOffset.transformBy(changeInPose(heading));
+            return new VisionMeasurement(newPose, visionCapTime);
         }
         return null;
+    }
+
+    public void setStartPose(double x, double y, double angle) {
+        //TODO: check that coordinate is correct
+        startPose = new Pose2d(x, y, new Rotation2d(angle));
+    }
+
+    public Transform2d changeInPose(double heading) {
+        // d_0 is the distance from the start position of the robot to the high hub
+        // d_c is the distance from the start position of the robot to the current position (calculated by the Law of Cosines)
+        // angleStartToCurr is the angle from the start position of the robot to the current position (calculated by the Law of Sines)
+        double d_0 = startPose.getX(); //TODO: make sure this is the right coordinate
+        double d_c = Math.sqrt((d_0 * d_0) + (distance * distance) - (2 * d_0 * distance * Math.cos(heading)));
+        double angleStartToCurr = Math.asin((distance * Math.sin(heading)) / d_c);
+        double x = d_c * Math.cos(angleStartToCurr); // change in x position
+        double y = d_c * Math.sin(angleStartToCurr); // change in y position
+        
+        return new Transform2d(new Translation2d(x , y), new Rotation2d(angleStartToCurr));
     }
 
     public double getVisionCaptureTime() {
@@ -149,42 +164,6 @@ public class Vision extends MustangSubsystemBase{
     public void testLEDS() {
         cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
     }
-
-    // public Transform2d getCamToTargetTrans(double heading) {
-    //     // TODO: make sure this is correct math (check with Mr.Dias)
-    //     Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
-    //     Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
-    //     return camToTargetTrans;
-    // }
-
-    public void updatePose(double heading, Pose2d cameraOffset) {
-        // Get general pose on the field
-        pose = poseMath(FieldConstants.DISTANCE_TO_GOAL_FROM_START, distance, angle);
-        // this.pose = pose.transformBy(
-        //     new Transform2d(new Translation2d(newPose.getX(), newPose.getY()), 
-        //     new Rotation2d(newPose.getX(),newPose.getY())));
-        this.transformedPose = pose.transformBy(new Transform2d(new Pose2d(0, 0, Rotation2d.fromDegrees(0)), getVisionMeasurements(heading, cameraOffset).pose));
-    }
-
-    public Pose2d poseMath(double d_0, double d_f, double theta) {
-        // d_0 is the distance from the start position of the robot to the high hub
-        // d_f is the distance from the current position of the robot to the high hub
-        // theta is the angle from the current position of the robot to the high hub
-        // d_c is the distance from the start position of the robot to the current position (calculated by the Law of Cosines)
-        // angleStartToCurr is the angle from the start position of the robot to the current position (calculated by the Law of Sines)
-        // x is the x-direction transformation of the current position from the starting position
-        // y is the y-direction transformation of the current position from the starting position
-
-        double d_c = Math.sqrt((d_0 * d_0) + (d_f * d_f) - (2 * d_0 * d_f * Math.cos(theta)));
-        double angleStartToCurr = Math.asin((d_f * Math.sin(theta)) / d_c);
-        double x = d_c * Math.cos(angleStartToCurr);
-        double y = d_c * Math.sin(angleStartToCurr);
-
-        // distanceAtoB = d_c;
-        return new Pose2d(x, y, new Rotation2d(angleStartToCurr));
-    }
-
-    
 
     @Override
     public HealthState checkHealth() {

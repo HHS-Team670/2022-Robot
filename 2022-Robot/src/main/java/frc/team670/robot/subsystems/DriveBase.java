@@ -40,6 +40,7 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -63,14 +64,17 @@ public class DriveBase extends HDrive {
 
   private DifferentialDrivePoseEstimator poseEstimator;
 
+  // Start pose variables
   public static final double START_Y = 2.4;
   public static final double START_X = 15.983 - 3.8;
   public static final double START_ANGLE_DEG = 180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
   // Constants used for doing robot to target pose conversion
-  public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d TARGET_POSE = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
+  //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
 
+  //2020 robot camera offset
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
@@ -120,8 +124,7 @@ public class DriveBase extends HDrive {
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
     super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
-        false,
-        false, .1, true);
+        false, false, .1, true);
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
@@ -358,13 +361,20 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    SmartDashboard.putNumber("Heading", getHeading());
 
-    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), CAMERA_OFFSET);
+    vision.setStartPose(START_X, START_Y, START_ANGLE_DEG);
+    poseEstimator.update(Rotation2d.fromDegrees(
+      getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+
+    SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+    SmartDashboard.putNumber("Pose Estimator Ang (deg)", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+   
+    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
       poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
-      vision.updatePose(getHeading(), CAMERA_OFFSET);
 
       SmartDashboard.putNumber("Vision Pose X", visionMeasurement.pose.getTranslation().getX());
       SmartDashboard.putNumber("Vision Pose Y", visionMeasurement.pose.getTranslation().getY());
