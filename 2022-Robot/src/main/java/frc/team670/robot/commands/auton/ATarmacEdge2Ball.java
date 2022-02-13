@@ -17,14 +17,18 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
 
-//split into 2 paths
-public class LeftTarmac2Shoot extends SequentialCommandGroup implements MustangCommand {
+/**
+ * Starts on edge of the A tarmac, picks up 1 additional ball
+ * and shoots both to the lower hub.
+ * https://miro.com/app/board/uXjVOWE2OxQ=/
+ */
+public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public LeftTarmac2Shoot(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("LeftTarmac2Shoot", 1.0, 0.5);
+    public ATarmacEdge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+        trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 1.0, 0.5);
         //Logger.consoleLog("Loaded path " + trajectory.toString());
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
