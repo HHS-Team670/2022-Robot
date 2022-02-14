@@ -108,10 +108,13 @@ public class AutoSelector {
     public AutoRoutine getSelection() {
 
       // RETURNED FALSE
-      Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys(0));
+      SmartDashboard.putNumber("delayTime", -1.0);
+      SmartDashboard.putNumber("auton-chooser", -1.0);
+      Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys()); 
       Logger.consoleLog("contains auton-chooser key: %s", SmartDashboard.containsKey("auton-chooser"));
-      
-        Number autoID = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("auton-chooser").getDouble(-1);
+      Logger.consoleLog("contains DriveBase key: %s", SmartDashboard.containsKey("DriveBase"));
+      Logger.consoleLog("contains delayTime key: %s", SmartDashboard.containsKey("delayTime"));
+      Number autoID = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("auton-chooser").getDouble(-1);
 
         
         // timer.start();
@@ -131,7 +134,9 @@ public class AutoSelector {
 
     public double getDelayTime() {
       Logger.consoleLog("Inside AutoSelector delay time:" + SmartDashboard.getNumber("delayTime", -1));
+      Logger.consoleLog(String.join(", ", SmartDashboard.getKeys()));
       return NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("delayTime").getDouble(-1);
+      
     }
 
     /**

@@ -1,0 +1,12 @@
+{
+  "LiveWindow": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "670"
+  },
+  "SmartDashboard": {
+    "open": true
+  }
+}
