@@ -8,32 +8,36 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+<<<<<<< HEAD
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.intake.StopAtNBalls;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
+=======
+>>>>>>> dev
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
 
-  private DriveBase driveBase = new DriveBase(getDriverController());
+  private static DriveBase driveBase = new DriveBase(getDriverController());
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Intake intake = new Intake(conveyorSystem);
   private static Shooter shooter = new Shooter();
   private static Intake intake = new Intake();
 
-  private static OI oi = new OI(conveyorSystem, shooter);
+  private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
   // vision);
@@ -43,8 +47,12 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
+<<<<<<< HEAD
     
     addSubsystem(driveBase, conveyorSystem, shooter, intake);
+=======
+    addSubsystem(conveyorSystem, shooter, intake);
+>>>>>>> dev
   }
 
   public void robotInit() {
@@ -69,7 +77,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake);
     driveBase.initDefaultCommand();
   }
 
@@ -78,7 +86,7 @@ public class RobotContainer extends RobotContainerBase {
 
   }
 
-  public static Joystick getOperatorController() {
+  public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
 
@@ -99,7 +107,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    conveyorSystem.debugBeamBreaks();
+    
   }
 
 }

@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.commands.drive.teleop.XboxFieldOrientedDrive;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
@@ -34,13 +35,13 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a tank drive base.
+ * Represents a H drive base.
  * 
  * @author lakshbhambhani
  */
 public class DriveBase extends HDrive {
   private SparkMAXLite left1, left2, right1, right2, middle;
-  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
+  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
   private MustangController mController;
 
@@ -111,6 +112,8 @@ public class DriveBase extends HDrive {
       true
     );
 
+    initBrakeMode();
+
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
   }
@@ -119,7 +122,7 @@ public class DriveBase extends HDrive {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxFieldOrientedDrive(this, navXMicro, mController));
   }
 
   /**
@@ -337,6 +340,12 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     getDriveTrain().feedWatchdog();
+    // if(Math.abs(mController.getRightStickX()) > 0.1) {
+    //   strafe(mController.getRightStickX());
+    // } else {
+    //   strafe(0);
+    // }
+    SmartDashboard.putNumber("Nax X", getHeading());
   }
 
   /**
@@ -506,5 +515,24 @@ public class DriveBase extends HDrive {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public static double getLinearSpeed(){
+    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  }
+
+  public void setCenterDrive(double speed) {
+    middle.set(speed);
+  }
+
+  public NavX getNavX() {
+    return navXMicro;
+  }
+
 
 }

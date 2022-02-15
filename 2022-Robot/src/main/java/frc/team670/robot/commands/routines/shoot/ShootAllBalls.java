@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.routines;
+package frc.team670.robot.commands.routines.shoot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +17,13 @@ import frc.team670.robot.commands.conveyor.*;
 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
 
-    private ConveyorSystem conveyorSystem;
-    private Shooter shooter;
-    
+
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
-    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {
-      this.conveyorSystem = conveyorSystem;
-      this.shooter = shooter;
-      
-      addRequirements(conveyorSystem);
-      
+    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
+      healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
         new StartShooter(shooter),
