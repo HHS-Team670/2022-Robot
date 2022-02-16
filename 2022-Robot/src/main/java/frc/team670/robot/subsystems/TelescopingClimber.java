@@ -2,12 +2,12 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.ControlType;
 import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -41,8 +41,8 @@ public class TelescopingClimber {
 
   private int SMARTMOTION_SLOT = 0;
 
-  private CANPIDController leadController;
-  private CANEncoder leadEncoder;
+  private SparkMaxPIDController leadController;
+  private SparkMaxPIDController leadEncoder;
   private ArrayList<SparkMAXLite> motors;
 
   private boolean onBar;
@@ -82,8 +82,8 @@ public class TelescopingClimber {
       motor.setSoftLimit(SoftLimitDirection.kReverse, softLimitAtRetracted);
     }
     leadController = motors.get(0).getPIDController();
-    leadEncoder = motors.get(0).getEncoder();
-    leadEncoder.setPosition(this.motorRotationsAtRetracted);
+    leadEncoder = (SparkMaxPIDController) motors.get(0).getEncoder();
+    ((RelativeEncoder) leadEncoder).setPosition(this.motorRotationsAtRetracted);
 
     setDefaultPID();
 
@@ -152,7 +152,7 @@ public class TelescopingClimber {
     double rotations = heightCM * ROTATIONS_PER_CM;
     SmartDashboard.putNumber("Climber rotation target", rotations);
     target = rotations;
-    leadController.setReference(rotations, ControlType.kSmartMotion);
+    leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
   }
 
   public HealthState checkHealth() {
@@ -165,11 +165,11 @@ public class TelescopingClimber {
   }
 
   public boolean isAtTarget() {
-    return (Math.abs(leadEncoder.getPosition() - target) < HALF_CM);
+    return (Math.abs(((RelativeEncoder) leadEncoder).getPosition() - target) < HALF_CM);
   }
 
   protected double getUnadjustedMotorRotations() {
-    return this.leadEncoder.getPosition();
+    return ((RelativeEncoder) this.leadEncoder).getPosition();
   }
 
   protected double getMotorCurrent(int motor) {
