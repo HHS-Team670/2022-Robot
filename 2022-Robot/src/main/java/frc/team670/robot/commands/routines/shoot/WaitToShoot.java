@@ -5,21 +5,26 @@ import java.util.Map;
 
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.subsystems.drivebase.DriveBase;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
 //only shoots when the robot is within a desired location
-public class WaitToShoot extends SequentialCommandGroup implements MustangCommand {
+public class WaitToShoot extends CommandBase implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
+    private Shooter shooter;
     private Pose2d target;
     private double errorX, errorY;
   
@@ -33,13 +38,14 @@ public class WaitToShoot extends SequentialCommandGroup implements MustangComman
       this.target = targetPose;
       this.errorX = errorX;
       this.errorY = errorY;
-      addCommands(
-
-        
-        new StartShooterByDistance(...),
-        // new ShootAllBalls(conveyorSystem, shooter)
-      );
+      this.shooter = shooter;
     } 
+
+    @Override
+    public void initialize() {
+      //shooter.setRPMForDistance(); TODO: calculate distance
+      shooter.run();
+    }
 
     @Override
     public boolean isFinished(){
@@ -50,7 +56,6 @@ public class WaitToShoot extends SequentialCommandGroup implements MustangComman
         return false;
       }
     }
-
 
 
     @Override

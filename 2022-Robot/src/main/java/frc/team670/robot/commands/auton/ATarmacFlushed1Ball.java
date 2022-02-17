@@ -5,6 +5,7 @@ import java.util.Map;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -37,10 +38,10 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
+                getTrajectoryFollowerCommand(trajectory, driveBase)
 
 
-            )
+            ),
             //shoot
             new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
