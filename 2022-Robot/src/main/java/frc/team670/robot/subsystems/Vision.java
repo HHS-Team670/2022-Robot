@@ -32,6 +32,7 @@ public class Vision extends MustangSubsystemBase{
     private Pose2d startPose = new Pose2d(0, 0, new Rotation2d(0));
 
     private double distance;
+    private double distanceNoError;
     private double angle;
     private double visionCapTime;
     private boolean hasTarget;
@@ -43,7 +44,7 @@ public class Vision extends MustangSubsystemBase{
     * Exposure: 0; Brightness: 24 (0 at 1:52pm facing the gray wall)
     * Resolution: 
     * Threshold:
-    * H: 27-100; S: 100-255 (194-255 at 2:27pm facing the gray wall); V: 126-255 (88, 4.08m at5:15 wed)
+    * H: 27-100; S: 100-255 (194-255 at 2:27pm facing the gray wall); V: 126-255
     * Contours:
     * Area: 0-100; Ratio: 0-8.7; Fullness: 60-100
     * Speckle Rejection: 100; Target Grouping: 2ormore
@@ -87,7 +88,9 @@ public class Vision extends MustangSubsystemBase{
                         RobotConstants.CAMERA_HEIGHT_METERS,
                         FieldConstants.HIGH_HUB_HEIGHT,
                         Units.degreesToRadians(RobotConstants.CAMERA_ANGLE_DEGREES),
-                        Units.degreesToRadians(result.getBestTarget().getPitch())) + calculateError(angle);
+                        Units.degreesToRadians(result.getBestTarget().getPitch()));
+
+                distanceNoError = distance + calculateError(angle);
                 
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
             } else {
@@ -178,6 +181,7 @@ public class Vision extends MustangSubsystemBase{
         
         if (hasTarget) {
             SmartDashboard.putNumber("Vision Distance", distance);
+            SmartDashboard.putNumber("Vision Distance Without Error", distanceNoError);
             SmartDashboard.putNumber("Vision Angle", angle);
         }
     }
@@ -198,7 +202,12 @@ public class Vision extends MustangSubsystemBase{
         double horiz_tran = 2.30049;
         double vert_tran = 0.126163;
 
-        return vert_dil * Math.sin(horiz_dil * yaw - horiz_tran) + vert_tran;
+        if(yaw < 0){
+            return 0.17;
+        } else {
+            return 0.5;
+        }
+        // return vert_dil * Math.sin(horiz_dil * yaw - horiz_tran) + vert_tran;
 
     }
 
