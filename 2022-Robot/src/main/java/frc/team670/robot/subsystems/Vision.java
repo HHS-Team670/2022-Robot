@@ -57,7 +57,7 @@ public class Vision extends MustangSubsystemBase{
     //     // targetPose = new Pose2d(FieldConstants.DISTANCE_TO_GOAL_FROM_START, 0.0, new Rotation2d(0.0));
     // }
 
-    // public Vision(String cameraType){
+    // public Vision(String cameraType) {
     //     camera = new PhotonCamera(cameraType);
     //     // pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
     //     transformedPose = pose;
@@ -82,12 +82,13 @@ public class Vision extends MustangSubsystemBase{
 
             if(result.hasTargets()){
                 hasTarget = true;
+                angle = camera.getLatestResult().getTargets().get(0).getYaw();
                 distance = PhotonUtils.calculateDistanceToTargetMeters(
                         RobotConstants.CAMERA_HEIGHT_METERS,
                         FieldConstants.HIGH_HUB_HEIGHT,
                         Units.degreesToRadians(RobotConstants.CAMERA_ANGLE_DEGREES),
-                        Units.degreesToRadians(result.getBestTarget().getPitch()));
-                angle = camera.getLatestResult().getTargets().get(0).getYaw();
+                        Units.degreesToRadians(result.getBestTarget().getPitch())) + calculateError(angle);
+                
                 visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
             } else {
                 hasTarget = false;
@@ -176,8 +177,8 @@ public class Vision extends MustangSubsystemBase{
         processImage();
         
         if (hasTarget) {
-            SmartDashboard.putNumber("Distance", distance);
-            SmartDashboard.putNumber("Angle", angle);
+            SmartDashboard.putNumber("Vision Distance", distance);
+            SmartDashboard.putNumber("Vision Angle", angle);
         }
     }
 
@@ -189,6 +190,16 @@ public class Vision extends MustangSubsystemBase{
             this.capTime = capTime;
             this.pose = pose;
         }
+    }
+
+    private double calculateError(double yaw) {
+        double vert_dil = 0.738392;
+        double horiz_dil = 0.994471;
+        double horiz_tran = 2.30049;
+        double vert_tran = 0.126163;
+
+        return vert_dil * Math.sin(horiz_dil * yaw - horiz_tran) + vert_tran;
+
     }
 
     @Override
