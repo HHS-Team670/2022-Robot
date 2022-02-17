@@ -18,7 +18,6 @@ import frc.team670.robot.subsystems.Shooter;
 //only shoots when the robot is within a desired location
 public class WaitToShoot extends SequentialCommandGroup implements MustangCommand {
 
-
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
     private Pose2d target;
@@ -37,8 +36,8 @@ public class WaitToShoot extends SequentialCommandGroup implements MustangComman
       addCommands(
 
         
-
-        new ShootAllBalls(conveyorSystem, shooter)
+        new StartShooterByDistance(...),
+        // new ShootAllBalls(conveyorSystem, shooter)
       );
     } 
 
