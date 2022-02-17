@@ -21,11 +21,11 @@ import frc.team670.robot.subsystems.Shooter;
  * Starts at the edge of the B tarmac, picks up 1 ball, and scores 2 lower
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class BTarmac2BallLower extends SequentialCommandGroup implements MustangCommand {
+public class BTarmacEdgeLower2Ball extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public BTarmac2BallLower(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    public BTarmacEdgeLower2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
