@@ -43,7 +43,7 @@ public class Vision extends MustangSubsystemBase{
     * Exposure: 0; Brightness: 24 (0 at 1:52pm facing the gray wall)
     * Resolution: 
     * Threshold:
-    * H: 27-100; S: 100-255 (194-255 at 2:27pm facing the gray wall); V: 126-255
+    * H: 27-100; S: 100-255 (194-255 at 2:27pm facing the gray wall); V: 126-255 (88, 4.08m at5:15 wed)
     * Contours:
     * Area: 0-100; Ratio: 0-8.7; Fullness: 60-100
     * Speckle Rejection: 100; Target Grouping: 2ormore
