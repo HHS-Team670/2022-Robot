@@ -64,7 +64,8 @@ public class Shooter extends MustangSubsystemBase {
     private static double VELOCITY_FOR_RAMP_RATE = 10.0;
     private static double manual_velocity;
 
-    private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN, RobotMap.SHOOTER_ULTRASONIC_EPIN);
+    private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
+            RobotMap.SHOOTER_ULTRASONIC_EPIN);
 
     private static final double[] MEASURED_DISTANCE_LOW_METER = {
             0.18415,
@@ -74,7 +75,8 @@ public class Shooter extends MustangSubsystemBase {
             1.40335,
             2.01295,
             2.62255,
-            3.23215
+            3.23215,
+            3.84175
     };
 
     private static final double[] MEASURED_LOW_RPM = {
@@ -85,19 +87,26 @@ public class Shooter extends MustangSubsystemBase {
             2250,
             2600,
             2800,
-            3000
+            3000,
+            3500
     };
 
     private static final double[] MEASURED_DISTANCE_HIGH_METER = {
             1.60655,
             1.91135,
-            2.21615
+            2.21615, 
+            3.13055,
+            4.04495,
+            4.65455
     };
 
     private static final double[] MEASURED_HIGH_RPM = {
             3150,
             3350,
-            3650
+            3650, 
+            3850,
+            4200,
+            4500
     };
 
     private static final LinearRegression speedAtDistanceForLowGoal = new LinearRegression(MEASURED_DISTANCE_LOW_METER,
@@ -183,7 +192,7 @@ public class Shooter extends MustangSubsystemBase {
      *         distance,
      *         calculated from the linear regression.
      */
-    double getTargetRPMForLowGoalDistance(double distance) {
+    public double getTargetRPMForLowGoalDistance(double distance) {
         double predictedVal = speedAtDistanceForLowGoal.predict(distance);
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
@@ -199,7 +208,7 @@ public class Shooter extends MustangSubsystemBase {
      *         distance,
      *         calculated from the linear regression.
      */
-    double getTargetRPMForHighGoalDistance(double distance) {
+    public double getTargetRPMForHighGoalDistance(double distance) {
         double predictedVal = speedAtDistanceForHighGoal.predict(distance);
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedHigh", expectedSpeed);
@@ -234,29 +243,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        double distance = Units.inchesToMeters(ultrasonic.getDistance());
-        double targetRPM;
-        if (distance < MEASURED_DISTANCE_HIGH_METER[0]) {
-            targetRPM = getTargetRPMForLowGoalDistance(distance);
-        }
-        else{
-            targetRPM = getTargetRPMForHighGoalDistance(distance);
-        }
-        if (Math.abs(getVelocity() - targetRPM) < VELOCITY_ALLOWED_ERROR) {
-            setRampRate(false);
-        }
-        // setTargetRPM(targetRPM);
-        SmartDashboard.putNumber("Ultrasonic Distance", distance);
-    }
-
-    /**
-     * @param distance In meters, the distance we are shooting at
-     *                 Predicts the target RPM based off the distance
-     *                 and sets it as the target RPM
-     */
-    public void setRPMForDistance(double distance) {
-        double RPMtarget = getTargetRPMForLowGoalDistance(distance);
-        setTargetRPM(RPMtarget);
+        
     }
 
     public boolean isShooting() {
@@ -272,6 +259,14 @@ public class Shooter extends MustangSubsystemBase {
             }
         }
         return false;
+    }
+
+    public double getUltrasonicDistanceInMeters(){
+        return Units.inchesToMeters(ultrasonic.getDistance());
+    }
+
+    public double getMinHighDistanceInMeter(){
+        return MEASURED_DISTANCE_HIGH_METER[0];
     }
 
     @Override
