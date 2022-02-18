@@ -206,13 +206,6 @@ public class Vision extends MustangSubsystemBase{
         //parabolic
         return a * Math.pow(yaw, 2) + b * yaw + c;
 
-        // if(yaw < 0){
-        //     return 0.17;
-        // } else {
-        //     return 0.5;
-        // }
-        // return vert_dil * Math.sin(horiz_dil * yaw - horiz_tran) + vert_tran;
-
     }
 
     @Override
