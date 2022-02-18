@@ -182,7 +182,7 @@ public class Vision extends MustangSubsystemBase{
         if (hasTarget) {
             SmartDashboard.putNumber("Vision Distance", distance);
             SmartDashboard.putNumber("Vision Distance Without Error", distanceNoError);
-            SmartDashboard.putNumber("Vision Angle", angle);
+            SmartDashboard.putNumber("Vision Angle (yaw)", angle);
         }
     }
 
@@ -197,16 +197,20 @@ public class Vision extends MustangSubsystemBase{
     }
 
     private double calculateError(double yaw) {
-        double vert_dil = 0.738392;
-        double horiz_dil = 0.994471;
-        double horiz_tran = 2.30049;
-        double vert_tran = 0.126163;
+        double a, b, c;
 
-        if(yaw < 0){
-            return 0.17;
-        } else {
-            return 0.5;
-        }
+        a = 0.00123007;
+        b = -0.000756779;
+        c = -0.173227;
+
+        //parabolic
+        return a * Math.pow(yaw, 2) + b * yaw + c;
+
+        // if(yaw < 0){
+        //     return 0.17;
+        // } else {
+        //     return 0.5;
+        // }
         // return vert_dil * Math.sin(horiz_dil * yaw - horiz_tran) + vert_tran;
 
     }
