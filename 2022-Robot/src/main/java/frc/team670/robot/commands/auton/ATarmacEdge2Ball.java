@@ -37,9 +37,9 @@ public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangC
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new RunIntakeWithConveyor(intake, conveyor),
+            // new RunIntakeWithConveyor(intake, conveyor),
             getTrajectoryFollowerCommand(trajectory, driveBase), 
-            new ShootAllBalls(conveyor, shooter),
+            // new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
 
