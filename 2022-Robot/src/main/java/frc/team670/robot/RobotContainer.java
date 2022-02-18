@@ -7,16 +7,24 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer extends RobotContainerBase {
 
@@ -28,6 +36,9 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter();
 
   private static OI oi = new OI(driveBase);
+  private SparkMAXLite flipout;
+  private DutyCycleEncoder absEncoder = new DutyCycleEncoder(2);
+  RelativeEncoder mEncoder;
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
   // vision);
@@ -38,6 +49,9 @@ public class RobotContainer extends RobotContainerBase {
   public RobotContainer() {
     super();
     addSubsystem(conveyorSystem, shooter, intake);
+    flipout = SparkMAXFactory.buildFactorySparkMAX(RobotMap.FLIP_OUT, Motor_Type.NEO);
+    flipout.setInverted(true);
+    mEncoder = flipout.getEncoder();
   }
 
   public void robotInit() {
@@ -92,7 +106,19 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    
+    SmartDashboard.putNumber("intake-motor-pos", mEncoder.getPosition());
+    SmartDashboard.putNumber("abs-motor-pos", absEncoder.get());
   }
+
+  // 8.142 - out 0- in
+  // 0.23 out -0.086 in
+
+  /**
+   * max a: 700 (down), 1900 (up), 
+   * max v: 3500 (both)
+   * 
+   * p: 0.00015
+   * f: 0.000176
+   */
 
 }
