@@ -122,7 +122,7 @@ public class DriveBase extends HDrive {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxFieldOrientedDrive(this, navXMicro, mController));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
   }
 
   /**

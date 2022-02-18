@@ -11,8 +11,8 @@ public class RobotMap {
 
   // Drive Base
   public static final int SPARK_LEFT_MOTOR_1 = 15; // These are properly set.
-  public static final int SPARK_LEFT_MOTOR_2 = 12;
-  public static final int SPARK_RIGHT_MOTOR_1 = 14;
+  public static final int SPARK_LEFT_MOTOR_2 = 14;
+  public static final int SPARK_RIGHT_MOTOR_1 = 12;
   public static final int SPARK_RIGHT_MOTOR_2 = 10;
   public static final int SPARK_MIDDLE_MOTOR = 13;
 
@@ -21,8 +21,8 @@ public class RobotMap {
   public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
-  public final static int SHOOTER_MAIN = 4;
-  public final static int SHOOTER_FOLLOWER = 5;
+  public final static int SHOOTER_MAIN = 5;
+  public final static int SHOOTER_FOLLOWER = 4;
 
   public final static int INTAKE_ROLLER = 11;
 
