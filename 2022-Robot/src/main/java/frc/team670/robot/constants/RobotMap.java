@@ -36,4 +36,11 @@ public class RobotMap {
   public static final int SHOOTER_ULTRASONIC_TPIN = 6;
   public static final int SHOOTER_ULTRASONIC_EPIN = 7;
 
+  // Climber
+  public static final int CLIMBER_ONE = 3;
+  public static final int CLIMBER_TWO = 2;
+
+  // Flip out
+  public static final int FLIP_OUT = 9;
+
 }
