@@ -95,6 +95,8 @@ public class DriveBase extends TankDrive {
 public DriveBase(MustangController mustangController) {
   matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
   isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
+  Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys()); 
+
 
 
   leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
