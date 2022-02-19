@@ -1,23 +1,11 @@
 package frc.team670.robot.commands.auton;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableType;
-import edu.wpi.first.wpilibj.Timer;
-
-import java.time.Instant;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.PutMessageAfterDelay;
-import frc.team670.robot.commands.auton.PutMessage;
-import frc.team670.robot.constants.FieldConstants;
+
 
 /**
  * Selects an autonomous routine to run based on choice from driver
@@ -114,8 +102,8 @@ public class AutoSelector {
       Logger.consoleLog("contains auton-chooser key: %s", SmartDashboard.containsKey("auton-chooser"));
       Logger.consoleLog("contains DriveBase key: %s", SmartDashboard.containsKey("DriveBase"));
       Logger.consoleLog("contains delayTime key: %s", SmartDashboard.containsKey("delayTime"));
-      Number autoID = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("auton-chooser").getDouble(-1);
-      Number autoID2 = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("auton-chooser").getDouble(-1);
+      Number autoID = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("auton-chooser").getNumber(-1);
+      Number autoID2 = NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("auton-chooser").getNumber(-1);
       Number autoID3 = SmartDashboard.getNumber("auton-chooser", -1);
       Logger.consoleError(autoID + " " + autoID2  + " " +  autoID3);
         
