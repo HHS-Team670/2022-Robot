@@ -41,6 +41,11 @@ public class Conveyors extends MustangSubsystemBase {
         checkHealth();
         
     }
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
+    }
 
 }
 
@@ -135,6 +140,12 @@ class Conveyor extends MustangSubsystemBase {
     public void mustangPeriodic() 
     {
         Logger.consoleLog("Speed: " + conveyorSpeed);
+    }
+
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
     }
     
 }

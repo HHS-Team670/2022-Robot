@@ -366,7 +366,7 @@ public class DriveBase extends HDrive {
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
 
-    vision.setStartPose(START_X, START_Y, START_ANGLE_DEG);
+    vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
       getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
 
