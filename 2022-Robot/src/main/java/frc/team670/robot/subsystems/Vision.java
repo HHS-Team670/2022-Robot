@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
@@ -24,7 +25,10 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class Vision extends VisionSubsystemBase{
 
-    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, PneumaticsModuleType.CTREPCM, RobotMap.VISION_LED_PCM);
+    public Vision(PowerDistribution pd) {
+        super(pd);
+    }
+
     private PhotonCamera camera = new PhotonCamera(RobotConstants.VISION_CAMERA);
     private Pose2d startPose = new Pose2d(0, 0, new Rotation2d(0));
 

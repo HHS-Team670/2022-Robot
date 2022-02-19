@@ -23,12 +23,16 @@ public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
 
-  private static Vision vision = new Vision();
-  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
+  
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
   private static Deployer deployer = new Deployer();
   private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Shooter shooter = new Shooter();
+
+  
+
+  private static Vision vision = new Vision();
+  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
