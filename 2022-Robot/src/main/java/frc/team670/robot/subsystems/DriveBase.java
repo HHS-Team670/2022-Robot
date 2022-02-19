@@ -95,7 +95,7 @@ public class DriveBase extends TankDrive {
 public DriveBase(MustangController mustangController) {
   matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
   isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
-  Logger.consoleLog("SmartDashboard contents: ", SmartDashboard.getKeys()); 
+  
 
 
 
@@ -375,7 +375,8 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
     if (!timer.hasElapsed(10)) {
       AutoRoutine routine = autoSelector.getSelection();
       double time = autoSelector.getDelayTime();
-      Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
+      // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
+      Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
       if (routine != AutoRoutine.UNKNOWN) {
         autoRoutine = routine;
       }
