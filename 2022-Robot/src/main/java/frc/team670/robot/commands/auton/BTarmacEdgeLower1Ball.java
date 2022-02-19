@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
@@ -36,8 +35,7 @@ public class BTarmacEdgeLower1Ball extends SequentialCommandGroup implements Mus
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new ShootAllBalls(conveyor, shooter),
-            new RunIntakeWithConveyor(intake, conveyor),
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new StopDriveBase(driveBase)
         );

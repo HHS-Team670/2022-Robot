@@ -5,14 +5,12 @@ import java.util.Map;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
@@ -33,15 +31,14 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
     private double errorInMeters;
-    private Pose2d shootLocation1;
+    private Pose2d targetPose;
 
     public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        errorInMeters = 0.5;
-        //shootLocation1 = new Pose2d(5.26, 1.99, Rotation2d.fromDegrees(-148.39));
-        shootLocation1 = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
+        errorInMeters = 0.5;;
+        targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
-        //trajectory2 starts and stops at the same spot, shoots from that spot
         trajectory2 = PathPlanner.loadPath("BTarmac5BallTerminalP2", 2.0, 1);
+        //trajectory2 starts and stops at the same spot, shoots from that spot
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -51,17 +48,19 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-
             new AutoShootToIntake(conveyor, shooter, intake),
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
                 new SequentialCommandGroup(
-                    new WaitToShoot(driveBase, shooter, shootLocation1, errorInMeters),
-                    new AutoShootToIntake(conveyor, shooter, intake)
+                    getTrajectoryFollowerCommand(trajectory, driveBase),
+                    getTrajectoryFollowerCommand(trajectory2, driveBase)
+                ),
+                new SequentialCommandGroup(
+                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                    new AutoShootToIntake(conveyor, shooter, intake),
+                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                    new ShootAllBalls(conveyor, shooter)
                 )
             ),
-            getTrajectoryFollowerCommand(trajectory2, driveBase),
-            new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
     }
