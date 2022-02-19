@@ -197,14 +197,18 @@ public class Vision extends MustangSubsystemBase{
     }
 
     private double calculateError(double yaw) {
-        double a, b, c;
+        // data tables: https://docs.google.com/spreadsheets/d/1dKOo8z_jt7KpYxrLy-mMBJh2OgplZgzeqEY14kFfD_Y/edit?usp=sharing
+        // modeled using desmos regression
 
-        a = 0.00123007;
-        b = -0.000756779;
-        c = -0.173227;
+        double a, b, c, d, f;
+        a = -1.599 * Math.pow(10, -7);
+        b = -0.00000851186604512;
+        c = 0.00110468032682;
+        d = -0.00402113407271;
+        f = 0.0137700071255;
 
-        //parabolic
-        return a * Math.pow(yaw, 2) + b * yaw + c;
+        // 4th degree polynomial
+        return a * Math.pow(yaw, 4) + b * Math.pow(yaw, 3) + c * Math.pow(yaw, 2) + d * yaw + f;
 
     }
 
