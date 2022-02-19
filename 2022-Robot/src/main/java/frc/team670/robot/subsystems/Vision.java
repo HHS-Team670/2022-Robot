@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
@@ -25,7 +26,7 @@ import frc.team670.robot.constants.RobotMap;
  * 
  * @author ctychen, lakshbhambhani
  */
-public class Vision extends MustangSubsystemBase{
+public class Vision extends VisionSubsystemBase {
 
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, PneumaticsModuleType.CTREPCM, RobotMap.VISION_LED_PCM);
     private PhotonCamera camera = new PhotonCamera(RobotConstants.VISION_CAMERA);
