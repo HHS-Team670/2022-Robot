@@ -13,6 +13,7 @@ import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
@@ -26,7 +27,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        new StartShooter(shooter),
+        new StartShooter(shooter, true),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
         new WaitCommand(2),
         new StopShooter(shooter)
