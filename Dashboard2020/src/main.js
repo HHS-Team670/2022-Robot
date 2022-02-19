@@ -94,7 +94,7 @@ function createWindow() {
     });
     ipc.on('add', (ev, mesg) => {
         console.log("inside ipc.on(add)");
-        console.log(client.Assign(mesg.val, mesg.key, false));
+        console.log(client.Assign(mesg.val, mesg.key, true));
         console.log(mesg);
     });
     ipc.on('update', (ev, mesg) => {
