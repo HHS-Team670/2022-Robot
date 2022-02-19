@@ -13,12 +13,11 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.ATarmacEdge4Ball;
-import frc.team670.robot.commands.auton.ATarmacFlushed1Ball;
-import frc.team670.robot.commands.auton.BTarmac4BallTerminal;
 import frc.team670.robot.commands.auton.BTarmac4BallTerminal2Ball;
 import frc.team670.robot.commands.auton.BTarmac5BallTerminal;
 import frc.team670.robot.commands.auton.BTarmacTriangle;
 import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
@@ -57,16 +56,25 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
+    //------- Edge2Ball path names -----------
+    //   - "ATarmacEdge2Ball"
+    //   - "BTarmacEdgeCenter2Ball"
+    //   - "BTarmacEdgeLower2Ball"
     MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "BTarmacEdgeCenter2Ball");
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "BTarmacEdgeLower2Ball");
-    // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
-    // MustangCommand autonCommand = new BTarmac4BallTerminal2Ball(driveBase, intake, conveyorSystem, shooter);
 
-    // Logger.consoleLog("autonCommand: %s", autonCommand
+    // --------- FourBallPath path names ------------
+    //   - "BTarmac4BallTerminal"
+    //   - "BTarmac4BallTerminal2Ball"
+    //   - "ATarmacEdge4Ball"
+
+    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmac4BallTerminal2Ball");
+
+    // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
+
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    
     return autonCommand;
   }
-
 
   public void autonomousInit() {
     Logger.consoleLog("autoInit called");
@@ -76,11 +84,6 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake);
     driveBase.initDefaultCommand();
-  }
-
-  @Override
-  public void disabled() {
-
   }
 
   public static MustangController getOperatorController() {
@@ -102,8 +105,15 @@ public class RobotContainer extends RobotContainerBase {
     return OI.getDriverController();
   }
 
-  public void periodic() {
+  @Override
+  public void disabled() {
+    // TODO Auto-generated method stub
     
   }
 
+  @Override
+  public void periodic() {
+    // TODO Auto-generated method stub
+    
+  }
 }
