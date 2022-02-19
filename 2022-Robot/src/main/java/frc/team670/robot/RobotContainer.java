@@ -7,7 +7,6 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
@@ -18,12 +17,14 @@ import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
 
-  private static DriveBase driveBase = new DriveBase(getDriverController());
+  private static Vision vision = new Vision();
+  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
   private static Deployer deployer = new Deployer();
   private static Intake intake = new Intake(conveyorSystem, deployer);
@@ -34,6 +35,7 @@ public class RobotContainer extends RobotContainerBase {
   // intake, conveyor, indexer, shooter, turret,
   // vision);
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -43,7 +45,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
-    
+
   }
 
   /**
@@ -65,6 +67,9 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
+    Logger.consoleLog(driveBase.getPose().toString());
+    vision.LEDSwitch(true);
+    
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();

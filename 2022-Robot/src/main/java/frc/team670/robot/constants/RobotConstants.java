@@ -3,8 +3,12 @@ package frc.team670.robot.constants;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
+import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
+        public static final double CAMERA_HEIGHT_METERS = 0.95; // TODO: Change this when we get the robot
+        public static final double CAMERA_ANGLE_DEGREES = 13;
+        public static final double CAMERA_DISTANCE_TO_FRONT = 0.2; //TODO: Change for 2022
 
     /** the id for the camera that tells you how to shoot the ball */
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
@@ -64,6 +68,8 @@ public class RobotConstants extends RobotConstantsBase {
     public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV_DEGREES / 2.0));
     public static final double TILT_ANGLE_DEGREES = 13;
     public static final double CAMERA_HEIGHT_METERS = 0.9525;
+
+    public static final String VISION_CAMERA = "Microsoft_LifeCam_HD-3000";
 
     // Autonomous Constants
 

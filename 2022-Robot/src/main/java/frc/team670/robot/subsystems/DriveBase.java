@@ -15,22 +15,30 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.commands.drive.teleop.XboxFieldOrientedDrive;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -40,6 +48,8 @@ import frc.team670.robot.constants.RobotMap;
  * @author lakshbhambhani
  */
 public class DriveBase extends HDrive {
+  private Vision vision;
+ 
   private SparkMAXLite left1, left2, right1, right2, middle;
   private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
@@ -50,28 +60,33 @@ public class DriveBase extends HDrive {
 
   private NavX navXMicro;
 
-  public DriveBase(MustangController mustangController) {
-    mController = mustangController;
+  private DifferentialDrivePoseEstimator poseEstimator;
 
-    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(
-      RobotMap.SPARK_LEFT_MOTOR_1, 
-      RobotMap.SPARK_LEFT_MOTOR_2,
-      false, 
-      MotorConfig.Motor_Type.NEO
-    );
+  // Start pose variables
+  // public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.08) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
+  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;//15.983 - 3.8;
+  //distance got 3.8m for actual value 3.5m away from hub, 3.15m for actual value 2.75m, 4.9m for 4.5m
+  public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
+  public static final double START_ANGLE_DEG = 0; //180;
+  public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
-    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(
-      RobotMap.SPARK_RIGHT_MOTOR_1, 
-      RobotMap.SPARK_RIGHT_MOTOR_2, 
-      false, 
-      MotorConfig.Motor_Type.NEO
-    );
+  // Constants used for doing robot to target pose conversion
+  public static final Pose2d TARGET_POSE = 
+    new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
+  //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
 
-    middle = SparkMAXFactory.buildSparkMAX(
-      RobotMap.SPARK_MIDDLE_MOTOR, 
-      SparkMAXFactory.defaultConfig, 
-      MotorConfig.Motor_Type.NEO
-    );
+  //2020 robot camera offset
+  public static final Pose2d CAMERA_OFFSET = TARGET_POSE
+      .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+
+  public DriveBase(MustangController mustangController, Vision vision) {
+    this.vision = vision;
+   
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
+        false, MotorConfig.Motor_Type.NEO);
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
+        RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
+    middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -102,20 +117,20 @@ public class DriveBase extends HDrive {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(
-      new MotorController[] { left1, left2 },
-      new MotorController[] { right1, right2 },
-      middle,
-      false,
-      false, 
-      .1, 
-      true
-    );
-
-    initBrakeMode();
+    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
+        false, false, .1, true);
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
+    // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
+
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+    new Pose2d(START_X, START_Y, START_ANGLE_RAD),
+      VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+      VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    ); //vision
+
   }
 
   /**
@@ -339,13 +354,30 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    getDriveTrain().feedWatchdog();
-    if(Math.abs(mController.getRightStickX()) > 0.1) {
-      strafe(mController.getRightStickX());
+    SmartDashboard.putNumber("Heading", getHeading());
+
+    vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
+    poseEstimator.update(Rotation2d.fromDegrees(
+      getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+
+    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
+
+    if (visionMeasurement != null) {
+      poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
+      SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
+      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {
-      strafe(0);
+      // Logger.consoleError("Did not find targets!");
     }
-    SmartDashboard.putNumber("Nax X", getHeading());
+  }
+
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return poseEstimator.getEstimatedPosition();
   }
 
   /**
@@ -508,12 +540,6 @@ public class DriveBase extends HDrive {
         motor.setIdleMode(IdleMode.kBrake);
       }
     }
-  }
-
-  @Override
-  public Pose2d getPose() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
