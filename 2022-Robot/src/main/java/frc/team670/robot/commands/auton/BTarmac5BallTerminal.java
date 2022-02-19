@@ -55,11 +55,10 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
             new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                 new SequentialCommandGroup(
-                    new WaitToShoot(driveBase, conveyor, shooter, shootLocation1, errorInMeters),
-                    new AutoShootToIntake(conveyor, shooter, intake),
-
+                    new WaitToShoot(driveBase, shooter, shootLocation1, errorInMeters),
+                    new AutoShootToIntake(conveyor, shooter, intake)
                 )
-            )
+            ),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory2, driveBase),
