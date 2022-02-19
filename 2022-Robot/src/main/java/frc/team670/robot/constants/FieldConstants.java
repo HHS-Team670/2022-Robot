@@ -2,7 +2,7 @@ package frc.team670.robot.constants;
 
 /**
  * All values in meters unless otherwise specified
- * @author Mihir, 
+ * @author Mihir, Marius, Wilson, Radhika, Katia, Kiara
  */
 public class FieldConstants {
     public static final double DISTANCE_TO_GOAL_FROM_START = 3.24; // TODO: Change this later when we find out
