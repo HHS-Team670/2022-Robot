@@ -20,13 +20,16 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private DutyCycleEncoder absEncoder;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.086; // From 2/17
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.08; // From 2/17
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.23; // From 2/17
     private static final double ABSOLUTE_ENCODER_GEAR_RATIO = 25.76582278;
 
     private static final double MAX_FLIPOUT_ROTATIONS = -8.142;
     public static final int FLIPOUT_GEAR_RATIO = 50;
     public static final int MAX_ACCEL_DOWNWARDS = 700;
     public static final int MAX_ACCEL_UPWARDS = 1900;
+
+    private static double normalizeOffset = 0; 
 
     private boolean isDeployed = false;
 
@@ -126,6 +129,9 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         absEncoder = new DutyCycleEncoder(RobotMap.FLIP_OUT_ABS_ENCODER);
         setEncoderPositionFromAbsolute();
         enableCoastMode();
+        if(getCurrentAngleInDegrees() > 45){
+            isDeployed = true;
+        }
     }
 
     public double getSpeed() {
@@ -133,7 +139,14 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public double getAbsoluteEncoderRotations() {
-        return absEncoder.get();
+        double pos = absEncoder.get();
+        while(pos > ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX + 0.1){
+           pos -= 1;
+        }
+        while(pos < ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO - 0.1){
+            pos += 1;
+         }
+        return pos;
     }
 
     /**

@@ -41,7 +41,7 @@ public class Shooter extends MustangSubsystemBase {
     private static double DEFAULT_SPEED = 3150;
 
     private static double MIN_RPM = 0;
-    private static double MAX_RPM = 0;
+    private static double MAX_RPM = 4750;
 
     private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
@@ -195,7 +195,7 @@ public class Shooter extends MustangSubsystemBase {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
-        double predictedVal = speedAtDistanceForLowGoal.predict(distance);
+        double predictedVal = ((224 * distance) + 1417);//speedAtDistanceForLowGoal.predict(distance);
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
         SmartDashboard.putNumber("predictedValLow", predictedVal);
@@ -264,7 +264,7 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public double getUltrasonicDistanceInMeters(){
-        return Units.inchesToMeters(ultrasonic.getDistance());
+        return Math.max(Math.min(Units.inchesToMeters(ultrasonic.getDistance()), 0.7), 0);
     }
 
     public double getMinHighDistanceInMeter(){
