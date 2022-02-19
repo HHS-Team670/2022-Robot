@@ -42,7 +42,7 @@ public class TelescopingClimber {
   private int SMARTMOTION_SLOT = 0;
 
   private SparkMaxPIDController leadController;
-  private SparkMaxPIDController leadEncoder;
+  private RelativeEncoder leadEncoder;
   private ArrayList<SparkMAXLite> motors;
 
   private boolean onBar;
@@ -82,8 +82,8 @@ public class TelescopingClimber {
       motor.setSoftLimit(SoftLimitDirection.kReverse, softLimitAtRetracted);
     }
     leadController = motors.get(0).getPIDController();
-    leadEncoder = (SparkMaxPIDController) motors.get(0).getEncoder();
-    ((RelativeEncoder) leadEncoder).setPosition(this.motorRotationsAtRetracted);
+    leadEncoder = motors.get(0).getEncoder();
+    leadEncoder.setPosition(this.motorRotationsAtRetracted);
 
     setDefaultPID();
 
@@ -165,11 +165,11 @@ public class TelescopingClimber {
   }
 
   public boolean isAtTarget() {
-    return (Math.abs(((RelativeEncoder) leadEncoder).getPosition() - target) < HALF_CM);
+    return (Math.abs(leadEncoder.getPosition() - target) < HALF_CM);
   }
 
   protected double getUnadjustedMotorRotations() {
-    return ((RelativeEncoder) this.leadEncoder).getPosition();
+    return this.leadEncoder.getPosition();
   }
 
   protected double getMotorCurrent(int motor) {
