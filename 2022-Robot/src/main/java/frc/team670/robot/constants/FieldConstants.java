@@ -18,6 +18,9 @@ public class FieldConstants {
     public static double WIDTH_HIGH_GOAL = 1.22;
     public static double FENDER_TO_LOW_GOAL_OPENING = 0.1;
     public static double FENDER_TO_CENTER_OF_LOW_GOAL = 0.86;
+    public static final double VISION_TARGET_CENTER_HEIGHT = 0;
+
+    public static final double FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS = 42.0; // change this later
 
     public static double HUB_WIDTH = 2.72;
     public static double HUB_HEIGHT = 2.64;

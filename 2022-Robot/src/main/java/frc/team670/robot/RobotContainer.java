@@ -7,45 +7,41 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
-import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.right.RightThroughTrench;
-import frc.team670.robot.commands.auton.MoveForwards;
-import frc.team670.robot.commands.auton.NewYCoord;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
-
 
 public class RobotContainer extends RobotContainerBase {
 
-  private static OI oi = new OI();
-  
-  int i = 0;
+  private static MustangCommand m_autonomousCommand;
 
-  private MustangCommand m_autonomousCommand;
+  private static Vision vision = new Vision();
+  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Deployer deployer = new Deployer();
+  private static Intake intake = new Intake(conveyorSystem, deployer);
+  private static Shooter shooter = new Shooter();
 
-  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-  //     vision);
+  private static OI oi = new OI(driveBase);
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase,
+  // intake, conveyor, indexer, shooter, turret,
+  // vision);
 
-  private Vision vision = new Vision();
-  private DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
-
-  private BeamBreak break1 = new BeamBreak(9); //TODO: (if not already) put in conveyor
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase, vision);
-    oi.configureButtonBindings(driveBase, vision);
+    addSubsystem(conveyorSystem, shooter, intake, deployer);
   }
 
   public void robotInit() {
@@ -58,34 +54,33 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new MoveForwards(driveBase);
-      //  MustangCommand autonCommand = new RightShootTrench(driveBase);
+    // MustangCommand autonCommand = new MoveForwards(driveBase);
+    // MustangCommand autonCommand = new RightShootTrench(driveBase);
 
-    Logger.consoleLog("autonCommand: %s", autonCommand);
-    return autonCommand;
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    return null;
   }
 
   public void autonomousInit() {
     Logger.consoleLog("autoInit called");
 
-    m_autonomousCommand = getAutonomousCommand();
-    if (m_autonomousCommand != null) {
-      MustangScheduler.getInstance().schedule(m_autonomousCommand);
-    }
   }
 
   public void teleopInit() {
     Logger.consoleLog(driveBase.getPose().toString());
     vision.LEDSwitch(true);
     
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer);
+    driveBase.initDefaultCommand();
+    deployer.setEncoderPositionFromAbsolute();
   }
 
   @Override
   public void disabled() {
-    
+    deployer.deploy(false);
   }
 
-  public static Joystick getOperatorController() {
+  public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
 
@@ -106,10 +101,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    break1.sendBeamBreakDataToDashboard();
-    // driveBase.getHeading();
-    SmartDashboard.putNumber("navX", driveBase.getHeading());
-    SmartDashboard.putString("Encoder Position", String.format("(%f, %f)", driveBase.getPose().getX(), driveBase.getPose().getY()));
+
   }
 
 }
