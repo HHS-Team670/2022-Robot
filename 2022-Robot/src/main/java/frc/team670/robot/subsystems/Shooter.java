@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -253,10 +254,28 @@ public class Shooter extends MustangSubsystemBase {
     /**
      * @param distance In meters, the distance we are shooting at
      *                 Predicts the target RPM based off the distance
-     *                 and sets it as the target RPM
+     *                 and sets it as the target RPM. Assumes lower goal
      */
     public void setRPMForDistance(double distance) {
-        double RPMtarget = getTargetRPMForLowGoalDistance(distance);
+        setRPMForDistance(distance, "lower");
+    }
+
+    /**
+     * @param distance In meters, the distance we are shooting at
+     *                 Predicts the target RPM based off the distance
+     *                 and sets it as the target RPM
+     * @param hubHeight Either "lower" or "upper"
+     */
+    public void setRPMForDistance(double distance, String hubType) {
+        double RPMtarget;
+        if(hubType.toLowerCase().equals("lower"))
+            RPMtarget = getTargetRPMForLowGoalDistance(distance);
+        else if(hubType.toLowerCase().equals("lower"))
+            RPMtarget = getTargetRPMForHighGoalDistance(distance);
+        else {
+            RPMtarget = 0;
+            Logger.consoleLog("Pass in either \"lower\" or \"upper\" to setRPMForDistance!");
+        }
         setTargetRPM(RPMtarget);
     }
 
