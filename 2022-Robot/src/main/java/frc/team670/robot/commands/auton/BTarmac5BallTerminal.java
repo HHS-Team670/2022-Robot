@@ -37,7 +37,8 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
 
     public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         errorInMeters = 0.5;
-        shootLocation1 = new Pose2d(5.26, 1.99, Rotation2d.fromDegrees(-148.39));
+        //shootLocation1 = new Pose2d(5.26, 1.99, Rotation2d.fromDegrees(-148.39));
+        shootLocation1 = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
         //trajectory2 starts and stops at the same spot, shoots from that spot
         trajectory2 = PathPlanner.loadPath("BTarmac5BallTerminalP2", 2.0, 1);
@@ -59,8 +60,6 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                     new AutoShootToIntake(conveyor, shooter, intake)
                 )
             ),
-            getTrajectoryFollowerCommand(trajectory, driveBase),
-            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory2, driveBase),
             new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)

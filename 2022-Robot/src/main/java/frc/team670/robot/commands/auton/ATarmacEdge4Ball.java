@@ -25,16 +25,9 @@ import frc.team670.robot.subsystems.Shooter;
  */
 public class ATarmacEdge4Ball extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Intake intake;
-    private ConveyorSystem conveyor;
-    private Shooter shooter;
     private Trajectory trajectory, trajectory2;
 
     public ATarmacEdge4Ball(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor) {
-        //change to ATarmacEdge4Ball for 2022 drivebase
-        this.intake = intake;
-        this.shooter = shooter;
-        this.conveyor = conveyor;
         
         trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
