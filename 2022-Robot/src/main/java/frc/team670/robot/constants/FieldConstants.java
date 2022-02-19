@@ -4,7 +4,7 @@ package frc.team670.robot.constants;
  * All values in meters unless otherwise specified
  */
 public class FieldConstants {
-    public static double DISTANCE_TO_GOAL_FROM_START = 3.24;//1.0; // TODO: Change this later when we find out
+    public static double DISTANCE_TO_GOAL_FROM_START = 3.24; // TODO: Change this later when we find out
 
     // from game manual:
     public static double LOW_GOAL_HEIGHT = 1.04;
@@ -18,10 +18,6 @@ public class FieldConstants {
     public static double WIDTH_HIGH_GOAL = 1.22;
     public static double FENDER_TO_LOW_GOAL_OPENING = 0.1;
     public static double FENDER_TO_CENTER_OF_LOW_GOAL = 0.86;
-
-    // Position of the hub
-//     e HUB is 8 ft. 11 in.
-// (~272 cm) wide by 8 ft. 11 in. (~272 cm) deep by 8 ft. 8 in. (~264 cm) tall
 
     public static double HUB_WIDTH = 2.72;
     public static double HUB_HEIGHT = 2.64;
