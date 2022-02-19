@@ -144,17 +144,17 @@ body.login #login {
 }
 #status-lights-commands {
   position: absolute;
-  transform: translate(50vw, 66vh);
+  transform: translate(70vw, 66vh);
   z-index: 1;
 }
 #status-lights-subsystems {
     position: absolute;
-    transform: translate(50vw, 76vh);
+    transform: translate(70vw, 76vh);
     z-index: 1;
   }
 #warning-info {
     position: absolute;
-    transform: translate(50vw, 60vh);
+    transform: translate(70vw, 60vh);
     /* width: 40vw;
     height: 10vh; */
     z-index: 1;
@@ -202,16 +202,6 @@ body.login #login {
 #intake {
     transform-origin: bottom left;
     /* transform: rotate(180deg); */
-}
-#auton-chooser {
-    position: relative;
-    transform: translate(10vw, 10vh);
-    display: flex;
-    flex-direction: column wrap;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid rgb(8, 218, 8);
-    width: 430px;
 }
 
 #delay {
@@ -276,14 +266,28 @@ body.login #login {
     position: absolute;
     transform: translate(0vw, 21vh);
 }
+
+#auton-chooser {
+    position: relative;
+    transform: translate(5vw, 83vh);
+    display: flex;
+    flex-direction: column wrap
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgb(8, 218, 8);
+    width: 430px;
+}
+
 #current-text {
     position: absolute;
     width: 30vw;
-    transform: translate(20vw, 70vh);
+    transform: translate(38vw, 70vh);
 }
 
 #match-phase {
     background-color: rgb(25, 67, 75);
+    transform: translate(5vw, 71.5vh);
+
 }
 
 .general-button { 

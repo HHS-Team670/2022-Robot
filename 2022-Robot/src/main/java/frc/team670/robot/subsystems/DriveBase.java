@@ -388,7 +388,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
       /**TODO We literally have no clue if any of this works */
       // DUMMY VARIABLE, CHANGE LATER!!!
-      double matchTime = new Date().getTime()/1000.0; // DriverStation.getMatchTime();
+      double matchTime = DriverStation.getMatchTime(); //new Date().getTime()/1000.0;
       boolean isAutonRn = DriverStation.isAutonomous();
       if (matchTime - (int) matchTime < 0.00001) {
         matchTimeEntry.forceSetDouble(matchTime);

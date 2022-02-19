@@ -94,19 +94,19 @@ NetworkTables.addKeyListener('/SmartDashboard/DriveBase', (key, value) => {
 });
 
 
-// updates status lights for indexer
-NetworkTables.addKeyListener('/SmartDashboard/Indexer', (key, value) => {
+// updates status lights for conveyor
+NetworkTables.addKeyListener('/SmartDashboard/Conveyor', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
     var commands = statusLights.contentDocument;
     if (value === 'GREEN') {
-        document.getElementById('indexer-status').style.fill = "rgb(0,255,0)";
-        document.getElementById('indexer-status').style.stroke = "rgb(0,255,0)";
+        document.getElementById('conveyor-status').style.fill = "rgb(0,255,0)";
+        document.getElementById('conveyor-status').style.stroke = "rgb(0,255,0)";
     } else if (value === 'YELLOW') {
         document.getElementById('shooter-status').style.fill = "rgb(255,255,0)";
         document.getElementById('shooter-status').style.stroke = "rgb(255,255,0)";
     } else if (value === 'RED') {
-        document.getElementById('indexer-status').style.fill = "rgb(255,0,0)";
-        document.getElementById('indexer-status').style.stroke = "rgb(255,0,0)";
+        document.getElementById('conveyor-status').style.fill = "rgb(255,0,0)";
+        document.getElementById('conveyor-status').style.stroke = "rgb(255,0,0)";
     }
 });
 
@@ -132,14 +132,14 @@ NetworkTables.addKeyListener('/SmartDashboard/Climber', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
     var commands = statusLights.contentDocument;
     if (value === 'GREEN') {
-        document.getElementById('climb-status').style.fill = "rgb(0,255,0)";
-        document.getElementById('climb-status').style.stroke = "rgb(0,255,0)";
+        document.getElementById('climber-status').style.fill = "rgb(0,255,0)";
+        document.getElementById('climber-status').style.stroke = "rgb(0,255,0)";
     } else if (value === 'YELLOW') {
-        document.getElementById('climb-status').style.fill = "rgb(255,255,0)";
-        document.getElementById('climb-status').style.stroke = "rgb(255,255,0)";
+        document.getElementById('climber-status').style.fill = "rgb(255,255,0)";
+        document.getElementById('climber-status').style.stroke = "rgb(255,255,0)";
     } else if (value === 'RED') {
-        document.getElementById('climb-status').style.fill = "rgb(255,0,0)";
-        document.getElementById('climb-status').style.stroke = "rgb(255,0,0)";
+        document.getElementById('climber-status').style.fill = "rgb(255,0,0)";
+        document.getElementById('climber-status').style.stroke = "rgb(255,0,0)";
     }
 });
 
@@ -200,7 +200,7 @@ document.addEventListener("keyup", function(event) {
         else if (nextTask.includes("cancel")) NetworkTables.putValue('/SmartDashboard/xkeys-cancel', nextTask);
         else if (nextTask.includes("shoot")) NetworkTables.putValue('/SmartDashboard/xkeys-shooter', nextTask);
         else if (nextTask.includes("updraw")) NetworkTables.putValue('/SmartDashboard/xkeys-updraw', nextTask);
-        else if (nextTask.includes("climb")) NetworkTables.putValue('/SmartDashboard/xkeys-climber', nextTask);
+        else if (nextTask.includes("climber")) NetworkTables.putValue('/SmartDashboard/xkeys-climber', nextTask);
         else if (nextTask.includes("vision")) NetworkTables.putValue('/Vision/vision-data', nextTask);
         else if (nextTask.includes("intake") || nextTask.includes("roller")) NetworkTables.putValue('/SmartDashboard/xkeys-intake', nextTask);
 
