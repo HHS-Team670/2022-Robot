@@ -22,6 +22,7 @@ import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
@@ -117,8 +118,12 @@ public class Shooter extends MustangSubsystemBase {
             MEASURED_HIGH_RPM);
 
     private static final int VELOCITY_SLOT = 0;
+    private Vision vision;
 
-    public Shooter() {
+    private boolean useDynamicSpeed = true;
+    
+    public Shooter(Vision vision) {
+        this.vision = vision;
         controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
                 RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
 
@@ -246,6 +251,7 @@ public class Shooter extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
+        Sma
     }
 
     public boolean isShooting() {
@@ -261,6 +267,41 @@ public class Shooter extends MustangSubsystemBase {
             }
         }
         return false;
+    }
+
+    /**
+     * If vision works, it gets the distance to target from vision,
+     * predicts the RPM based off the distance,
+     * and sets that as the Target RPM
+     * If vision doesn't work, it tries to use the ultrasonic sensors
+     * If that doesn't work either, then it will run the shooter at default speed
+     */
+
+    public void setRPM() {
+        double targetRPM = getDefaultRPM();
+        if (useDynamicSpeed) {
+            double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
+            if (vision.hasTarget()) {
+                distanceToTarget = vision.getDistanceToTargetM();
+            } 
+            if(distanceToTarget == RobotConstants.VISION_ERROR_CODE){
+                distanceToTarget = getUltrasonicDistanceInMeters();
+            }
+            if (distanceToTarget < getMinHighDistanceInMeter()) {
+                targetRPM = getTargetRPMForLowGoalDistance(distanceToTarget);
+            } else {
+                targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
+            }
+        }
+        if(targetRPM < 0 || targetRPM > MAX_RPM){
+            targetRPM = getDefaultRPM();
+        }
+        setTargetRPM(targetRPM);
+
+    }
+
+    public void useDynamicSpeed(boolean isDynamic){
+        this.useDynamicSpeed = isDynamic;
     }
 
     public double getUltrasonicDistanceInMeters(){

@@ -25,17 +25,14 @@ import frc.team670.robot.subsystems.Vision;
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
-
-  
-  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
-  private static Deployer deployer = new Deployer();
-  private static Intake intake = new Intake(conveyorSystem, deployer);
-  private static Shooter shooter = new Shooter();
-
   
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Deployer deployer = new Deployer();
+  private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
+  private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
   private static OI oi = new OI(driveBase);
