@@ -23,15 +23,15 @@ import frc.team670.robot.subsystems.Shooter;
 /**
  * Starts on the edge of B tarmac facing the middle ball.
  * Intakes middle ball, shoots high.
- * Goes to terminal and picks up either 1 or 2. Shoots all high.
+ * Goes to terminal and picks up 2 balls 
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class BTarmacHighHubTerminal extends SequentialCommandGroup implements MustangCommand {
+public class BTarmac4BallTerminal2Ball extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
     private Pose2d targetPose, targetPose2;
 
-    public BTarmacHighHubTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    public BTarmac4BallTerminal2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
         
