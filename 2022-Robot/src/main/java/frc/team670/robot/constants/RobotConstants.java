@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
         public static final double CAMERA_HEIGHT_METERS = 0.75; // TODO: Change this when we get the robot
-        public static final double CAMERA_ANGLE_DEGREES = 43;
+        public static final double CAMERA_ANGLE_DEGREES = 25;
         public static final double CAMERA_DISTANCE_TO_FRONT = 0.22; // TODO: Change for 2022
 
         /** the id for the camera that tells you how to shoot the ball */
