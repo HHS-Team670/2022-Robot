@@ -370,18 +370,10 @@ public class DriveBase extends HDrive {
     poseEstimator.update(Rotation2d.fromDegrees(
       getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
 
-    SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
-    SmartDashboard.putNumber("Pose Estimator Ang (deg)", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-   
     Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
       poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
-
-      SmartDashboard.putNumber("Vision Pose X", visionMeasurement.pose.getTranslation().getX());
-      SmartDashboard.putNumber("Vision Pose Y", visionMeasurement.pose.getTranslation().getY());
-      SmartDashboard.putNumber("Vision Angle (Deg)", visionMeasurement.pose.getRotation().getDegrees());
       SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
       SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {

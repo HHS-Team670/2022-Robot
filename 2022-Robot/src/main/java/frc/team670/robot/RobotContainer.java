@@ -49,8 +49,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
-    // vision.turnOnLEDs();
-    // driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
+
   }
 
   /**
@@ -77,7 +76,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void teleopInit() {
     Logger.consoleLog(driveBase.getPose().toString());
-    vision.turnOnLEDs();
+    vision.LEDSwitch(true);
     
   }
 
