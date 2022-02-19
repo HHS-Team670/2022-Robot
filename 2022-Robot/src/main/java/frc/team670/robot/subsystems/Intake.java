@@ -25,12 +25,12 @@ public class Intake extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
-    private boolean isDeployed = true;
-
     private ConveyorSystem conveyor;
+    private Deployer deployer;
 
-    public Intake(ConveyorSystem conveyor) {
+    public Intake(ConveyorSystem conveyor, Deployer deployer) {
         this.conveyor = conveyor;
+        this.deployer = deployer;
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
@@ -43,13 +43,14 @@ public class Intake extends MustangSubsystemBase {
 
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
-        if (isDeployed) {
-            if (reversed) {
-                roller.set(intake_roller_speed * -1);
+        if (!deployer.isDeployed()) {
+            deployer.deploy(true);
+        }
+        if (reversed) {
+            roller.set(intake_roller_speed * -1);
 
-            } else {
-                roller.set(intake_roller_speed);
-            }
+        } else {
+            roller.set(intake_roller_speed);
         }
     }
 

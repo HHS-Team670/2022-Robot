@@ -15,32 +15,28 @@ public class RobotMap {
   public static final int SPARK_RIGHT_MOTOR_1 = 12;
   public static final int SPARK_RIGHT_MOTOR_2 = 10;
   public static final int SPARK_MIDDLE_MOTOR = 13;
-
-  // NavX
   public final static SerialPort.Port NAVX_PORT = SerialPort.Port.kUSB;
-  public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
   public final static int SHOOTER_MAIN = 5;
   public final static int SHOOTER_FOLLOWER = 4;
+  public static final int SHOOTER_ULTRASONIC_TPIN = 6;
+  public static final int SHOOTER_ULTRASONIC_EPIN = 7;
 
-  public final static int INTAKE_ROLLER = 11;
-
-  //CONVEYOR Vars
+  // Conveyor
   public static final int INTAKE_CONVEYOR_MOTOR = 7;
   public static final int SHOOTER_CONVEYOR_MOTOR = 6;
 
   public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;
   public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;
 
-  public static final int SHOOTER_ULTRASONIC_TPIN = 6;
-  public static final int SHOOTER_ULTRASONIC_EPIN = 7;
-
   // Climber
   public static final int CLIMBER_ONE = 3;
   public static final int CLIMBER_TWO = 2;
 
-  // Flip out
+  // Intake
+  public static final int INTAKE_ROLLER = 11;
   public static final int FLIP_OUT = 9;
+  public static final int FLIP_OUT_ABS_ENCODER = 2;
 
 }
