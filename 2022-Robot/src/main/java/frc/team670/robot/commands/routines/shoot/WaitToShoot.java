@@ -36,6 +36,16 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       this.shooter = shooter;
     } 
 
+    /**
+     * Creates a WaitToShoot, but with added distance because if the robot is
+     * moving while shooting, then the calculated RPM for distance will be inaccurate.
+     * @param addedDistance Distance, in meters, to be added to the shooter calculations. Negative numbers will reduce the distance
+     */
+    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance) {
+      this(driveBase, shooter, targetPose, errorInMeters);
+      distanceFromHub+= addedDistance;
+    }
+
     @Override
     public void initialize() {
       shooter.setRPMForDistance(distanceFromHub); 

@@ -21,19 +21,19 @@ import frc.team670.robot.subsystems.Shooter;
 
 
 /**
- * Starts flush with the edge of B tarmac.
- * Picks up 1 additional ball and shoots both low.
- * Picks up 1 from the ground and 1 from terminal and shoots both low.
+ * Starts on the edge of B tarmac facing the middle ball.
+ * Intakes middle ball, shoots high.
+ * Goes to terminal and picks up either 1 or 2. Shoots all high.
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class BTarmac4BallTerminal extends SequentialCommandGroup implements MustangCommand {
+public class BTarmacHighHubTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
     private Pose2d targetPose, targetPose2;
 
-    public BTarmac4BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
-        trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
+    public BTarmacHighHubTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+        trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
+        trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
         
         double errorInMeters = 0.5;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
@@ -59,7 +59,7 @@ public class BTarmac4BallTerminal extends SequentialCommandGroup implements Must
                     new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters),
                     new AutoShootToIntake(conveyor, shooter, intake)
                 )
-            ),
+            ), 
             new StopDriveBase(driveBase)
         );
     }
