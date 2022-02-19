@@ -340,11 +340,11 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     getDriveTrain().feedWatchdog();
-    // if(Math.abs(mController.getRightStickX()) > 0.1) {
-    //   strafe(mController.getRightStickX());
-    // } else {
-    //   strafe(0);
-    // }
+    if(Math.abs(mController.getRightStickX()) > 0.1) {
+      strafe(mController.getRightStickX());
+    } else {
+      strafe(0);
+    }
     SmartDashboard.putNumber("Nax X", getHeading());
   }
 

@@ -2,7 +2,9 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.functions.MathUtils;
@@ -25,6 +27,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public static final int FLIPOUT_GEAR_RATIO = 50;
     public static final int MAX_ACCEL_DOWNWARDS = 700;
     public static final int MAX_ACCEL_UPWARDS = 1900;
+
+    private boolean isDeployed = false;
 
     /**
      * PID and SmartMotion constants for the flipout rotator go here.
@@ -71,20 +75,12 @@ public class Deployer extends SparkMaxRotatingSubsystem {
             return -1;
         }
 
-        public double getMaxVelocity() {
-            return 3500;
-        }
-
-        public double getMinVelocity() {
-            return 0;
-        }
-
         public double getMaxAcceleration() {
             return 1900;
         }
 
         public double getAllowedError() {
-            return 0;
+            return 0.25;
         }
 
         public boolean enableSoftLimits() {
@@ -96,11 +92,11 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         }
 
         public int getContinuousCurrent() {
-            return 3;
+            return 20;
         }
 
         public int getPeakCurrent() {
-            return 6;
+            return 80;
         }
 
         public double getRotatorGearRatio() {
@@ -113,7 +109,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
         @Override
         public double getMaxRotatorRPM() {
-            return 0;
+            return 3500;
         }
 
         @Override
@@ -129,6 +125,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         super(FLIPOUT_CONFIG);
         absEncoder = new DutyCycleEncoder(RobotMap.FLIP_OUT_ABS_ENCODER);
         setEncoderPositionFromAbsolute();
+        enableCoastMode();
     }
 
     public double getSpeed() {
@@ -188,6 +185,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
+        angleDegrees = MathUtil.clamp(angleDegrees, 0, 90);
         double currentAngle = getCurrentAngleInDegrees();
         if(angleDegrees > currentAngle){
             rotator_controller.setSmartMotionMaxAccel(MAX_ACCEL_DOWNWARDS, this.SMARTMOTION_SLOT);
@@ -208,7 +206,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-
+        debugSubsystem();
     }
 
     public boolean hasReachedTargetPosition() {
@@ -220,6 +218,10 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         double angle = 0;
         if(deploy){
             angle = 90;
+            isDeployed = true;
+        }
+        else{
+            isDeployed = false;
         }
         setSystemTargetAngleInDegrees(angle);
         return hasReachedTargetPosition();
@@ -236,6 +238,10 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    public boolean isDeployed(){
+        return (isDeployed && hasReachedTargetPosition());
+    } 
+
     @Override
     public boolean getTimeout() {
         // TODO Auto-generated method stub
@@ -251,6 +257,9 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     @Override
     public void debugSubsystem() {
         // TODO Auto-generated method stub
-
+        SmartDashboard.putNumber("abs-Encoder", absEncoder.get());
+        SmartDashboard.putNumber("rel-Encoder", this.rotator_encoder.getPosition());
+        SmartDashboard.putNumber("rel-Encoder-vel", this.rotator_encoder.getVelocity());
+        SmartDashboard.putNumber("angle", getCurrentAngleInDegrees());
     }
 }

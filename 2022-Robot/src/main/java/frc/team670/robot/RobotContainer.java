@@ -7,24 +7,17 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
-import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
-
-import com.revrobotics.RelativeEncoder;
-
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer extends RobotContainerBase {
 
@@ -32,7 +25,8 @@ public class RobotContainer extends RobotContainerBase {
 
   private static DriveBase driveBase = new DriveBase(getDriverController());
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
-  private static Intake intake = new Intake(conveyorSystem);
+  private static Deployer deployer = new Deployer();
+  private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Shooter shooter = new Shooter();
 
   private static OI oi = new OI(driveBase);
@@ -45,10 +39,11 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake);
+    addSubsystem(conveyorSystem, shooter, intake, deployer);
   }
 
   public void robotInit() {
+    
   }
 
   /**
@@ -70,13 +65,14 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer);
     driveBase.initDefaultCommand();
+    deployer.setEncoderPositionFromAbsolute();
   }
 
   @Override
   public void disabled() {
-
+    deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {
@@ -100,7 +96,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-  
+
   }
 
 }
