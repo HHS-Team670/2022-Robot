@@ -21,9 +21,15 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
     private Pose2d target;
     private double error;
     private double distanceFromHub;
+    private String hubType;
   
-    //error is in meters
+    //default to low hub
     public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters) {
+      this(driveBase, shooter, targetPose, errorInMeters, "lower");
+    } 
+
+    //error is in meters
+    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, String hubType) {
       double distanceX = target.getX() - FieldConstants.HUB_X_POSITION_METERS;
       double distanceY = target.getY() - FieldConstants.HUB_Y_POSITION_METERS;
       distanceFromHub = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
@@ -34,6 +40,7 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       this.target = targetPose;
       this.error = errorInMeters;
       this.shooter = shooter;
+      this.hubType = hubType;
     } 
 
     /**
@@ -41,8 +48,8 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
      * moving while shooting, then the calculated RPM for distance will be inaccurate.
      * @param addedDistance Distance, in meters, to be added to the shooter calculations. Negative numbers will reduce the distance
      */
-    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance) {
-      this(driveBase, shooter, targetPose, errorInMeters);
+    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance, String hubType) {
+      this(driveBase, shooter, targetPose, errorInMeters, hubType);
       distanceFromHub+= addedDistance;
     }
 
