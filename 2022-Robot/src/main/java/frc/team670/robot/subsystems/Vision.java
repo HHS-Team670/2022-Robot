@@ -1,20 +1,16 @@
 package frc.team670.robot.subsystems;
 
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.constants.RobotMap;
 
 
 /**
@@ -27,16 +23,10 @@ public class Vision extends VisionSubsystemBase{
 
     public Vision(PowerDistribution pd) {
         super(pd);
+        setCameraName(RobotConstants.VISION_CAMERA_NAME);
     }
 
-    private PhotonCamera camera = new PhotonCamera(RobotConstants.VISION_CAMERA);
-    private Pose2d startPose = new Pose2d(0, 0, new Rotation2d(0));
-
     private double distanceNoError;
-    protected double distance;
-    protected double angle;
-    protected double visionCapTime;
-    protected boolean hasTarget;
 
     /*
     * 11' 8" --> trying to do 35 feet --tested with 30 feet
@@ -51,12 +41,20 @@ public class Vision extends VisionSubsystemBase{
     * Speckle Rejection: 100; Target Grouping: 2ormore
     */ 
 
+    @Override
+    public void processImage(double cameraHeight, double targetHeight, double cameraAngleDeg) {
+        // TODO Auto-generated method stub
+        super.processImage(cameraHeight, targetHeight, cameraAngleDeg);
+        distanceNoError = distance + calculateError(angle);
+    }
+
+
     
 
    
 
     public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
-        if (hasTarget){
+        if (super.hasTarget()){
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
             Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
@@ -84,7 +82,7 @@ public class Vision extends VisionSubsystemBase{
     public void mustangPeriodic() {
         super.processImage(RobotConstants.CAMERA_HEIGHT_METERS, FieldConstants.HIGH_HUB_HEIGHT, RobotConstants.CAMERA_ANGLE_DEGREES);
         
-        if (hasTarget) {
+        if (super.hasTarget()) {
             SmartDashboard.putNumber("Vision Distance", distance);
             SmartDashboard.putNumber("Vision Distance Without Error", distanceNoError);
             SmartDashboard.putNumber("Vision Angle (yaw)", angle);

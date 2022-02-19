@@ -132,6 +132,8 @@ public class Shooter extends MustangSubsystemBase {
         shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
         shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
         shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
+
+        ultrasonic.setUltrasonicAutomaticMode(true);
     }
 
     public double getVelocity() {
@@ -243,7 +245,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        
+        SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
     }
 
     public boolean isShooting() {

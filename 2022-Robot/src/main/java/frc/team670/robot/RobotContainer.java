@@ -7,6 +7,9 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
@@ -30,8 +33,9 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter();
 
   
+  private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
-  private static Vision vision = new Vision();
+  private static Vision vision = new Vision(pd);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
   private static OI oi = new OI(driveBase);
@@ -45,7 +49,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake, deployer);
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision);
   }
 
   public void robotInit() {
@@ -71,12 +75,10 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    Logger.consoleLog(driveBase.getPose().toString());
-    vision.LEDSwitch(true);
-    
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
+    pd.setSwitchableChannel(false);
   }
 
   @Override
@@ -105,7 +107,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-
+    
   }
 
 }

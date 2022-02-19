@@ -6,12 +6,12 @@ import frc.team670.mustanglib.constants.RobotConstantsBase;
 import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
-        public static final double CAMERA_HEIGHT_METERS = 0.95; // TODO: Change this when we get the robot
-        public static final double CAMERA_ANGLE_DEGREES = 13;
-        public static final double CAMERA_DISTANCE_TO_FRONT = 0.2; // TODO: Change for 2022
+        public static final double CAMERA_HEIGHT_METERS = 0.75; // TODO: Change this when we get the robot
+        public static final double CAMERA_ANGLE_DEGREES = 43;
+        public static final double CAMERA_DISTANCE_TO_FRONT = 0.22; // TODO: Change for 2022
 
         /** the id for the camera that tells you how to shoot the ball */
-        public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
+        public static final String VISION_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
         public static final double DRIVEBASE_VELOCITY_CONVERSION_FACTOR = RobotConstants.DRIVEBASE_METERS_PER_ROTATION
                         / 60;
         public static final double HDRIVE_VELOCITY_CONVERSION_FACTOR = RobotConstants.HDRIVE_METERS_PER_ROTATION / 60;
@@ -69,7 +69,7 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kVerticalFOV_DEGREES = 34.3;
         public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV_DEGREES / 2.0));
         public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV_DEGREES / 2.0));
-        public static final double TILT_ANGLE_DEGREES = 13;
+        public static final double TILT_ANGLE_DEGREES = 43;
 
         public static final String VISION_CAMERA = "Microsoft_LifeCam_HD-3000";
 

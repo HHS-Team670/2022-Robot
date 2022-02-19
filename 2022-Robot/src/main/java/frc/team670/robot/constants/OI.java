@@ -2,6 +2,7 @@ package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
+import frc.team670.mustanglib.commands.vision.SetVisionLEDs;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
@@ -17,6 +18,7 @@ import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 public class OI extends OIBase {
 
@@ -31,6 +33,7 @@ public class OI extends OIBase {
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   
   private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
   //private static JoystickButton resetNavx = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
   private DriveBase driveBase;
@@ -65,6 +68,7 @@ public class OI extends OIBase {
     Shooter shooter = (Shooter) subsystemBases[2];
     Intake intake = (Intake) subsystemBases[3];
     Deployer deployer = (Deployer) subsystemBases [4];
+    Vision vision = (Vision) subsystemBases [5];
 
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
@@ -77,6 +81,8 @@ public class OI extends OIBase {
     stopShooter.whenPressed((new StopShooter(shooter)));
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
+
+    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(!vision.LEDsTurnedOn(), vision));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }
