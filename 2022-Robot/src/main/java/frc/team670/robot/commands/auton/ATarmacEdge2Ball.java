@@ -32,7 +32,7 @@ public class ATarmacEdge2Ball extends SequentialCommandGroup implements MustangC
     private Pose2d targetPose;
 
     public ATarmacEdge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge2Shoot", 1.0, 0.5);
+        trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 1.0, 0.5);
         double errorInMeters = 0.5;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

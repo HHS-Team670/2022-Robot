@@ -37,11 +37,6 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase)
-
-
-            ),
             //shoot
             new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
