@@ -49,8 +49,8 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                 
                 new SequentialCommandGroup(
-                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters), 
-                    new ShootAllBalls(conveyor, shooter)
+                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters) 
+                    // new ShootAllBalls(driveBase, conveyor, shooter, vision)
                 )
             ),
             new StopDriveBase(driveBase)

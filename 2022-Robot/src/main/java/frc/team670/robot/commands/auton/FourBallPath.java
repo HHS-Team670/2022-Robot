@@ -84,7 +84,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
                                 new AutoShootToIntake(conveyor, shooter, intake),
                                 new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
-                                new AutoShootToIntake(conveyor, shooter, intake))),
+                                new AutoShootToIntake(conveyor, shooter, intake))), //TODO: change to shoot all balls!?
                 new StopDriveBase(driveBase));
     }
 

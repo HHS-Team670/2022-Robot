@@ -39,7 +39,7 @@ public class BTarmacEdgeLower2BallSteal extends SequentialCommandGroup implement
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             getTrajectoryFollowerCommand(trajectory, driveBase),
-            new ShootAllBalls(conveyor, shooter),
+            // new ShootAllBalls(conveyor, shooter),
             getTrajectoryFollowerCommand(trajectory2, driveBase),
             new StopDriveBase(driveBase)
         );

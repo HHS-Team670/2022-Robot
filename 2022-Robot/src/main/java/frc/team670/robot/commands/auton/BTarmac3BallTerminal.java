@@ -39,7 +39,7 @@ public class BTarmac3BallTerminal extends SequentialCommandGroup implements Must
         addCommands(
             new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
-            new ShootAllBalls(conveyor, shooter),
+            // new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
     }

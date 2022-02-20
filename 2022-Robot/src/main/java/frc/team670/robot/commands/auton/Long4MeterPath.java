@@ -1,48 +1,63 @@
 package frc.team670.robot.commands.auton;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.commands.routines.shoot.WaitToShoot;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
-
 /**
- * Starts on edge of the A tarmac, shoots upper hub
- * and picks up 1 additional ball
+ * goes 4 meters forwards
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class ATarmacEdge1Ball extends SequentialCommandGroup implements MustangCommand {
+public class Long4MeterPath extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
+    private Pose2d targetPose;
 
-    public ATarmacEdge1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge1Ball", 1.0, 0.5);
+
+    public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+        trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
+
+        double errorInMeters = 0.25;
+        targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-
+        
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            // new ShootAllBalls(conveyor, shooter),
-            new RunIntakeWithConveyor(intake, conveyor),
+            //new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
+            //     new SequentialCommandGroup( 
+            //         new RunIntakeWithConveyor(intake, conveyor),
+            //         //if doing lower, adjustment should be +2 meters
+            //         //if doing upper, adjustment should be -1.2 meters
+            //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+            //         new ShootAllBalls(conveyor, shooter)
+            //     )
+            //),  
             new StopDriveBase(driveBase)
         );
-
     }
 
     @Override
@@ -50,10 +65,9 @@ public class ATarmacEdge1Ball extends SequentialCommandGroup implements MustangC
         super.initialize();
     }
 
-
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
-    
+
 }

@@ -32,6 +32,22 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       Logger.consoleLog("called shoot all balls");
 
       addCommands(
+        new AlignAngleToTarget(driveBase, vision),
+        new StartShooter(shooter, true),
+        new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
+        new WaitCommand(2),
+        new StopShooter(shooter)
+      );
+    } 
+
+    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {      
+      healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+      healthReqs.put(conveyorSystem, HealthState.GREEN);
+      healthReqs.put(shooter, HealthState.GREEN);
+
+      Logger.consoleLog("called shoot all balls");
+
+      addCommands(
         // new AlignAngleToTarget(driveBase, vision),
         new StartShooter(shooter, true),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
