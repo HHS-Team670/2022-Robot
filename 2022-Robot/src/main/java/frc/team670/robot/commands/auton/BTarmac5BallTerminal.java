@@ -50,7 +50,7 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(conveyor, shooter, intake),
+            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     getTrajectoryFollowerCommand(trajectory, driveBase),
@@ -58,7 +58,7 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                 ),
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
-                    new AutoShootToIntake(conveyor, shooter, intake),
+                    new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters)
                     // new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
                 )

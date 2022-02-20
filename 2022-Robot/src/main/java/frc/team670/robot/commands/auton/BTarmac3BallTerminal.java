@@ -39,7 +39,7 @@ public class BTarmac3BallTerminal extends SequentialCommandGroup implements Must
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(conveyor, shooter, intake),
+            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             // new ShootAllBalls(driveBase, conveyor, shooter, vision), //ADDED VISION
             new StopDriveBase(driveBase)

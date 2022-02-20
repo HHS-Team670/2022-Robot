@@ -46,7 +46,7 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(conveyor, shooter, intake),
+            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
             new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                 

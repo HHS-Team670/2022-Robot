@@ -39,7 +39,7 @@ public class BTarmacEdgeCenter1Ball extends SequentialCommandGroup implements Mu
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(conveyor, shooter, intake),
+            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new StopDriveBase(driveBase)
         );
