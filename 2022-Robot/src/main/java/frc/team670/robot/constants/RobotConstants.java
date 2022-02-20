@@ -22,10 +22,10 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
         // Drive Base Gearing
-        public static final double DRIVEBASE_GEAR_RATIO = 8.45;
+        public static final double DRIVEBASE_GEAR_RATIO = 10.71;
 
         // Drive Base Gearing
-        public static final double HDRIVE_GEAR_RATIO = 8.45; // TODO: Check with mech
+        public static final double HDRIVE_GEAR_RATIO = 11.08; // TODO: Check with mech
 
         /** Drive Base Wheel Diameter in Inches */
         public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
@@ -81,9 +81,9 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double leftKIDriveVel = 0.00;
         public static final double leftKDDriveVel = 0.0;
 
-        public static final double rightKPDriveVel = 2.4;
-        public static final double rightKIDriveVel = 0.00;
-        public static final double rightKDDriveVel = 0.0;
+        public static final double rightKPDriveVel = leftKPDriveVel; //2.4;
+        public static final double rightKIDriveVel = leftKIDriveVel; //0.00;
+        public static final double rightKDDriveVel = leftKDDriveVel; //0.0;
 
         public static final double kMaxSpeedInchesPerSecond = 6;
         public static final double kMaxAccelerationInchesPerSecondSquared = 6;

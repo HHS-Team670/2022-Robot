@@ -77,8 +77,8 @@ public class RobotContainer extends RobotContainerBase {
     // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    
-    return null;
+    return autonCommand;
+    // return null;
   }
 
   public void autonomousInit() {
