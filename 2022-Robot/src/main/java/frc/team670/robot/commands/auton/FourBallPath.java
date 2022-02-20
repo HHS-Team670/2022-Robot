@@ -53,7 +53,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
             trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
         }
 
-        if (pathName.equals("BTarmac4BallTerminal2Ball")) {
+        if (pathName.equals("BTarmacHighHubTerminal")) {
             trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
             trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
         }
@@ -63,9 +63,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
             trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
         }
 
-        double errorInMeters = 0.5;
+        double errorInMeters = 0.2;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
-        targetPose2 = trajectory.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -81,9 +81,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                                 getTrajectoryFollowerCommand(trajectory, driveBase),
                                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
                         new SequentialCommandGroup(
-                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
                                 new AutoShootToIntake(conveyor, shooter, intake),
-                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters),
+                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
                                 new AutoShootToIntake(conveyor, shooter, intake))),
                 new StopDriveBase(driveBase));
     }

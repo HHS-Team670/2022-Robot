@@ -6,7 +6,6 @@ import frc.team670.mustanglib.constants.RobotConstantsBase;
 import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
-
         public static final double CAMERA_HEIGHT_METERS = 0.75; // TODO: Change this when we get the robot
         public static final double CAMERA_ANGLE_DEGREES = 25;
         public static final double CAMERA_DISTANCE_TO_FRONT = 0.22; // TODO: Change for 2022
@@ -23,10 +22,10 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
         // Drive Base Gearing
-        public static final double DRIVEBASE_GEAR_RATIO = 10.71;
+        public static final double DRIVEBASE_GEAR_RATIO = 8.45;
 
         // Drive Base Gearing
-        public static final double HDRIVE_GEAR_RATIO = 10.71;
+        public static final double HDRIVE_GEAR_RATIO = 8.45; // TODO: Check with mech
 
         /** Drive Base Wheel Diameter in Inches */
         public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
@@ -54,14 +53,14 @@ public class RobotConstants extends RobotConstantsBase {
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
         public static final double leftKsVolts = 0.14709;
-        public static final double leftKvVoltSecondsPerMeter = 2.7426;
+        public static final double leftKvVoltSecondsPerMeter = 2.2; //2.7426;
         public static final double leftKaVoltSecondsSquaredPerMeter = 0.35449;
         public static final double rightKsVolts = leftKsVolts;
         public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
         public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
 
         // "WHEEL_BASE" is really track width
-        public static final double kTrackwidthMeters = 0.7108;
+        public static final double kTrackwidthMeters = 0.702;
 
         // VISION Constants
 
@@ -78,11 +77,11 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
                         kTrackwidthMeters);
-        public static final double leftKPDriveVel = 2.2797;
+        public static final double leftKPDriveVel = 2.29;
         public static final double leftKIDriveVel = 0.00;
         public static final double leftKDDriveVel = 0.0;
 
-        public static final double rightKPDriveVel = leftKPDriveVel;
+        public static final double rightKPDriveVel = 2.4;
         public static final double rightKIDriveVel = 0.00;
         public static final double rightKDDriveVel = 0.0;
 
@@ -102,8 +101,6 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
                         kDriveKinematics, kMaxSpeedMetersPerSecond);
-
-        // public static final
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and
         // seconds

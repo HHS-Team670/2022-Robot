@@ -35,11 +35,10 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // path names: "ATarmacEdge2Ball", "BTarmacEdgeCenter2Ball",
     // "BTarmacEdgeLower2Ball"
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, String pathName) {
-        // trajectory = PathPlanner.loadPath(pathName, 0.2, 0.1);
-        //TODO: REVERT BITCH
-        trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 0.2, 0.1);
+        trajectory = PathPlanner.loadPath(pathName, 1, 0.5);
+        // trajectory = PathPlanner.loadPath("ATarmacEdge2Ball", 1, 0.5);
 
-        double errorInMeters = 0.5;
+        double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -47,21 +46,22 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
 
-        SmartDashboard.putString("Edge2Ball called", "yea");
+        SmartDashboard.putNumber("target x", targetPose.getX());
+        SmartDashboard.putNumber("target y", targetPose.getY());
         
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            getTrajectoryFollowerCommand(trajectory, driveBase),
+            //new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory, driveBase),
+            //     new SequentialCommandGroup( 
+            //         new RunIntakeWithConveyor(intake, conveyor),
+            //         //if doing lower, adjustment should be +2 meters
+            //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+            //         new ShootAllBalls(conveyor, shooter)
+            //     )
+            //),  
             new StopDriveBase(driveBase)
-            // new RunIntakeWithConveyor(intake, conveyor),
-            //     new ParallelCommandGroup(
-            //         getTrajectoryFollowerCommand(trajectory, driveBase),
-            //         new SequentialCommandGroup(
-            //                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, "lower"),
-            //                 new ShootAllBalls(conveyor, shooter))
-            //     ),  
-            //     new StopDriveBase(driveBase)
-                );
+        );
     }
 
     @Override

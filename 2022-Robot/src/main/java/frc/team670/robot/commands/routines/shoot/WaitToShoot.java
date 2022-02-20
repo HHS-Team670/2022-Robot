@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -62,11 +63,11 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
         double lowGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
         shooter.setTargetRPM(lowGoalRPM);
       } else if (hubType.equals("upper")){
-        double upperGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
+        double upperGoalRPM = shooter.getTargetRPMForHighGoalDistance(distanceFromHub);
         shooter.setTargetRPM(upperGoalRPM);
       }
       // shooter.setRPMForDistance(distanceFromHub); 
-
+      SmartDashboard.putNumber("target distance", distanceFromHub);
       shooter.run();
     }
 
@@ -80,7 +81,7 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       double distanceY = driveBase.getPose().getY() - target.getY();
       //pythagorean theorem
       double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-      
+     
       if (distance < this.error){
         return true;
       }

@@ -64,9 +64,7 @@ public class DriveBase extends HDrive {
   private DifferentialDrivePoseEstimator poseEstimator;
 
   // Start pose variables
-  // public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.08) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
-  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;//15.983 - 3.8;
-  //distance got 3.8m for actual value 3.5m away from hub, 3.15m for actual value 2.75m, 4.9m for 4.5m
+  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
   public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
   public static final double START_ANGLE_DEG = 0; //180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
@@ -357,7 +355,10 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
-    SmartDashboard.putNumber("test DriveBasePeriodic", 1827364);
+    SmartDashboard.putNumber("currentX", getPose().getX());
+    SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
+    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
@@ -389,7 +390,10 @@ public class DriveBase extends HDrive {
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    zeroHeading();
+    //zeroHeading();
+    navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
+    SmartDashboard.putNumber("starting heading", getHeading());
+    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());

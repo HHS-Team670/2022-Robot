@@ -14,10 +14,6 @@ import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.BTarmac5BallTerminal;
-import frc.team670.robot.commands.auton.BTarmacTriangle;
-import frc.team670.robot.commands.auton.Edge2Ball;
-import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -54,7 +50,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
- 
+
   }
 
   /**
@@ -68,6 +64,7 @@ public class RobotContainer extends RobotContainerBase {
     //   - "BTarmacEdgeCenter2Ball"
     //   - "BTarmacEdgeLower2Ball"
 
+    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
     MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
 
     // --------- FourBallPath path names ------------
@@ -75,13 +72,11 @@ public class RobotContainer extends RobotContainerBase {
     //   - "BTarmac4BallTerminal2Ball"
     //   - "ATarmacEdge4Ball"
 
-    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmac4BallTerminal2Ball");
-
     // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
 
-    Logger.consoleLog("autonCommand: %s", autonCommand);
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
     
-    return autonCommand;
+    return null;
   }
 
   public void autonomousInit() {
@@ -90,21 +85,22 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    driveBase.initCoastMode();
-    // oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
-    // driveBase.initDefaultCommand();
-    // deployer.setEncoderPositionFromAbsolute();
-    // pd.setSwitchableChannel(false);
+    driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    driveBase.initDefaultCommand();
+    deployer.setEncoderPositionFromAbsolute();
+    pd.setSwitchableChannel(false);
   }
 
-  // @Override
-  // public void disabled() {
-  //   deployer.deploy(false);
-  // }
+  @Override
+  public void disabled() {
+    deployer.deploy(false);
+  }
 
   public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
+
   public static void rumbleDriverController() {
     notifyDriverController(1.0, 0.3);
   }
@@ -121,15 +117,8 @@ public class RobotContainer extends RobotContainerBase {
     return OI.getDriverController();
   }
 
-  @Override
-  public void disabled() {
-    // TODO Auto-generated method stub
+  public void periodic() {
     
   }
 
-  @Override
-  public void periodic() {
-    // TODO Auto-generated method stub
-    
-  }
 }
