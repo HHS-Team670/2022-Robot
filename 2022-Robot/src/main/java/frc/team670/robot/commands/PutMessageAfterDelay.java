@@ -1,6 +1,7 @@
 package frc.team670.robot.commands;
 
 import java.util.Map;
+import frc.team670.mustanglib.utils.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -31,11 +32,34 @@ public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
     public void execute() {
         super.execute();
         SmartDashboard.putNumber("current time millis", System.currentTimeMillis());
-        SmartDashboard.putNumber( "countdown", (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
-        
+        if ((int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0) >= 0){
+            SmartDashboard.putNumber( "countdown", (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
+        }
+      
+
+
     }
 
-    public void end() {
+    public boolean isFinished() {
+        Logger.consoleLog("VALUE OF NUMBER: " + (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
+
+       if ( (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0){
+            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+
+            return true;
+       }
+       return false;
+    }
+
+    public void end(boolean interrupted) {
+        Logger.consoleLog("Inside End method");
+        Logger.consoleLog("Inside END method");
+        Logger.consoleLog("Inside END method");
+
+
         SmartDashboard.putString("message", message);
     }
 

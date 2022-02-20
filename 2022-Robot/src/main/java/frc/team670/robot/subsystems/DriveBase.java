@@ -371,20 +371,26 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   @Override
   public void mustangPeriodic() {
-    //Logger.consoleLog("in Periodic");
-    if (!timer.hasElapsed(10)) {
-      AutoRoutine routine = autoSelector.getSelection();
-      double time = autoSelector.getDelayTime();
-      // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
-      Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
-      if (routine != AutoRoutine.UNKNOWN) {
-        autoRoutine = routine;
-      }
-      if (time != -1) {
-        delayTime = time;
-      }
-      Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
+    //removed the delay for 10 seconds
+    AutoRoutine routine = autoSelector.getSelection();
+    double time = autoSelector.getDelayTime();
+    // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
+    Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
+    
+    double oldTime = delayTime;
+    AutoRoutine oldRoutine = routine;
+    if (routine != AutoRoutine.UNKNOWN) {
+          autoRoutine = routine;
+   }
+    if (time != -1) {
+      delayTime = time;
     }
+    if (oldTime != delayTime || oldRoutine != routine){
+      Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
+      autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
+
+    Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
+    
 
       /**TODO We literally have no clue if any of this works */
       // DUMMY VARIABLE, CHANGE LATER!!!
@@ -395,6 +401,7 @@ navXMicro = new NavX(RobotMap.NAVX_PORT);
         if (isAutonRn != isAutonEntry.getBoolean(isAutonRn))
           isAutonEntry.forceSetBoolean(isAutonRn);
       }
+    }
   }
 
   
