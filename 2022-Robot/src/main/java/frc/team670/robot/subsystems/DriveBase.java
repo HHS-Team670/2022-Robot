@@ -361,6 +361,10 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("currentX", getPose().getX());
+    SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
+    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
@@ -392,7 +396,10 @@ public class DriveBase extends HDrive {
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    zeroHeading();
+    //zeroHeading();
+    navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
+    SmartDashboard.putNumber("starting heading", getHeading());
+    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());

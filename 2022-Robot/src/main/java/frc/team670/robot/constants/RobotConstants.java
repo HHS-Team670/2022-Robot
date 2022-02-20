@@ -22,10 +22,10 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
 
         // Drive Base Gearing
-        public static final double DRIVEBASE_GEAR_RATIO = 8.45;
+        public static final double DRIVEBASE_GEAR_RATIO = 10.71;
 
         // Drive Base Gearing
-        public static final double HDRIVE_GEAR_RATIO = 8.45; // TODO: Check with mech
+        public static final double HDRIVE_GEAR_RATIO = 11.08; // TODO: Check with mech
 
         /** Drive Base Wheel Diameter in Inches */
         public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
@@ -52,12 +52,12 @@ public class RobotConstants extends RobotConstantsBase {
 
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
-        public static final double leftKsVolts = 0.246;
-        public static final double leftKvVoltSecondsPerMeter = 2.1;
-        public static final double leftKaVoltSecondsSquaredPerMeter = 0.2;
-        public static final double rightKsVolts = 0.12;
-        public static final double rightKvVoltSecondsPerMeter = 2.1;
-        public static final double rightKaVoltSecondsSquaredPerMeter = 0.1;
+        public static final double leftKsVolts = 0.14709;
+        public static final double leftKvVoltSecondsPerMeter = 2.2; //2.7426;
+        public static final double leftKaVoltSecondsSquaredPerMeter = 0.35449;
+        public static final double rightKsVolts = leftKsVolts;
+        public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
+        public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
 
         // "WHEEL_BASE" is really track width
         public static final double kTrackwidthMeters = 0.702;
@@ -77,13 +77,13 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
                         kTrackwidthMeters);
-        public static final double leftKPDriveVel = 6;
+        public static final double leftKPDriveVel = 2.29;
         public static final double leftKIDriveVel = 0.00;
         public static final double leftKDDriveVel = 0.0;
 
-        public static final double rightKPDriveVel = 2.4;
-        public static final double rightKIDriveVel = 0.00;
-        public static final double rightKDDriveVel = 0.0;
+        public static final double rightKPDriveVel = leftKPDriveVel; //2.4;
+        public static final double rightKIDriveVel = leftKIDriveVel; //0.00;
+        public static final double rightKDDriveVel = leftKDDriveVel; //0.0;
 
         public static final double kMaxSpeedInchesPerSecond = 6;
         public static final double kMaxAccelerationInchesPerSecondSquared = 6;
