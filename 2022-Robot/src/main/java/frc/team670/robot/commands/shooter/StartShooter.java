@@ -59,6 +59,4 @@ public class StartShooter extends CommandBase implements MustangCommand {
         return healthReqs;
     }
 
-    
-
 }

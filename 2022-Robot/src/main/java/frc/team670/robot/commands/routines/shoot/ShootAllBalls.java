@@ -9,9 +9,11 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 
@@ -21,12 +23,13 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
-    public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {      
+    public ShootAllBalls(DriveBase driveBase, ConveyorSystem conveyorSystem, Shooter shooter, Vision vision) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
+        new AlignAngleToTarget(driveBase, vision),
         new StartShooter(shooter, true),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
         new WaitCommand(2),
