@@ -39,7 +39,7 @@ public class Shooter extends MustangSubsystemBase {
     private SparkMaxPIDController shooter_mainPIDController;
 
     private double targetRPM = 0;
-    private static double DEFAULT_SPEED = 3150;
+    private static double DEFAULT_SPEED = 1850;
 
     private static double MIN_RPM = 0;
     private static double MAX_RPM = 4750;
@@ -139,6 +139,8 @@ public class Shooter extends MustangSubsystemBase {
         shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
 
         ultrasonic.setUltrasonicAutomaticMode(true);
+
+        debugSubsystem();
     }
 
     public double getVelocity() {
@@ -283,8 +285,13 @@ public class Shooter extends MustangSubsystemBase {
             if (vision.hasTarget()) {
                 distanceToTarget = vision.getDistanceToTargetM();
             } 
-            if(distanceToTarget == RobotConstants.VISION_ERROR_CODE){
+            if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
+            }
+            SmartDashboard.putNumber("distance to target", distanceToTarget);
+            if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){  //double comparison
+                setTargetRPM(getDefaultRPM());
+                return;
             }
             if (distanceToTarget < getMinHighDistanceInMeter()) {
                 targetRPM = getTargetRPMForLowGoalDistance(distanceToTarget);
@@ -304,7 +311,13 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public double getUltrasonicDistanceInMeters(){
-        return Math.max(Math.min(Units.inchesToMeters(ultrasonic.getDistance()), 0.7), 0);
+        double dist = Units.inchesToMeters(ultrasonic.getDistance());
+        if(dist <= 0.4){
+            return dist;
+        }
+        else{
+            return RobotConstants.VISION_ERROR_CODE;
+        }
     }
 
     public double getMinHighDistanceInMeter(){

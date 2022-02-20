@@ -29,7 +29,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        new AlignAngleToTarget(driveBase, vision),
+        // new AlignAngleToTarget(driveBase, vision),
         new StartShooter(shooter, true),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
         new WaitCommand(2),
