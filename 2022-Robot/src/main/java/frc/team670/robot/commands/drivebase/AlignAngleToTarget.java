@@ -57,16 +57,20 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             validData = false;
             return;
         }
-        driveBase.curvatureDrive(0.3, targetAngle/180, true);
+        driveBase.cancelDefaultCommand();
+        driveBase.curvatureDrive(0.3, targetAngle / 180, true);
         relativeYawToTarget = vision.getAngleToTarget(); //yaw relative to target
     }
 
     @Override
     public boolean isFinished() {
-        return (driveBase.getHeading() == targetAngle);
+        return (Math.abs(driveBase.getHeading() - targetAngle) <= 5);
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        driveBase.initDefaultCommand();
+        return;
+    }
 
 }
