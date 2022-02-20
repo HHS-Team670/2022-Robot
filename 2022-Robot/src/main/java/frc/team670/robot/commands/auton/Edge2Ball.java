@@ -45,7 +45,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
                 new RunIntakeWithConveyor(intake, conveyor),
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                 new SequentialCommandGroup(
-                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, "upper"),
                         new ShootAllBalls(conveyor, shooter)),
                 new StopDriveBase(driveBase));
     }
