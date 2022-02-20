@@ -357,6 +357,7 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("test DriveBasePeriodic", 1827364);
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(

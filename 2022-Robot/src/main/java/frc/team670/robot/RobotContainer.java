@@ -67,6 +67,7 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge2Ball"
     //   - "BTarmacEdgeCenter2Ball"
     //   - "BTarmacEdgeLower2Ball"
+
     MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
 
     // --------- FourBallPath path names ------------
@@ -78,7 +79,7 @@ public class RobotContainer extends RobotContainerBase {
 
     // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
 
-    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    Logger.consoleLog("autonCommand: %s", autonCommand);
     
     return autonCommand;
   }
@@ -89,10 +90,11 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
-    driveBase.initDefaultCommand();
-    deployer.setEncoderPositionFromAbsolute();
-    pd.setSwitchableChannel(false);
+    driveBase.initCoastMode();
+    // oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    // driveBase.initDefaultCommand();
+    // deployer.setEncoderPositionFromAbsolute();
+    // pd.setSwitchableChannel(false);
   }
 
   // @Override

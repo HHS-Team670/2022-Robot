@@ -40,24 +40,28 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
             String pathName) {
+
+
+        //TODOOOO
+        //target pose is returning null or false or some shit 
         
-        trajectory = PathPlanner.loadPath(pathName + "P1", 2.0, 1);
-        trajectory2 = PathPlanner.loadPath(pathName + "P2", 2.0, 1);
+        // trajectory = PathPlanner.loadPath(pathName + "P1", 2.0, 1);
+        // trajectory2 = PathPlanner.loadPath(pathName + "P2", 2.0, 1);
 
-        // if (pathName.equals("BTarmac4BallTerminal")) {
-        //     trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
-        //     trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
-        // }
+        if (pathName.equals("BTarmac4BallTerminal")) {
+            trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
+        }
 
-        // if (pathName.equals("BTarmac4BallTerminal2Ball")) {
-        //     trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
-        //     trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
-        // }
+        if (pathName.equals("BTarmac4BallTerminal2Ball")) {
+            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
+        }
 
-        // if (pathName.equals("ATarmacEdge4Ball")) {
-        //     trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);
-        //     trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
-        // }
+        if (pathName.equals("ATarmacEdge4Ball")) {
+            trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);
+            trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
+        }
 
         double errorInMeters = 0.5;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;

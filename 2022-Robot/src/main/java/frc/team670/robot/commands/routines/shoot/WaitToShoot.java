@@ -31,17 +31,19 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
     //error is in meters
     //see Shooter.setRPMForDistance(double distance, String hubType) for valid hubTypes
     public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, String hubType) {
+      this.driveBase = driveBase;
+      this.target = targetPose;
+      this.error = errorInMeters;
+      this.shooter = shooter;
+      this.hubType = hubType.toLowerCase();
+     
       double distanceX = target.getX() - FieldConstants.HUB_X_POSITION_METERS;
       double distanceY = target.getY() - FieldConstants.HUB_Y_POSITION_METERS;
       distanceFromHub = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(shooter, HealthState.GREEN);
 
-      this.driveBase = driveBase;
-      this.target = targetPose;
-      this.error = errorInMeters;
-      this.shooter = shooter;
-      this.hubType = hubType.toLowerCase();
+
     } 
 
     /**
