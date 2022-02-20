@@ -11,7 +11,6 @@ import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.routines.shoot.AlignThenShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
