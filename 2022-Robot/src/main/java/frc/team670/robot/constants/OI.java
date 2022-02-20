@@ -1,20 +1,17 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team670.mustanglib.commands.drive.teleop.ResetNavX;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
 import frc.team670.mustanglib.constants.OIBase;
-import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
-import frc.team670.robot.commands.conveyor.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
-import frc.team670.mustanglib.commands.drive.teleop.ResetNavX;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;

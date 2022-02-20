@@ -7,7 +7,6 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
