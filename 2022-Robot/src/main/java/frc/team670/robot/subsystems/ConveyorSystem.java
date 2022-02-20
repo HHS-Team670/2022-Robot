@@ -98,14 +98,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
 				break;
 			case OUTTAKING:
 				if (getBallCount() == 0) {
-					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+					if (timer.advanceIfElapsed(CONVEYOR_IDLE_CHECK_PERIOD)) {
 						stopAll();
 					}
 				}
 				break;
 			case SHOOTING:
 				if (getBallCount() == 0) {
-					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+					if (timer.advanceIfElapsed(CONVEYOR_IDLE_CHECK_PERIOD)) {
 						stopAll();
 					}
 				}
