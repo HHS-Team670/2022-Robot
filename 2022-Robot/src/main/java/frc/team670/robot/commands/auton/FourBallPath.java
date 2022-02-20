@@ -40,11 +40,11 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
             String pathName) {
-
-
-        //TODOOOO
-        //target pose is returning null or false or some shit 
         
+        // TODO: Check if using pathName + "P1" works, rather than
+        //       using the if/else statements (this was changed while
+        //       debugging the bot going in a circle on 2/19)
+
         // trajectory = PathPlanner.loadPath(pathName + "P1", 2.0, 1);
         // trajectory2 = PathPlanner.loadPath(pathName + "P2", 2.0, 1);
 
