@@ -19,6 +19,7 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Starts flush with lower hub in B tarmac
@@ -30,7 +31,7 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
     private Trajectory trajectory;
     private Pose2d targetPose;
 
-    public BTarmacTriangle(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor) {
+    public BTarmacTriangle(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor, Vision vision) {
         //shoot balls then go pick up balls
         trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
         double errorInMeters = 0.5;
@@ -41,6 +42,7 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
+        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
@@ -50,7 +52,7 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
                 
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters) 
-                    // new ShootAllBalls(driveBase, conveyor, shooter, vision)
+                    // new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
                 )
             ),
             new StopDriveBase(driveBase)

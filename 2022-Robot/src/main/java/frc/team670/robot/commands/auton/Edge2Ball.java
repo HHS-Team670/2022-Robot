@@ -21,6 +21,7 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Works for any of the 3 edge2ball paths
@@ -36,7 +37,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // "ATarmacEdge2Ball"
     // "BTarmacEdgeCenter2Ball"
     // "BTarmacEdgeLower2Ball"
-    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, String pathName) {
+    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision, String pathName) {
         trajectory = PathPlanner.loadPath(pathName, 1, 0.5);
 
         double errorInMeters = 0.25;
@@ -59,7 +60,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
             //         //if doing lower, adjustment should be +2 meters
             //         //if doing upper, adjustment should be -1.2 meters
             //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(conveyor, shooter)
+            //         new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
             //     )
             //),  
             new StopDriveBase(driveBase)

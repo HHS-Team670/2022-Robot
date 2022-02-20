@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.oneBallPaths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.auton.StopDriveBase;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 
 /**
@@ -24,7 +26,7 @@ public class BTarmacEdgeLower1Ball extends SequentialCommandGroup implements Mus
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public BTarmacEdgeLower1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    public BTarmacEdgeLower1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
         trajectory = PathPlanner.loadPath("BTarmacEdgeLower1Ball", 2.0, 1);
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -32,6 +34,7 @@ public class BTarmacEdgeLower1Ball extends SequentialCommandGroup implements Mus
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(

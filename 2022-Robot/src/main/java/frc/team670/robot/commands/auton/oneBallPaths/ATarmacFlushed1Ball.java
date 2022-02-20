@@ -1,45 +1,49 @@
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.oneBallPaths;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.commands.auton.StopDriveBase;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
-
+import frc.team670.robot.subsystems.Vision;
 
 /**
- * Starts on edge of the A tarmac, shoots upper hub
- * and picks up 1 additional ball
+ * Starts flush with lower hub.
+ * Scores 1 lower hub, then picks up one more.
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
-public class ATarmacEdge1Ball extends SequentialCommandGroup implements MustangCommand {
+public class ATarmacFlushed1Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacEdge1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("ATarmacEdge1Ball", 1.0, 0.5);
+    public ATarmacFlushed1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+        trajectory = PathPlanner.loadPath("ATarmacFlushed1Ball", 1.0, 0.5);
+
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
-        healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
+        healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            // new ShootAllBalls(conveyor, shooter),
-            new RunIntakeWithConveyor(intake, conveyor),
+            //shoot
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
+            //intake
             new StopDriveBase(driveBase)
         );
 
