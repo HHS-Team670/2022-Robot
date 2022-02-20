@@ -77,7 +77,7 @@ public class OI extends OIBase {
 
     stopIntake.whenPressed((new StopIntake(intake)));
 
-    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
+    shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
     stopShooter.whenPressed((new StopShooter(shooter)));
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
