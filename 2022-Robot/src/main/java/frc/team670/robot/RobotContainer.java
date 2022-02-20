@@ -14,8 +14,6 @@ import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.ATarmacEdge4Ball;
-import frc.team670.robot.commands.auton.BTarmac4BallTerminal2Ball;
 import frc.team670.robot.commands.auton.BTarmac5BallTerminal;
 import frc.team670.robot.commands.auton.BTarmacTriangle;
 import frc.team670.robot.commands.auton.Edge2Ball;
@@ -97,10 +95,10 @@ public class RobotContainer extends RobotContainerBase {
     pd.setSwitchableChannel(false);
   }
 
-  @Override
-  public void disabled() {
-    deployer.deploy(false);
-  }
+  // @Override
+  // public void disabled() {
+  //   deployer.deploy(false);
+  // }
 
   public static MustangController getOperatorController() {
     return OI.getOperatorController();
