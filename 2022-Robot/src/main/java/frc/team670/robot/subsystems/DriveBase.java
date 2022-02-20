@@ -82,6 +82,9 @@ public class DriveBase extends HDrive {
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
+
+  private XboxRobotOrientedDrive defaultCommand;
+
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
@@ -143,7 +146,12 @@ public class DriveBase extends HDrive {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRobotOrientedDrive(this, mController));
+    defaultCommand = new XboxRobotOrientedDrive(this, mController);
+    MustangScheduler.getInstance().setDefaultCommand(this, defaultCommand);
+  }
+
+  public void cancelDefaultCommand() {
+    MustangScheduler.getInstance().cancel(defaultCommand);
   }
 
   /**
