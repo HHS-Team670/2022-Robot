@@ -405,7 +405,7 @@ public class DriveBase extends HDrive {
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
     SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
-    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);

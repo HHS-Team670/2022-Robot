@@ -31,11 +31,11 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
     private Pose2d targetPose;
-
+    private DriveBase driveBase;
 
     public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
-
+        this.driveBase = driveBase;
         double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -43,8 +43,9 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        
+ 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
+
         addCommands(
             //new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
@@ -63,6 +64,8 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
     @Override
     public void initialize() {
         super.initialize();
+        SmartDashboard.putNumber("Auton target x", targetPose.getX());
+        SmartDashboard.putNumber("Auton target y", targetPose.getY());
     }
 
     @Override
