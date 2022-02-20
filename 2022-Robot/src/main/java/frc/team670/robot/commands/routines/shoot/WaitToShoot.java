@@ -40,7 +40,7 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       this.target = targetPose;
       this.error = errorInMeters;
       this.shooter = shooter;
-      this.hubType = hubType;
+      this.hubType = hubType.toLowerCase();
     } 
 
     /**
@@ -55,7 +55,15 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-      shooter.setRPMForDistance(distanceFromHub); 
+      if (hubType.equals("lower")){
+        double lowGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
+        shooter.setTargetRPM(lowGoalRPM);
+      } else if (hubType.equals("upper")){
+        double upperGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
+        shooter.setTargetRPM(upperGoalRPM);
+      }
+      // shooter.setRPMForDistance(distanceFromHub); 
+
       shooter.run();
     }
 

@@ -251,7 +251,6 @@ public class Shooter extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
-        Sma
     }
 
     public boolean isShooting() {
