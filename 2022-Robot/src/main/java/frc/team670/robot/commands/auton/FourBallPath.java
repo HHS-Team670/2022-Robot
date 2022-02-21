@@ -40,7 +40,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     private Trajectory trajectory, trajectory2;
     private Pose2d targetPose, targetPose2;
 
-    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision,
+    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
             String pathName) {
         
         // TODO: Check if using pathName + "P1" works, rather than
@@ -74,7 +74,6 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
@@ -85,9 +84,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                 //                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
                 //         new SequentialCommandGroup(
                 //                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-                //                 new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+                //                 new AutoShootToIntake(conveyor, shooter, intake),
                 //                 new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
-                //                 new ShootAllBalls(driveBase, conveyor, shooter, vision))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
+                //                 new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
                 // new StopDriveBase(driveBase)
 
                 

@@ -26,7 +26,7 @@ public class BTarmacEdgeLower2BallSteal extends SequentialCommandGroup implement
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
 
-    public BTarmacEdgeLower2BallSteal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public BTarmacEdgeLower2BallSteal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmacEdgeLower2BallSteal1", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("BTarmacEdgeLower2BallSteal2", 2.0, 1);
 
@@ -36,12 +36,11 @@ public class BTarmacEdgeLower2BallSteal extends SequentialCommandGroup implement
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             getTrajectoryFollowerCommand(trajectory, driveBase),
-            // new ShootAllBalls(driveBase, conveyor, shooter, vision),
+            // new ShootAllBalls(conveyor, shooter),
             getTrajectoryFollowerCommand(trajectory2, driveBase),
             new StopDriveBase(driveBase)
         );

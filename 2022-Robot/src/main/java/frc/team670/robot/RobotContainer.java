@@ -73,9 +73,9 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge4Ball"
 
     //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, vision, "ATarmacEdge2Ball");
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
  
-    MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter, vision);
+    MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
 
     // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter, vision);
 

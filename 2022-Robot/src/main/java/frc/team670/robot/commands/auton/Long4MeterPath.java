@@ -34,7 +34,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
     private Pose2d targetPose;
     private DriveBase driveBase;
 
-    public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         // trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
         trajectory = PathPlanner.loadPath("SecondFourMeterPath", 1, 0.5);
         this.driveBase = driveBase;
@@ -45,7 +45,6 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         addCommands(
             //new ParallelCommandGroup(
@@ -55,7 +54,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
             //         //if doing lower, adjustment should be +2 meters
             //         //if doing upper, adjustment should be -1.2 meters
             //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
+            //         new ShootAllBalls(conveyor, shooter) //ADDED VISION
             //     )
             //),  
             new StopDriveBase(driveBase)

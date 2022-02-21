@@ -34,7 +34,7 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
     private double errorInMeters;
     private Pose2d targetPose;
 
-    public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         errorInMeters = 0.5;;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
@@ -46,11 +46,10 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     getTrajectoryFollowerCommand(trajectory, driveBase),
@@ -58,9 +57,9 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                 ),
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
-                    new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+                    new AutoShootToIntake(conveyor, shooter, intake),
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters)
-                    // new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
+                    // new ShootAllBalls(conveyor, shooter)
                 )
             ),
             new StopDriveBase(driveBase)

@@ -29,18 +29,17 @@ public class ATarmacEdge1Ball extends SequentialCommandGroup implements MustangC
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacEdge1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public ATarmacEdge1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("ATarmacEdge1Ball", 1.0, 0.5);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            // new ShootAllBalls(driveBase, conveyor, shooter, vision),
+            // new ShootAllBalls(conveyor, shooter),
             new RunIntakeWithConveyor(intake, conveyor),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new StopDriveBase(driveBase)

@@ -37,7 +37,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // "ATarmacEdge2Ball"
     // "BTarmacEdgeCenter2Ball"
     // "BTarmacEdgeLower2Ball"
-    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision, String pathName) {
+    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, String pathName) {
         trajectory = PathPlanner.loadPath(pathName, 1, 0.5);
 
         double errorInMeters = 0.25;
@@ -61,7 +61,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
             //         //if doing lower, adjustment should be +2 meters
             //         //if doing upper, adjustment should be -1.2 meters
             //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
+            //         new ShootAllBalls(conveyor, shooter)
             //     )
             //),  
             new StopDriveBase(driveBase)
