@@ -107,4 +107,6 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kRamseteZeta = .7;
         public static final boolean kNavXReversed = true;
 
+        public static final int LED_LENGTH = 70;
+
 }
