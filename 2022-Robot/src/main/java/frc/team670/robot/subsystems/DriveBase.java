@@ -82,6 +82,9 @@ public class DriveBase extends HDrive {
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
+
+  private XboxRobotOrientedDrive defaultCommand;
+
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
@@ -143,7 +146,12 @@ public class DriveBase extends HDrive {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRobotOrientedDrive(this, mController));
+    defaultCommand = new XboxRobotOrientedDrive(this, mController);
+    MustangScheduler.getInstance().setDefaultCommand(this, defaultCommand);
+  }
+
+  public void cancelDefaultCommand() {
+    MustangScheduler.getInstance().cancel(defaultCommand);
   }
 
   /**
@@ -361,6 +369,10 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("currentX", getPose().getX());
+    SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
+    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
@@ -392,13 +404,16 @@ public class DriveBase extends HDrive {
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    zeroHeading();
+    //zeroHeading();
+    navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
+    SmartDashboard.putNumber("starting heading", getHeading());
+    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
     SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
-    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);

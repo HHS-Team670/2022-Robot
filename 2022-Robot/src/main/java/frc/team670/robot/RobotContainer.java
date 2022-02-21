@@ -14,6 +14,9 @@ import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -59,11 +62,26 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // MustangCommand autonCommand = new MoveForwards(driveBase);
-    // MustangCommand autonCommand = new RightShootTrench(driveBase);
+    // ------------ Edge2Ball path names (copy/paste) ------------
+    //   - "ATarmacEdge2Ball"
+    //   - "BTarmacEdgeCenter2Ball"
+    //   - "BTarmacEdgeLower2Ball"
+
+    // ------------ FourBallPath path names (copy/paste) ------------
+    //   - "BTarmac4BallTerminal"
+    //   - "BTarmac4BallTerminal2Ball"
+    //   - "ATarmacEdge4Ball"
+
+    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
+    MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
+ 
+    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
+
+    // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    return null;
+    return autonCommand;
+    // return null;
   }
 
   public void autonomousInit() {
@@ -72,6 +90,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
+    driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
