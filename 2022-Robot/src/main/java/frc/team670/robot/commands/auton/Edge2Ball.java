@@ -32,6 +32,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
     private Pose2d targetPose;
+    private DriveBase driveBase;
 
     // path names:
     // "ATarmacEdge2Ball"
@@ -40,6 +41,8 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, String pathName) {
         trajectory = PathPlanner.loadPath(pathName, 1, 0.5);
 
+        this.driveBase = driveBase;
+        
         double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -52,18 +55,17 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         SmartDashboard.putNumber("Auton target x", targetPose.getX());
         SmartDashboard.putNumber("Auton target y", targetPose.getY());
         
-        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            //new ParallelCommandGroup(
+            new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
-            //     new SequentialCommandGroup( 
-            //         new RunIntakeWithConveyor(intake, conveyor),
-            //         //if doing lower, adjustment should be +2 meters
-            //         //if doing upper, adjustment should be -1.2 meters
-            //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(conveyor, shooter)
-            //     )
-            //),  
+                new SequentialCommandGroup( 
+                    new RunIntakeWithConveyor(intake, conveyor),
+                    //if doing lower, adjustment should be +2 meters
+                    //if doing upper, adjustment should be -1.2 meters
+                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+                    new ShootAllBalls(conveyor, shooter)
+                )
+            ),  
             new StopDriveBase(driveBase)
         );
     }
@@ -71,6 +73,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     @Override
     public void initialize() {
         super.initialize();
+        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
     }
 
     @Override

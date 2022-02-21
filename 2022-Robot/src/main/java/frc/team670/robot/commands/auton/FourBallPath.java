@@ -39,10 +39,12 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
     private Pose2d targetPose, targetPose2;
+    private DriveBase driveBase;
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
             String pathName) {
         
+        this.driveBase = driveBase;
         // TODO: Check if using pathName + "P1" works, rather than
         //       using the if/else statements (this was changed while
         //       debugging the bot going in a circle on 2/19)
@@ -56,8 +58,8 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         }
 
         if (pathName.equals("BTarmacHighHubTerminal")) {
-            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.0, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2.0, 1);
+            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 1.0, 0.5);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 1.0, 0.5);
         }
 
         if (pathName.equals("ATarmacEdge4Ball")) {
@@ -75,28 +77,28 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
 
-        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-                // new RunIntakeWithConveyor(intake, conveyor),
-                // new ParallelCommandGroup(
-                //         new SequentialCommandGroup(
-                //                 getTrajectoryFollowerCommand(trajectory, driveBase),
-                //                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
-                //         new SequentialCommandGroup(
-                //                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-                //                 new AutoShootToIntake(conveyor, shooter, intake),
-                //                 new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
-                //                 new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
-                // new StopDriveBase(driveBase)
+                new RunIntakeWithConveyor(intake, conveyor),
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                getTrajectoryFollowerCommand(trajectory, driveBase),
+                                getTrajectoryFollowerCommand(trajectory2, driveBase)),
+                        new SequentialCommandGroup(
+                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+                                new AutoShootToIntake(conveyor, shooter, intake),
+                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
+                                new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
+                new StopDriveBase(driveBase)
 
                 
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+                // getTrajectoryFollowerCommand(trajectory, driveBase)
         );
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
     }
 
     @Override

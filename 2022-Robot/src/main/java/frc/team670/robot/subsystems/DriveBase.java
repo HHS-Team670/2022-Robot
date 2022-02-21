@@ -371,8 +371,8 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("currentX", getPose().getX());
     SmartDashboard.putNumber("currentY", getPose().getY());
-    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
-    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
+    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
+    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
