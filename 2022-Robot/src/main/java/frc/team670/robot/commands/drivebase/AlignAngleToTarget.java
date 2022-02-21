@@ -25,6 +25,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private boolean validData = false;
+    private double relativeYawToTarget;
 
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         addRequirements(driveBase);
@@ -50,27 +51,27 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         validData = true;
-        double relativeYawToTarget = vision.getAngleToTarget();
-        targetAngle = driveBase.getHeading() + relativeYawToTarget;
-        
         if (relativeYawToTarget == RobotConstants.VISION_ERROR_CODE) {
             validData = false;
             return;
         }
         driveBase.cancelDefaultCommand();
-        driveBase.curvatureDrive(0.3, targetAngle / 180, true);
-        relativeYawToTarget = vision.getAngleToTarget(); //yaw relative to target
+    }
+
+    @Override
+    public void execute(){
+        relativeYawToTarget = vision.getAngleToTarget();
+        driveBase.curvatureDrive(0, relativeYawToTarget < 0 ? -0.3 : 0.3, true); // 0.3 is just a constant safe quick-turn rotational speed
     }
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(driveBase.getHeading() - targetAngle) <= 5);
+        return (Math.abs(relativeYawToTarget) <= 5 || !validData);
     }
 
     @Override
     public void end(boolean interrupted) {
         driveBase.initDefaultCommand();
-        return;
     }
 
 }

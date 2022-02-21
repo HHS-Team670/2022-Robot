@@ -64,6 +64,7 @@ public class OI extends OIBase {
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
+    DriveBase driveBase = (DriveBase) subsystemBases[0];
     ConveyorSystem conveyorSystem = (ConveyorSystem) subsystemBases[1];
     Shooter shooter = (Shooter) subsystemBases[2];
     Intake intake = (Intake) subsystemBases[3];
@@ -77,7 +78,7 @@ public class OI extends OIBase {
 
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
 
-    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
+    shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
     stopShooter.whenPressed((new StopShooter(shooter)));
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
