@@ -20,8 +20,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private DutyCycleEncoder absEncoder;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.08; // From 2/17
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.23; // From 2/17
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = 0.13; // From 2/17
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.43 ; // From 2/17
     private static final double ABSOLUTE_ENCODER_GEAR_RATIO = 25.76582278;
 
     private static final double MAX_FLIPOUT_ROTATIONS = -8.142;
@@ -83,7 +83,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         }
 
         public double getAllowedError() {
-            return 0.25;
+            return 0.35;
         }
 
         public boolean enableSoftLimits() {
@@ -252,7 +252,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean isDeployed(){
-        return (isDeployed && hasReachedTargetPosition());
+        return (isDeployed && (rotator.get() == 0 || hasReachedTargetPosition()));
     } 
 
     @Override
