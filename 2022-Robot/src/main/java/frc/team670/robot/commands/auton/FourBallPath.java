@@ -78,17 +78,21 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-                new RunIntakeWithConveyor(intake, conveyor),
-                new ParallelCommandGroup(
-                        new SequentialCommandGroup(
-                                getTrajectoryFollowerCommand(trajectory, driveBase),
-                                getTrajectoryFollowerCommand(trajectory2, driveBase)),
-                        new SequentialCommandGroup(
-                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-                                new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
-                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
-                                new ShootAllBalls(driveBase, conveyor, shooter, vision))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
-                new StopDriveBase(driveBase));
+                // new RunIntakeWithConveyor(intake, conveyor),
+                // new ParallelCommandGroup(
+                //         new SequentialCommandGroup(
+                //                 getTrajectoryFollowerCommand(trajectory, driveBase),
+                //                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
+                //         new SequentialCommandGroup(
+                //                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+                //                 new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+                //                 new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
+                //                 new ShootAllBalls(driveBase, conveyor, shooter, vision))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
+                // new StopDriveBase(driveBase)
+
+                
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+        );
     }
 
     @Override

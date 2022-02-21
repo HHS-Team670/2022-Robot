@@ -44,9 +44,10 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
-        healthReqs.put(conveyor, HealthState.GREEN);
-        healthReqs.put(intake, HealthState.GREEN);
-        healthReqs.put(shooter, HealthState.GREEN);
+        // healthReqs.put(conveyor, HealthState.GREEN);
+        // healthReqs.put(intake, HealthState.GREEN);
+        // healthReqs.put(shooter, HealthState.GREEN);
+        // healthReqs.put(vision, HealthState.GREEN);
 
         SmartDashboard.putNumber("Auton target x", targetPose.getX());
         SmartDashboard.putNumber("Auton target y", targetPose.getY());

@@ -91,10 +91,12 @@ public class RobotContainer extends RobotContainerBase {
 
   public void teleopInit() {
     driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
-    driveBase.initDefaultCommand();
-    deployer.setEncoderPositionFromAbsolute();
-    pd.setSwitchableChannel(false);
+    
+    //These four lines commented out while testing auton without an intake. Uncomment when needed.
+    // oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    // driveBase.initDefaultCommand();
+    // deployer.setEncoderPositionFromAbsolute();
+    // pd.setSwitchableChannel(false);
   }
 
   @Override
