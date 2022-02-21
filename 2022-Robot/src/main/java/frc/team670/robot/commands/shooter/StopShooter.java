@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.Conveyors;
+package frc.team670.robot.commands.shooter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,28 +6,30 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Conveyors;
 
 /**
- * Stops the conveyor
+ * Stops the shooter
  * 
- * @author Armaan
- * 
+ * @author wilsonpotato, palldas, smishra467
  */
-public class StopConveyor extends InstantCommand implements MustangCommand {
-    private Conveyors conveyors;
+
+public class StopShooter extends InstantCommand implements MustangCommand {
+
+    private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StopConveyor(Conveyors conveyors) {
-        this.conveyors = conveyors;
-        addRequirements(conveyors);
+    public StopShooter(Shooter shooter) {
+        this.shooter = shooter;
+        addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(conveyors, HealthState.GREEN);
+        healthReqs.put(shooter, HealthState.GREEN);
     }
 
+    @Override
     public void initialize() {
-        conveyors.stopAll();
+        shooter.stop();
     }
 
     @Override

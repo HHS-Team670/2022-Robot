@@ -7,48 +7,53 @@
 
 package frc.team670.robot;
 
-import com.fasterxml.jackson.databind.util.Converter;
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Conveyors;
-
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 public class RobotContainer extends RobotContainerBase {
 
-  private static OI oi = new OI();
+  private static MustangCommand m_autonomousCommand;
 
-  private static DriveBase driveBase = new DriveBase(getDriverController());
-
+  
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Deployer deployer = new Deployer();
+  private static Intake intake = new Intake(conveyorSystem, deployer);
+  private static Shooter shooter = new Shooter();
   private static AutoSelector autoSelector = new AutoSelector();
+  
+  private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
-  int i = 0;
+  private static Vision vision = new Vision(pd);
+  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
 
-  private MustangCommand m_autonomousCommand;
-  private Conveyors conveyors = new Conveyors();
+  private static OI oi = new OI(driveBase);
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase,
+  // intake, conveyor, indexer, shooter, turret,
+  // vision);
 
-  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-  //     vision);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase);
-    
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision);
   }
 
   public void robotInit() {
+
   }
 
   /**
@@ -69,26 +74,31 @@ public class RobotContainer extends RobotContainerBase {
     // MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
+    // MustangCommand autonCommand = new MoveForwards(driveBase);
+    // MustangCommand autonCommand = new RightShootTrench(driveBase);
+
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    // return null;
   }
 
   public void autonomousInit() {
-    
+    Logger.consoleLog("autoInit called");
+
   }
 
   public void teleopInit() {
-    Timer.delay(1);
-    Logger.consoleLog("WORKSSS??");
-  
-    conveyors.runConveyor(Conveyors.Status.INTAKING);
-  
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    driveBase.initDefaultCommand();
+    deployer.setEncoderPositionFromAbsolute();
+    pd.setSwitchableChannel(false);
   }
 
   @Override
   public void disabled() {
-    
+    deployer.deploy(false);
   }
 
-  public static Joystick getOperatorController() {
+  public static MustangController getOperatorController() {
     return OI.getOperatorController();
   }
 
@@ -109,7 +119,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   //break1.sendBeamBreakDataToDashboard();
+    
   }
 
 }

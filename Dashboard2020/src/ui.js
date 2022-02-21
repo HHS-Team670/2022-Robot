@@ -95,7 +95,7 @@ NetworkTables.addKeyListener('/SmartDashboard/DriveBase', (key, value) => {
 
 
 // updates status lights for conveyor
-NetworkTables.addKeyListener('/SmartDashboard/Conveyor', (key, value) => {
+NetworkTables.addKeyListener('/SmartDashboard/ConveyorSystem', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
     var commands = statusLights.contentDocument;
     if (value === 'GREEN') {

@@ -1,12 +1,12 @@
 {
-  "LiveWindow": {
-    "open": true
-  },
   "NetworkTables Settings": {
     "mode": "Client",
     "serverTeam": "670"
   },
-  "SmartDashboard": {
+  "photonvision": {
+    "Microsoft_LifeCam_HD-3000": {
+      "open": true
+    },
     "open": true
   }
 }

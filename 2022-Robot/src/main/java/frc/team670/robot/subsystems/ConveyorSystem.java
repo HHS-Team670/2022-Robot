@@ -1,14 +1,18 @@
-
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.REVLibError;
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.constants.RobotMap;
 
 /**
  * Connects the intake to the shooter
@@ -17,7 +21,7 @@ import frc.team670.mustanglib.utils.Logger;
  * @author Soham
  * @author Edward
  */
-public class Conveyors extends MustangSubsystemBase {
+public class ConveyorSystem extends MustangSubsystemBase {
 	// Conveyor status
 
 	public enum Status {
@@ -27,12 +31,21 @@ public class Conveyors extends MustangSubsystemBase {
 		SHOOTING
 	}
 
-	private Conveyor intakeConveyor, shooterConveyor;
-	private Status status = Status.OFF;
+	private static Conveyor intakeConveyor, shooterConveyor;
+	private static Status status = Status.OFF;
+	private Timer timer = new Timer();
+	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
+	    private int totalNumBalls = 0;
 
-	public Conveyors() {
+
+	public ConveyorSystem() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+	}
+
+	public void debugBeamBreaks() {
+		intakeConveyor.debugBeamBreaks();
+		shooterConveyor.debugBeamBreaks();
 	}
 
 	// Actions
@@ -42,8 +55,10 @@ public class Conveyors extends MustangSubsystemBase {
 			intakeConveyor();
 		} else if (mode == Status.SHOOTING) {
 			shootConveyor();
+			timer.start();
 		} else if (mode == Status.OUTTAKING) {
 			outtakeConveyor();
+			timer.start();
 		} else if (mode == Status.OFF) {
 			stopAll();
 		}
@@ -82,23 +97,22 @@ public class Conveyors extends MustangSubsystemBase {
 					shooterConveyor.stop();
 					if (intakeConveyor.getBallCount() == 1) {
 						intakeConveyor.stop();
+						status = Status.OFF;
 					}
 				}
 				break;
 			case OUTTAKING:
-				if (shooterConveyor.getBallCount() == 0) {
-					shooterConveyor.stop();
-				}
-				if (ballCount() == 0) {
-					intakeConveyor.stop();
+				if (getBallCount() == 0) {
+					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+						stopAll();
+					}
 				}
 				break;
 			case SHOOTING:
-				if (intakeConveyor.getBallCount() == 0) {
-					intakeConveyor.stop();
-				}
-				if (ballCount() == 0) {
-					shooterConveyor.stop();
+				if (getBallCount() == 0) {
+					if (timer.hasPeriodPassed(CONVEYOR_IDLE_CHECK_PERIOD)) {
+						stopAll();
+					}
 				}
 				break;
 			case OFF:
@@ -111,13 +125,22 @@ public class Conveyors extends MustangSubsystemBase {
 		status = Status.OFF;
 		intakeConveyor.stop();
 		shooterConveyor.stop();
+		timer.reset();
+		timer.stop();
 	}
 
 	// Data collection
 	// Returns the total number of balls in the conveyor
-	public int ballCount() {
+	public static int getBallCount() {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
+
+	private void pushGameDataToDashboard() {
+        NetworkTableInstance instance = NetworkTableInstance.getDefault();
+        NetworkTable table = instance.getTable("/SmartDashboard");
+        NetworkTableEntry gameData = table.getEntry("Balls");
+        gameData.setNumber(getBallCount());
+    }
 
 	// Mustang Subsystem
 	@Override
@@ -135,17 +158,30 @@ public class Conveyors extends MustangSubsystemBase {
 	public void mustangPeriodic() {
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
-//		checkState();
+		// intakeConveyor.debugBeamBreaks();
+		// shooterConveyor.debugBeamBreaks();
+		checkState();
+		debugSubsystem();
+		pushGameDataToDashboard();
+	}
+
+	public static Status getStatus() {
+		return status;
+	}
+
+	@Override
+	public void debugSubsystem() {
+		debugBeamBreaks();
 	}
 }
 
 class Conveyor {
 
 	private SparkMAXLite roller;
-	private double CONVEYOR_SPEED = 0.5;
+	private double CONVEYOR_SPEED = 0.6;
 	private int ballCount = 0;
 
-	BeamBreak beamBreak;
+	private BeamBreak beamBreak;
 
 	public Conveyor(int motorID, int beamBreakID) {
 		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
@@ -161,6 +197,7 @@ class Conveyor {
 		if (beamBreak.isTriggered()) {
 			ballCount = 1;
 			return;
+
 		}
 		ballCount = 0;
 	}
@@ -182,5 +219,9 @@ class Conveyor {
 	// Returns the current roller error
 	public REVLibError getRollerError() {
 		return roller.getLastError();
+	}
+
+	public void debugBeamBreaks() {
+		beamBreak.sendBeamBreakDataToDashboard();
 	}
 }
