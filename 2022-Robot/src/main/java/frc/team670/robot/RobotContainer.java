@@ -9,14 +9,11 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.Edge2Ball;
-import frc.team670.robot.commands.auton.FourBallPath;
-import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -53,7 +50,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
-
+    vision.switchLEDS(false);
   }
 
   /**
@@ -90,7 +87,6 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
-    driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
@@ -99,7 +95,7 @@ public class RobotContainer extends RobotContainerBase {
 
   @Override
   public void disabled() {
-    deployer.deploy(false);
+    
   }
 
   public static MustangController getOperatorController() {

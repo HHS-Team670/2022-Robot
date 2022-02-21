@@ -29,8 +29,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public static final int MAX_ACCEL_DOWNWARDS = 700;
     public static final int MAX_ACCEL_UPWARDS = 1900;
 
-    private static double normalizeOffset = 0; 
-
     private boolean isDeployed = false;
 
     /**
@@ -228,6 +226,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean deploy(boolean deploy){
+        setEncoderPositionFromAbsolute();
         double angle = 0;
         if(deploy){
             angle = 90;

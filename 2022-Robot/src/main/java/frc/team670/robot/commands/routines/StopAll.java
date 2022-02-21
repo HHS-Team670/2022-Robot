@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.routines.intake;
+package frc.team670.robot.commands.routines;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,33 +8,36 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.conveyor.StopConveyor;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.intake.StopIntake;
+import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
-import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 
 
 /**
- * Runs the intake for the time required to intake one ball? Needs to be checked
- * @author Sanatan
+ * Stops all operator subsystems
+ * @author lakshbhambhani
  */
 
  
-public class EmptyRobot extends ParallelCommandGroup implements MustangCommand {
+public class StopAll extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     // Sets up everything
 
-    public EmptyRobot(Intake intake, ConveyorSystem conveyor, Deployer deployer) {
+    public StopAll(Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
-            new ToggleIntake(deployer),
-            new RunIntake(intake, true),
-            new RunConveyor(conveyor, ConveyorSystem.Status.OUTTAKING));
+            new StopShooter(shooter),
+            new StopIntake(intake),
+            new StopConveyor(conveyor));
     }
 
     // Returns health state
