@@ -73,9 +73,9 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge4Ball"
 
     //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
-    MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, vision, "ATarmacEdge2Ball");
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, vision, "ATarmacEdge2Ball");
  
-    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter, vision);
+    MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter, vision);
 
     // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter, vision);
 
@@ -85,6 +85,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void autonomousInit() {
+    deployer.setEncoderPositionFromAbsolute();
     Logger.consoleLog("autoInit called");
 
   }
@@ -92,16 +93,15 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
     
-    //These four lines commented out while testing auton without an intake. Uncomment when needed.
-    // oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
-    // driveBase.initDefaultCommand();
-    // deployer.setEncoderPositionFromAbsolute();
-    // pd.setSwitchableChannel(false);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    driveBase.initDefaultCommand();
+    deployer.setEncoderPositionFromAbsolute();
+    pd.setSwitchableChannel(false);
   }
 
   @Override
   public void disabled() {
-    deployer.deploy(false);
+    // deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {
