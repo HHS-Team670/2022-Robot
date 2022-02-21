@@ -14,11 +14,13 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 /*
  * BTarmac4BallTerminal   
@@ -38,7 +40,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     private Trajectory trajectory, trajectory2;
     private Pose2d targetPose, targetPose2;
 
-    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
+    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision,
             String pathName) {
         
         // TODO: Check if using pathName + "P1" works, rather than
@@ -72,20 +74,25 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-                new RunIntakeWithConveyor(intake, conveyor),
-                new ParallelCommandGroup(
-                        new SequentialCommandGroup(
-                                getTrajectoryFollowerCommand(trajectory, driveBase),
-                                getTrajectoryFollowerCommand(trajectory2, driveBase)),
-                        new SequentialCommandGroup(
-                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-                                new AutoShootToIntake(conveyor, shooter, intake),
-                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
-                                new AutoShootToIntake(conveyor, shooter, intake))), //TODO: change to shoot all balls!?
-                new StopDriveBase(driveBase));
+                // new RunIntakeWithConveyor(intake, conveyor),
+                // new ParallelCommandGroup(
+                //         new SequentialCommandGroup(
+                //                 getTrajectoryFollowerCommand(trajectory, driveBase),
+                //                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
+                //         new SequentialCommandGroup(
+                //                 new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+                //                 new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+                //                 new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
+                //                 new ShootAllBalls(driveBase, conveyor, shooter, vision))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
+                // new StopDriveBase(driveBase)
+
+                
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+        );
     }
 
     @Override

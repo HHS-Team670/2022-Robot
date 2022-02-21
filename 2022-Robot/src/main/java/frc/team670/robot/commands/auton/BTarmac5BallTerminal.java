@@ -18,6 +18,7 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 
 /**
@@ -33,7 +34,7 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
     private double errorInMeters;
     private Pose2d targetPose;
 
-    public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
         errorInMeters = 0.5;;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
@@ -45,10 +46,11 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(conveyor, shooter, intake),
+            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     getTrajectoryFollowerCommand(trajectory, driveBase),
@@ -56,9 +58,9 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                 ),
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
-                    new AutoShootToIntake(conveyor, shooter, intake),
+                    new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters)
-                    // new ShootAllBalls(conveyor, shooter)
+                    // new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
                 )
             ),
             new StopDriveBase(driveBase)

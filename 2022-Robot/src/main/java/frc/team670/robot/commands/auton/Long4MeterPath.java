@@ -21,6 +21,7 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * goes 4 meters forwards
@@ -33,8 +34,9 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
     private Pose2d targetPose;
     private DriveBase driveBase;
 
-    public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
+    public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+        // trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
+        trajectory = PathPlanner.loadPath("SecondFourMeterPath", 1, 0.5);
         this.driveBase = driveBase;
         double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
@@ -43,8 +45,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
- 
-        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
+        healthReqs.put(vision, HealthState.GREEN);
 
         addCommands(
             //new ParallelCommandGroup(
@@ -54,7 +55,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
             //         //if doing lower, adjustment should be +2 meters
             //         //if doing upper, adjustment should be -1.2 meters
             //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(conveyor, shooter)
+            //         new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
             //     )
             //),  
             new StopDriveBase(driveBase)
@@ -64,6 +65,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
     @Override
     public void initialize() {
         super.initialize();
+        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         SmartDashboard.putNumber("Auton target x", targetPose.getX());
         SmartDashboard.putNumber("Auton target y", targetPose.getY());
     }
