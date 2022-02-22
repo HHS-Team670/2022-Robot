@@ -7,6 +7,7 @@ import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -17,6 +18,7 @@ import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -45,30 +47,30 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     private DriveBase driveBase;
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer,
-            String pathName) {
+            AutonTrajectory pathName) {
         
         this.driveBase = driveBase;
         // TODO: Check if using pathName + "P1" works, rather than
         //       using the if/else statements (this was changed while
         //       debugging the bot going in a circle on 2/19)
 
-        // trajectory = PathPlanner.loadPath(pathName + "P1", 2.0, 1);
-        // trajectory2 = PathPlanner.loadPath(pathName + "P2", 2.0, 1);
+        trajectory = PathPlanner.loadPath(pathName.toString() + "P1", 2.0, 1);
+        trajectory2 = PathPlanner.loadPath(pathName.toString() + "P2", 2.0, 1);
 
-        if (pathName.equals("BTarmac4BallTerminal")) {
-            trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
-        }
+        // if (pathName.equals("BTarmac4BallTerminal")) {
+        //     trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
+        //     trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
+        // }
 
-        if (pathName.equals("BTarmacHighHubTerminal")) {
-            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 1.0, 0.5);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 1.0, 0.5);
-        }
+        // if (pathName.equals("BTarmacHighHubTerminal")) {
+        //     trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 1.0, 0.5);
+        //     trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 1.0, 0.5);
+        // }
 
-        if (pathName.equals("ATarmacEdge4Ball")) {
-            trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);
-            trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
-        }
+        // if (pathName.equals("ATarmacEdge4Ball")) {
+        //     trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);
+        //     trajectory2 = PathPlanner.loadPath("ATarmacEdge4BallP2", 2.0, 1);
+        // }
 
         double errorInMeters = 0.2;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
@@ -90,9 +92,10 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                                 new ToggleIntake(deployer),
                                 new RunIntakeWithConveyor(intake, conveyor)
                             ),
-                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, HubType.UPPER),
+                                new WaitToShoot(driveBase, shooter, targetPose, 0.1, -0.8, HubType.UPPER),
                                 new AutoShootToIntake(conveyor, shooter, intake),
-                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2, HubType.LOWER),
+                                // new WaitToShoot(driveBase, shooter, targetPose2, 0.5, 1.25, HubType.LOWER),
+                                new WaitToShoot(driveBase, shooter, targetPose2, 0.75, -0.9, HubType.UPPER),
                                 new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
                 new StopDriveBase(driveBase)
 
@@ -105,6 +108,8 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     public void initialize() {
         super.initialize();
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
+        SmartDashboard.putNumber("Auton target x", targetPose.getX());
+        SmartDashboard.putNumber("Auton target y", targetPose.getY());
     }
 
     @Override
