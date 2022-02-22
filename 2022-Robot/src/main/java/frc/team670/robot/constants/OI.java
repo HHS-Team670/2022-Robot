@@ -3,6 +3,7 @@ package frc.team670.robot.constants;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
 import frc.team670.mustanglib.commands.vision.SetVisionLEDs;
+import frc.team670.mustanglib.commands.vision.ToggleLEDs;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
@@ -34,6 +35,7 @@ public class OI extends OIBase {
   
   private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
+  private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B);
   //private static JoystickButton resetNavx = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
   private DriveBase driveBase;
@@ -83,7 +85,7 @@ public class OI extends OIBase {
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
 
-    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(!vision.LEDsTurnedOn(), vision));
+    turnVisionLEDsOn.whenPressed(new ToggleLEDs(vision));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }

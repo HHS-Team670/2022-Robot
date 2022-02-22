@@ -9,11 +9,11 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -124,7 +124,9 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    
+    SmartDashboard.putNumber("current", pd.getTotalCurrent());
+    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+    SmartDashboard.putNumber("power", pd.getTotalPower());
   }
 
 }
