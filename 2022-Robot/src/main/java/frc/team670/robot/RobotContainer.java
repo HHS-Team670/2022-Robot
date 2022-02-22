@@ -7,13 +7,15 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -56,6 +58,12 @@ public class RobotContainer extends RobotContainerBase {
   public void robotInit() {
     leds.setIsDisabled(true);
     vision.switchLEDS(false);
+    Alliance alliance = DriverStation.getAlliance();
+    if(alliance == Alliance.Red) {
+      leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
+    } else {
+      leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
+    }
   }
 
 

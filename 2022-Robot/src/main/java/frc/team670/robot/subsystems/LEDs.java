@@ -10,7 +10,8 @@ public class LEDs extends LEDSubsystem {
     private Intake intake;
     private ConveyorSystem conveyors;
     private boolean isDisabled;
-    
+
+    private LEDColor allianceColor, oppositeAllianceColor;    
 
     public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors) {
         super(port, length);
@@ -24,25 +25,26 @@ public class LEDs extends LEDSubsystem {
         this.isDisabled = isDisabled;
     }
 
+    public void setAllianceColors(LEDColor alliance, LEDColor oppositeAlliance) {
+        this.allianceColor = alliance;
+        this.oppositeAllianceColor = oppositeAlliance;
+    }
+
     @Override
     public void mustangPeriodic() {
         if(isDisabled) {
             rainbow();
         } else if (!isBlinking) {
             if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
-                solid(LEDColor.BLUE);
-                SmartDashboard.putString("LED Status", "Conveyor Solid");
+                solid(allianceColor);
             } else if (shooter.getVelocity() > 0) { // shooter is shooting
                 if (shooter.isShooting()) {
-                    blink(LEDColor.BLUE.dimmer(), 10);
-                    SmartDashboard.putString("LED Status", "Shooter Blink");
+                    blink(allianceColor.dimmer(), 10);
                 }
             } else if (conveyors.getBallCount() == 1) { // show amount of balls in conveyor
-                progressBar(LEDColor.RED,LEDColor.BLUE, 0.5);
-                SmartDashboard.putString("LED Status", "Conyeyor Half");
+                progressBar(oppositeAllianceColor, allianceColor, 0.5);                
             } else if (intake.isRolling()) { // intake is running
-                blink(LEDColor.RED.dimmer(), 10);
-                SmartDashboard.putString("LED Status", "Intake Blink");
+                blink(oppositeAllianceColor.dimmer(), 10);
             } else {
                 rainbow();
             }
