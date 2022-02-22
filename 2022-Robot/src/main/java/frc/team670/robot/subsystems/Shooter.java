@@ -50,7 +50,7 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.00009;
+    private static final double V_P = 0.0001;
     private static final double V_I = 0.0;
     private static final double V_D = 0.0;
     private static final double V_FF = 0.00017618;
@@ -279,7 +279,7 @@ public class Shooter extends MustangSubsystemBase {
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
             if (vision.hasTarget()) {
-                distanceToTarget = vision.getDistanceToTargetM();
+                distanceToTarget = vision.getLastValidDistanceMetersCaptured();
             } 
             if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
@@ -308,7 +308,7 @@ public class Shooter extends MustangSubsystemBase {
 
     public double getUltrasonicDistanceInMeters(){
         double dist = Units.inchesToMeters(ultrasonic.getDistance());
-        if(dist <= 1){
+        if(dist <= 0.8){
             return dist;
         }
         else{
