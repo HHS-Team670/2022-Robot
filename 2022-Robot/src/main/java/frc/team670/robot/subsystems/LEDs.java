@@ -9,17 +9,26 @@ public class LEDs extends LEDSubsystem {
     private Shooter shooter;
     private Intake intake;
     private ConveyorSystem conveyors;
+    private boolean isDisabled;
+    
 
     public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors) {
         super(port, length);
         this.shooter = shooter;
         this.intake = intake;
         this.conveyors = conveyors;
+        this.isDisabled = true;
+    }
+
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     @Override
     public void mustangPeriodic() {
-        if (!isBlinking) {
+        if(isDisabled) {
+            rainbow();
+        } else if (!isBlinking) {
             if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
                 solid(LEDColor.BLUE);
                 SmartDashboard.putString("LED Status", "Conveyor Solid");
@@ -34,6 +43,8 @@ public class LEDs extends LEDSubsystem {
             } else if (intake.isRolling()) { // intake is running
                 blink(LEDColor.RED.dimmer(), 10);
                 SmartDashboard.putString("LED Status", "Intake Blink");
+            } else {
+                rainbow();
             }
         }
         super.mustangPeriodic(); // to handle blinks and setting the led state
