@@ -8,6 +8,7 @@ public class LEDs extends LEDSubsystem {
     private Shooter shooter;
     private Intake intake;
     private ConveyorSystem conveyors;
+    private boolean isDisabled;
     
 
     public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors) {
@@ -15,11 +16,19 @@ public class LEDs extends LEDSubsystem {
         this.shooter = shooter;
         this.intake = intake;
         this.conveyors = conveyors;
+        this.isDisabled = true;
+    }
+
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     @Override
     public void mustangPeriodic() {
-        if(!isBlinking) {
+        if(isDisabled) {
+            rainbow();
+        }
+        else if(!isBlinking) {
             if(shooter.getVelocity() > 0) { // shooter is shooting
                 if(shooter.isShooting()) {
                     blink(LEDColor.BLUE);

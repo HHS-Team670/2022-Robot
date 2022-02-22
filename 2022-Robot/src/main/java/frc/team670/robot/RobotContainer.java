@@ -54,8 +54,10 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
+    leds.setIsDisabled(true);
     vision.switchLEDS(false);
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -88,10 +90,12 @@ public class RobotContainer extends RobotContainerBase {
   public void autonomousInit() {
     deployer.setEncoderPositionFromAbsolute();
     Logger.consoleLog("autoInit called");
+    leds.setIsDisabled(false);
 
   }
 
   public void teleopInit() {
+    leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
@@ -100,7 +104,7 @@ public class RobotContainer extends RobotContainerBase {
 
   @Override
   public void disabled() {
-    
+    leds.setIsDisabled(true);
   }
 
   public static MustangController getOperatorController() {
@@ -126,5 +130,4 @@ public class RobotContainer extends RobotContainerBase {
   public void periodic() {
     
   }
-
 }
