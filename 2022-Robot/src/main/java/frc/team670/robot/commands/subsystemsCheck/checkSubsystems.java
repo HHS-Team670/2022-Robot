@@ -18,11 +18,11 @@ import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.*;
 
-public class checkSubsystems extends SequentialCommandGroup implements MustangCommand {
+public class CheckSubsystems extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public checkSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, TelescopingClimber climber, Vision vision) {
+    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, TelescopingClimber climber, Vision vision) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.GREEN);
         healthReqs.put(deployer, HealthState.GREEN);
