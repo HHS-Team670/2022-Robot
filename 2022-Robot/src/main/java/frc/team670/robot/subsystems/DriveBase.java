@@ -34,7 +34,6 @@ import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.math.filter.SlewRateLimiter;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -56,16 +55,12 @@ public class DriveBase extends HDrive {
 
   private MustangController mController;
 
-  private static final double CENTERDRIVE_ACCEL_RATE_LIMIT = 4; 
-
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
 
   private DifferentialDrivePoseEstimator poseEstimator;
-
-  private SlewRateLimiter slewRateLimiter;
 
   // Start pose variables
   public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
@@ -139,7 +134,6 @@ public class DriveBase extends HDrive {
     ); //vision
     
     initBrakeMode();
-    slewRateLimiter = new SlewRateLimiter(CENTERDRIVE_ACCEL_RATE_LIMIT, CENTERDRIVE_ACCEL_RATE_LIMIT);
   }
 
   /**

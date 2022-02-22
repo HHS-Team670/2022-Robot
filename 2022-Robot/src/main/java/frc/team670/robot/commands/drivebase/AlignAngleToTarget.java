@@ -3,6 +3,7 @@ package frc.team670.robot.commands.drivebase;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -24,10 +25,11 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     private double targetAngle;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    private boolean validData = false;
+    private double relativeYawToTarget;
+
+    double prevCapTime;
 
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
-        addRequirements(driveBase);
         this.driveBase = driveBase;
         this.vision = vision;
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -49,28 +51,31 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
-        validData = true;
-        double relativeYawToTarget = vision.getAngleToTarget();
-        targetAngle = driveBase.getHeading() + relativeYawToTarget;
-        
-        if (relativeYawToTarget == RobotConstants.VISION_ERROR_CODE) {
-            validData = false;
-            return;
+        prevCapTime = 0.0;
+        targetAngle = driveBase.getHeading();
+    }
+
+    @Override
+    public void execute(){
+        relativeYawToTarget = vision.getAngleToTarget();
+        double capTime = vision.getVisionCaptureTime();
+        double heading =  driveBase.getHeading();
+        if(capTime!=prevCapTime && relativeYawToTarget != RobotConstants.VISION_ERROR_CODE){
+            targetAngle = heading - relativeYawToTarget;
+            prevCapTime = capTime;
         }
-        driveBase.cancelDefaultCommand();
-        driveBase.curvatureDrive(0.3, targetAngle / 180, true);
-        relativeYawToTarget = vision.getAngleToTarget(); //yaw relative to target
+        driveBase.curvatureDrive(0, heading < targetAngle ? -0.15 : 0.15, true); // 0.3 is just a constant safe quick-turn rotational speed
     }
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(driveBase.getHeading() - targetAngle) <= 5);
+        return (Math.abs(driveBase.getHeading() - targetAngle) <= 0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
-        driveBase.initDefaultCommand();
-        return;
+        driveBase.stop();
+        // driveBase.initDefaultCommand();
     }
 
 }

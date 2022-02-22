@@ -29,8 +29,6 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);
 
-      Logger.consoleLog("called shoot all balls");
-
       addCommands(
         new AlignAngleToTarget(driveBase, vision),
         new StartShooter(shooter, true),
@@ -44,8 +42,6 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);
-
-      Logger.consoleLog("called shoot all balls");
 
       addCommands(
         // new AlignAngleToTarget(driveBase, vision),

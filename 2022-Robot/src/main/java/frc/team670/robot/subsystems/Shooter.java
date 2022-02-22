@@ -39,7 +39,7 @@ public class Shooter extends MustangSubsystemBase {
     private SparkMaxPIDController shooter_mainPIDController;
 
     private double targetRPM = 0;
-    private static double DEFAULT_SPEED = 1850;
+    private static double DEFAULT_SPEED = 2200;
 
     private static double MIN_RPM = 0;
     private static double MAX_RPM = 4750;
@@ -61,7 +61,6 @@ public class Shooter extends MustangSubsystemBase {
     private double INITIAL_DIFF = 0;
     private static double SPEED_ALLOWED_ERROR = 100.0;
     private static double SHOOTING_CURRENT = 0.0;
-    private static double VELOCITY_ALLOWED_ERROR = 10.0;
     private static double VELOCITY_FOR_RAMP_RATE = 10.0;
     private static double manual_velocity;
 
@@ -109,9 +108,6 @@ public class Shooter extends MustangSubsystemBase {
             4200,
             4500
     };
-
-    private static final LinearRegression speedAtDistanceForLowGoal = new LinearRegression(MEASURED_DISTANCE_LOW_METER,
-            MEASURED_LOW_RPM);
 
     private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
             MEASURED_DISTANCE_HIGH_METER,
@@ -312,7 +308,7 @@ public class Shooter extends MustangSubsystemBase {
 
     public double getUltrasonicDistanceInMeters(){
         double dist = Units.inchesToMeters(ultrasonic.getDistance());
-        if(dist <= 0.4){
+        if(dist <= 1){
             return dist;
         }
         else{

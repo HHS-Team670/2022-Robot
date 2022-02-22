@@ -7,11 +7,14 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.Edge2Ball;
@@ -20,10 +23,13 @@ import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.LEDs;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 
@@ -39,6 +45,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
+  private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
 
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
@@ -51,12 +58,20 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake, deployer, vision);
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds);
   }
 
   public void robotInit() {
-
+    leds.setIsDisabled(true);
+    vision.switchLEDS(false);
+    Alliance alliance = DriverStation.getAlliance();
+    if(alliance == Alliance.Red) {
+      leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
+    } else {
+      leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
+    }
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -88,12 +103,12 @@ public class RobotContainer extends RobotContainerBase {
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
     Logger.consoleLog("autoInit called");
+    leds.setIsDisabled(false);
 
   }
 
   public void teleopInit() {
-    driveBase.initCoastMode(); // InitCoastMode was added by auton so we could reset the bot more easily. Remove if needed.
-    
+    leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
@@ -102,7 +117,7 @@ public class RobotContainer extends RobotContainerBase {
 
   @Override
   public void disabled() {
-    // deployer.deploy(false);
+    leds.setIsDisabled(true);
   }
 
   public static MustangController getOperatorController() {
@@ -126,7 +141,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    
+    SmartDashboard.putNumber("current", pd.getTotalCurrent());
+    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+    SmartDashboard.putNumber("power", pd.getTotalPower());
   }
-
 }

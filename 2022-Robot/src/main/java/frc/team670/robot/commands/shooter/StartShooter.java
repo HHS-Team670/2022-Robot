@@ -46,6 +46,9 @@ public class StartShooter extends CommandBase implements MustangCommand {
     public void initialize() {
         if(useDynamicSpeed)
             shooter.setRPM();
+        else{
+            shooter.setTargetRPM(shooter.getDefaultRPM());
+        }
         shooter.run();
     }
 

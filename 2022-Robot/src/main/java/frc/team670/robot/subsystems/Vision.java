@@ -81,7 +81,7 @@ public class Vision extends VisionSubsystemBase{
 
     public void mustangPeriodic() {
         super.processImage(RobotConstants.CAMERA_HEIGHT_METERS, FieldConstants.HIGH_HUB_HEIGHT, RobotConstants.CAMERA_ANGLE_DEGREES);
-        
+        SmartDashboard.putBoolean("leds", LEDsTurnedOn());
         if (super.hasTarget()) {
             SmartDashboard.putNumber("Vision Distance", distance);
             SmartDashboard.putNumber("Vision Distance Without Error", distanceNoError);

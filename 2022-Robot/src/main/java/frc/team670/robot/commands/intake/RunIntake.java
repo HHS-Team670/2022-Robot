@@ -17,7 +17,6 @@ public class RunIntake extends InstantCommand implements MustangCommand {
     Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean reversed;
     private Intake intake;
-    private int countWasJammed;
 
     /**
      * @param reversed true to run the intake in reverse (out), 
@@ -29,7 +28,6 @@ public class RunIntake extends InstantCommand implements MustangCommand {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.YELLOW);
         addRequirements(intake);
-        countWasJammed = 0;
     }
 
     /**

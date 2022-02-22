@@ -3,7 +3,6 @@ package frc.team670.robot.constants;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.mustanglib.constants.RobotConstantsBase;
-import edu.wpi.first.math.geometry.*;
 
 public class RobotConstants extends RobotConstantsBase {
         public static final double CAMERA_HEIGHT_METERS = 0.75; // TODO: Change this when we get the robot
@@ -107,5 +106,7 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = .7;
         public static final boolean kNavXReversed = true;
+
+        public static final int LED_LENGTH = 70;
 
 }
