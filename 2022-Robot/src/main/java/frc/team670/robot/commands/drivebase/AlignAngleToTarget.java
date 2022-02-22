@@ -3,7 +3,7 @@ package frc.team670.robot.commands.drivebase;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -22,7 +22,14 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     private DriveBase driveBase;
     private Vision vision;
+
+    private final double ANGULAR_P = 0.1;
+    private final double ANGULAR_D = 0.0;
+    private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+    
     private double targetAngle;
+    private double rotationSpeed;
+
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private double relativeYawToTarget;
@@ -64,7 +71,9 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             targetAngle = heading - relativeYawToTarget;
             prevCapTime = capTime;
         }
-        driveBase.curvatureDrive(0, heading < targetAngle ? -0.15 : 0.15, true); // 0.3 is just a constant safe quick-turn rotational speed
+        // driveBase.curvatureDrive(0, heading < targetAngle ? -0.15 : 0.15, true); // 0.3 is just a constant safe quick-turn rotational speed
+        rotationSpeed = turnController.calculate(relativeYawToTarget, 0);
+        driveBase.curvatureDrive(0, rotationSpeed, true); // 0.3 is just a constant, safe quick-turn rotational speed
     }
 
     @Override
