@@ -66,10 +66,11 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge2Ball"
     //   - "BTarmacEdgeCenter2Ball"
     //   - "BTarmacEdgeLower2Ball"
+    
 
     // ------------ FourBallPath path names (copy/paste) ------------
     //   - "BTarmac4BallTerminal"
-    //   - "BTarmac4BallTerminal2Ball"
+    //   - "BTarmacHighHubTerminal"
     //   - "ATarmacEdge4Ball"
 
     MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
