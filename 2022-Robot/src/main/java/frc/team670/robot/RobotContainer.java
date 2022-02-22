@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.LEDColor;
@@ -136,6 +137,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    
+    SmartDashboard.putNumber("current", pd.getTotalCurrent());
+    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+    SmartDashboard.putNumber("power", pd.getTotalPower());
   }
 }

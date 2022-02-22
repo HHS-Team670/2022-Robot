@@ -39,7 +39,7 @@ public class Shooter extends MustangSubsystemBase {
     private SparkMaxPIDController shooter_mainPIDController;
 
     private double targetRPM = 0;
-    private static double DEFAULT_SPEED = 2900;
+    private static double DEFAULT_SPEED = 2200;
 
     private static double MIN_RPM = 0;
     private static double MAX_RPM = 4750;
@@ -198,7 +198,7 @@ public class Shooter extends MustangSubsystemBase {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
-        double predictedVal = ((224 * distance) + 1417); //speedAtDistanceForLowGoal.predict(distance); direct function was working better than the regressor
+        double predictedVal = ((224 * distance) + 1517); //speedAtDistanceForLowGoal.predict(distance); direct function was working better than the regressor
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
         SmartDashboard.putNumber("predictedValLow", predictedVal);
@@ -308,7 +308,7 @@ public class Shooter extends MustangSubsystemBase {
 
     public double getUltrasonicDistanceInMeters(){
         double dist = Units.inchesToMeters(ultrasonic.getDistance());
-        if(dist <= 0.4){
+        if(dist <= 1){
             return dist;
         }
         else{
