@@ -257,14 +257,17 @@ function getFromMap(key) {
 
 
 function getAutonFromMap() {
-    console.log("SELECTED VALUE", document.querySelector('input[name="start-position"]:checked').value);
-    switch (document.querySelector('input[name="start-position"]:checked').value) {
-        case "Message1":
+    console.log("SELECTED VALUE", document.querySelector('input[name="path"]:checked').value);
+    switch (document.querySelector('input[name="path"]:checked').value) {
+        case "ATarmacEdge2Ball":
             return 0.0;
-        case "Message2":
+        case "BTarmacEdgeCenter2Ball":
             return 1.0;
-        case "Message3":
+        case "BTarmacEdgeLower2Ball":
             return 2.0;
+        case "BTarmacHighHubTerminal":
+            return 3.0;
+
         // case "Left":
         //     return getLocation(0, document.querySelector('input[name="location"]:checked').value)
         // case "Center":

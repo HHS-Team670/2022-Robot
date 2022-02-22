@@ -4,22 +4,22 @@ import java.util.Map;
 import frc.team670.mustanglib.utils.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
-public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
+public class AutonPathWithDelay extends CommandBase implements MustangCommand{
 
 
     private double targetTimeMillis;
     private double delaySeconds;
-    private String message;
+    private MustangCommand path;
 
-    public PutMessageAfterDelay(double delay, String message) {
-        super(delay);
-        this.message = message;
+    public AutonPathWithDelay(double delay, MustangCommand path) {
         this.delaySeconds = delay;
+        this.path = path;
         targetTimeMillis = System.currentTimeMillis() + delay*1000;
     }
 
@@ -30,14 +30,10 @@ public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
     }
 
     public void execute() {
-        super.execute();
         SmartDashboard.putNumber("current time millis", System.currentTimeMillis());
         if ((int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0) >= 0){
             SmartDashboard.putNumber( "countdown", (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
         }
-      
-
-
     }
 
     public boolean isFinished() {
@@ -60,13 +56,12 @@ public class PutMessageAfterDelay extends WaitCommand implements MustangCommand{
         Logger.consoleLog("Inside END method");
 
 
-        SmartDashboard.putString("message", message);
+        MustangScheduler.getInstance().schedule(path);
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
-        return null;
+        return path.getHealthRequirements();
     }
     
 }
