@@ -33,7 +33,7 @@ public class Vision extends VisionSubsystemBase{
     * 2020 camera to target closest distance: 250 in
     * Input:
     * Exposure: 0; Brightness: 24 (0 at 1:52pm facing the gray wall)
-    * Resolution: 
+    * Resolution: 160 x 140 FPS
     * Threshold:
     * H: 27-100; S: 100-255 (194-255 at 2:27pm facing the gray wall); V: 126-255
     * Contours:
