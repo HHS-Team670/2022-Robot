@@ -202,7 +202,7 @@ public class Shooter extends MustangSubsystemBase {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
-        double predictedVal = ((224 * distance) + 1417); //speedAtDistanceForLowGoal.predict(distance); direct function was working better than the regressor
+        double predictedVal = ((224 * distance) + 1517); //speedAtDistanceForLowGoal.predict(distance); direct function was working better than the regressor
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
         SmartDashboard.putNumber("predictedValLow", predictedVal);

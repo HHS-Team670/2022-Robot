@@ -12,11 +12,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
@@ -41,7 +44,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     private Pose2d targetPose, targetPose2;
     private DriveBase driveBase;
 
-    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter,
+    public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer,
             String pathName) {
         
         this.driveBase = driveBase;
@@ -78,15 +81,18 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         healthReqs.put(shooter, HealthState.GREEN);
 
         addCommands(
-                new RunIntakeWithConveyor(intake, conveyor),
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
                                 getTrajectoryFollowerCommand(trajectory, driveBase),
                                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
                         new SequentialCommandGroup(
-                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
+                            new ParallelCommandGroup(
+                                new ToggleIntake(deployer),
+                                new RunIntakeWithConveyor(intake, conveyor)
+                            ),
+                                new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, HubType.UPPER),
                                 new AutoShootToIntake(conveyor, shooter, intake),
-                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2,"lower"),
+                                new WaitToShoot(driveBase, shooter, targetPose2, errorInMeters, 2, HubType.LOWER),
                                 new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
                 new StopDriveBase(driveBase)
 

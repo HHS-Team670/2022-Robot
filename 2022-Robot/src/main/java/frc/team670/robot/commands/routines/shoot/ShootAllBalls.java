@@ -49,7 +49,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
       addCommands(
         // new AlignAngleToTarget(driveBase, vision),
-        new StartShooter(shooter, true),
+        new StartShooter(shooter, false),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
         new WaitCommand(2),
         new StopShooter(shooter)

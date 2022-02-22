@@ -17,6 +17,8 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.auton.Long4MeterPath;
+import frc.team670.robot.constants.AutonTrajectory;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -73,16 +75,13 @@ public class RobotContainer extends RobotContainerBase {
     //   - "BTarmacHighHubTerminal"
     //   - "ATarmacEdge4Ball"
 
-    MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
+    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+    MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball , HubType.LOWER);
  
     // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
 
-    // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter, vision);
-
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
-    // return null;
   }
 
   public void autonomousInit() {
