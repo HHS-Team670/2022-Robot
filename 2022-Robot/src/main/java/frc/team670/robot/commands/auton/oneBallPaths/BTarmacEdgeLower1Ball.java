@@ -26,7 +26,7 @@ public class BTarmacEdgeLower1Ball extends SequentialCommandGroup implements Mus
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public BTarmacEdgeLower1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public BTarmacEdgeLower1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmacEdgeLower1Ball", 2.0, 1);
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -34,11 +34,10 @@ public class BTarmacEdgeLower1Ball extends SequentialCommandGroup implements Mus
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new StopDriveBase(driveBase)
         );

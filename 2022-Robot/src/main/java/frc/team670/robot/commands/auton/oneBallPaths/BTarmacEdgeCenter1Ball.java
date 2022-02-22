@@ -27,7 +27,7 @@ public class BTarmacEdgeCenter1Ball extends SequentialCommandGroup implements Mu
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public BTarmacEdgeCenter1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public BTarmacEdgeCenter1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmacEdgeCenter1Ball", 2.0, 1);
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -35,11 +35,10 @@ public class BTarmacEdgeCenter1Ball extends SequentialCommandGroup implements Mu
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             new StopDriveBase(driveBase)
         );

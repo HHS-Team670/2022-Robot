@@ -28,7 +28,7 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public ATarmacFlushed1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public ATarmacFlushed1Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("ATarmacFlushed1Ball", 1.0, 0.5);
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -36,12 +36,11 @@ public class ATarmacFlushed1Ball extends SequentialCommandGroup implements Musta
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
             //shoot
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             //intake
             new StopDriveBase(driveBase)

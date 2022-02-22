@@ -20,13 +20,13 @@ public class AutoShootToIntake extends SequentialCommandGroup implements Mustang
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
-    public AutoShootToIntake(DriveBase driveBase, ConveyorSystem conveyorSystem, Shooter shooter, Intake intake, Vision vision) {      
+    public AutoShootToIntake(ConveyorSystem conveyorSystem, Shooter shooter, Intake intake) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        new ShootAllBalls(driveBase, conveyorSystem, shooter, vision),
+        new ShootAllBalls(conveyorSystem, shooter),
         new RunIntakeWithConveyor(intake, conveyorSystem)
       );
     } 

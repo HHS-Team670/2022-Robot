@@ -27,7 +27,7 @@ public class BTarmac3BallTerminal extends SequentialCommandGroup implements Must
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
 
-    public BTarmac3BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision) {
+    public BTarmac3BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -35,11 +35,10 @@ public class BTarmac3BallTerminal extends SequentialCommandGroup implements Must
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             getTrajectoryFollowerCommand(trajectory, driveBase),
             // new ShootAllBalls(driveBase, conveyor, shooter, vision), //ADDED VISION
             new StopDriveBase(driveBase)

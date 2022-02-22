@@ -17,7 +17,10 @@ import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.constants.AutonTrajectory;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
+import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
@@ -32,14 +35,18 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory;
     private Pose2d targetPose;
+    private DriveBase driveBase;
 
     // path names:
     // "ATarmacEdge2Ball"
     // "BTarmacEdgeCenter2Ball"
     // "BTarmacEdgeLower2Ball"
-    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Vision vision, String pathName) {
-        trajectory = PathPlanner.loadPath(pathName, 1, 0.5);
+    // Valid hubTypes are "upper" and "lower"
+    public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
+        trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
 
+        this.driveBase = driveBase;
+        
         double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -52,18 +59,28 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         SmartDashboard.putNumber("Auton target x", targetPose.getX());
         SmartDashboard.putNumber("Auton target y", targetPose.getY());
         
-        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
+        WaitToShoot waitCommand;
+        if(hubType == HubType.UPPER)
+            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, HubType.UPPER);
+        else
+            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2.4, HubType.LOWER);
+
         addCommands(
-            //new ParallelCommandGroup(
+            new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
-            //     new SequentialCommandGroup( 
-            //         new RunIntakeWithConveyor(intake, conveyor),
-            //         //if doing lower, adjustment should be +2 meters
-            //         //if doing upper, adjustment should be -1.2 meters
-            //         new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, "upper"),
-            //         new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
-            //     )
-            //),  
+                new SequentialCommandGroup( 
+                    new ParallelCommandGroup(
+                        new ToggleIntake(deployer),
+                        new RunIntakeWithConveyor(intake, conveyor)
+                    ),
+                    //if doing lower, adjustment should be +2 meters
+                    //if doing upper, adjustment should be -0.85 meters
+                    // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, "upper"),
+                    // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2, "lower"),
+                    waitCommand,
+                    new ShootAllBalls(conveyor, shooter)
+                )
+            ),  
             new StopDriveBase(driveBase)
         );
     }
@@ -71,6 +88,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     @Override
     public void initialize() {
         super.initialize();
+        driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
     }
 
     @Override

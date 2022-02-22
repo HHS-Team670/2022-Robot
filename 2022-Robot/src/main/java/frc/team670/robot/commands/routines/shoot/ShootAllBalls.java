@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
@@ -44,7 +43,8 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        new StartShooter(shooter, true),
+        // new AlignAngleToTarget(driveBase, vision),
+        new StartShooter(shooter, false),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
         new WaitCommand(2),
         new StopShooter(shooter)
