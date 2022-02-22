@@ -17,6 +17,11 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.auton.Long4MeterPath;
+import frc.team670.robot.constants.AutonTrajectory;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -78,26 +83,25 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge2Ball"
     //   - "BTarmacEdgeCenter2Ball"
     //   - "BTarmacEdgeLower2Ball"
+    
 
     // ------------ FourBallPath path names (copy/paste) ------------
     //   - "BTarmac4BallTerminal"
-    //   - "BTarmac4BallTerminal2Ball"
+    //   - "BTarmacHighHubTerminal"
     //   - "ATarmacEdge4Ball"
 
-    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, vision, "ATarmacEdge2Ball");
+    MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
  
-    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter, vision);
-
-    // MustangCommand autonCommand = new BTarmac5BallTerminal(driveBase, intake, conveyorSystem, shooter, vision);
+    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    return null;
-    // return null;
+    return autonCommand;
   }
 
   public void autonomousInit() {
     deployer.setEncoderPositionFromAbsolute();
+    driveBase.initBrakeMode();
     Logger.consoleLog("autoInit called");
     leds.setIsDisabled(false);
 
@@ -114,6 +118,7 @@ public class RobotContainer extends RobotContainerBase {
   @Override
   public void disabled() {
     leds.setIsDisabled(true);
+    deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {

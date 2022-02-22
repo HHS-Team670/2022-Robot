@@ -31,7 +31,7 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
     private Trajectory trajectory;
     private Pose2d targetPose;
 
-    public BTarmacTriangle(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor, Vision vision) {
+    public BTarmacTriangle(DriveBase driveBase, Intake intake, Shooter shooter, ConveyorSystem conveyor) {
         //shoot balls then go pick up balls
         trajectory = PathPlanner.loadPath("BTarmacTriangle", 1.0, 0.5);
         double errorInMeters = 0.5;
@@ -42,17 +42,16 @@ public class BTarmacTriangle extends SequentialCommandGroup implements MustangCo
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
-        healthReqs.put(vision, HealthState.GREEN);
 
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
         addCommands(
-            new AutoShootToIntake(driveBase, conveyor, shooter, intake, vision),
+            new AutoShootToIntake(conveyor, shooter, intake),
             new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                 
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters) 
-                    // new ShootAllBalls(driveBase, conveyor, shooter, vision) //ADDED VISION
+                    // new ShootAllBalls(conveyor, shooter)
                 )
             ),
             new StopDriveBase(driveBase)
