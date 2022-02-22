@@ -33,11 +33,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
+import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.math.filter.SlewRateLimiter;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -55,11 +56,12 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class DriveBase extends HDrive {
   private Vision vision;
-
   private SparkMAXLite left1, left2, right1, right2, middle;
   private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
   private MustangController mController;
+
+  private static final double CENTERDRIVE_ACCEL_RATE_LIMIT = 4; 
 
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
@@ -86,6 +88,8 @@ public class DriveBase extends HDrive {
   private Timer timer = new Timer();
   private NetworkTableEntry matchTimeEntry;
   private NetworkTableEntry isAutonEntry;
+  private SlewRateLimiter slewRateLimiter;
+  private XboxRobotOrientedDrive defaultCommand;
 
   // public static final double
 
@@ -120,13 +124,12 @@ public class DriveBase extends HDrive {
     middleEncoder = middle.getEncoder();
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
-    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
-                                                                                                    // right side
-    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR);
+    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for right side
+    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR); 
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION);
+    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION); 
 
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
@@ -154,13 +157,19 @@ public class DriveBase extends HDrive {
         VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), // gyros --> trusted the most
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); // vision
     initBrakeMode();
+    slewRateLimiter = new SlewRateLimiter(CENTERDRIVE_ACCEL_RATE_LIMIT, CENTERDRIVE_ACCEL_RATE_LIMIT);
   }
 
   /**
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
+    defaultCommand = new XboxRobotOrientedDrive(this, mController);
+    MustangScheduler.getInstance().setDefaultCommand(this, defaultCommand);
+  }
+
+  public void cancelDefaultCommand() {
+    MustangScheduler.getInstance().cancel(defaultCommand);
   }
 
   /**
@@ -410,13 +419,16 @@ public class DriveBase extends HDrive {
     }
 
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("currentX", getPose().getX());
+    SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
+    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
-        getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+      getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
 
-    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE,
-        CAMERA_OFFSET);
+    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
       poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
@@ -425,7 +437,6 @@ public class DriveBase extends HDrive {
     } else {
       // Logger.consoleError("Did not find targets!");
     }
-    
   }
 
   /**
@@ -443,13 +454,16 @@ public class DriveBase extends HDrive {
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    zeroHeading();
+    //zeroHeading();
+    navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
+    SmartDashboard.putNumber("starting heading", getHeading());
+    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
-    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
     SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
@@ -645,5 +659,18 @@ public class DriveBase extends HDrive {
   public NavX getNavX() {
     return navXMicro;
   }
+
+  public static double getLinearSpeed(){
+    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  }
+
+  public void setCenterDrive(double speed) {
+    middle.set(speed);
+  }
+
+  public NavX getNavX() {
+    return navXMicro;
+  }
+
 
 }

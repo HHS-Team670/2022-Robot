@@ -22,6 +22,7 @@ import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
@@ -38,10 +39,10 @@ public class Shooter extends MustangSubsystemBase {
     private SparkMaxPIDController shooter_mainPIDController;
 
     private double targetRPM = 0;
-    private static double DEFAULT_SPEED = 3150;
+    private static double DEFAULT_SPEED = 1850;
 
     private static double MIN_RPM = 0;
-    private static double MAX_RPM = 0;
+    private static double MAX_RPM = 4750;
 
     private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
@@ -117,8 +118,12 @@ public class Shooter extends MustangSubsystemBase {
             MEASURED_HIGH_RPM);
 
     private static final int VELOCITY_SLOT = 0;
+    private Vision vision;
 
-    public Shooter() {
+    private boolean useDynamicSpeed = true;
+    
+    public Shooter(Vision vision) {
+        this.vision = vision;
         controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
                 RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
 
@@ -134,6 +139,8 @@ public class Shooter extends MustangSubsystemBase {
         shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
 
         ultrasonic.setUltrasonicAutomaticMode(true);
+
+        debugSubsystem();
     }
 
     public double getVelocity() {
@@ -195,7 +202,7 @@ public class Shooter extends MustangSubsystemBase {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
-        double predictedVal = speedAtDistanceForLowGoal.predict(distance);
+        double predictedVal = ((224 * distance) + 1417); //speedAtDistanceForLowGoal.predict(distance); direct function was working better than the regressor
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
         SmartDashboard.putNumber("predictedValLow", predictedVal);
@@ -263,8 +270,54 @@ public class Shooter extends MustangSubsystemBase {
         return false;
     }
 
+    /**
+     * If vision works, it gets the distance to target from vision,
+     * predicts the RPM based off the distance,
+     * and sets that as the Target RPM
+     * If vision doesn't work, it tries to use the ultrasonic sensors
+     * If that doesn't work either, then it will run the shooter at default speed
+     */
+
+    public void setRPM() {
+        double targetRPM = getDefaultRPM();
+        if (useDynamicSpeed) {
+            double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
+            if (vision.hasTarget()) {
+                distanceToTarget = vision.getDistanceToTargetM();
+            } 
+            if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison
+                distanceToTarget = getUltrasonicDistanceInMeters();
+            }
+            SmartDashboard.putNumber("distance to target", distanceToTarget);
+            if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){  //double comparison
+                setTargetRPM(getDefaultRPM());
+                return;
+            }
+            if (distanceToTarget < getMinHighDistanceInMeter()) {
+                targetRPM = getTargetRPMForLowGoalDistance(distanceToTarget);
+            } else {
+                targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
+            }
+        }
+        if(targetRPM < 0 || targetRPM > MAX_RPM){
+            targetRPM = getDefaultRPM();
+        }
+        setTargetRPM(targetRPM);
+
+    }
+
+    public void useDynamicSpeed(boolean isDynamic){
+        this.useDynamicSpeed = isDynamic;
+    }
+
     public double getUltrasonicDistanceInMeters(){
-        return Units.inchesToMeters(ultrasonic.getDistance());
+        double dist = Units.inchesToMeters(ultrasonic.getDistance());
+        if(dist <= 0.4){
+            return dist;
+        }
+        else{
+            return RobotConstants.VISION_ERROR_CODE;
+        }
     }
 
     public double getMinHighDistanceInMeter(){

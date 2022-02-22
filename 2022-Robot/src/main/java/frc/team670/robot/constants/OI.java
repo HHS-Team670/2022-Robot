@@ -1,6 +1,7 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team670.mustanglib.commands.drive.teleop.ResetNavX;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
 import frc.team670.mustanglib.commands.vision.SetVisionLEDs;
 import frc.team670.mustanglib.constants.OIBase;
@@ -77,7 +78,7 @@ public class OI extends OIBase {
 
     stopIntake.whenPressed((new StopIntake(intake)));
 
-    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
+    shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
     stopShooter.whenPressed((new StopShooter(shooter)));
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));

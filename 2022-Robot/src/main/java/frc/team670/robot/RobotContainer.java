@@ -9,11 +9,15 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -25,18 +29,16 @@ import frc.team670.robot.subsystems.Vision;
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
-
-  
-  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
-  private static Deployer deployer = new Deployer();
-  private static Intake intake = new Intake(conveyorSystem, deployer);
-  private static Shooter shooter = new Shooter();
-  private static AutoSelector autoSelector = new AutoSelector();
   
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
+  private static Deployer deployer = new Deployer();
+  private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
+  private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
+  private static AutoSelector autoSelector = new AutoSelector();
 
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
@@ -78,10 +80,24 @@ public class RobotContainer extends RobotContainerBase {
     // MustangCommand autonCommand = new RightShootTrench(driveBase);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    // return null;
+    // ------------ Edge2Ball path names (copy/paste) ------------
+    //   - "ATarmacEdge2Ball"
+    //   - "BTarmacEdgeCenter2Ball"
+    //   - "BTarmacEdgeLower2Ball"
+    
+
+    // ------------ FourBallPath path names (copy/paste) ------------
+    //   - "BTarmac4BallTerminal"
+    //   - "BTarmacHighHubTerminal"
+    //   - "ATarmacEdge4Ball"
+
+    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, "BTarmacHighHubTerminal");
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, "ATarmacEdge2Ball");
+
   }
 
   public void autonomousInit() {
+    deployer.setEncoderPositionFromAbsolute();
     Logger.consoleLog("autoInit called");
 
   }
@@ -95,7 +111,7 @@ public class RobotContainer extends RobotContainerBase {
 
   @Override
   public void disabled() {
-    deployer.deploy(false);
+    // deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {

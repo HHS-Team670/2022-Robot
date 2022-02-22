@@ -18,6 +18,7 @@ public class ToggleIntake extends CommandBase implements MustangCommand {
 
     private Deployer deployer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private boolean deployed;
 
     /**
      * 
@@ -32,12 +33,20 @@ public class ToggleIntake extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        deployer.deploy(!deployer.isDeployed());
+        deployed = !deployer.isDeployed();
+        deployer.deploy(deployed);
     }
 
     @Override
     public boolean isFinished() {
         return deployer.hasReachedTargetPosition();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if(deployed){
+            deployer.stop();
+        }
     }
 
     @Override
