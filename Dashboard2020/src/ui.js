@@ -8,6 +8,24 @@ document.getElementById('big-warning').style.display = "none";
 var driveReversed = false;
 var allKeysPressed = new Array();
 
+var selectedPath = "";
+
+var paths = document.querySelectorAll(".path-dropdown .dropup-content p");
+for (let i = 0; i < paths.length; i+=1) {
+    let path = paths[i];
+    console.log(path);
+    path.onclick = updatePath;
+}
+
+function updatePath(evt) {
+    if (document.querySelector(".path-dropdown:hover") != null) {
+        evt.preventDefault();
+        selectedPath = evt.target.innerHTML;
+        let dropupBtn = document.querySelector(".dropbtn");
+        dropupBtn.innerHTML = selectedPath;
+    }
+}
+
 // listens for robot-state and updates status lights and auton chooser accordingly
 NetworkTables.addKeyListener('/SmartDashboard/robot-state', (key, value) => {
     if (value === "autonomousInit()" || value === "disabledPeriodic()") {
@@ -257,8 +275,10 @@ function getFromMap(key) {
 
 
 function getAutonFromMap() {
-    console.log("SELECTED VALUE", document.querySelector('input[name="path"]:checked').value);
-    switch (document.querySelector('input[name="path"]:checked').value) {
+    // console.log("SELECTED VALUE", document.querySelector('input[name="path"]:checked').value);
+    console.log("SELECTED VALUE", selectedPath);
+    // switch (document.querySelector('input[name="path"]:checked').value) {
+    switch (selectedPath) {
         case "ATarmacEdge2Ball":
             return 0.0;
         case "BTarmacEdgeCenter2Ball":

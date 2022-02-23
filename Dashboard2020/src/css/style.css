@@ -46,7 +46,7 @@ input[type="checkbox"] {
 body > * {
     padding: 10px;
     position: fixed;
-    overflow: scroll;
+    /* overflow: scroll; */
     background: #222;
 }
 header {
@@ -271,12 +271,58 @@ body.login #login {
     position: relative;
     transform: translate(5vw, 83vh);
     display: flex;
-    flex-direction: column wrap
+    flex-direction: column wrap;
     justify-content: space-between;
     align-items: center;
     border: 1px solid rgb(8, 218, 8);
     width: 430px;
 }
+
+fieldset#position {
+    border: none;
+}
+
+/* Dropup Button */
+.dropbtn {
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+  }
+  
+  /* The container <div> - needed to position the dropup content */
+  .path-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropup content (Hidden by Default) */
+  .dropup-content {
+    display: none;
+    position: absolute;
+    bottom: 38px;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropup */
+  .dropup-content p {
+    color: black;
+    padding: 10px 13px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropup links on hover */
+  .dropup-content p:hover {background-color: #ddd}
+  
+  /* Show the dropup menu on hover */
+  .path-dropdown:hover .dropup-content {
+    display: block;
+  }
+
 
 #current-text {
     position: absolute;
