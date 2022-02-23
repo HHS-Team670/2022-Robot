@@ -39,4 +39,7 @@ public class RobotMap {
   public static final int FLIP_OUT = 9;
   public static final int FLIP_OUT_ABS_ENCODER = 2;
 
+  // leds
+  public static final int LED_PORT = 9;
+
 }

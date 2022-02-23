@@ -56,6 +56,7 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class DriveBase extends HDrive {
   private Vision vision;
+ 
   private SparkMAXLite left1, left2, right1, right2, middle;
   private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
@@ -71,14 +72,9 @@ public class DriveBase extends HDrive {
   private DifferentialDrivePoseEstimator poseEstimator;
 
   // Start pose variables
-  // public static final double START_X = (FieldConstants.HUB_POSE_X -
-  // FieldConstants.HUB_RADIUS - 4.08) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
-  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5)
-      - RobotConstants.CAMERA_DISTANCE_TO_FRONT;// 15.983 - 3.8;
-  // distance got 3.8m for actual value 3.5m away from hub, 3.15m for actual value
-  // 2.75m, 4.9m for 4.5m
-  public static final double START_Y = FieldConstants.HUB_POSE_Y;// 2.4;
-  public static final double START_ANGLE_DEG = 0; // 180;
+  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
+  public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
+  public static final double START_ANGLE_DEG = 0; //180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
   private AutoSelector autoSelector = new AutoSelector();
@@ -89,25 +85,25 @@ public class DriveBase extends HDrive {
   private NetworkTableEntry matchTimeEntry;
   private NetworkTableEntry isAutonEntry;
   private SlewRateLimiter slewRateLimiter;
-  private XboxRobotOrientedDrive defaultCommand;
-
-  // public static final double
 
   // Constants used for doing robot to target pose conversion
-  public static final Pose2d TARGET_POSE = new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,
-      new Rotation2d(0.0));
-  // new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d TARGET_POSE = 
+    new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
+  //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
 
-  // 2020 robot camera offset
+  //2020 robot camera offset
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
       .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+
+
+  private XboxRobotOrientedDrive defaultCommand;
 
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
     matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
     isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
-
+   
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -150,12 +146,13 @@ public class DriveBase extends HDrive {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
     timer.start();
-
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-        VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), // current state
-        VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), // gyros --> trusted the most
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); // vision
+    new Pose2d(START_X, START_Y, START_ANGLE_RAD),
+      VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+      VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    ); //vision
+    
     initBrakeMode();
     slewRateLimiter = new SlewRateLimiter(CENTERDRIVE_ACCEL_RATE_LIMIT, CENTERDRIVE_ACCEL_RATE_LIMIT);
   }
@@ -179,8 +176,7 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
-        middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(), middle.isErrored());
   }
 
   /**
@@ -421,8 +417,8 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("currentX", getPose().getX());
     SmartDashboard.putNumber("currentY", getPose().getY());
-    SmartDashboard.putNumber("left velocity", getLeftVelocityInches());
-    SmartDashboard.putNumber("right velocity", getRightVelocityInches());
+    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
+    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     poseEstimator.update(Rotation2d.fromDegrees(
@@ -462,7 +458,7 @@ public class DriveBase extends HDrive {
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
-    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
     SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
@@ -646,18 +642,6 @@ public class DriveBase extends HDrive {
   public void debugSubsystem() {
     // TODO Auto-generated method stub
 
-  }
-
-  public static double getLinearSpeed() {
-    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity())) / 2;
-  }
-
-  public void setCenterDrive(double speed) {
-    middle.set(speed);
-  }
-
-  public NavX getNavX() {
-    return navXMicro;
   }
 
   public static double getLinearSpeed(){

@@ -90,9 +90,9 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putBoolean("Conveyor Off", ConveyorSystem.getStatus() == ConveyorSystem.Status.OFF);
-        SmartDashboard.putNumber("Conveyor Ball Count", ConveyorSystem.getBallCount());
-        if(ConveyorSystem.getStatus() == ConveyorSystem.Status.OFF && ConveyorSystem.getBallCount() == 2){
+        SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+        if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
             stop();
         }
     }

@@ -36,7 +36,7 @@ public class Long4MeterPath extends SequentialCommandGroup implements MustangCom
 
     public Long4MeterPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         // trajectory = PathPlanner.loadPath("Long4MeterPath", 1, 0.5);
-        trajectory = PathPlanner.loadPath("SecondFourMeterPath", 1, 0.5);
+        trajectory = PathPlanner.loadPath("SecondFourMeterPath", 2, 1);
         this.driveBase = driveBase;
         double errorInMeters = 0.25;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;

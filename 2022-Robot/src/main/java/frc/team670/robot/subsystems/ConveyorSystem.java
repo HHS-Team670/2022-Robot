@@ -31,12 +31,10 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		SHOOTING
 	}
 
-	private static Conveyor intakeConveyor, shooterConveyor;
-	private static Status status = Status.OFF;
+	private Conveyor intakeConveyor, shooterConveyor;
+	private Status status = Status.OFF;
 	private Timer timer = new Timer();
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
-	    private int totalNumBalls = 0;
-
 
 	public ConveyorSystem() {
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
@@ -131,7 +129,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	// Data collection
 	// Returns the total number of balls in the conveyor
-	public static int getBallCount() {
+	public int getBallCount() {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
 
@@ -165,7 +163,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		pushGameDataToDashboard();
 	}
 
-	public static Status getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 

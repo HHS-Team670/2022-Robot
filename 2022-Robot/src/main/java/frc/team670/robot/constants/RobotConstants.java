@@ -52,12 +52,12 @@ public class RobotConstants extends RobotConstantsBase {
 
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
-        public static final double leftKsVolts = 0.25; //0.14709
+        public static final double leftKsVolts = 0.4; //0.14709
         public static final double leftKvVoltSecondsPerMeter = 2.0; //2.7426;
-        public static final double leftKaVoltSecondsSquaredPerMeter = 0.3; //0.35449
+        public static final double leftKaVoltSecondsSquaredPerMeter = 0.27; //0.35449;
         public static final double rightKsVolts = leftKsVolts;
         public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
-        public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
+        public static final double rightKaVoltSecondsSquaredPerMeter = 0.3; //leftKaVoltSecondsSquaredPerMeter;
 
         // "WHEEL_BASE" is really track width
         public static final double kTrackwidthMeters = 0.702;
@@ -107,5 +107,7 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = .7;
         public static final boolean kNavXReversed = true;
+
+        public static final int LED_LENGTH = 70;
 
 }

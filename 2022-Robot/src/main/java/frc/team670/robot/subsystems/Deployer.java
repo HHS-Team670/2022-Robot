@@ -29,9 +29,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public static final int MAX_ACCEL_DOWNWARDS = 700;
     public static final int MAX_ACCEL_UPWARDS = 1900;
 
-    private static double normalizeOffset = 0; 
-
-    private boolean isDeployed = false;
 
     /**
      * PID and SmartMotion constants for the flipout rotator go here.
@@ -83,7 +80,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         }
 
         public double getAllowedError() {
-            return 0.25;
+            return 0.35;
         }
 
         public boolean enableSoftLimits() {
@@ -129,9 +126,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         absEncoder = new DutyCycleEncoder(RobotMap.FLIP_OUT_ABS_ENCODER);
         setEncoderPositionFromAbsolute();
         enableCoastMode();
-        if(getCurrentAngleInDegrees() > 45){
-            isDeployed = true;
-        }
     }
 
     public double getSpeed() {
@@ -228,13 +222,10 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean deploy(boolean deploy){
+        setEncoderPositionFromAbsolute();
         double angle = 0;
         if(deploy){
             angle = 90;
-            isDeployed = true;
-        }
-        else{
-            isDeployed = false;
         }
         setSystemTargetAngleInDegrees(angle);
         return hasReachedTargetPosition();
@@ -252,7 +243,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean isDeployed(){
-        return (isDeployed && (rotator.get() == 0 || hasReachedTargetPosition()));
+        return (getCurrentAngleInDegrees() > 45 && (rotator.get() == 0 || hasReachedTargetPosition()));
     } 
 
     @Override

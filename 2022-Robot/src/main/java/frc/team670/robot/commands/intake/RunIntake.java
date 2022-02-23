@@ -3,8 +3,6 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -19,7 +17,6 @@ public class RunIntake extends InstantCommand implements MustangCommand {
     Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean reversed;
     private Intake intake;
-    private int countWasJammed;
 
     /**
      * @param reversed true to run the intake in reverse (out), 
@@ -31,7 +28,6 @@ public class RunIntake extends InstantCommand implements MustangCommand {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.YELLOW);
         addRequirements(intake);
-        countWasJammed = 0;
     }
 
     /**

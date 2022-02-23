@@ -11,6 +11,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.subsystems.drivebase.DriveBase;
 import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.Shooter;
 
 //only shoots when the robot is within a desired location
@@ -22,21 +23,21 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
     private Pose2d target;
     private double error;
     private double distanceFromHub;
-    private String hubType;
+    private HubType hubType;
   
     //default to low hub
     public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters) {
-      this(driveBase, shooter, targetPose, errorInMeters, "lower");
+      this(driveBase, shooter, targetPose, errorInMeters, HubType.LOWER);
     } 
 
     //error is in meters
     //see Shooter.setRPMForDistance(double distance, String hubType) for valid hubTypes
-    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, String hubType) {
+    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, HubType hubType) {
       this.driveBase = driveBase;
       this.target = targetPose;
       this.error = errorInMeters;
       this.shooter = shooter;
-      this.hubType = hubType.toLowerCase();
+      this.hubType = hubType;
      
       double distanceX = target.getX() - FieldConstants.HUB_X_POSITION_METERS;
       double distanceY = target.getY() - FieldConstants.HUB_Y_POSITION_METERS;
@@ -52,17 +53,17 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
      * moving while shooting, then the calculated RPM for distance will be inaccurate.
      * @param addedDistance Distance, in meters, to be added to the shooter calculations. Negative numbers will reduce the distance
      */
-    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance, String hubType) {
+    public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance, HubType hubType) {
       this(driveBase, shooter, targetPose, errorInMeters, hubType);
       distanceFromHub+= addedDistance;
     }
 
     @Override
     public void initialize() {
-      if (hubType.equals("lower")){
+      if (hubType == HubType.LOWER){
         double lowGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
         shooter.setTargetRPM(lowGoalRPM);
-      } else if (hubType.equals("upper")){
+      } else if (hubType == HubType.UPPER){
         double upperGoalRPM = shooter.getTargetRPMForHighGoalDistance(distanceFromHub);
         shooter.setTargetRPM(upperGoalRPM);
       }
