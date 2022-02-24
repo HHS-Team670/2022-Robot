@@ -387,7 +387,7 @@ public class DriveBase extends HDrive {
     int routine = autoSelector.getSelection();
     double time = autoSelector.getDelayTime();
     // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
-    Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
+    // Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
     
     double oldTime = delayTime;
     int oldRoutine = routine;
@@ -398,10 +398,10 @@ public class DriveBase extends HDrive {
       delayTime = time;
     }
     if (oldTime != delayTime || oldRoutine != routine){
-      Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
+      // Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
       // autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
 
-    Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
+    // Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
     
     /** TODO We literally have no clue if any of this works */
       // DUMMY VARIABLE, CHANGE LATER!!!
@@ -518,7 +518,7 @@ public class DriveBase extends HDrive {
   public int getSelectedRoutine() {
     while (autoRoutine == -1) {
       if (timer.hasElapsed(10)) {
-        Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
         break;
       }
       continue;
@@ -529,12 +529,12 @@ public class DriveBase extends HDrive {
   public double getDelayTime() {
     while (delayTime == -1) {
       if (timer.hasElapsed(10)) {
-        Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
         break;
       }
       continue;
     }
-    Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ", delayTime);
+    // Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ", delayTime);
     return delayTime;
   }
 

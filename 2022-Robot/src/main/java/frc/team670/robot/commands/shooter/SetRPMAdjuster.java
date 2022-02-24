@@ -34,7 +34,7 @@ public class SetRPMAdjuster extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
-        Logger.consoleLog("Changing the Shooter RPM adjuster by %s", diff);
+        // Logger.consoleLog("Changing the Shooter RPM adjuster by %s", diff);
         shooter.adjustRPMAdjuster(diff);
     }
 

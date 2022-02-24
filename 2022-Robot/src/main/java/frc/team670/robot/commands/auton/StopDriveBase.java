@@ -25,8 +25,8 @@ public class StopDriveBase extends CommandBase implements MustangCommand{
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
 
-        Logger.consoleLog("CALLED STOP DRIVE BASE");
-        Logger.consoleLog("CALLED STOP DRIVE BASE");
+        // Logger.consoleLog("CALLED STOP DRIVE BASE");
+        // Logger.consoleLog("CALLED STOP DRIVE BASE");
     }
 
     public void initialize() {

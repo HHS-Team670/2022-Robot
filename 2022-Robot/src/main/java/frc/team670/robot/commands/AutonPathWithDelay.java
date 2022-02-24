@@ -37,13 +37,13 @@ public class AutonPathWithDelay extends CommandBase implements MustangCommand{
     }
 
     public boolean isFinished() {
-        Logger.consoleLog("VALUE OF NUMBER: " + (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
+        // Logger.consoleLog("VALUE OF NUMBER: " + (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0));
 
        if ( (int)( (targetTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0){
-            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
-            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
-            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
-            Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            // Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            // Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            // Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
+            // Logger.consoleLog("Inside ISFINISHED IF STATEMENT method");
 
             return true;
        }
@@ -51,9 +51,9 @@ public class AutonPathWithDelay extends CommandBase implements MustangCommand{
     }
 
     public void end(boolean interrupted) {
-        Logger.consoleLog("Inside End method");
-        Logger.consoleLog("Inside END method");
-        Logger.consoleLog("Inside END method");
+        // Logger.consoleLog("Inside End method");
+        // Logger.consoleLog("Inside END method");
+        // Logger.consoleLog("Inside END method");
 
 
         MustangScheduler.getInstance().schedule(path);

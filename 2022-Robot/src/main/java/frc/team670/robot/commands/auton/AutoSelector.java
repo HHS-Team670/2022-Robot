@@ -63,16 +63,16 @@ public class AutoSelector {
 
       
       Number autoID = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("auton-chooser").getNumber(-1);
-        Logger.consoleLog("auto path number: %s", autoID);
+        // Logger.consoleLog("auto path number: %s", autoID);
 
         this.selectedRoutine = (int)(autoID.intValue());
-        Logger.consoleLog("auto path routine: %s", this.selectedRoutine);
+        // Logger.consoleLog("auto path routine: %s", this.selectedRoutine);
         return this.selectedRoutine;
     }
 
     public double getDelayTime() {
-      Logger.consoleLog("Inside AutoSelector delay time:" + SmartDashboard.getNumber("delayTime", -1));
-      Logger.consoleLog(String.join(", ", SmartDashboard.getKeys()));
+      // Logger.consoleLog("Inside AutoSelector delay time:" + SmartDashboard.getNumber("delayTime", -1));
+      // Logger.consoleLog(String.join(", ", SmartDashboard.getKeys()));
       return NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("delayTime").getDouble(-1);
       
     }
@@ -83,8 +83,8 @@ public class AutoSelector {
      */
     public MustangCommand getCommandFromRoutine(int routine, double delayTime, DriveBase driveBase, Intake intake, ConveyorSystem conveyor, 
     Shooter shooter, Deployer deployer){
-        Logger.consoleLog("Inside getCommandFromRoutine() Auton %s", routine);
-        Logger.consoleLog("Inside getCommandFromRoutine - delay time: " + delayTime);
+        // Logger.consoleLog("Inside getCommandFromRoutine() Auton %s", routine);
+        // Logger.consoleLog("Inside getCommandFromRoutine - delay time: " + delayTime);
           switch(routine) {
             case 0:
               return new AutonPathWithDelay(delayTime, new Edge2Ball(driveBase, intake, conveyor, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER)); 

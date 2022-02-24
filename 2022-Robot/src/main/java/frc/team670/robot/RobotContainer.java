@@ -77,12 +77,12 @@ public class RobotContainer extends RobotContainerBase {
     int autonRoutine = driveBase.getSelectedRoutine();
     double delayTime = driveBase.getDelayTime();
 
-    Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
+    // Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
 
     MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
         conveyorSystem, shooter, deployer);
-    if (autonCommand== null){
-      Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
+    // if (autonCommand== null)
+      // Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
 
     // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake,
     // conveyor, indexer, turret, shooter);
@@ -90,7 +90,7 @@ public class RobotContainer extends RobotContainerBase {
     // conveyor, indexer, turret, shooter, vision);
     // MustangCommand autonCommand = new RightShootTrench(driveBase, intake,
     // conveyor, indexer, turret, shooter, vision);
-    Logger.consoleLog("autonCommand: %s", autonCommand);
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
     // MustangCommand autonCommand = new MoveForwards(driveBase);
     // MustangCommand autonCommand = new RightShootTrench(driveBase);
 
@@ -121,7 +121,7 @@ public class RobotContainer extends RobotContainerBase {
   public void autonomousInit() {
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
-    Logger.consoleLog("autoInit called");
+    // Logger.consoleLog("autoInit called");
     leds.setIsDisabled(false);
 
   }
