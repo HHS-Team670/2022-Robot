@@ -44,7 +44,7 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
+// import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -78,7 +78,7 @@ public class DriveBase extends HDrive {
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
   private AutoSelector autoSelector = new AutoSelector();
-  private AutoRoutine autoRoutine = AutoRoutine.UNKNOWN;
+  private int autoRoutine = -1;
   private double delayTime = -1;
 
   private Timer timer = new Timer();
@@ -384,14 +384,14 @@ public class DriveBase extends HDrive {
   @Override
   public void mustangPeriodic() {
     //removed the delay for 10 seconds
-    AutoRoutine routine = autoSelector.getSelection();
+    int routine = autoSelector.getSelection();
     double time = autoSelector.getDelayTime();
     // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
     Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
     
     double oldTime = delayTime;
-    AutoRoutine oldRoutine = routine;
-    if (routine != AutoRoutine.UNKNOWN) {
+    int oldRoutine = routine;
+    if (routine != -1) {
           autoRoutine = routine;
    }
     if (time != -1) {
@@ -399,7 +399,7 @@ public class DriveBase extends HDrive {
     }
     if (oldTime != delayTime || oldRoutine != routine){
       Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
-      autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
+      // autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
 
     Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
     
@@ -515,8 +515,8 @@ public class DriveBase extends HDrive {
     return mController;
   }
 
-  public AutoRoutine getSelectedRoutine() {
-    while (autoRoutine == AutoRoutine.UNKNOWN) {
+  public int getSelectedRoutine() {
+    while (autoRoutine == -1) {
       if (timer.hasElapsed(10)) {
         Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
         break;

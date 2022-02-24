@@ -100,10 +100,10 @@
         
     </div>
 
-    <!-- <div id="camera-streams">
-      <image class="camera-stream" src="http://photonvision.local:1182/stream.mjpg?1645483825695"></image>
-      <image class="camera-stream" src="http://photonvision.local:1196/stream.mjpg?1636594397806"></image>
-    </div> -->
+    <div id="camera-streams">
+      <image class="camera-stream" src="http://photonvision.local:1182/stream.mjpg?1645661099566"></image>
+      <image class="camera-stream" src="http://photonvision.local:1182/stream.mjpg?1645661099566"></image>
+    </div>
     <div id = "match-phase">
       <p>Match Phase: NOT STARTED</p>
     </div>
@@ -131,6 +131,11 @@
         <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
         <form>
             <fieldset id="position">
+                <input style="margin:5px;" type="radio" name="hub-type" value="Upper" id="Upper"/>
+                <label for="Upper">Upper Hub</label>
+                <input style="margin:5px;" type="radio" name="hub-type" value="Lower" id="Lower"/>
+                <label for="Lower">Lower Hub</label>
+
                 <!-- <input style="margin:5px;" type="radio" name="path" value="ATarmacEdge2Ball"/>
                 <label for="start-position-left">ATarmacEdge2Ball</label>
                 <input style="margin:5px;" type="radio" name="path" value="BTarmacEdgeCenter2Ball"/>
@@ -140,12 +145,12 @@
                 <input style="margin:5px;" type="radio" name="path" value="BTarmacHighHubTerminal"/>
                 <label for="start-position-right">BTarmacHighHubTerminal</label> -->
                 <div class="path-dropdown">
-                  <button type="button" class="dropbtn general-button">Choose Path</button>
+                  <button style="margin:2px;" type="button" class="dropbtn general-button">Choose Path</button>
                   <div class="dropup-content">
-                    <p>ATarmacEdge2Ball</p>
+                    <!-- <p>ATarmacEdge2Ball</p>
                     <p >BTarmacEdgeCenter2Ball</p>
                     <p>BTarmacEdgeLower2Ball</p>
-                    <p>BTarmacHighHubTerminal</p>
+                    <p>BTarmacHighHubTerminal</p> -->
                   </div>
                 </div>
               </fieldset>
@@ -189,7 +194,7 @@
     <script src="networktables/networktables.js"></script>
     <script src="connection.js"></script>
     <script src="ui.js"></script>
-    <script src="ui/livetimer.js"></script> <!--Use "ui/manualtimer.js" for a start/stop timer and 
+    <script src="ui/manualtimer.js"></script> <!--Use "ui/manualtimer.js" for a start/stop timer and 
                                                 "ui/livetimer.js" for a timer which pulls the match time directly 
                                                 (currently untested and probably doesn't work)-->
 

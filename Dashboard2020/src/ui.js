@@ -10,13 +10,6 @@ var allKeysPressed = new Array();
 
 var selectedPath = "";
 
-var paths = document.querySelectorAll(".path-dropdown .dropup-content p");
-for (let i = 0; i < paths.length; i+=1) {
-    let path = paths[i];
-    console.log(path);
-    path.onclick = updatePath;
-}
-
 function updatePath(evt) {
     if (document.querySelector(".path-dropdown:hover") != null) {
         evt.preventDefault();
@@ -25,6 +18,68 @@ function updatePath(evt) {
         dropupBtn.innerHTML = selectedPath;
     }
 }
+
+function setPaths(upper) {
+    var content = document.querySelector(".dropup-content");
+    content.innerHTML = "";
+
+    var p1 = document.createElement("p");
+    p1.appendChild(document.createTextNode("ATarmacEdge2Ball"));
+    
+    var p2 = document.createElement("p");
+    p2.appendChild(document.createTextNode("BTarmacEdgeCenter2Ball"));
+
+    var p3 = document.createElement("p");
+    p3.appendChild(document.createTextNode("BTarmacEdgeLower2Ball"));
+
+    if (upper) {
+        var p4 = document.createElement("p");
+        p4.appendChild(document.createTextNode("BTarmacHighHubTerminal"));
+        content.append(p1, p2, p3, p4);
+    } else {
+        content.append(p1, p2, p3);
+    }
+    resetAndAddDropdownListeners();
+}
+
+// function setUpperPaths(evt) {
+//     var content = document.querySelector(".dropup-content");
+//     content.innerHTML = "";
+
+//     var p1 = document.createElement("p");
+//     p1.appendChild(document.createTextNode("ATarmacEdge2Ball"));
+    
+//     var p2 = document.createElement("p");
+//     p2.appendChild(document.createTextNode("BTarmacEdgeCenter2Ball"));
+
+//     var p3 = document.createElement("p");
+//     p3.appendChild(document.createTextNode("BTarmacEdgeLower2Ball"));
+
+//     var p4 = document.createElement("p");
+//     p4.appendChild(document.createTextNode("BTarmacHighHubTerminal"));
+
+//     content.append(p1, p2, p3, p4);
+//     resetAndAddDropdownListeners();
+// }
+
+var lower = document.querySelector('#Lower');
+lower.onclick = () => {setPaths(false)};
+var upper = document.querySelector('#Upper');
+upper.onclick = () => {setPaths(true)};
+
+
+function resetAndAddDropdownListeners() {
+    document.querySelector(".dropbtn").innerHTML = "Choose Path";
+    var paths = document.querySelectorAll(".path-dropdown .dropup-content p");
+    for (let i = 0; i < paths.length; i+=1) {
+        let path = paths[i];
+        console.log(path);
+        path.onclick = updatePath;
+    }
+}
+
+
+
 
 // listens for robot-state and updates status lights and auton chooser accordingly
 NetworkTables.addKeyListener('/SmartDashboard/robot-state', (key, value) => {
@@ -278,22 +333,27 @@ function getAutonFromMap() {
     // console.log("SELECTED VALUE", document.querySelector('input[name="path"]:checked').value);
     console.log("SELECTED VALUE", selectedPath);
     // switch (document.querySelector('input[name="path"]:checked').value) {
-    switch (selectedPath) {
-        case "ATarmacEdge2Ball":
-            return 0.0;
-        case "BTarmacEdgeCenter2Ball":
-            return 1.0;
-        case "BTarmacEdgeLower2Ball":
-            return 2.0;
-        case "BTarmacHighHubTerminal":
-            return 3.0;
-
-        // case "Left":
-        //     return getLocation(0, document.querySelector('input[name="location"]:checked').value)
-        // case "Center":
-        //     return getLocation(1, document.querySelector('input[name="location"]:checked').value)
-        // case "Right":
-        //     return getLocation(2, document.querySelector('input[name="location"]:checked').value)
+    switch (document.querySelector('input[name="hub-type"]:checked').value) {
+        case "Upper":
+            switch(selectedPath) {
+                case "ATarmacEdge2Ball":
+                    return 0.0;
+                case "BTarmacEdgeCenter2Ball":
+                    return 1.0;
+                case "BTarmacEdgeLower2Ball":
+                    return 2.0;
+                case "BTarmacHighHubTerminal":
+                    return 3.0;
+            }
+        case "Lower":
+            switch(selectedPath) {
+                case "ATarmacEdge2Ball":
+                    return 4.0;
+                case "BTarmacEdgeCenter2Ball":
+                    return 5.0;
+                case "BTarmacEdgeLower2Ball":
+                    return 6.0;
+            }
     }
     return -1;
 

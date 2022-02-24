@@ -14,21 +14,10 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.Edge2Ball;
-import frc.team670.robot.commands.auton.FourBallPath;
-import frc.team670.robot.commands.auton.Long4MeterPath;
-import frc.team670.robot.constants.OI;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.Edge2Ball;
-import frc.team670.robot.commands.auton.FourBallPath;
-import frc.team670.robot.commands.auton.Long4MeterPath;
-import frc.team670.robot.constants.AutonTrajectory;
-import frc.team670.robot.constants.HubType;
+import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -43,7 +32,7 @@ import frc.team670.robot.subsystems.Vision;
 public class RobotContainer extends RobotContainerBase {
 
   private static MustangCommand m_autonomousCommand;
-  
+
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
   private static ConveyorSystem conveyorSystem = new ConveyorSystem();
@@ -60,7 +49,6 @@ public class RobotContainer extends RobotContainerBase {
   // intake, conveyor, indexer, shooter, turret,
   // vision);
 
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -73,13 +61,12 @@ public class RobotContainer extends RobotContainerBase {
     leds.setIsDisabled(true);
     vision.switchLEDS(false);
     Alliance alliance = DriverStation.getAlliance();
-    if(alliance == Alliance.Red) {
+    if (alliance == Alliance.Red) {
       leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
     } else {
       leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
     }
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -87,36 +74,45 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    AutoSelector.AutoRoutine autonRoutine = driveBase.getSelectedRoutine();
+    int autonRoutine = driveBase.getSelectedRoutine();
     double delayTime = driveBase.getDelayTime();
 
     Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
-    
-    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, 
-    delayTime);
-    // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
-    // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
-    // MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+
+    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
+        conveyorSystem, shooter, deployer);
+    if (autonCommand== null){
+      Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
+
+    // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake,
+    // conveyor, indexer, turret, shooter);
+    // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake,
+    // conveyor, indexer, turret, shooter, vision);
+    // MustangCommand autonCommand = new RightShootTrench(driveBase, intake,
+    // conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     // MustangCommand autonCommand = new MoveForwards(driveBase);
     // MustangCommand autonCommand = new RightShootTrench(driveBase);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     // ------------ Edge2Ball path names (copy/paste) ------------
-    //   - "ATarmacEdge2Ball"
-    //   - "BTarmacEdgeCenter2Ball"
-    //   - "BTarmacEdgeLower2Ball"
-    
+    // - "ATarmacEdge2Ball"
+    // - "BTarmacEdgeCenter2Ball"
+    // - "BTarmacEdgeLower2Ball"
 
     // ------------ FourBallPath path names (copy/paste) ------------
-    //   - "BTarmac4BallTerminal"
-    //   - "BTarmacHighHubTerminal"
-    //   - "ATarmacEdge4Ball"
+    // - "BTarmac4BallTerminal"
+    // - "BTarmacHighHubTerminal"
+    // - "ATarmacEdge4Ball"
 
-    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
- 
-    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
+    // MustangCommand autonCommand = new FourBallPath(driveBase, intake,
+    // conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake,
+    // conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball,
+    // HubType.UPPER);
+
+    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake,
+    // conveyorSystem, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
