@@ -1,10 +1,6 @@
-// COPIED FROM 2020
-
-
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.I2C;
 
 public class RobotMap {
 
@@ -14,57 +10,36 @@ public class RobotMap {
   public static final int OPERATOR_CONTROLLER_PORT = 1;
 
   // Drive Base
-  public static final int SPARK_LEFT_MOTOR_1 = 20; // These are properly set.
-  public static final int SPARK_LEFT_MOTOR_2 = 21;
-  public static final int SPARK_RIGHT_MOTOR_1 = 22;
-  public static final int SPARK_RIGHT_MOTOR_2 = 23;
-
-  // NavX
-  public final static I2C.Port NAVX_PORT = I2C.Port.kOnboard;
-  public final static SerialPort.Port ARDUINO_PORT = SerialPort.Port.kUSB2;
+  public static final int SPARK_LEFT_MOTOR_1 = 15; // These are properly set.
+  public static final int SPARK_LEFT_MOTOR_2 = 14;
+  public static final int SPARK_RIGHT_MOTOR_1 = 12;
+  public static final int SPARK_RIGHT_MOTOR_2 = 10;
+  public static final int SPARK_MIDDLE_MOTOR = 13;
+  public final static SerialPort.Port NAVX_PORT = SerialPort.Port.kUSB;
 
   // Shooter
-  public final static int SHOOTER_MAIN = 11;
-  public final static int SHOOTER_FOLLOWER = 12;
-
-  // Turret
-  public static final int TURRET_ROTATOR = 24;
-
-  // Color Wheel
-  public static final int COLOR_WHEEL_MOTOR_ID = 7;
-
-  // Intake
-  public static final int INTAKE_ROLLER = 4;
+  public final static int SHOOTER_MAIN = 5;
+  public final static int SHOOTER_FOLLOWER = 4;
+  public static final int SHOOTER_ULTRASONIC_TPIN = 6;
+  public static final int SHOOTER_ULTRASONIC_EPIN = 7;
 
   // Conveyor
-  public static final int CONVEYOR_ROLLER = 8;
+  public static final int INTAKE_CONVEYOR_MOTOR = 7;
+  public static final int SHOOTER_CONVEYOR_MOTOR = 6;
 
-  // Indexer and Updraw
-  public static final int FRONT_MOTOR = 25;
-  public static final int BACK_MOTOR = 26;
-  public static final int UPDRAW_SPINNER = 10;
+  public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;
+  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;
 
   // Climber
-  public static final int STRAIGHT_CLIMBER_MOTOR = -1; // TODO: Get the proper numbers
-  public static final int OBLIQUE_CLIMBER_MOTOR = -1;
+  public static final int CLIMBER_ONE = 3;
+  public static final int CLIMBER_TWO = 2;
 
-  // PNEUMATICS
-  public static final int PCMODULE = 2; // PCM CAN ID
+  // Intake
+  public static final int INTAKE_ROLLER = 11;
+  public static final int FLIP_OUT = 9;
+  public static final int FLIP_OUT_ABS_ENCODER = 2;
 
-  // Solenoids. Using 24V
-
-  public static final int INTAKE_DEPLOYER = 0; 
-  public static final int INDEXER_PUSHER_CLIMBER_DEPLOY = 1;
-  public static final int VISION_LED_PCM = 4;
-
-  // SENSORS
-
-  // Indexer sensors
-  public static final I2C.Port INDEXER_MUL_PORT = I2C.Port.kOnboard;
-
-
-  // LEDs (connected on RoboRIO PWM)
-  public static final int LEFT_SIDE_LEDS_PWM = 0;
-  public static final int RIGHT_SIDE_LEDS_PWM = 1;
+  // leds
+  public static final int LED_PORT = 9;
 
 }

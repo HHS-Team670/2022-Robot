@@ -2,26 +2,24 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.REVLibError;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
  * 
  * @author Pallavi, ctychen, Sanatan
  */
-public class TelescopingClimber {
+public class TelescopingClimber extends MustangSubsystemBase{
 
   private double kP = 0;
   private double kI = 0;
@@ -43,8 +41,8 @@ public class TelescopingClimber {
 
   private int SMARTMOTION_SLOT = 0;
 
-  private CANPIDController leadController;
-  private CANEncoder leadEncoder;
+  private SparkMaxPIDController leadController;
+  private RelativeEncoder leadEncoder;
   private ArrayList<SparkMAXLite> motors;
 
   private boolean onBar;
@@ -154,7 +152,7 @@ public class TelescopingClimber {
     double rotations = heightCM * ROTATIONS_PER_CM;
     SmartDashboard.putNumber("Climber rotation target", rotations);
     target = rotations;
-    leadController.setReference(rotations, ControlType.kSmartMotion);
+    leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
   }
 
   public HealthState checkHealth() {
@@ -181,6 +179,12 @@ public class TelescopingClimber {
   public void test() {
     setPower(SmartDashboard.getNumber("Climber power", 0.0));
     SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
+  }
+
+  @Override
+  public void mustangPeriodic() {
+    // TODO Auto-generated method stub
+    
   }
 
 }
