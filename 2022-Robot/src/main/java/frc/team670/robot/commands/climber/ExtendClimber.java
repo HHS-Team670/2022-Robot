@@ -3,33 +3,32 @@ package frc.team670.robot.commands.climber;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.Climber;
 
 /**
  * Raise the climber mechanism to its maximum allowed height so it can reach the
  * generator bar.
  */
-public class ExtendClimber implements MustangCommand{
+public class ExtendClimber extends CommandBase implements MustangCommand {
 
-  private ClimberSystem climberSystem;
-  private boolean vertical;
+  private Climber climber;
+  // private boolean vertical;
   private HashMap<MustangSubsystemBase, HealthState> healthReqs;
 
   
-  public ExtendClimber(ClimberSystem climberSystem, boolean vertical) {
-    this.climberSystem = climberSystem;
-    this.vertical = vertical;
+  public ExtendClimber(Climber climber) {
+    this.climber = climber;
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-    healthReqs.put(vertical ? climberSystem.getClimber1() : climberSystem.getClimber2(), HealthState.GREEN);
+    healthReqs.put(climber, HealthState.GREEN);
   }
-
 
   @Override
   public void initialize() {
-    climberSystem.climb(vertical, climber.MAX_EXTENDING_HEIGHT_CM);
+    climber.climb(climber.MAX_EXTENDING_HEIGHT_CM);
   }
 
   @Override
@@ -41,6 +40,6 @@ public class ExtendClimber implements MustangCommand{
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     // TODO Auto-generated method stub
-    return null;
+    return healthReqs;
   }
 }

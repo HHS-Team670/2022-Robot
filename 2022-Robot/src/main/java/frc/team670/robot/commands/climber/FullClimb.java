@@ -15,22 +15,23 @@ import frc.team670.robot.subsystems.ClimberSystem;
  */
 public class FullClimb extends SequentialCommandGroup implements MustangCommand {
   
-  private ClimberSystem climber;
+  private ClimberSystem climberSystem;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  public FullClimb(Climber c) {
-    this.climber = c;
-    addRequirements(c);
+  public FullClimb(ClimberSystem climberSystem) {
+    this.climberSystem = climberSystem;
+
+    addRequirements(climberSystem);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-    healthReqs.put(climber, HealthState.GREEN);
+    healthReqs.put(climberSystem, HealthState.GREEN);
+    
     addCommands(
-        new ExtendClimber(climber, true),
-        new HookOnBar(climber, true),
-        new ExtendClimber(climber, false),
-        new HookOnBar(climber, false),
-        new UnhookFromBar(climber), // TODO: Do we really need to unhook??? And if we do should it come automatically with the hooking on to the higher bar???
-        new RetractClimber(climber)
-      );
+      new ExtendClimber(climberSystem.getClimber1()),
+      new HookOnBar(climberSystem.getClimber2()),
+      new ExtendClimber(climberSystem.getClimber2()),
+      new HookOnBar(climberSystem.getClimber2()),
+      new UnhookFromBar(climberSystem.getClimber1()),
+      new RetractClimber(climberSystem.getClimber1()));
   }
 
   @Override
