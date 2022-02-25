@@ -22,15 +22,16 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private double power = 0.25;
 
-    // SmartMotion constants
-    private static final double MAX_ACC = 0;
-    private static final double MIN_VEL = 0;
-    private static final double MAX_VEL = 0;
+    // SmartMotion constants 
+    // TODO: different for diagonal vs vertical?
+    private static final double MAX_ACC = 200; // TODO test
+    private static final double MIN_VEL = 0; // TODO test
+    private static final double MAX_VEL = 200; // TODO test
 
-    private static final double ALLOWED_ERR = 0;
+    private static final double ALLOWED_ERR = 3;
 
-    private static final double NORMAL_OUTPUT = 0; // Todo: this should be the current output when running normally
-    private static final double ROTATIONS_PER_CM = 0; // gearing is 50:1
+    private static final double NORMAL_OUTPUT = 6.5; // this should be the current output when running normally
+    private static final double ROTATIONS_PER_CM = 0; // TODO: find rotations per cm
     private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
     private int SMARTMOTION_SLOT = 0;

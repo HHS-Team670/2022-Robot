@@ -26,7 +26,7 @@ public class RetractClimber extends CommandBase implements MustangCommand{
   @Override
   public void initialize() {
     climber.stop();
-    climber.climb(0);
+    climber.climb(0); //TODO: ask mech should be 0 or 1 ?
   }
 
 
@@ -37,7 +37,6 @@ public class RetractClimber extends CommandBase implements MustangCommand{
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
     return healthReqs;
   }
 }
