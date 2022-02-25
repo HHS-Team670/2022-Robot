@@ -22,7 +22,8 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, TelescopingClimber climber, Vision vision) {
+    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds,
+            Shooter shooter, TelescopingClimber climber, Vision vision) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.GREEN);
         healthReqs.put(deployer, HealthState.GREEN);
@@ -30,7 +31,7 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         healthReqs.put(vision, HealthState.GREEN);
-        
+
         addCommands(
 
                 new ToggleIntake(deployer),
@@ -45,8 +46,7 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
                 new StopConveyor(conveyors),
 
                 new StartShooter(shooter),
-                new StopShooter(shooter)
-        );
+                new StopShooter(shooter));
     }
 
     @Override

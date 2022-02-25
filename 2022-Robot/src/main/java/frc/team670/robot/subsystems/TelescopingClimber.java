@@ -187,4 +187,10 @@ public class TelescopingClimber extends MustangSubsystemBase{
     
   }
 
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

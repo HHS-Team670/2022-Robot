@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.climb;
+package frc.team670.robot.commands.climber;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberSystem;
 
 /**
  * Once the driver aligns the back wheels to the bars under the hangar 
@@ -15,7 +15,7 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class FullClimb extends SequentialCommandGroup implements MustangCommand {
   
-  private Climber climber;
+  private ClimberSystem climber;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public FullClimb(Climber c) {

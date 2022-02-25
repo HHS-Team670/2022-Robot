@@ -51,4 +51,10 @@ public class Climber extends MustangSubsystemBase {
   public void mustangPeriodic() {
     // TODO Auto-generated method stub
   }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+    
+  }
 }
