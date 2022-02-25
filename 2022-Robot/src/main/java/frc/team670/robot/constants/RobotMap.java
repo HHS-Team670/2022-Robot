@@ -31,10 +31,8 @@ public class RobotMap {
   public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;
 
   // Climber
-  public static final int VERTICAL_CLIMBER_1 = 3; // TODO get id
-  public static final int VERTICAL_CLIMBER_2 = 2; // TODO get id
-  public static final int DIAGONAL_CLIMBER_1 = 2; // TODO get id
-    public static final int DIAGONAL_CLIMBER_2 = 2; // TODO get id
+  public static final int VERTICAL_CLIMBER = 3; // TODO get id
+  public static final int DIAGONAL_CLIMBER = 2; // TODO get id
 
   // Intake
   public static final int INTAKE_ROLLER = 11;

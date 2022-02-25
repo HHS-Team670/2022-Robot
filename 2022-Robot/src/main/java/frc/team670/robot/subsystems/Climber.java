@@ -27,12 +27,12 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     private static final double MAX_ACC = 200; // TODO test
     private static final double MIN_VEL = 0; // TODO test
     private static final double MAX_VEL = 200; // TODO test
+    // public static final double MAX_EXTENDING_HEIGHT_CM;
+
 
     private static final double ALLOWED_ERR = 3;
 
     private static final double NORMAL_OUTPUT = 6.5; // this should be the current output when running normally
-    private static final double ROTATIONS_PER_CM = 0; // TODO: find rotations per cm
-    private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
     private int SMARTMOTION_SLOT = 0;
 
@@ -50,11 +50,13 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     private float softLimitAtRetracted;
     private float softLimitAtExtension;
 
-    public double MAX_EXTENDING_HEIGHT_CM; // TODO: change this later
+    private double ROTATIONS_PER_CM; // TODO: find rotations per cm
+    private double HALF_CM = ROTATIONS_PER_CM / 2;
+
     private SparkMAXLite motor;
 
     public Climber(int motorId, double p, double i, double d, double ff, float motorRotationsAtRetracted,
-            float motorRotationsAtMaxExtension, double maxExtendingHeightCm) {
+            float motorRotationsAtMaxExtension, double rotationsPerCM) {
         kP = p;
         kI = i;
         kD = d;
@@ -64,7 +66,8 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         this.softLimitAtRetracted = this.motorRotationsAtRetracted + .5f;
         this.softLimitAtExtension = motorRotationsAtMaxExtension - 10;
 
-        MAX_EXTENDING_HEIGHT_CM = maxExtendingHeightCm;
+        ROTATIONS_PER_CM = rotationsPerCM;
+        HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
         motor = SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kBrake);
