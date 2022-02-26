@@ -1,7 +1,6 @@
 package frc.team670.robot.subsystems;
 
-import java.util.ArrayList;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.constants.RobotMap;
 
@@ -16,20 +15,10 @@ public class ClimberSystem extends MustangSubsystemBase {
     private static final double VERTICAL_kI = 0;
     private static final double VERTICAL_kD = 0;
     private static final double VERTICAL_kFF = 0;
+    
     private static final double VERTICAL_ROTATIONS_PER_CM = 2.0051;
-
-    // circum of spool is 11.9694680102  in cm 
-
-        // for every 24 motor rotations, the vertical spool rotates once
-
-        // rotations per cm of vertical: 2.00510164525
-
-        // for every 25 motor rotations, diagonal climber spool in back rotates once
-
-        // rotations per cm of diagonal: 2.08864754713
-
-    private static final float VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static final float VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0; //TODO: talk to mech to find max motor rotations for full extension
+    private static final double VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    private static final double VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = VERTICAL_ROTATIONS_PER_CM * 58.42;
 
 
     //TODO: find PIDF values for diagonal climbers
@@ -37,20 +26,20 @@ public class ClimberSystem extends MustangSubsystemBase {
     private static final double DIAGONAL_kI = 0;
     private static final double DIAGONAL_kD = 0;
     private static final double DIAGONAL_kFF = 0;
-
-    private static final float DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    private static final float DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 0; //TODO: talk to mech to find max motor rotations for full extension
+    
     private static final double DIAGONAL_ROTATIONS_PER_CM = 2.0886;
+    private static final double DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    private static final double DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = DIAGONAL_ROTATIONS_PER_CM * 79.2325; 
 
     private Climber verticalClimber;
     private Climber diagonalClimber;
 
     public ClimberSystem() {
 
-            verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, VERTICAL_kP, VERTICAL_kI, VERTICAL_kD, VERTICAL_kFF,
+            verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, RobotMap.VERTICAL_CLIMBER_LIMIT_SWITCH, VERTICAL_kP, VERTICAL_kI, VERTICAL_kD, VERTICAL_kFF,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION, VERTICAL_ROTATIONS_PER_CM);   
         
-            diagonalClimber = new Climber(RobotMap.DIAGONAL_CLIMBER, DIAGONAL_kP, DIAGONAL_kI, DIAGONAL_kD, DIAGONAL_kFF,
+            diagonalClimber = new Climber(RobotMap.DIAGONAL_CLIMBER, RobotMap.DIAGONAL_CLIMBER_LIMIT_SWITCH, DIAGONAL_kP, DIAGONAL_kI, DIAGONAL_kD, DIAGONAL_kFF,
                 DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED, DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION, DIAGONAL_ROTATIONS_PER_CM);
     }
 
@@ -70,34 +59,20 @@ public class ClimberSystem extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        SmartDashboard.putNumber("Vertical Climber Motor Rotations difference",  VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION - verticalClimber.getUnadjustedMotorRotations());
+        SmartDashboard.putNumber("Diagonal Climber Motor Rotations difference", DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION - diagonalClimber.getUnadjustedMotorRotations());
     }
 
     @Override
     public void debugSubsystem() {
     }
 
-    public Climber getVerticalClimbers() {
+    public Climber getVerticalClimber() {
         return verticalClimber;
     }
 
-    public Climber getDiagonalClimbers() {
+    public Climber getDiagonalClimber() {
         return diagonalClimber;
-    }
-
-    public boolean isAtTarget(boolean vertical) {
-        if (vertical) {
-            return verticalClimber.isAtTarget();
-        } else {
-            return diagonalClimber.isAtTarget();
-        } 
-    }
-
-    public void climb(boolean vertical, double heightCM) {
-        if (vertical) {
-            verticalClimber.climb(heightCM);
-        } else {
-            diagonalClimber.climb(heightCM);
-        }
     }
 }
 

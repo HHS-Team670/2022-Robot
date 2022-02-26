@@ -28,7 +28,8 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
 
   @Override
   public void initialize() {
-    climber.climb(climber.MAX_EXTENDING_HEIGHT_CM);
+    climber.stop();
+    climber.climb(climber.MOTOR_ROTATIONS_AT_MAX_EXTENSION); //TODO: implement limit switch
   }
 
   @Override

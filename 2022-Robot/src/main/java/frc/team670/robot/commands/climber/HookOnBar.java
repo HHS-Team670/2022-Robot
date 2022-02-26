@@ -27,6 +27,7 @@ public class HookOnBar extends CommandBase implements MustangCommand {
 
   @Override
   public void initialize() {
+    climber.stop();
     climber.hookOnBar();
   }
 
