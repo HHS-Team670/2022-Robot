@@ -6,6 +6,7 @@ import java.util.Map;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -54,8 +55,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         //       using the if/else statements (this was changed while
         //       debugging the bot going in a circle on 2/19)
 
-        trajectory = PathPlanner.loadPath(pathName.toString() + "P1", 2.0, 1);
-        trajectory2 = PathPlanner.loadPath(pathName.toString() + "P2", 2.0, 1);
+        // trajectory = PathPlanner.loadPath(pathName.toString() + "P1", 2.0, 1);
+        // trajectory2 = PathPlanner.loadPath(pathName.toString() + "P2", 2.0, 1);
+        trajectory = PathPlanner.loadPath(pathName.toString(), 0.5, 1);
 
         // if (pathName.equals("BTarmac4BallTerminal")) {
         //     trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
@@ -73,8 +75,10 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         // }
 
         double errorInMeters = 0.2;
-        targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
-        targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        // targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
+        // targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
+        targetPose2 = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -85,18 +89,19 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         addCommands(
                 new ParallelCommandGroup(
                         new SequentialCommandGroup(
-                                getTrajectoryFollowerCommand(trajectory, driveBase),
-                                getTrajectoryFollowerCommand(trajectory2, driveBase)),
-                        new SequentialCommandGroup(
-                            new ParallelCommandGroup(
-                                new ToggleIntake(deployer),
-                                new RunIntakeWithConveyor(intake, conveyor)
-                            ),
-                                new WaitToShoot(driveBase, shooter, targetPose, 0.1, -0.8, HubType.UPPER),
-                                new AutoShootToIntake(conveyor, shooter, intake),
-                                // new WaitToShoot(driveBase, shooter, targetPose2, 0.5, 1.25, HubType.LOWER),
-                                new WaitToShoot(driveBase, shooter, targetPose2, 0.75, -0.9, HubType.UPPER),
-                                new ShootAllBalls(conveyor, shooter))), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
+                                getTrajectoryFollowerCommand(trajectory, driveBase))
+                                //getTrajectoryFollowerCommand(trajectory2, driveBase)),
+                        // new SequentialCommandGroup(
+                        //     new ParallelCommandGroup(
+                        //         new ToggleIntake(deployer),
+                        //         new RunIntakeWithConveyor(intake, conveyor)
+                        //     ),
+                        //         new WaitToShoot(driveBase, shooter, targetPose, 0.1, -0.8, HubType.UPPER),
+                        //         new AutoShootToIntake(conveyor, shooter, intake),
+                        //         // new WaitToShoot(driveBase, shooter, targetPose2, 0.5, 1.25, HubType.LOWER),
+                        //         new WaitToShoot(driveBase, shooter, targetPose2, 0.75, -0.9, HubType.UPPER),
+                        //         new ShootAllBalls(conveyor, shooter))
+                                ), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
                 new StopDriveBase(driveBase)
 
                 
@@ -108,8 +113,8 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     public void initialize() {
         super.initialize();
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
-        SmartDashboard.putNumber("Auton target x", targetPose.getX());
-        SmartDashboard.putNumber("Auton target y", targetPose.getY());
+        SmartDashboard.putNumber("Auton target x", targetPose2.getX());
+        SmartDashboard.putNumber("Auton target y", targetPose2.getY());
     }
 
     @Override

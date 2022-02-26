@@ -34,6 +34,7 @@ import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.math.filter.SlewRateLimiter;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -61,6 +62,8 @@ public class DriveBase extends HDrive {
   private NavX navXMicro;
 
   private DifferentialDrivePoseEstimator poseEstimator;
+
+  SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
 
   // Start pose variables
   public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
@@ -365,6 +368,8 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("currentX", getPose().getX());
     SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left 1 encoder", getLeftPositionTicks());
+    SmartDashboard.putNumber("right 1 encoder", getRightPositionTicks());
     SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
@@ -375,7 +380,7 @@ public class DriveBase extends HDrive {
     Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
-      poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
+      // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
       SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
       SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {
@@ -568,7 +573,7 @@ public class DriveBase extends HDrive {
   }
 
   public void setCenterDrive(double speed) {
-    middle.set(speed);
+    middle.set(limiter.calculate(speed));
   }
 
   public NavX getNavX() {
