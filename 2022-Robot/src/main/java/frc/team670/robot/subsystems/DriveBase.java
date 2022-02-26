@@ -368,6 +368,8 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("currentX", getPose().getX());
     SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left 1 encoder", getLeftPositionTicks());
+    SmartDashboard.putNumber("right 1 encoder", getRightPositionTicks());
     SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
@@ -378,7 +380,7 @@ public class DriveBase extends HDrive {
     Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
-      poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
+      // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
       SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
       SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {

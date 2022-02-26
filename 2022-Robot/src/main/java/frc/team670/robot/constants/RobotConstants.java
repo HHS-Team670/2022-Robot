@@ -51,12 +51,12 @@ public class RobotConstants extends RobotConstantsBase {
 
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
-        public static final double leftKsVolts = 0.4; //0.14709
-        public static final double leftKvVoltSecondsPerMeter = 2.0; //2.7426;
-        public static final double leftKaVoltSecondsSquaredPerMeter = 0.27; //0.35449;
+        public static final double leftKsVolts = 0.4; //0.14709; //0.4
+        public static final double leftKvVoltSecondsPerMeter = 2.7426; //2
+        public static final double leftKaVoltSecondsSquaredPerMeter = 0.333; //0.35449; //0.2
         public static final double rightKsVolts = leftKsVolts;
         public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
-        public static final double rightKaVoltSecondsSquaredPerMeter = 0.3; //leftKaVoltSecondsSquaredPerMeter;
+        public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
 
         // "WHEEL_BASE" is really track width
         public static final double kTrackwidthMeters = 0.702;
@@ -76,9 +76,9 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
                         kTrackwidthMeters);
-        public static final double leftKPDriveVel = 0.0; //2.29
+        public static final double leftKPDriveVel = 2.25;
         public static final double leftKIDriveVel = 0.00;
-        public static final double leftKDDriveVel = 0.0;
+        public static final double leftKDDriveVel = 0; //0.26
 
         public static final double rightKPDriveVel = leftKPDriveVel; //2.4;
         public static final double rightKIDriveVel = leftKIDriveVel; //0.00;
@@ -87,8 +87,8 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kMaxSpeedInchesPerSecond = 6;
         public static final double kMaxAccelerationInchesPerSecondSquared = 6;
 
-        public static final double kMaxSpeedMetersPerSecond = 0.25;// 1; //0.305;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.25;// 1; //0.305;
+        public static final double kMaxSpeedMetersPerSecond = 2;// 1; //0.305;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2;// 1; //0.305;
         public static final double endVelocityMetersPerSecond = 0;
 
         public static final double kMaxSpeedMetersPerSecond2 = 0.3;// 1; //0.305;
