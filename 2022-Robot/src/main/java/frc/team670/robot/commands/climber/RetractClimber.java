@@ -19,13 +19,14 @@ public class RetractClimber extends CommandBase implements MustangCommand{
   
   public RetractClimber(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
   }
 
   @Override
   public void initialize() {
-    climber.climb(0); //TODO: ask mech should be 0 or 1 ?
+    climber.retractToMinHeight();; //TODO: ask mech should be 0 or 1 ?
   }
 
 

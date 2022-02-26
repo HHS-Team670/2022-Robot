@@ -20,8 +20,8 @@ public class HookOnBar extends CommandBase implements MustangCommand {
 
   public HookOnBar(Climber climber) {
     this.climber = climber;
-
-    healthReqs = new HashMap<>();
+    addRequirements(climber);
+    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
   }
 
@@ -43,7 +43,6 @@ public class HookOnBar extends CommandBase implements MustangCommand {
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
     return healthReqs;
   }
 }

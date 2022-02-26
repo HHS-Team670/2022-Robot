@@ -16,12 +16,12 @@ import frc.team670.robot.subsystems.Climber;
 public class ExtendClimber extends CommandBase implements MustangCommand {
 
   private Climber climber;
-  // private boolean vertical;
   private HashMap<MustangSubsystemBase, HealthState> healthReqs;
 
   
   public ExtendClimber(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
   }
@@ -43,7 +43,6 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
     return healthReqs;
   }
 }

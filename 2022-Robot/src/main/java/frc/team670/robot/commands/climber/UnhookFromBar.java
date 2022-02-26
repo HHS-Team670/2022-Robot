@@ -19,6 +19,7 @@ public class UnhookFromBar extends CommandBase implements MustangCommand {
 
   public UnhookFromBar(Climber climber) {
     this.climber = climber;
+    addRequirements(climber);
 
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
