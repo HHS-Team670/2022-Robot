@@ -109,4 +109,8 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final int LED_LENGTH = 70;
 
+        // slew rate
+        public static final double HYPER_DRIVE_ACCELERATION_LIMIT = 10.0;
+        public static final double HYPER_DRIVE_DECCELERATION_LIMIT = 100.0;
+
 }
