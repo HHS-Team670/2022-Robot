@@ -10,10 +10,10 @@ public class RobotMap {
   public static final int OPERATOR_CONTROLLER_PORT = 1;
 
   // Drive Base
-  public static final int SPARK_LEFT_MOTOR_1 = 15; // These are properly set.
-  public static final int SPARK_LEFT_MOTOR_2 = 14;
-  public static final int SPARK_RIGHT_MOTOR_1 = 12;
-  public static final int SPARK_RIGHT_MOTOR_2 = 10;
+  public static final int SPARK_LEFT_MOTOR_1 = 10; // These are properly set.
+  public static final int SPARK_LEFT_MOTOR_2 = 12;
+  public static final int SPARK_RIGHT_MOTOR_1 = 15;
+  public static final int SPARK_RIGHT_MOTOR_2 = 14;
   public static final int SPARK_MIDDLE_MOTOR = 13;
   public final static SerialPort.Port NAVX_PORT = SerialPort.Port.kUSB;
 
@@ -27,8 +27,8 @@ public class RobotMap {
   public static final int INTAKE_CONVEYOR_MOTOR = 7;
   public static final int SHOOTER_CONVEYOR_MOTOR = 6;
 
-  public static final int INTAKE_CONVEYOR_BEAMBREAK = 1;
-  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 0;
+  public static final int INTAKE_CONVEYOR_BEAMBREAK = 9;
+  public static final int SHOOTER_CONVEYOR_BEAMBREAK = 8;
 
   // Climber
   public static final int CLIMBER_ONE = 3;
