@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.climber.ExtendClimber;
+import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.conveyor.StopConveyor;
 import frc.team670.robot.commands.deployer.ToggleIntake;
@@ -15,13 +17,13 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.LEDs;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.TelescopingClimber;
 import frc.team670.robot.subsystems.Vision;
 
 public class CheckSubsystems extends SequentialCommandGroup implements MustangCommand {

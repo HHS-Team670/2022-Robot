@@ -25,14 +25,17 @@ public class RetractClimber extends CommandBase implements MustangCommand{
 
   @Override
   public void initialize() {
-    climber.stop();
     climber.climb(0); //TODO: ask mech should be 0 or 1 ?
   }
 
 
   @Override
   public boolean isFinished() {
-    return climber.isAtTarget() && climber.reverseLimitSwitchTripped();
+    return climber.isAtTarget() || climber.reverseLimitSwitchTripped();
+  }
+
+  public void end() {
+    climber.stop();
   }
 
   @Override

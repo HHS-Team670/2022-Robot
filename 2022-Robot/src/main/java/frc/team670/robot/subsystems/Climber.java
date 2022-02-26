@@ -16,22 +16,21 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 
 public class Climber extends MustangSubsystemBase { // og telescoping
 
-    private double kP;
-    private double kI;
-    private double kD;
     private double kFF;
 
-    private double defaultPower = 0.25;
+    private double defaultPower = 0.05; // TODO find this, it's the power used when hooking climber
 
-    // SmartMotion constants 
-    // TODO: different for diagonal vs vertical?
-    private static final double MAX_ACC = 200; // TODO test
-    private static final double MIN_VEL = 0; // TODO test
-    private static final double MAX_VEL = 200; // TODO test
+    private final double MAX_ACC; 
+    private final double MIN_VEL; 
+    private final double MAX_VEL;
 
 
     private static final double ALLOWED_ERR = 3;
 
+
+    private static final double MIN_RUNNING_OUTPUT_CURRENT = 0.2; // TODO find this
+
+    // TODO find this
     private static final double NORMAL_OUTPUT = 6.5; // this should be the current output when running normally
 
     private int SMARTMOTION_SLOT = 0;
@@ -44,31 +43,31 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private int currentAtHookedCount;
 
-    public final double MOTOR_ROTATIONS_AT_RETRACTED;
-    public final double MOTOR_ROTATIONS_AT_MAX_EXTENSION;
+    private final double MOTOR_ROTATIONS_AT_RETRACTED;
+    private final double MOTOR_ROTATIONS_AT_MAX_EXTENSION;
 
     private final double SOFT_LIMIT_AT_RETRACTED;
     private final double SOFT_LIMIT_AT_EXTENSION;
 
     private final double ROTATIONS_PER_CM;
-    private final double HALF_CM;
+    private final double ROTATIONS_HALF_CM;
 
     private SparkMAXLite motor;
     private SparkMaxLimitSwitch limitSwitch;
 
-    public Climber(int motorId, int limitSwitchId, double p, double i, double d, double ff, double motorRotationsAtRetracted,
-            double motorRotationsAtMaxExtension, double rotationsPerCM) {
-        kP = p;
-        kI = i;
-        kD = d;
+    public Climber(int motorId, double ff, double motorRotationsAtRetracted,
+            double motorRotationsAtMaxExtension, double rotationsPerCM, double maxAcc, double maxVel, double minVel) {
         kFF = ff;
         this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
         this.MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
         this.SOFT_LIMIT_AT_RETRACTED = this.MOTOR_ROTATIONS_AT_RETRACTED + .5f;
         this.SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
+        this.MAX_ACC = maxAcc;
+        this.MAX_VEL = maxVel;
+        this.MIN_VEL = minVel;
 
         ROTATIONS_PER_CM = rotationsPerCM;
-        HALF_CM = 0.5 * ROTATIONS_PER_CM;
+        ROTATIONS_HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
         motor = SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kBrake);
@@ -78,12 +77,14 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         motor.setSoftLimit(SoftLimitDirection.kForward, (float)SOFT_LIMIT_AT_EXTENSION);
         motor.setSoftLimit(SoftLimitDirection.kReverse, (float)SOFT_LIMIT_AT_RETRACTED);
 
-        limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        // TODO kNormallyOpen or kNormallyClosed
+        // TODO reverse switch or forward?
+        limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen); 
 
         leadController = motor.getPIDController();
         leadEncoder = motor.getEncoder();
         leadEncoder.setPosition(this.MOTOR_ROTATIONS_AT_RETRACTED);
-        setDefaultPID();
+        setSmartMotionConstants();
 
         onBar = false;
         target = 0.0;
@@ -94,10 +95,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         SmartDashboard.putNumber("Climber rotation target", 0);
     }
 
-    public void setDefaultPID() {
-        leadController.setP(kP);
-        leadController.setI(kI);
-        leadController.setD(kD);
+    public void setSmartMotionConstants() {
         leadController.setFF(kFF);
         leadController.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
         leadController.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
@@ -111,7 +109,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         }
 
         if (!onBar) {
-            motor.set(-1 * defaultPower);
+            motor.set(-defaultPower);
         }
     }
 
@@ -123,9 +121,9 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     }
 
     private boolean isHooked() {
-        double current = motor.getOutputCurrent();
-        if (current > 0.2) {
-            if (current >= NORMAL_OUTPUT) {
+        double current = getMotorCurrent();
+        if (current > MIN_RUNNING_OUTPUT_CURRENT) { // TODO do we need this check?
+            if (current >= NORMAL_OUTPUT) { 
                 currentAtHookedCount++;
             } else {
                 currentAtHookedCount = 0;
@@ -149,6 +147,14 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
     }
 
+    public void climbToMaxHeight() {
+        climb(MOTOR_ROTATIONS_AT_MAX_EXTENSION);
+    }
+
+    public void retractToMinHeight() {
+        climb(MOTOR_ROTATIONS_AT_RETRACTED);
+    }
+
     public HealthState checkHealth() {
         if ((motor == null || motor.getLastError() != REVLibError.kOk)) {
                 return HealthState.RED;
@@ -157,7 +163,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     }
 
     public boolean isAtTarget() {
-        return (Math.abs(leadEncoder.getPosition() - target) < HALF_CM);
+        return (Math.abs(leadEncoder.getPosition() - target) < ROTATIONS_HALF_CM);
     }
 
     public boolean reverseLimitSwitchTripped() {
@@ -183,13 +189,11 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     @Override
     public void mustangPeriodic() {
-        // TODO Auto-generated method stub
-
+        
     }
 
     @Override
     public void debugSubsystem() {
-        // TODO Auto-generated method stub
 
     }
 

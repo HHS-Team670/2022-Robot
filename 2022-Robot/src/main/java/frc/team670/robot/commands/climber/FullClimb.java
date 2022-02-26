@@ -10,8 +10,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.ClimberSystem;
 
 /**
- * Once the driver aligns the back wheels to the bars under the hangar 
- * and drives straight to align with the climbing bar, this climbs on to the high bar.
+ * Once the driver aligns with the mid bar, climbs to the mid bar. It then climbs
+ to the high bar from the mid bar, letting go of the mid bar.
  */
 public class FullClimb extends SequentialCommandGroup implements MustangCommand {
   

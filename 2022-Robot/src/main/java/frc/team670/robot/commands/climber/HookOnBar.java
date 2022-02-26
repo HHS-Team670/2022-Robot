@@ -26,8 +26,7 @@ public class HookOnBar extends CommandBase implements MustangCommand {
   }
 
   @Override
-  public void initialize() {
-    climber.stop();
+  public void execute() {
     climber.hookOnBar();
   }
 
@@ -35,6 +34,12 @@ public class HookOnBar extends CommandBase implements MustangCommand {
   public boolean isFinished() {
     return climber.isHookedOnBar();
   }
+
+  public void end() {
+    climber.stop();
+  }
+
+
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {

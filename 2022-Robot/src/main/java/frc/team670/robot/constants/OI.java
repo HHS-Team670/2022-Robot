@@ -2,14 +2,12 @@ package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
-import frc.team670.mustanglib.commands.vision.SetVisionLEDs;
 import frc.team670.mustanglib.commands.vision.ToggleLEDs;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climber.ExtendClimber;
-import frc.team670.robot.commands.climber.FullClimb;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
@@ -36,7 +34,7 @@ public class OI extends OIBase {
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
-  private static JoystickButton fullClimb = new JoystickButton(getOperatorController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
+  // private static JoystickButton fullClimb = new JoystickButton(getOperatorController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
   private static JoystickButton testExtendClimber = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
 
   // driver controls
@@ -81,7 +79,7 @@ public class OI extends OIBase {
     Vision vision = (Vision) subsystemBases [5];
     ClimberSystem climberSystem = (ClimberSystem) subsystemBases[6];
 
-    fullClimb.whenPressed(new FullClimb(climberSystem));
+    // fullClimb.whenPressed(new FullClimb(climberSystem));
 
     testExtendClimber.whenPressed(new ExtendClimber(climberSystem.getVerticalClimber()));
 
