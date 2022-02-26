@@ -52,7 +52,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
-  private static Climber climber = new Climber();
+  private static ClimberSystem climberSystem = new ClimberSystem();
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
@@ -64,7 +64,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, climber);
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, climberSystem);
   }
 
   public void robotInit() {

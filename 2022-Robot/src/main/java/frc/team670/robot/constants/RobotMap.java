@@ -42,8 +42,5 @@ public class RobotMap {
   // leds
   public static final int LED_PORT = 9;
 
-public static final int DIAGONAL_CLIMBER_LIMIT_SWITCH = 0;
-
-public static final int VERTICAL_CLIMBER_LIMIT_SWITCH = 0;
 
 }
