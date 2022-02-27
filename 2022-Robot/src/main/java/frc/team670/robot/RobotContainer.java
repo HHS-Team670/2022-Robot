@@ -7,6 +7,8 @@
 
 package frc.team670.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -22,7 +24,8 @@ import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberContainer;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
@@ -44,7 +47,9 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
-  private static ClimberSystem climberSystem = new ClimberSystem();
+  private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
+  private static Climber verticalClimber = climbers.get(0);
+  private static Climber diagonalClimber = climbers.get(1);
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
@@ -56,7 +61,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, climberSystem);
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber);
   }
 
   public void robotInit() {

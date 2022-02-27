@@ -18,14 +18,14 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private double kFF;
 
-    private double defaultPower = 0.05; // TODO find this, it's the power used when hooking climber
+    private static final double HOOKING_POWER = 0.05; // TODO find this, it's the power used when hooking climber
 
     private final double MAX_ACC; 
     private final double MIN_VEL; 
     private final double MAX_VEL;
 
 
-    private static final double ALLOWED_ERR = 3;
+    private static final double ALLOWED_ERR_ROTATIONS = 3;
 
 
     private static final double MIN_RUNNING_OUTPUT_CURRENT = 0.2; // TODO find this
@@ -45,6 +45,14 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private final double MOTOR_ROTATIONS_AT_RETRACTED;
     private final double MOTOR_ROTATIONS_AT_MAX_EXTENSION;
+
+    private final double LOW_BAR_HEIGHT_CM = 124;
+    private final double MID_BAR_HEIGHT_CM = 153;
+
+    private final double EXTENSION_DIST_ABOVE_BAR_CM = 15.24; // half a foot
+
+    private final double LOW_BAR_TARGET_HEIGHT_CM = LOW_BAR_HEIGHT_CM + EXTENSION_DIST_ABOVE_BAR_CM;
+    private final double MID_BAR_TARGET_HEIGHT_CM = MID_BAR_HEIGHT_CM + EXTENSION_DIST_ABOVE_BAR_CM;
 
     private final double SOFT_LIMIT_AT_RETRACTED;
     private final double SOFT_LIMIT_AT_EXTENSION;
@@ -100,7 +108,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         leadController.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
         leadController.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
         leadController.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
-        leadController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
+        leadController.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR_ROTATIONS, this.SMARTMOTION_SLOT);
     }
 
     public void hookOnBar() {
@@ -109,13 +117,13 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         }
 
         if (!onBar) {
-            motor.set(-defaultPower);
+            motor.set(-HOOKING_POWER);
         }
     }
 
     public void unhookFromBar() {
         if (onBar) {
-            motor.set(defaultPower);
+            motor.set(HOOKING_POWER);
             onBar = false;
         }
     }
@@ -147,12 +155,20 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
     }
 
-    public void climbToMaxHeight() {
-        climb(MOTOR_ROTATIONS_AT_MAX_EXTENSION);
-    }
-
     public void retractToMinHeight() {
         climb(MOTOR_ROTATIONS_AT_RETRACTED);
+    }
+
+    public void climbToHeight(String barType) {
+        switch(barType) {
+            case "low":
+                climb(LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
+            case "mid":
+                climb(MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
+            case "high":
+                climb(MOTOR_ROTATIONS_AT_MAX_EXTENSION);
+        }
+
     }
 
     public HealthState checkHealth() {

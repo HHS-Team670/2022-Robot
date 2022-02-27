@@ -9,12 +9,11 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climber.ExtendClimber;
 import frc.team670.robot.commands.deployer.ToggleIntake;
-import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
-import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
@@ -77,18 +76,18 @@ public class OI extends OIBase {
     Intake intake = (Intake) subsystemBases[3];
     Deployer deployer = (Deployer) subsystemBases [4];
     Vision vision = (Vision) subsystemBases [5];
-    ClimberSystem climberSystem = (ClimberSystem) subsystemBases[6];
+    Climber verticalClimber = (Climber) subsystemBases[6];
+    Climber diagonalClimber = (Climber) subsystemBases[7];
 
     // fullClimb.whenPressed(new FullClimb(climberSystem));
 
-    testExtendClimber.whenPressed(new ExtendClimber(climberSystem.getVerticalClimber()));
+    testExtendClimber.whenPressed(new ExtendClimber(verticalClimber, "Mid"));
 
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
     triggerIntaking.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem, deployer));
 
-    stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
 
     shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
     stopShooter.whenPressed((new StopShooter(shooter)));

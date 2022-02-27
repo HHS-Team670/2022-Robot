@@ -10,7 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Climber;
 
 /**
- * Moves the climber slowly down until it hooks on the generator bar. 
+ * Moves the climber slowly up until it unhooks from the generator bar. 
  */
 public class UnhookFromBar extends CommandBase implements MustangCommand {
 
@@ -35,9 +35,12 @@ public class UnhookFromBar extends CommandBase implements MustangCommand {
     return !climber.isHookedOnBar();
   }
 
+  public void end() {
+    climber.stop();
+  }
+
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
     return healthReqs;
   }
 }

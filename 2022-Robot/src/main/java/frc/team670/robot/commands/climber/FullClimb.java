@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.Climber;
 
 /**
  * Once the driver aligns with the mid bar, climbs to the mid bar. It then climbs
@@ -17,18 +17,19 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
   
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  public FullClimb(ClimberSystem climberSystem) {
-    addRequirements(climberSystem);
+  public FullClimb(Climber verticalClimber, Climber diagonalClimber) {
+    addRequirements(verticalClimber, diagonalClimber);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-    healthReqs.put(climberSystem, HealthState.GREEN);
+    healthReqs.put(verticalClimber, HealthState.GREEN);
+    healthReqs.put(diagonalClimber, HealthState.GREEN);
 
     addCommands(
-      new ExtendClimber(climberSystem.getVerticalClimber()),
-      new HookOnBar(climberSystem.getVerticalClimber()),
-      new RetractClimber(climberSystem.getVerticalClimber()),
-      new ExtendClimber(climberSystem.getDiagonalClimber()),
-      new HookOnBar(climberSystem.getDiagonalClimber()),
-      new RetractClimber(climberSystem.getDiagonalClimber()));
+      new ExtendClimber(verticalClimber, "Mid"),
+      new HookOnBar(verticalClimber), // TODO do we need? find out
+      new RetractClimber(verticalClimber),
+      new ExtendClimber(diagonalClimber, "High"),
+      new HookOnBar(diagonalClimber),
+      new RetractClimber(diagonalClimber));
   }
 
   @Override
