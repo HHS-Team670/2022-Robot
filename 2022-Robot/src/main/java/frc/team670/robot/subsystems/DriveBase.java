@@ -137,6 +137,7 @@ public class DriveBase extends HDrive {
     ); //vision
     
     initBrakeMode();
+    middle.setIdleMode(IdleMode.kCoast);
   }
 
   /**
@@ -573,7 +574,7 @@ public class DriveBase extends HDrive {
   }
 
   public void setCenterDrive(double speed) {
-    middle.set(speed);
+    middle.set(0);
   }
 
   public NavX getNavX() {
