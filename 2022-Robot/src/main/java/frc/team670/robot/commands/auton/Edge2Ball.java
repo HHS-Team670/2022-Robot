@@ -61,7 +61,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         
         WaitToShoot waitCommand;
         if(hubType == HubType.UPPER)
-            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, HubType.UPPER);
+            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.93, HubType.UPPER);
         else
             waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2.4, HubType.LOWER);
 

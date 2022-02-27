@@ -573,7 +573,7 @@ public class DriveBase extends HDrive {
   }
 
   public void setCenterDrive(double speed) {
-    middle.set(limiter.calculate(speed));
+    middle.set(speed);
   }
 
   public NavX getNavX() {

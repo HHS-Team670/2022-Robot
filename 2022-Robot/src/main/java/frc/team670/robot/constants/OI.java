@@ -85,7 +85,8 @@ public class OI extends OIBase {
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
 
-    turnVisionLEDsOn.whenPressed(new ToggleLEDs(vision));
+    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
+    turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }
