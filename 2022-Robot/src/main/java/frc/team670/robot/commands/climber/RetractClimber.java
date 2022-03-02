@@ -15,10 +15,12 @@ import frc.team670.robot.subsystems.Climber;
 public class RetractClimber extends CommandBase implements MustangCommand{
 
   private Climber climber;
+  private boolean isAuto;
   private HashMap<MustangSubsystemBase, HealthState> healthReqs;
   
-  public RetractClimber(Climber climber) {
+  public RetractClimber(Climber climber, boolean isAuto) {
     this.climber = climber;
+    this.isAuto = isAuto;
     addRequirements(climber);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
@@ -32,7 +34,11 @@ public class RetractClimber extends CommandBase implements MustangCommand{
 
   @Override
   public boolean isFinished() {
-    return climber.isAtTarget() || climber.reverseLimitSwitchTripped();
+    if (isAuto) {
+      return climber.reverseLimitSwitchTripped();
+    } else {
+      return climber.isAtTarget() || climber.reverseLimitSwitchTripped();
+    }
   }
 
   public void end() {

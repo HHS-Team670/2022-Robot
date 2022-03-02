@@ -26,10 +26,10 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
     addCommands(
       new ExtendClimber(verticalClimber, Climber.Level.MID),
       new HookOnBar(verticalClimber), // TODO do we need? find out
-      new RetractClimber(verticalClimber),
+      new RetractClimber(verticalClimber, false),
       new ExtendClimber(diagonalClimber, Climber.Level.HIGH),
       new HookOnBar(diagonalClimber),
-      new RetractClimber(diagonalClimber));
+      new RetractClimber(diagonalClimber, false));
   }
 
   @Override

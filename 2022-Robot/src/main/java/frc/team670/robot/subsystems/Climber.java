@@ -36,6 +36,8 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     // TODO find this
     private static final double NORMAL_OUTPUT = 6.5; // this should be the current output when running normally
 
+    private static final double VERTICAL_RETRACTED_HEIGHT_CM = 93.98;
+
     private int SMARTMOTION_SLOT = 0;
 
     private SparkMaxPIDController leadController;
@@ -167,9 +169,9 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     public void climbToHeight(Level barType) {
         switch(barType) {
             case LOW:
-                climb(LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
+                climb(LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM - VERTICAL_RETRACTED_HEIGHT_CM * ROTATIONS_PER_CM);
             case MID:
-                climb(MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
+                climb(MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM - VERTICAL_RETRACTED_HEIGHT_CM * ROTATIONS_PER_CM);
             case HIGH:
                 climb(MOTOR_ROTATIONS_AT_MAX_EXTENSION);
         }
