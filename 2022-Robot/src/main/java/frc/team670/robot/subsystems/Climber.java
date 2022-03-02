@@ -16,6 +16,9 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 
 public class Climber extends MustangSubsystemBase { // og telescoping
 
+    public enum Level{
+        LOW, MID, HIGH
+    }
     private double kFF;
 
     private static final double HOOKING_POWER = 0.05; // TODO find this, it's the power used when hooking climber
@@ -159,13 +162,13 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         climb(MOTOR_ROTATIONS_AT_RETRACTED);
     }
 
-    public void climbToHeight(String barType) {
+    public void climbToHeight(Level barType) {
         switch(barType) {
-            case "low":
+            case LOW:
                 climb(LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
-            case "mid":
+            case MID:
                 climb(MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM);
-            case "high":
+            case HIGH:
                 climb(MOTOR_ROTATIONS_AT_MAX_EXTENSION);
         }
 

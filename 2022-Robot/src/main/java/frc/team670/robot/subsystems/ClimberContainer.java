@@ -64,5 +64,13 @@ public class ClimberContainer {
 
             
     }
+
+    public static Climber getVerticalClimber(){
+        return getClimbers().get(0);
+    }
+
+    public static Climber getDiaogonaClimber(){
+        return getClimbers().get(1);
+    }
 }
 
