@@ -51,11 +51,13 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private final double LOW_BAR_HEIGHT_CM = 124;
     private final double MID_BAR_HEIGHT_CM = 153;
+    //private final double HIGH_BAR_HEIGHT_CM = 192;
 
     private final double EXTENSION_DIST_ABOVE_BAR_CM = 15.24; // half a foot
 
     private final double LOW_BAR_TARGET_HEIGHT_CM = LOW_BAR_HEIGHT_CM + EXTENSION_DIST_ABOVE_BAR_CM;
     private final double MID_BAR_TARGET_HEIGHT_CM = MID_BAR_HEIGHT_CM + EXTENSION_DIST_ABOVE_BAR_CM;
+    //private final double HIGH_BAR_TARGET_HEIGHT_CM = HIGH_BAR_HEIGHT_CM + EXTENSION_DIST_ABOVE_BAR_CM;
 
     private final double SOFT_LIMIT_AT_RETRACTED;
     private final double SOFT_LIMIT_AT_EXTENSION;

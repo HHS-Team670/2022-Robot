@@ -24,10 +24,10 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
     healthReqs.put(diagonalClimber, HealthState.GREEN);
 
     addCommands(
-      new ExtendClimber(verticalClimber, "Mid"),
+      new ExtendClimber(verticalClimber, Climber.Level.MID),
       new HookOnBar(verticalClimber), // TODO do we need? find out
       new RetractClimber(verticalClimber),
-      new ExtendClimber(diagonalClimber, "High"),
+      new ExtendClimber(diagonalClimber, Climber.Level.HIGH),
       new HookOnBar(diagonalClimber),
       new RetractClimber(diagonalClimber));
   }
