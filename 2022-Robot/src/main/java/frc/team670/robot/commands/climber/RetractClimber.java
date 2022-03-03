@@ -36,9 +36,6 @@ public class RetractClimber extends CommandBase implements MustangCommand{
     }
   }
 
-
-
-
   @Override
   public boolean isFinished() {
     if (zeroClimber) {

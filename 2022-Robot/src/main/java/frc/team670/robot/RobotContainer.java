@@ -7,8 +7,6 @@
 
 package frc.team670.robot;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
