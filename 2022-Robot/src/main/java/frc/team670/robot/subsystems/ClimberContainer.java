@@ -53,9 +53,8 @@ public class ClimberContainer {
     public static final double DIAGONAL_ROTATIONS_PER_CM = DIAGONAL_MOTOR_ROTATIONS_PER_SPOOL_ROTATION
             / SPOOL_CIRCUMFERENCE_CM;
     public static final double DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    public static final double DIAGONAL_CLIMBER_CM_TO_FULL_EXTENSION = -128;
-    public static final double DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = DIAGONAL_ROTATIONS_PER_CM
-            * DIAGONAL_CLIMBER_CM_TO_FULL_EXTENSION;
+    public static final double DIAGONAL_CLIMBER_CM_TO_FULL_EXTENSION = 79.2325;
+    public static final double DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = -128;
 
     // TODO find this, it's basically how much gap you want to leave when partially
     // deploying the diagonal climber at the same time as vertical to save time
