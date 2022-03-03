@@ -8,6 +8,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climber.ExtendClimber;
+import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
@@ -33,11 +34,12 @@ public class OI extends OIBase {
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
-  // private static JoystickButton fullClimb = new JoystickButton(getOperatorController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
-  private static JoystickButton testExtendClimber = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
 
   // driver controls
-  private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton extendVerticalClimber = new JoystickButton(getOperatorController(), XboxButtons.Y);
+  private static JoystickButton retractVerticalClimber = new JoystickButton(getOperatorController(), XboxButtons.A);
+  private static JoystickButton extendDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
   private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B); //TODO: make this be used
   //private static JoystickButton resetNavx = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
@@ -81,10 +83,6 @@ public class OI extends OIBase {
 
     // fullClimb.whenPressed(new FullClimb(climberSystem));
 
-    testExtendClimber.whenPressed(new ExtendClimber(verticalClimber, "Mid"));
-
-    toggleReverseDrive.whenPressed(new FlipDriveDirection());
-
     triggerIntaking.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem, deployer));
 
@@ -95,6 +93,12 @@ public class OI extends OIBase {
     toggleIntake.whenPressed(new ToggleIntake(deployer));
 
     turnVisionLEDsOn.whenPressed(new ToggleLEDs(vision));
+
+    extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.MID));
+    retractVerticalClimber.whenPressed(new RetractClimber(verticalClimber, false));
+
+    extendDiagonalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.HIGH));
+    retractDiagonalClimber.whenPressed(new RetractClimber(verticalClimber, false));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }

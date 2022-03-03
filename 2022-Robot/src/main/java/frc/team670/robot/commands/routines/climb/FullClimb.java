@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.climber;
+package frc.team670.robot.commands.routines.climb;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.climber.ExtendClimber;
+import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.subsystems.Climber;
 
 /**
@@ -29,10 +31,8 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
         new ExtendClimber(verticalClimber, Climber.Level.MID),
         new ExtendClimber(diagonalClimber, Climber.Level.INTERMEDIATE_HIGH)
       ),
-      new HookOnBar(verticalClimber), // TODO do we need? find out
       new RetractClimber(verticalClimber, false), // TODO find actual retraction amount
       new ExtendClimber(diagonalClimber, Climber.Level.HIGH), // finish extending diagonal
-      new HookOnBar(diagonalClimber),
       new RetractClimber(diagonalClimber, false));
   }
 
