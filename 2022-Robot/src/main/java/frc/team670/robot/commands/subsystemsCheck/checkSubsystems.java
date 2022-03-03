@@ -60,11 +60,11 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
                 new StartShooter(shooter),
                 new StopShooter(shooter),
 
-                new ExtendClimber(verticalClimber),
-                new RetractClimber(verticalClimber),
+                new ExtendClimber(verticalClimber, Climber.Level.MID),
+                new RetractClimber(verticalClimber, false),
 
-                new ExtendClimber(climberSystem.getDiagonalClimber()),
-                new RetractClimber(climberSystem.getDiagonalClimber())
+                new ExtendClimber(diagonalClimber, Climber.Level.HIGH),
+                new RetractClimber(diagonalClimber, false)
 
         );
     }

@@ -49,7 +49,7 @@ public class RobotContainer extends RobotContainerBase {
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
   // private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
   private static Climber verticalClimber = ClimberContainer.getVerticalClimber();
-  private static Climber diagonalClimber = ClimberContainer.getDiaogonaClimber();
+  private static Climber diagonalClimber = ClimberContainer.getDiagonalClimber();
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,

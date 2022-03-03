@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 
@@ -20,6 +21,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         LOW, MID, HIGH
     }
     private double kFF;
+    private double kP;
 
     private static final double HOOKING_POWER = 0.05; // TODO find this, it's the power used when hooking climber
 
@@ -67,12 +69,15 @@ public class Climber extends MustangSubsystemBase { // og telescoping
     private final double ROTATIONS_PER_CM;
     private final double ROTATIONS_HALF_CM;
 
+    private final double MOTOR_ID;
+
     private SparkMAXLite motor;
     private SparkMaxLimitSwitch limitSwitch;
 
-    public Climber(int motorId, double ff, double motorRotationsAtRetracted,
+    public Climber(int motorId, double ff, double p, double motorRotationsAtRetracted,
             double motorRotationsAtMaxExtension, double rotationsPerCM, double maxAcc, double maxVel, double minVel) {
         kFF = ff;
+        kP = p;
         this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
         this.MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
         this.SOFT_LIMIT_AT_RETRACTED = this.MOTOR_ROTATIONS_AT_RETRACTED + .5f;
@@ -80,13 +85,13 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         this.MAX_ACC = maxAcc;
         this.MAX_VEL = maxVel;
         this.MIN_VEL = minVel;
+        this.MOTOR_ID = motorId;
 
         ROTATIONS_PER_CM = rotationsPerCM;
         ROTATIONS_HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
         motor = SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kBrake);
-        motor.setInverted(true);
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         motor.setSoftLimit(SoftLimitDirection.kForward, (float)SOFT_LIMIT_AT_EXTENSION);
@@ -94,7 +99,8 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
         // TODO kNormallyOpen or kNormallyClosed
         // TODO reverse switch or forward?
-        limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen); 
+        limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+        limitSwitch.enableLimitSwitch(true); 
 
         leadController = motor.getPIDController();
         leadEncoder = motor.getEncoder();
@@ -112,6 +118,7 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     public void setSmartMotionConstants() {
         leadController.setFF(kFF);
+        leadController.setP(kP);
         leadController.setSmartMotionMaxVelocity(MAX_VEL, this.SMARTMOTION_SLOT);
         leadController.setSmartMotionMinOutputVelocity(MIN_VEL, this.SMARTMOTION_SLOT);
         leadController.setSmartMotionMaxAccel(MAX_ACC, this.SMARTMOTION_SLOT);
@@ -124,8 +131,12 @@ public class Climber extends MustangSubsystemBase { // og telescoping
         }
 
         if (!onBar) {
-            motor.set(-HOOKING_POWER);
+            run(-HOOKING_POWER);
         }
+    }
+
+    public void run(double power) {
+        motor.set(power);
     }
 
     public void unhookFromBar() {
@@ -137,7 +148,6 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     private boolean isHooked() {
         double current = getMotorCurrent();
-        if (current > MIN_RUNNING_OUTPUT_CURRENT) { // TODO do we need this check?
             if (current >= NORMAL_OUTPUT) { 
                 currentAtHookedCount++;
             } else {
@@ -146,7 +156,6 @@ public class Climber extends MustangSubsystemBase { // og telescoping
             if (currentAtHookedCount >= 4) { // 4 consecutive readings higher than peak
                 return true;
             }
-        }
         return false;
 
     }
@@ -158,11 +167,17 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     public void climb(double rotations) {
         target = rotations;
-        SmartDashboard.putNumber("Climber rotation target", rotations);
+        if (MOTOR_ID == RobotMap.VERTICAL_CLIMBER) {
+            SmartDashboard.putNumber("Vertical climber rotation target", rotations);
+        } else {
+            SmartDashboard.putNumber("Diagonal climber rotation target", rotations);
+        }
         leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
     }
 
-    public void retractToMinHeight() {
+
+
+    public void retract() {
         climb(MOTOR_ROTATIONS_AT_RETRACTED);
     }
 
@@ -212,7 +227,9 @@ public class Climber extends MustangSubsystemBase { // og telescoping
 
     @Override
     public void mustangPeriodic() {
-        
+        if (reverseLimitSwitchTripped()) {
+            leadEncoder.setPosition(0);
+        }
     }
 
     @Override
