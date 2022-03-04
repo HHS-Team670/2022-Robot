@@ -45,7 +45,7 @@ public class Climber extends MustangSubsystemBase {
     private final double ROTATIONS_PER_CM;
     private final double ROTATIONS_HALF_CM;
 
-    private final double MOTOR_ID;
+    private final int MOTOR_ID;
 
     private SparkMAXLite motor;
     private SparkMaxLimitSwitch limitSwitch;
@@ -65,7 +65,7 @@ public class Climber extends MustangSubsystemBase {
      * @param minVel Minimum velocity the climber can take
      */
     public Climber(int motorId, double ff, double p, boolean isReversed, double motorRotationsAtRetracted,
-            double motorRotationsAtMaxExtension, double rotationsPerCM, double maxAcc, double maxVel, double minVel) {
+            double motorRotationsAtMaxExtension, double rotationsPerCM, double maxAcc, double minVel, double maxVel) {
         
                 this.kFF = ff;
         this.kP = p;
@@ -86,16 +86,18 @@ public class Climber extends MustangSubsystemBase {
         motor.setIdleMode(IdleMode.kBrake);
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        motor.setSoftLimit(SoftLimitDirection.kForward, (float) SOFT_LIMIT_AT_EXTENSION);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFT_LIMIT_AT_RETRACTED);
-
+       
         if (!isReversed) {
             limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+            // motor.setSoftLimit(SoftLimitDirection.kForward, (float) SOFT_LIMIT_AT_EXTENSION);
+            // motor.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFT_LIMIT_AT_RETRACTED);
+            limitSwitch.enableLimitSwitch(true);
         } else {
             limitSwitch = motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-
+            // motor.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFT_LIMIT_AT_EXTENSION);
+            // motor.setSoftLimit(SoftLimitDirection.kForward, (float) SOFT_LIMIT_AT_RETRACTED);
         }
-        limitSwitch.enableLimitSwitch(true);
+
 
         leadController = motor.getPIDController();
         leadEncoder = motor.getEncoder();
@@ -109,8 +111,8 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public void setSmartMotionConstants() {
-        leadController.setFF(kFF);
-        leadController.setP(kP);
+        leadController.setFF(kFF, ClimberContainer.SMARTMOTION_SLOT);
+        leadController.setP(kP, ClimberContainer.SMARTMOTION_SLOT);
         leadController.setSmartMotionMaxVelocity(MAX_VEL, ClimberContainer.SMARTMOTION_SLOT);
         leadController.setSmartMotionMinOutputVelocity(MIN_VEL, ClimberContainer.SMARTMOTION_SLOT);
         leadController.setSmartMotionMaxAccel(MAX_ACC, ClimberContainer.SMARTMOTION_SLOT);
@@ -162,7 +164,7 @@ public class Climber extends MustangSubsystemBase {
     public void climb(double rotations) {
         target = rotations;
         Logger.consoleLog("Climber with Motor ID %s rotation target %s", MOTOR_ID, rotations);
-        leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion);
+        leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion, ClimberContainer.SMARTMOTION_SLOT);
     }
 
     // is called when retracting c1 just enough so c2 can extend in the right
@@ -199,7 +201,7 @@ public class Climber extends MustangSubsystemBase {
         return (Math.abs(leadEncoder.getPosition() - target) < ROTATIONS_HALF_CM);
     }
 
-    public boolean reverseLimitSwitchTripped() {
+    public boolean isLimitSwitchTripped() {
         return limitSwitch.isPressed();
     }
 
@@ -222,9 +224,11 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        if (reverseLimitSwitchTripped()) {
+        if (isLimitSwitchTripped()) {
             leadEncoder.setPosition(0);
         }
+        debugSubsystem();
+        SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
     }
 
     @Override

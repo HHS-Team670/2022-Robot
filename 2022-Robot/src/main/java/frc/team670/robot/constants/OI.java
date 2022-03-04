@@ -36,8 +36,8 @@ public class OI extends OIBase {
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
 
   // driver controls
-  private static JoystickButton extendVerticalClimber = new JoystickButton(getOperatorController(), XboxButtons.Y);
-  private static JoystickButton retractVerticalClimber = new JoystickButton(getOperatorController(), XboxButtons.A);
+  private static JoystickButton extendVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.Y);
+  private static JoystickButton retractVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.A);
   private static JoystickButton extendDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
@@ -97,8 +97,8 @@ public class OI extends OIBase {
     extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.MID));
     retractVerticalClimber.whenPressed(new RetractClimber(verticalClimber, false));
 
-    extendDiagonalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.HIGH));
-    retractDiagonalClimber.whenPressed(new RetractClimber(verticalClimber, false));
+    extendDiagonalClimber.whenPressed(new ExtendClimber(diagonalClimber, Climber.Level.HIGH));
+    retractDiagonalClimber.whenPressed(new RetractClimber(diagonalClimber, false));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }

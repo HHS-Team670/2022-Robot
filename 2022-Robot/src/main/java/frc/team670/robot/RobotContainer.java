@@ -111,7 +111,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void teleopInit() {
     leds.setIsDisabled(false);
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber, diagonalClimber);
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
