@@ -6,7 +6,7 @@ public class ClimberContainer {
 
     public static final double HOOKING_POWER = 0.3; // power used when hooking climber
 
-    public static final double ALLOWED_ERR_ROTATIONS = 3;
+    public static final double ALLOWED_ERR_ROTATIONS = 0.05;
 
     // TODO find this, hopefully same for both c1 and c2?
     public static final double NORMAL_OUTPUT = 6.5; // this should be the current output when running normally
@@ -40,15 +40,15 @@ public class ClimberContainer {
     public static final double VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 108; // actually 109, from 3/1 testing
 
     // SmartMotion constants
-    public static final double MAX_ACC = 5676;
-    public static final double MAX_VEL = 5676;
+    public static final double MAX_ACC = 3000;
+    public static final double MAX_VEL = 3000;
     public static final double MIN_VEL = 0;
 
-    public static final double VERTICAL_kFF = 0.000176;
-    public static final double VERTICAL_kP = 0.00001;
+    public static final double VERTICAL_kFF = 0.00017618;
+    public static final double VERTICAL_kP = 0.00002;
 
-    public static final double DIAGONAL_kFF = 0.000176;
-    public static final double DIAGONAL_kP = 0.00001;
+    public static final double DIAGONAL_kFF = 0.00017618;
+    public static final double DIAGONAL_kP = 0.00002;
 
     public static final double DIAGONAL_ROTATIONS_PER_CM = DIAGONAL_MOTOR_ROTATIONS_PER_SPOOL_ROTATION
             / SPOOL_CIRCUMFERENCE_CM;

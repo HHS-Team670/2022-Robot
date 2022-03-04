@@ -84,8 +84,10 @@ public class Climber extends MustangSubsystemBase {
 
         motor = SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kBrake);
-        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        motor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+
+        motor.setSmartCurrentLimit(85);
        
         if (!isReversed) {
             limitSwitch = motor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
@@ -94,6 +96,7 @@ public class Climber extends MustangSubsystemBase {
             limitSwitch.enableLimitSwitch(true);
         } else {
             limitSwitch = motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+            limitSwitch.enableLimitSwitch(false);
             // motor.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFT_LIMIT_AT_EXTENSION);
             // motor.setSoftLimit(SoftLimitDirection.kForward, (float) SOFT_LIMIT_AT_RETRACTED);
         }
@@ -224,9 +227,9 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        if (isLimitSwitchTripped()) {
-            leadEncoder.setPosition(0);
-        }
+        // if (isLimitSwitchTripped()) {
+        //     leadEncoder.setPosition(0);
+        // }
         debugSubsystem();
         SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
     }
