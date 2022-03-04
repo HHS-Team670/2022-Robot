@@ -1,7 +1,9 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.team670.mustanglib.commands.drive.teleop.ResetNavX;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
+import frc.team670.mustanglib.commands.vision.SetVisionLEDs;
 import frc.team670.mustanglib.commands.vision.ToggleLEDs;
 import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -41,8 +43,8 @@ public class OI extends OIBase {
   private static JoystickButton extendDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
-  private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B); //TODO: make this be used
-  //private static JoystickButton resetNavx = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B);
+  private static JoystickButton resetNavx = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
   private DriveBase driveBase;
 
@@ -92,7 +94,8 @@ public class OI extends OIBase {
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
 
-    turnVisionLEDsOn.whenPressed(new ToggleLEDs(vision));
+    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
+    turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
 
     extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.MID));
     retractVerticalClimber.whenPressed(new RetractClimber(verticalClimber, false));

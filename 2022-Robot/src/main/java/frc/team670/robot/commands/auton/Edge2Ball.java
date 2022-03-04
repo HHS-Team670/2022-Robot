@@ -61,7 +61,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         
         WaitToShoot waitCommand;
         if(hubType == HubType.UPPER)
-            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, HubType.UPPER);
+            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.93, HubType.UPPER);
         else
             waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2.4, HubType.LOWER);
 
@@ -69,10 +69,10 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
             new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
                 new SequentialCommandGroup( 
-                    new ParallelCommandGroup(
-                        new ToggleIntake(deployer),
-                        new RunIntakeWithConveyor(intake, conveyor)
-                    ),
+                    // new ParallelCommandGroup(
+                    //     new ToggleIntake(deployer),
+                    //     new RunIntakeWithConveyor(intake, conveyor)
+                    // ),
                     //if doing lower, adjustment should be +2 meters
                     //if doing upper, adjustment should be -0.85 meters
                     // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, "upper"),

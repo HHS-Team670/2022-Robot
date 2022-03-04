@@ -279,14 +279,17 @@ public class Shooter extends MustangSubsystemBase {
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
             if (vision.hasTarget()) {
-                distanceToTarget = vision.getLastValidDistanceMetersCaptured();
+                distanceToTarget = vision.getDistanceToTargetM();
+                SmartDashboard.putNumber("speed-chooser", 0);
             } 
             if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
+                SmartDashboard.putNumber("speed-chooser", 1);
             }
             SmartDashboard.putNumber("distance to target", distanceToTarget);
             if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){  //double comparison
                 setTargetRPM(getDefaultRPM());
+                SmartDashboard.putNumber("speed-chooser", 2);
                 return;
             }
             if (distanceToTarget < getMinHighDistanceInMeter()) {
