@@ -14,6 +14,7 @@ import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.commands.shooter.OverrideDynamicRPM;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -33,6 +34,7 @@ public class OI extends OIBase {
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton overrideDyanmicSpeed = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
   
   private static JoystickButton toggleReverseDrive = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
@@ -83,6 +85,7 @@ public class OI extends OIBase {
 
     shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
     stopShooter.whenPressed((new StopShooter(shooter)));
+    overrideDyanmicSpeed.whenPressed(new OverrideDynamicRPM(shooter));
 
     toggleIntake.whenPressed(new ToggleIntake(deployer));
 

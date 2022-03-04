@@ -309,6 +309,10 @@ public class Shooter extends MustangSubsystemBase {
         this.useDynamicSpeed = isDynamic;
     }
 
+    public boolean isUsingDynamicSpeed(){
+        return useDynamicSpeed;
+    }
+
     public double getUltrasonicDistanceInMeters(){
         double dist = Units.inchesToMeters(ultrasonic.getDistance());
         if(dist <= 0.8){
