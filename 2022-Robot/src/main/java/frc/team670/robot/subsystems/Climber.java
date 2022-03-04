@@ -180,11 +180,11 @@ public class Climber extends MustangSubsystemBase {
     public void climbToHeight(Level level) {
         switch (level) {
             case LOW:
-                climb(ClimberContainer.LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM
-                        - ClimberContainer.VERTICAL_STARTING_HEIGHT_CM * ROTATIONS_PER_CM);
+                climb(87.3); // Original = ClimberContainer.LOW_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM - ClimberContainer.VERTICAL_STARTING_HEIGHT_CM * ROTATIONS_PER_CM
+                             // Currently used = Low bar height * max extension / high bar height
             case MID:
-                climb(ClimberContainer.MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM
-                        - ClimberContainer.VERTICAL_STARTING_HEIGHT_CM * ROTATIONS_PER_CM);
+                climb(108); // Original = ClimberContainer.MID_BAR_TARGET_HEIGHT_CM * ROTATIONS_PER_CM - ClimberContainer.VERTICAL_STARTING_HEIGHT_CM * ROTATIONS_PER_CM
+                            // Currently used = Max extensions for vertical
             case INTERMEDIATE_HIGH:
                 climb(ClimberContainer.MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION);
             case HIGH:

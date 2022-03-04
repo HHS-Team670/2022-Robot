@@ -59,8 +59,7 @@ public class ClimberContainer {
     // TODO find this, it's basically how much gap you want to leave when partially
     // deploying the diagonal climber at the same time as vertical to save time
     public static final double REMAINING_DIST_TO_HIGH_CM = 15.24; // half a foot
-    public static final double MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION = DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION
-            - DIAGONAL_ROTATIONS_PER_CM * REMAINING_DIST_TO_HIGH_CM;
+    public static final double MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION = -60;//DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION - DIAGONAL_ROTATIONS_PER_CM * REMAINING_DIST_TO_HIGH_CM;
 
     public static Climber getVerticalClimber() {
         Climber verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, VERTICAL_kFF, VERTICAL_kP, false,
