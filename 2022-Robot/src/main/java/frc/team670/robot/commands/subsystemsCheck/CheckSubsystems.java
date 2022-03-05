@@ -3,13 +3,12 @@ package frc.team670.robot.commands.subsystemsCheck;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.climber.ExtendClimber;
-import frc.team670.robot.commands.climber.RetractClimber;
+
 import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.conveyor.StopConveyor;
 import frc.team670.robot.commands.deployer.ToggleIntake;
@@ -17,21 +16,13 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
-import frc.team670.robot.subsystems.ClimberSystem;
-import frc.team670.robot.subsystems.ConveyorSystem;
-import frc.team670.robot.subsystems.Deployer;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.LEDs;
-import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.Vision;
+import frc.team670.robot.subsystems.*;
 
 public class CheckSubsystems extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    
-    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, ClimberSystem.Climber verticalClimber, ClimberSystem.Climber diagonalClimber, Vision vision) {
+    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, Vision vision) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.GREEN);
         healthReqs.put(deployer, HealthState.GREEN);
@@ -39,9 +30,6 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         healthReqs.put(vision, HealthState.GREEN);
-        healthReqs.put(verticalClimber, HealthState.GREEN);
-        healthReqs.put(diagonalClimber, HealthState.GREEN);
-
         
         addCommands(
 
@@ -57,14 +45,7 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
                 new StopConveyor(conveyors),
 
                 new StartShooter(shooter),
-                new StopShooter(shooter),
-
-                new ExtendClimber(verticalClimber, ClimberSystem.Level.MID),
-                new RetractClimber(verticalClimber, false),
-
-                new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH),
-                new RetractClimber(diagonalClimber, false)
-
+                new StopShooter(shooter)
         );
     }
 
