@@ -52,7 +52,7 @@ public class RobotContainer extends RobotContainerBase {
   private static ClimberSystem climbers = new ClimberSystem();
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
-  private static OI oi = new OI(driveBase);
+  private static OI oi = new OI();
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
   // vision);
