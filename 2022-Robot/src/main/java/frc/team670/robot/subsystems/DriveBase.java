@@ -19,6 +19,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -26,6 +27,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,11 +38,12 @@ import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.math.filter.SlewRateLimiter;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.commands.auton.AutoSelector;
+// import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -56,6 +61,8 @@ public class DriveBase extends HDrive {
 
   private MustangController mController;
 
+  private static final double CENTERDRIVE_ACCEL_RATE_LIMIT = 4; 
+
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
@@ -64,6 +71,14 @@ public class DriveBase extends HDrive {
   private DifferentialDrivePoseEstimator poseEstimator;
 
   SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
+
+  private AutoSelector autoSelector = new AutoSelector();
+  private int autoRoutine = -1;
+  private double delayTime = -1;
+
+  private Timer timer = new Timer();
+  private NetworkTableEntry matchTimeEntry;
+  private NetworkTableEntry isAutonEntry;
 
   // Start pose variables
   public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
@@ -86,6 +101,8 @@ public class DriveBase extends HDrive {
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
+    matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
+    isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
    
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
@@ -128,7 +145,7 @@ public class DriveBase extends HDrive {
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-
+    timer.start();
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
     new Pose2d(START_X, START_Y, START_ANGLE_RAD),
       VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
@@ -387,6 +404,37 @@ public class DriveBase extends HDrive {
     } else {
       // Logger.consoleError("Did not find targets!");
     }
+
+    //removed the delay for 10 seconds
+    int routine = autoSelector.getSelection();
+    double time = autoSelector.getDelayTime();
+    // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
+    // Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
+    
+    double oldTime = delayTime;
+    int oldRoutine = routine;
+    if (routine != -1) {
+          autoRoutine = routine;
+   }
+    if (time != -1) {
+      delayTime = time;
+    }
+    if (oldTime != delayTime || oldRoutine != routine){
+      // Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
+      // autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
+
+    // Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
+    
+    /** TODO We literally have no clue if any of this works */
+      // DUMMY VARIABLE, CHANGE LATER!!!
+      double matchTime = DriverStation.getMatchTime(); // new Date().getTime()/1000.0;
+      boolean isAutonRn = DriverStation.isAutonomous();
+      if (matchTime - (int) matchTime < 0.00001) {
+        matchTimeEntry.forceSetDouble(matchTime);
+        if (isAutonRn != isAutonEntry.getBoolean(isAutonRn))
+          isAutonEntry.forceSetBoolean(isAutonRn);
+      }
+    }
   }
 
   /**
@@ -467,6 +515,29 @@ public class DriveBase extends HDrive {
   @Override
   public MustangController getMustangController() {
     return mController;
+  }
+
+  public int getSelectedRoutine() {
+    while (autoRoutine == -1) {
+      if (timer.hasElapsed(10)) {
+        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+        break;
+      }
+      continue;
+    }
+    return autoRoutine;
+  }
+
+  public double getDelayTime() {
+    while (delayTime == -1) {
+      if (timer.hasElapsed(10)) {
+        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
+        break;
+      }
+      continue;
+    }
+    // Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ", delayTime);
+    return delayTime;
   }
 
   @Override
@@ -552,6 +623,12 @@ public class DriveBase extends HDrive {
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
+  // @Override
+  // public void resetOdometry(frc.team670.mustanglib.subsystems.path.Pose2d pose)
+  // {
+  // // TODO Auto-generated method stub
+
+  // }
   @Override
   public void toggleIdleMode() {
     for (SparkMAXLite motor : allMotors) {
@@ -566,7 +643,7 @@ public class DriveBase extends HDrive {
   @Override
   public void debugSubsystem() {
     // TODO Auto-generated method stub
-    
+
   }
 
   public static double getLinearSpeed(){
