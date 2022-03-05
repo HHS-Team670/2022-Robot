@@ -118,6 +118,9 @@ public class ClimberSystem {
         private final int MOTOR_ID;
         private final int SMARTMOTION_SLOT;
 
+        private double forwardLimit;
+        private double reverseLimit;
+
         private SparkMAXLite motor;
         private SparkMaxLimitSwitch limitSwitch;
 
@@ -169,7 +172,7 @@ public class ClimberSystem {
                 limitSwitch.enableLimitSwitch(true);
             } else {
                 limitSwitch = motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-                limitSwitch.enableLimitSwitch(false);
+                limitSwitch.enableLimitSwitch(true);
             }
 
             leadController = motor.getPIDController();
@@ -241,9 +244,9 @@ public class ClimberSystem {
         public HealthState checkHealth() {
             if (!isZeroedAtStart) {
                 return HealthState.UNKNOWN;
-            }
-            else{
-                if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR) || (motor == null || motor.getLastError() != REVLibError.kOk)) {
+            } else {
+                if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
+                        || (motor == null || motor.getLastError() != REVLibError.kOk)) {
                     return HealthState.RED;
                 }
             }
@@ -276,23 +279,32 @@ public class ClimberSystem {
 
         @Override
         public void mustangPeriodic() {
+            SmartDashboard.putBoolean("LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
+            SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
+                    stop();
                     leadEncoder.setPosition(0);
-                    isZeroedAtStart = true;
-                    motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-                    motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-                    if (!isReversed) {
-                        motor.setSoftLimit(SoftLimitDirection.kForward, (float)
-                        SOFT_LIMIT_AT_EXTENSION);
-                        motor.setSoftLimit(SoftLimitDirection.kReverse, (float)
-                        SOFT_LIMIT_AT_RETRACTED);
-                    } else {
-                        motor.setSoftLimit(SoftLimitDirection.kReverse, (float)
-                        SOFT_LIMIT_AT_EXTENSION);
-                        motor.setSoftLimit(SoftLimitDirection.kForward, (float)
-                        SOFT_LIMIT_AT_RETRACTED);
+                    if (Math.abs(leadEncoder.getPosition()) < 0.5) {
+                        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+                        motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+                        if (!isReversed) {
+                            forwardLimit = SOFT_LIMIT_AT_EXTENSION;
+                            reverseLimit = SOFT_LIMIT_AT_RETRACTED;
+
+                        } else {
+                            forwardLimit = SOFT_LIMIT_AT_RETRACTED;
+                            reverseLimit = SOFT_LIMIT_AT_EXTENSION;
+                        }
+                        motor.setSoftLimit(SoftLimitDirection.kForward, (float) forwardLimit);
+                        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) reverseLimit);
+                        if (Math.abs(motor.getSoftLimit(SoftLimitDirection.kForward) - forwardLimit) < 0.5
+                                && (Math.abs(motor.getSoftLimit(SoftLimitDirection.kReverse) - reverseLimit) < 0.5)) {
+                            isZeroedAtStart = true;
+                        }
                     }
+                } else {
+                    run(-ClimberSystem.Climber.HOOKING_POWER);
                 }
             }
         }

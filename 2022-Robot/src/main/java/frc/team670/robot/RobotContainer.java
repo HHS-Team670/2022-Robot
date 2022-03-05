@@ -120,7 +120,7 @@ public class RobotContainer extends RobotContainerBase {
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
-    MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
+    // MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
   }
 
   @Override
