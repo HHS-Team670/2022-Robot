@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberSystem;
 
 /**
  * Raise the climber mechanism to its maximum allowed height so it can reach the
@@ -15,12 +15,12 @@ import frc.team670.robot.subsystems.Climber;
  */
 public class ExtendClimber extends CommandBase implements MustangCommand {
 
-  private Climber climber;
-  private Climber.Level level;
+  private ClimberSystem.Climber climber;
+  private ClimberSystem.Level level;
   private HashMap<MustangSubsystemBase, HealthState> healthReqs;
 
   
-  public ExtendClimber(Climber climber, Climber.Level level) {
+  public ExtendClimber(ClimberSystem.Climber climber, ClimberSystem.Level level) {
     this.climber = climber;
     this.level = level;
     addRequirements(climber);
@@ -30,7 +30,7 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
 
   @Override
   public void initialize() {
-    climber.climbToHeight(level);
+    climber.climb(level.getRotations());
   }
 
   @Override

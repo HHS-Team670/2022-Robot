@@ -17,8 +17,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
-import frc.team670.robot.subsystems.Climber;
-import frc.team670.robot.subsystems.ClimberContainer;
+import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
@@ -32,7 +31,7 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     
-    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, Climber verticalClimber, Climber diagonalClimber, Vision vision) {
+    public CheckSubsystems(ConveyorSystem conveyors, Deployer deployer, DriveBase driveBase, Intake intake, LEDs leds, Shooter shooter, ClimberSystem.Climber verticalClimber, ClimberSystem.Climber diagonalClimber, Vision vision) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyors, HealthState.GREEN);
         healthReqs.put(deployer, HealthState.GREEN);
@@ -60,10 +59,10 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
                 new StartShooter(shooter),
                 new StopShooter(shooter),
 
-                new ExtendClimber(verticalClimber, Climber.Level.MID),
+                new ExtendClimber(verticalClimber, ClimberSystem.Level.MID),
                 new RetractClimber(verticalClimber, false),
 
-                new ExtendClimber(diagonalClimber, Climber.Level.HIGH),
+                new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH),
                 new RetractClimber(diagonalClimber, false)
 
         );

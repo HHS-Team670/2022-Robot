@@ -10,7 +10,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.climber.ExtendClimber;
 import frc.team670.robot.commands.climber.RetractClimber;
-import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.ClimberSystem.Climber;
 
 /**
  * Once the driver aligns with the mid bar, climbs to the mid bar. It then climbs
@@ -28,11 +29,11 @@ public class FullClimb extends SequentialCommandGroup implements MustangCommand 
 
     addCommands(
       new ParallelCommandGroup( // extend vertical, and diagonal partially to save time
-        new ExtendClimber(verticalClimber, Climber.Level.MID),
-        new ExtendClimber(diagonalClimber, Climber.Level.INTERMEDIATE_HIGH)
+        new ExtendClimber(verticalClimber, ClimberSystem.Level.MID),
+        new ExtendClimber(diagonalClimber, ClimberSystem.Level.INTERMEDIATE_HIGH)
       ),
       new RetractClimber(verticalClimber, false), // TODO find actual retraction amount
-      new ExtendClimber(diagonalClimber, Climber.Level.HIGH), // finish extending diagonal
+      new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH), // finish extending diagonal
       new RetractClimber(diagonalClimber, false));
   }
 

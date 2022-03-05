@@ -7,16 +7,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.ClimberSystem.Climber;
 
 /**
  * Lower the Climber mechanism.
  */
 public class RetractClimber extends CommandBase implements MustangCommand{
 
-  private Climber climber;
+  private ClimberSystem.Climber climber;
   private boolean zeroClimber;
-  private final double RETRACTING_POWER = 0.05;
   private HashMap<MustangSubsystemBase, HealthState> healthReqs;
   
   public RetractClimber(Climber climber, boolean zeroClimber) {
@@ -30,7 +30,7 @@ public class RetractClimber extends CommandBase implements MustangCommand{
   @Override
   public void initialize() {
     if (zeroClimber) {
-      climber.run(-RETRACTING_POWER);
+      climber.run(-ClimberSystem.Climber.HOOKING_POWER);
     } else {
       climber.retract(); 
     }

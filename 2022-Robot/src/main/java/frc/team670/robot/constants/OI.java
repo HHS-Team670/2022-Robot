@@ -16,13 +16,14 @@ import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
-import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
+import frc.team670.robot.subsystems.ClimberSystem.Climber;
 
 public class OI extends OIBase {
 
@@ -40,6 +41,7 @@ public class OI extends OIBase {
   // driver controls
   private static JoystickButton extendVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton retractVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.A);
+  private static JoystickButton retractVerticalClimberForC2Climb = new JoystickButton(getDriverController(), XboxButtons.BACK);
   private static JoystickButton extendDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
@@ -97,10 +99,11 @@ public class OI extends OIBase {
     turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
     turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
 
-    extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, Climber.Level.MID));
+    extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.MID));
     retractVerticalClimber.whenPressed(new RetractClimber(verticalClimber, false));
+    retractVerticalClimberForC2Climb.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
 
-    extendDiagonalClimber.whenPressed(new ExtendClimber(diagonalClimber, Climber.Level.HIGH));
+    extendDiagonalClimber.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
     retractDiagonalClimber.whenPressed(new RetractClimber(diagonalClimber, false));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));

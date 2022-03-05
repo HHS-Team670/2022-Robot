@@ -14,17 +14,19 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.subsystems.Climber;
-import frc.team670.robot.subsystems.ClimberContainer;
+import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
@@ -47,8 +49,9 @@ public class RobotContainer extends RobotContainerBase {
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
   // private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
-  private static Climber verticalClimber = ClimberContainer.getVerticalClimber();
-  private static Climber diagonalClimber = ClimberContainer.getDiagonalClimber();
+  private static ClimberSystem climbers = new ClimberSystem();
+  private static Climber verticalClimber = climbers.getVerticalClimber();
+  private static Climber diagonalClimber = climbers.getDiagonalClimber();
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
   // intake, conveyor, indexer, shooter, turret,
@@ -117,12 +120,13 @@ public class RobotContainer extends RobotContainerBase {
     driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
+    MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
   }
 
   @Override
   public void disabled() {
     leds.setIsDisabled(true);
-    deployer.deploy(false);
+    // deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {
