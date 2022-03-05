@@ -242,15 +242,16 @@ public class ClimberSystem {
         }
 
         public HealthState checkHealth() {
-            if (!isZeroedAtStart) {
-                return HealthState.UNKNOWN;
-            } else {
-                if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
-                        || (motor == null || motor.getLastError() != REVLibError.kOk)) {
-                    return HealthState.RED;
-                }
-            }
-            return HealthState.GREEN;
+            // if (!isZeroedAtStart) {
+            //     return HealthState.UNKNOWN;
+            // } else {
+            //     if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
+            //             || (motor == null || motor.getLastError() != REVLibError.kOk)) {
+            //         return HealthState.RED;
+            //     }
+            // }
+            // return HealthState.GREEN;
+            return HealthState.RED;
         }
 
         public boolean isAtTarget() {
