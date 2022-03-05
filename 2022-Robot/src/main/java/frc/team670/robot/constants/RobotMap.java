@@ -31,8 +31,8 @@ public class RobotMap {
   public static final int SHOOTER_CONVEYOR_BEAMBREAK = 8;
 
   // Climber
-  public static final int CLIMBER_ONE = 3;
-  public static final int CLIMBER_TWO = 2;
+  public static final int VERTICAL_CLIMBER = 2; 
+  public static final int DIAGONAL_CLIMBER = 3; 
 
   // Intake
   public static final int INTAKE_ROLLER = 11;
@@ -41,5 +41,6 @@ public class RobotMap {
 
   // leds
   public static final int LED_PORT = 9;
+
 
 }
