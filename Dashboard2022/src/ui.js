@@ -175,8 +175,8 @@ NetworkTables.addKeyListener('/SmartDashboard/ConveyorSystem', (key, value) => {
         document.getElementById('conveyor-status').style.fill = "rgb(0,255,0)";
         document.getElementById('conveyor-status').style.stroke = "rgb(0,255,0)";
     } else if (value === 'YELLOW') {
-        document.getElementById('shooter-status').style.fill = "rgb(255,255,0)";
-        document.getElementById('shooter-status').style.stroke = "rgb(255,255,0)";
+        document.getElementById('conveyor-status').style.fill = "rgb(255,255,0)";
+        document.getElementById('conveyor-status').style.stroke = "rgb(255,255,0)";
     } else if (value === 'RED') {
         document.getElementById('conveyor-status').style.fill = "rgb(255,0,0)";
         document.getElementById('conveyor-status').style.stroke = "rgb(255,0,0)";
