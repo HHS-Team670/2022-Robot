@@ -2,6 +2,9 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -130,6 +133,13 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
 
+	// private void pushGameDataToDashboard() {
+    //     NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    //     NetworkTable table = instance.getTable("/SmartDashboard");
+    //     NetworkTableEntry gameData = table.getEntry("Balls");
+    //     gameData.setNumber(getBallCount());
+    // }
+
 	// Mustang Subsystem
 	@Override
 	public HealthState checkHealth() {
@@ -150,6 +160,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		// shooterConveyor.debugBeamBreaks();
 		checkState();
 		debugSubsystem();
+		// pushGameDataToDashboard();
 	}
 
 	public Status getStatus() {

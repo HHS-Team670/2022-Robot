@@ -22,6 +22,7 @@ import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
+import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -46,6 +47,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
+  private static AutoSelector autoSelector = new AutoSelector();
 
   private static OI oi = new OI(driveBase);
   // private static AutoSelector autoSelector = new AutoSelector(driveBase,
@@ -91,11 +93,22 @@ public class RobotContainer extends RobotContainerBase {
     //   - "ATarmacEdge4Ball"
 
     // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-    MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
     // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.UPPER);
 
     
     //MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
+    int autonRoutine = driveBase.getSelectedRoutine();
+    double delayTime = driveBase.getDelayTime();
+
+    // Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
+
+    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
+        conveyorSystem, shooter, deployer);
+    // if (autonCommand== null)
+      // Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
+
+    
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;

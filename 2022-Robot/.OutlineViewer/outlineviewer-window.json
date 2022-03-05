@@ -1,0 +1,30 @@
+{
+  "MainWindow": {
+    "GLOBAL": {
+      "height": "1200",
+      "maximized": "0",
+      "style": "0",
+      "userScale": "2",
+      "width": "1800",
+      "xpos": "378",
+      "ypos": "445"
+    }
+  },
+  "Window": {
+    "Debug##Default": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "400,400"
+    },
+    "Entries": {
+      "Collapsed": "0",
+      "Pos": "0,0",
+      "Size": "1800,1200"
+    },
+    "Settings": {
+      "Collapsed": "0",
+      "Pos": "612,534",
+      "Size": "621,213"
+    }
+  }
+}
