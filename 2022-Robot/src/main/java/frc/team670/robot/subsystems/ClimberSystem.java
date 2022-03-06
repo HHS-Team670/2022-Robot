@@ -47,7 +47,7 @@ public class ClimberSystem {
     protected static final double DIAGONAL_MOTOR_ROTATIONS_PER_SPOOL_ROTATION = 25;
 
     protected static final double VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
-    protected static final double VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 108; // from 3/1 testing
+    protected static final double VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 109; // from 3/6 testing
     protected static final double VERTICAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION = 83;
 
     protected static final double DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
