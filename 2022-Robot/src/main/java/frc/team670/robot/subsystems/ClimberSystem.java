@@ -89,7 +89,7 @@ public class ClimberSystem {
 
     public class Climber extends MustangSubsystemBase {
 
-        public static final double HOOKING_POWER = 0.3; // power used when hooking climber
+        public static final double HOOKING_POWER = 0.2; // power used when hooking climber
         private static final int CURRENT_LIMIT = 85;
 
         private double kFF;
@@ -242,16 +242,15 @@ public class ClimberSystem {
         }
 
         public HealthState checkHealth() {
-            // if (!isZeroedAtStart) {
-            //     return HealthState.UNKNOWN;
-            // } else {
-            //     if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
-            //             || (motor == null || motor.getLastError() != REVLibError.kOk)) {
-            //         return HealthState.RED;
-            //     }
-            // }
-            // return HealthState.GREEN;
-            return HealthState.RED;
+            if (!isZeroedAtStart) {
+                return HealthState.UNKNOWN;
+            } else {
+                if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
+                        || (motor == null || motor.getLastError() != REVLibError.kOk)) {
+                    return HealthState.RED;
+                }
+            }
+            return HealthState.GREEN;
         }
 
         public boolean isAtTarget() {
