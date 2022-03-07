@@ -36,10 +36,20 @@
       "Pos": "60,60",
       "Size": "400,400"
     },
+    "Deploy Status": {
+      "Collapsed": "0",
+      "Pos": "584,50",
+      "Size": "800,720"
+    },
     "Diagnostic Plots": {
       "Collapsed": "0",
-      "Pos": "895,25",
-      "Size": "375,660"
+      "Pos": "1183,39",
+      "Size": "366,830"
+    },
+    "Warning": {
+      "Collapsed": "0",
+      "Pos": "757,3",
+      "Size": "100,894"
     }
   }
 }

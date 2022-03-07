@@ -69,12 +69,12 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
             new ParallelCommandGroup(
             getTrajectoryFollowerCommand(trajectory, driveBase),
                 new SequentialCommandGroup( 
-                    // new ParallelCommandGroup(
-                    //     new ToggleIntake(deployer),
-                    //     new RunIntakeWithConveyor(intake, conveyor)
-                    // ),
-                    //if doing lower, adjustment should be +2 meters
-                    //if doing upper, adjustment should be -0.85 meters
+                    new ParallelCommandGroup(
+                        new ToggleIntake(deployer),
+                        new RunIntakeWithConveyor(intake, conveyor)
+                    ),
+                    // if doing lower, adjustment should be +2 meters
+                    // if doing upper, adjustment should be -0.85 meters
                     // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, "upper"),
                     // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2, "lower"),
                     waitCommand,

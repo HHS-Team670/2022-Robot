@@ -1,10 +1,11 @@
 {
   "SysId": {
     "Analysis Type": "Drivetrain",
-    "Analyzer": {
-      "window": {
-        "visible": false
-      }
-    }
+    "AnalyzerJSONLocation": "C:\\Users\\Hwang\\Desktop\\sysid_data20220306-150231.json",
+    "NetworkTables Settings": {
+      "serverTeam": "670"
+    },
+    "mode": "Client",
+    "serverTeam": "670"
   }
 }

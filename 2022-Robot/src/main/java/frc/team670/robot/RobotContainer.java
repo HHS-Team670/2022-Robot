@@ -19,6 +19,8 @@ import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
@@ -109,12 +111,13 @@ public class RobotContainer extends RobotContainerBase {
 
     // Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
 
-    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
-        conveyorSystem, shooter, deployer);
+    // MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
+    //     conveyorSystem, shooter, deployer);
     // if (autonCommand== null)
       // Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
 
-    
+    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
+    MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
@@ -164,8 +167,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("current", pd.getTotalCurrent());
-    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
-    SmartDashboard.putNumber("power", pd.getTotalPower());
+    // SmartDashboard.putNumber("current", pd.getTotalCurrent());
+    // SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+    // SmartDashboard.putNumber("power", pd.getTotalPower());
   }
 }

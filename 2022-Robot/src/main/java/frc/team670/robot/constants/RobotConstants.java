@@ -51,9 +51,9 @@ public class RobotConstants extends RobotConstantsBase {
 
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
-        public static final double leftKsVolts = 0.4; //0.14709; //0.4
-        public static final double leftKvVoltSecondsPerMeter = 2.7426; //2
-        public static final double leftKaVoltSecondsSquaredPerMeter = 0.333; //0.35449; //0.2
+        public static final double leftKsVolts = 0.19744; //0.4; //0.14709; //0.4
+        public static final double leftKvVoltSecondsPerMeter = 1.3667; //2.7426; //2
+        public static final double leftKaVoltSecondsSquaredPerMeter = 0.21286; //0.333; //0.35449; //0.2
         public static final double rightKsVolts = leftKsVolts;
         public static final double rightKvVoltSecondsPerMeter = leftKvVoltSecondsPerMeter;
         public static final double rightKaVoltSecondsSquaredPerMeter = leftKaVoltSecondsSquaredPerMeter;
@@ -76,7 +76,7 @@ public class RobotConstants extends RobotConstantsBase {
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
                         kTrackwidthMeters);
-        public static final double leftKPDriveVel = 2.25;
+        public static final double leftKPDriveVel = 1.8156; //2.25;
         public static final double leftKIDriveVel = 0.00;
         public static final double leftKDDriveVel = 0; //0.26
 
