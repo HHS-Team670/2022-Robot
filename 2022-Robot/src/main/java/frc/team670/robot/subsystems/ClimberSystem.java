@@ -87,6 +87,10 @@ public class ClimberSystem {
         return diagonalClimber;
     }
 
+    public boolean isRobotClimbing(){
+        return (verticalClimber.getUnadjustedMotorRotations() > verticalClimber.getMinMotorPosition() || diagonalClimber.getUnadjustedMotorRotations() > diagonalClimber.getMinMotorPosition());
+    }
+
     public class Climber extends MustangSubsystemBase {
 
         public static final double HOOKING_POWER = 0.2; // power used when hooking climber
@@ -231,10 +235,14 @@ public class ClimberSystem {
             return onBar;
         }
 
-        public void climb(double rotations) {
+        private void climb(double rotations) {
             target = rotations;
             Logger.consoleLog("Climber with Motor ID %s rotation target %s", MOTOR_ID, rotations);
             leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion, SMARTMOTION_SLOT);
+        }
+
+        public void climb(Level level){
+            climb(level.getRotations());
         }
 
         public void retract() {
@@ -275,6 +283,14 @@ public class ClimberSystem {
 
         public RelativeEncoder getLeadEncoder() {
             return leadEncoder;
+        }
+
+        public double getMinMotorPosition(){
+            return MOTOR_ROTATIONS_AT_RETRACTED;
+        }
+
+        public double getMaxMotorPosition(){
+            return MOTOR_ROTATIONS_AT_MAX_EXTENSION;
         }
 
         @Override

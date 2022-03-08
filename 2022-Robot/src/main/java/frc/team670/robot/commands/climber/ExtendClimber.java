@@ -30,7 +30,7 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
 
   @Override
   public void initialize() {
-    climber.climb(level.getRotations());
+    climber.climb(level);
   }
 
   @Override

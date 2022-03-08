@@ -9,15 +9,19 @@ public class LEDs extends LEDSubsystem {
     private Shooter shooter;
     private Intake intake;
     private ConveyorSystem conveyors;
+    private ClimberSystem climbers;
+
     private boolean isDisabled;
 
-    private LEDColor allianceColor, oppositeAllianceColor;    
+    private LEDColor allianceColor, oppositeAllianceColor;
 
-    public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors) {
+    public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors,
+            ClimberSystem climbers) {
         super(port, length);
         this.shooter = shooter;
         this.intake = intake;
         this.conveyors = conveyors;
+        this.climbers = climbers;
         this.isDisabled = true;
     }
 
@@ -32,19 +36,21 @@ public class LEDs extends LEDSubsystem {
 
     @Override
     public void mustangPeriodic() {
-        if(isDisabled) {
+        if (isDisabled) {
             rainbow();
         } else if (!isBlinking) {
-            if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
-                solid(allianceColor);
+            if (climbers.isRobotClimbing()) {
+                blink(LEDColor.GREEN.dimmer());
+            } else if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
+                solid(oppositeAllianceColor);
             } else if (shooter.getVelocity() > 0) { // shooter is shooting
                 if (shooter.isShooting()) {
-                    blink(allianceColor.dimmer(), 10);
+                    blink(oppositeAllianceColor.dimmer(), 10);
                 }
             } else if (conveyors.getBallCount() == 1) { // show amount of balls in conveyor
-                progressBar(oppositeAllianceColor, allianceColor, 0.5);                
+                progressBar(allianceColor, oppositeAllianceColor, 0.5);
             } else if (intake.isRolling()) { // intake is running
-                blink(oppositeAllianceColor.dimmer(), 10);
+                blink(allianceColor.dimmer(), 10);
             } else {
                 rainbow();
             }

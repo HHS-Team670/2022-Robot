@@ -50,11 +50,12 @@ public class RobotContainer extends RobotContainerBase {
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
-  private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem);
-  // private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
   private static ClimberSystem climbers = new ClimberSystem();
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
+  private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem, climbers);
+  // private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
+  
   private static OI oi = new OI();
   private static AutoSelector autoSelector = new AutoSelector();
 
