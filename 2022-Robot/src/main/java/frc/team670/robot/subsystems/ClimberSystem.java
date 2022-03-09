@@ -88,7 +88,7 @@ public class ClimberSystem {
     }
 
     public boolean isRobotClimbing(){
-        return (verticalClimber.getUnadjustedMotorRotations() > verticalClimber.getMinMotorPosition() || diagonalClimber.getUnadjustedMotorRotations() > diagonalClimber.getMinMotorPosition());
+        return (Math.abs(verticalClimber.getUnadjustedMotorRotations()) > Math.abs(verticalClimber.getMinMotorPosition()) || Math.abs(diagonalClimber.getUnadjustedMotorRotations()) > Math.abs(diagonalClimber.getMinMotorPosition()));
     }
 
     public class Climber extends MustangSubsystemBase {
