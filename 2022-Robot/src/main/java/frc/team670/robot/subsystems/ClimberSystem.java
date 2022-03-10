@@ -77,6 +77,9 @@ public class ClimberSystem {
                 DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED, DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
                 ALLOWED_ERR_ROTATIONS,
                 MAX_ACC, MIN_VEL, MAX_VEL);
+
+        verticalClimber.setName("Climber 1");
+        diagonalClimber.setName("Climber 2");
     }
 
     public Climber getVerticalClimber() {
