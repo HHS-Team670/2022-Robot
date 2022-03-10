@@ -110,15 +110,16 @@ public class RobotContainer extends RobotContainerBase {
     int autonRoutine = driveBase.getSelectedRoutine();
     double delayTime = driveBase.getDelayTime();
 
-    // Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
+    Logger.consoleLog("Inside getAutonomousCommand - delay time:" + delayTime);
 
-    // MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
-    //     conveyorSystem, shooter, deployer);
-    // if (autonCommand== null)
-      // Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
+    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
+        conveyorSystem, shooter, deployer);
+    if (autonCommand== null)
+      Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
 
     // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
-    MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+
+    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
