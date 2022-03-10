@@ -33,7 +33,7 @@ import frc.team670.robot.subsystems.Vision;
 public class Edge2Ball extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory;
+    private Trajectory trajectory, extension;
     private Pose2d targetPose;
     private DriveBase driveBase;
 
@@ -44,6 +44,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // Valid hubTypes are "upper" and "lower"
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
         trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
+        extension = PathPlanner.loadPath("2BallExtension", 1, 0.5);
 
         this.driveBase = driveBase;
         
@@ -80,7 +81,9 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
                     waitCommand,
                     new ShootAllBalls(conveyor, shooter)
                 )
-            ),  
+            ), 
+            getTrajectoryFollowerCommand(extension, driveBase), 
+            new ShootAllBalls(conveyor, shooter),
             new StopDriveBase(driveBase)
         );
     }
