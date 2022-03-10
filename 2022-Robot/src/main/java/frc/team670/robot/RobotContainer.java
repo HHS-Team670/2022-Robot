@@ -128,9 +128,9 @@ public class RobotContainer extends RobotContainerBase {
   public void autonomousInit() {
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
+    
     Logger.consoleLog("autoInit called");
     leds.setIsDisabled(false);
-
   }
 
   public void teleopInit() {
