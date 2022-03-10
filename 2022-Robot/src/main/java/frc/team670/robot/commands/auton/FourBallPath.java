@@ -1,5 +1,6 @@
 package frc.team670.robot.commands.auton;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -43,7 +46,9 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class FourBallPath extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory, trajectory2;
+    // private Trajectory trajectory, trajectory2;
+    private Trajectory trajectory, trajectory2, trajectory3;
+
     private Pose2d targetPose, targetPose2;
     private DriveBase driveBase;
 
@@ -66,7 +71,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
             trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1);
+
         }
 
         // if (pathName.equals("ATarmacEdge4Ball")) {
@@ -78,13 +85,16 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         // targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         // targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
         targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
-        targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        // targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        targetPose2 = trajectory3.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
+
+        
 
         addCommands(
                 new SequentialCommandGroup(
@@ -96,7 +106,11 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                     ), 
                     new AutoShootToIntake(conveyor, shooter, intake),
                     new ParallelCommandGroup(
-                        getTrajectoryFollowerCommand(trajectory2, driveBase),
+                        new SequentialCommandGroup(           
+                            getTrajectoryFollowerCommand(trajectory2, driveBase),
+                            new WaitCommand(1),
+                            getTrajectoryFollowerCommand(trajectory3, driveBase)
+                        ),
                         new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
                     ),
                     new StopDriveBase(driveBase),
