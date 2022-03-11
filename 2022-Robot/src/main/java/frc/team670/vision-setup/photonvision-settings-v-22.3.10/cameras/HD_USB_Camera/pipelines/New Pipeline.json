@@ -4,24 +4,24 @@
   "inputImageFlipMode" : "NONE",
   "inputImageRotationMode" : "DEG_180",
   "pipelineNickname" : "New Pipeline",
-  "cameraExposure" : 5.0,
-  "cameraBrightness" : 23,
+  "cameraExposure" : 3.3,
+  "cameraBrightness" : 0,
   "cameraGain" : -1,
-  "cameraVideoModeIndex" : 20,
-  "streamingFrameDivisor" : "QUARTER",
+  "cameraVideoModeIndex" : 1,
+  "streamingFrameDivisor" : "NONE",
   "ledMode" : true,
-  "inputShouldShow" : true,
+  "inputShouldShow" : false,
   "outputShouldShow" : true,
   "hsvHue" : {
-    "first" : 28,
-    "second" : 98
+    "first" : 35,
+    "second" : 180
   },
   "hsvSaturation" : {
-    "first" : 106,
+    "first" : 50,
     "second" : 255
   },
   "hsvValue" : {
-    "first" : 116,
+    "first" : 50,
     "second" : 255
   },
   "outputShouldDraw" : true,
@@ -32,13 +32,13 @@
   },
   "contourRatio" : {
     "first" : 0.0,
-    "second" : 8.9
+    "second" : 20.0
   },
   "contourFullness" : {
-    "first" : 60.0,
+    "first" : 0.0,
     "second" : 100.0
   },
-  "contourSpecklePercentage" : 100,
+  "contourSpecklePercentage" : 5,
   "contourSortMode" : "Largest",
   "contourTargetOffsetPointEdge" : "Center",
   "contourTargetOrientation" : "Landscape",
@@ -57,7 +57,7 @@
     "y" : 0.0
   },
   "offsetDualPointBArea" : 0.0,
-  "contourGroupingMode" : "TwoOrMore",
+  "contourGroupingMode" : "Single",
   "contourIntersection" : "Up",
   "solvePNPEnabled" : false,
   "targetModel" : "k2020HighGoalOuter",

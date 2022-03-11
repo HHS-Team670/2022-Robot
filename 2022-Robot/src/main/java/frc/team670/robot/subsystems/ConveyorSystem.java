@@ -24,6 +24,8 @@ import frc.team670.robot.constants.RobotMap;
 public class ConveyorSystem extends MustangSubsystemBase {
 	// Conveyor status
 
+	private Deployer deployer;
+
 	public enum Status {
 		OFF,
 		INTAKING,
@@ -36,7 +38,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	private Timer timer = new Timer();
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
 
-	public ConveyorSystem() {
+	public ConveyorSystem(Deployer deployer) {
+		this.deployer = deployer;
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
 	}
@@ -125,6 +128,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		shooterConveyor.stop();
 		timer.reset();
 		timer.stop();
+		deployer.setSystemTargetAngleInDegrees(0);
 	}
 
 	// Data collection
