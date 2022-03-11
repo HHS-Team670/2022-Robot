@@ -18,6 +18,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.deployer.ToggleIntake;
+import frc.team670.robot.commands.routines.WaitToPause;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
@@ -46,10 +47,12 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class FourBallPath extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    // private Trajectory trajectory, trajectory2;
-    private Trajectory trajectory, trajectory2, trajectory3;
+    private Trajectory trajectory, trajectory2;
 
-    private Pose2d targetPose, targetPose2;
+    //splitting highhubTerminalP2 into 2 so it can wait at the terminal for 1 sec w WaitCommand
+    // private Trajectory trajectory, trajectory2, trajectory3;
+
+    private Pose2d targetPose, targetPose2, terminalTargetPose;
     private DriveBase driveBase;
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer,
@@ -71,8 +74,10 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
             trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
-            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
+
+            // trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
+            // trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1);
 
         }
 
@@ -82,11 +87,13 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         // }
 
         double errorInMeters = 0.2;
-        // targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
-        // targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
-        targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
-        // targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
-        targetPose2 = trajectory3.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        terminalTargetPose = new Pose2d(1.72, 1.50, Rotation2d.fromDegrees(-176.97)); //middle pose where robot is at terminal
+        targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
+        targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+
+        //splitting highhuberterminalP2 into 2:
+        // targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
+        // targetPose2 = trajectory3.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -94,47 +101,26 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
 
-        
-
         addCommands(
-                new SequentialCommandGroup(
-                    new ParallelCommandGroup(
-                        getTrajectoryFollowerCommand(trajectory, driveBase),
-                        new ToggleIntake(deployer),
-                        new RunIntakeWithConveyor(intake, conveyor),
-                        new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER)
-                    ), 
-                    new AutoShootToIntake(conveyor, shooter, intake),
-                    new ParallelCommandGroup(
-                        new SequentialCommandGroup(           
-                            getTrajectoryFollowerCommand(trajectory2, driveBase),
-                            new WaitCommand(1),
-                            getTrajectoryFollowerCommand(trajectory3, driveBase)
-                        ),
-                        new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
-                    ),
-                    new StopDriveBase(driveBase),
-                    new ShootAllBalls(conveyor, shooter)
-                ));
-                // new ParallelCommandGroup(
-                //         new SequentialCommandGroup(
-                //                 getTrajectoryFollowerCommand(trajectory, driveBase),
-                //                 getTrajectoryFollowerCommand(trajectory2, driveBase)),
-                //         new SequentialCommandGroup(
-                //             new ParallelCommandGroup(
-                //                 new ToggleIntake(deployer),
-                //                 new RunIntakeWithConveyor(intake, conveyor)
-                //             ),
-                //                 new WaitToShoot(driveBase, shooter, targetPose, 0.1, -0.8, HubType.UPPER),
-                //                 new AutoShootToIntake(conveyor, shooter, intake),
-                //                 // new WaitToShoot(driveBase, shooter, targetPose2, 0.5, 1.25, HubType.LOWER),
-                //                 new WaitToShoot(driveBase, shooter, targetPose2, 0.75, -0.9, HubType.UPPER)
-                                
-                //         ), //TODO: test if ShootAllBalls works (rather than autoShootToIntake)
-                // new StopDriveBase(driveBase)
-
-                
-                // getTrajectoryFollowerCommand(trajectory, driveBase)
+            new SequentialCommandGroup(
+                //shoot first two balls (one in robot, one in front of tarmac)
+                new ParallelCommandGroup(
+                    getTrajectoryFollowerCommand(trajectory, driveBase),
+                    new ToggleIntake(deployer),
+                    new RunIntakeWithConveyor(intake, conveyor),
+                    new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER)
+                ), 
+                new AutoShootToIntake(conveyor, shooter, intake),
+                //go to terminal, pause at terminal and intake 2 balls, then go to og shooting pose and shoot
+                new ParallelCommandGroup(
+                    getTrajectoryFollowerCommand(trajectory2, driveBase),   
+                    //TODO: test if errorInMeters needs to be updated to 100
+                    new WaitToPause(driveBase, terminalTargetPose, errorInMeters, 1),
+                    new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
+                ),
+                new StopDriveBase(driveBase),
+                new ShootAllBalls(conveyor, shooter)
+            ));
     }
 
     @Override
