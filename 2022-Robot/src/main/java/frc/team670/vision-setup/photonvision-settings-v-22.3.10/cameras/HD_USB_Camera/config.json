@@ -1,0 +1,14 @@
+{
+  "baseName" : "HD USB Camera",
+  "uniqueName" : "HD_USB_Camera",
+  "nickname" : "HD_USB_Camera",
+  "FOV" : 70.0,
+  "path" : "/dev/video4",
+  "cameraType" : "UsbCamera",
+  "currentPipelineIndex" : 0,
+  "camPitch" : {
+    "radians" : 0.0
+  },
+  "calibrations" : [ ],
+  "streamIndex" : 2
+}
