@@ -48,11 +48,6 @@ public class Vision extends VisionSubsystemBase{
         distanceNoError = distance + calculateError(angle);
     }
 
-
-    
-
-   
-
     public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
         if (super.hasTarget()){
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
