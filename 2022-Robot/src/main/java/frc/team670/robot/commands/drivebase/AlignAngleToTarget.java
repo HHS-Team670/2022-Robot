@@ -3,7 +3,8 @@ package frc.team670.robot.commands.drivebase;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -28,6 +29,12 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     private double relativeYawToTarget;
 
     double prevCapTime;
+
+    private final double ANGULAR_P = 0.01;
+    private final double ANGULAR_D = 0.0;
+    private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
+    private double rotationSpeed;
 
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         this.driveBase = driveBase;
@@ -56,15 +63,17 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     }
 
     @Override
-    public void execute(){
+    public void execute() {
         relativeYawToTarget = vision.getAngleToTarget();
         double capTime = vision.getVisionCaptureTime();
-        double heading =  driveBase.getHeading();
-        if(capTime!=prevCapTime && relativeYawToTarget != RobotConstants.VISION_ERROR_CODE){
+        double heading = driveBase.getHeading();
+        if (capTime != prevCapTime && relativeYawToTarget != RobotConstants.VISION_ERROR_CODE) {
             targetAngle = heading - relativeYawToTarget;
             prevCapTime = capTime;
         }
-        driveBase.curvatureDrive(0, heading < targetAngle ? -0.15 : 0.15, true); // 0.3 is just a constant safe quick-turn rotational speed
+        rotationSpeed = MathUtil.clamp(turnController.calculate(targetAngle, 0), -0.3, 0.3); // Max speed can be 0.3
+        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : rotationSpeed, true); // 0.3 is just a constant safe
+                                                                                 // quick-turn rotational speed
     }
 
     @Override
