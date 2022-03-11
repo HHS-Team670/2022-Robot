@@ -455,7 +455,7 @@ public class DriveBase extends HDrive {
     //zeroHeading();
     navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
     SmartDashboard.putNumber("starting heading", getHeading());
-    odometry.resetPosition(pose2d, Rotation2d.fromDegrees(getHeading()));
+    odometry.resetPosition(pose2d, pose2d.getRotation());
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
