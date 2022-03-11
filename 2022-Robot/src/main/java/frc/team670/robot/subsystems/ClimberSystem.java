@@ -9,17 +9,23 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.commands.climber.RetractClimber;
+import frc.team670.robot.commands.routines.climb.FullClimb;
 import frc.team670.robot.constants.RobotMap;
 
-public class ClimberSystem {
+public class ClimberSystem extends MustangSubsystemBase{
 
     public enum Level {
-        LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION), HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
+        RETRACTED(0), LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION), HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
         INTERMEDIATE_HIGH(DIAGONAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION),
         INTERMEDIATE_MID(VERTICAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION);
 
@@ -67,7 +73,9 @@ public class ClimberSystem {
 
     private static Climber verticalClimber, diagonalClimber;
 
-    public ClimberSystem() {
+    private MustangController mController;
+
+    public ClimberSystem(MustangController mController) {
         verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, SMARTMOTION_SLOT, VERTICAL_kFF, VERTICAL_kP, false,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
                 ALLOWED_ERR_ROTATIONS,
@@ -80,6 +88,8 @@ public class ClimberSystem {
 
         verticalClimber.setName("Climber 1");
         diagonalClimber.setName("Climber 2");
+
+        this.mController = mController;
     }
 
     public Climber getVerticalClimber() {
@@ -91,7 +101,58 @@ public class ClimberSystem {
     }
 
     public boolean isRobotClimbing(){
-        return (Math.abs(verticalClimber.getUnadjustedMotorRotations()) > Math.abs(verticalClimber.getMinMotorPosition()) || Math.abs(diagonalClimber.getUnadjustedMotorRotations()) > Math.abs(diagonalClimber.getMinMotorPosition()));
+        return (verticalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations || diagonalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations);
+    }
+
+    @Override
+    public HealthState checkHealth() {
+        HealthState verticalClimberHealth = verticalClimber.checkHealth();
+        if(verticalClimberHealth == HealthState.GREEN && diagonalClimber.checkHealth().getId() <= HealthState.YELLOW.getId()){
+            return HealthState.YELLOW;
+        }
+        else{
+            return verticalClimberHealth;
+        }
+    }
+
+    public void climbProcedure(int step){
+        switch(step){
+            case 0:
+                verticalClimber.retract();
+                diagonalClimber.retract();
+                break;
+            case 1:
+                verticalClimber.climb(Level.MID);
+                break;
+            case 3:
+                verticalClimber.retract();
+                break;
+            case 4:
+                diagonalClimber.climb(Level.HIGH);
+                break;
+            case 5:
+                verticalClimber.climb(Level.INTERMEDIATE_MID);
+                break;
+        }
+    }
+
+    @Override
+    public void mustangPeriodic() {
+        if(verticalClimber.getCurrentLevel() == Level.INTERMEDIATE_MID && verticalClimber.isAtTarget()){
+            MustangScheduler.getInstance().schedule(new SequentialCommandGroup(
+                new WaitCommand(0.5),
+                new RetractClimber(verticalClimber, false)
+            ), verticalClimber);
+        }
+    }
+
+    @Override
+    public void debugSubsystem() {
+
+    }
+
+    public void initDefaultCommand(){
+        MustangScheduler.getInstance().setDefaultCommand(this, new FullClimb(this, mController));
     }
 
     public class Climber extends MustangSubsystemBase {
@@ -133,6 +194,8 @@ public class ClimberSystem {
 
         private boolean isReversed;
         private boolean isZeroedAtStart = false;
+
+        private Level currentLevel;
 
         /**
          * @param motorId                      The CAN id for the motor controller
@@ -204,6 +267,10 @@ public class ClimberSystem {
                     SMARTMOTION_SLOT);
         }
 
+        public Level getCurrentLevel(){
+            return currentLevel;
+        }
+
         public void hookOnBar() {
             if (isHooked() && !onBar) {
                 onBar = true;
@@ -246,10 +313,12 @@ public class ClimberSystem {
 
         public void climb(Level level){
             climb(level.getRotations());
+            currentLevel = level;
         }
 
         public void retract() {
             climb(MOTOR_ROTATIONS_AT_RETRACTED);
+            currentLevel = Level.RETRACTED;
         }
 
         public HealthState checkHealth() {
@@ -320,6 +389,7 @@ public class ClimberSystem {
                         if (Math.abs(motor.getSoftLimit(SoftLimitDirection.kForward) - forwardLimit) < 0.5
                                 && (Math.abs(motor.getSoftLimit(SoftLimitDirection.kReverse) - reverseLimit) < 0.5)) {
                             isZeroedAtStart = true;
+                            currentLevel = Level.RETRACTED;
                         }
                     }
                 } else {
