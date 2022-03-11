@@ -8,6 +8,7 @@ public class RobotMap {
 
   public static final int DRIVER_CONTROLLER_PORT = 0;
   public static final int OPERATOR_CONTROLLER_PORT = 1;
+  public static final int BACKUP_CONTROLLER_PORT = 2;
 
   // Drive Base
   public static final int SPARK_LEFT_MOTOR_1 = 10; // These are properly set.
