@@ -44,7 +44,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // Valid hubTypes are "upper" and "lower"
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
         trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
-        extension = PathPlanner.loadPath("2BallExtension", 1, 0.5);
+        extension = PathPlanner.loadPath("ATarmac2BallExtension", 1, 0.5);
 
         this.driveBase = driveBase;
         

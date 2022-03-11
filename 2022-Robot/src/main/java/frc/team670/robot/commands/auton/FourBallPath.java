@@ -47,12 +47,12 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class FourBallPath extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Trajectory trajectory, trajectory2;
+    // private Trajectory trajectory, trajectory2;
 
     //splitting highhubTerminalP2 into 2 so it can wait at the terminal for 1 sec w WaitCommand
-    // private Trajectory trajectory, trajectory2, trajectory3;
+    private Trajectory trajectory, trajectory2, trajectory3;
 
-    private Pose2d targetPose, targetPose2, terminalTargetPose;
+    private Pose2d targetPose, targetPose2, terminalTargetPose, targetPose3;
     private DriveBase driveBase;
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer,
@@ -74,10 +74,10 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
             trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
+            // trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
 
-            // trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
-            // trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1, true);
 
         }
 
@@ -90,6 +90,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         terminalTargetPose = new Pose2d(1.72, 1.50, Rotation2d.fromDegrees(-176.97)); //middle pose where robot is at terminal
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        targetPose3 = trajectory3.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
 
         //splitting highhuberterminalP2 into 2:
         // targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
@@ -111,24 +112,60 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                     new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER)
                 ), 
                 new AutoShootToIntake(conveyor, shooter, intake),
-                //go to terminal, pause at terminal and intake 2 balls, then go to og shooting pose and shoot
+                getTrajectoryFollowerCommand(trajectory2, driveBase),   
+
                 new ParallelCommandGroup(
-                    getTrajectoryFollowerCommand(trajectory2, driveBase),   
-                    //TODO: test if errorInMeters needs to be updated to 100
-                    new WaitToPause(driveBase, terminalTargetPose, errorInMeters, 1),
-                    new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
+                    new RunIntakeWithConveyor(intake, conveyor),
+                    new WaitCommand(1)
                 ),
-                new StopDriveBase(driveBase),
+                getTrajectoryFollowerCommand(trajectory3, driveBase), 
+                new ParallelCommandGroup(
+                    new StopDriveBase(driveBase),
+                    new WaitToShoot(driveBase, shooter, targetPose, 100, -0.8, HubType.UPPER)
+                ),  
+                
                 new ShootAllBalls(conveyor, shooter)
-            ));
+            )
+                // /*VERSION THAT SHOULD WORK/OG*
+                //  new SequentialCommandGroup(
+                //     new ParallelCommandGroup(
+                //         getTrajectoryFollowerCommand(trajectory, driveBase),
+                //         new ToggleIntake(deployer),
+                //         new RunIntakeWithConveyor(intake, conveyor),
+                //         new WaitToShoot(driveBase, shooter, targetPose, 100, -1, HubType.UPPER)
+                //     ), 
+                //     new AutoShootToIntake(conveyor, shooter, intake),
+                //     new ParallelCommandGroup(
+                //         getTrajectoryFollowerCommand(trajectory2, driveBase),
+                //         new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
+                //     ),
+                //     new StopDriveBase(driveBase),
+                //     new ShootAllBalls(conveyor, shooter)
+                // )
+                
+                // END*/
+
+                // new ParallelCommandGroup(
+                //     getTrajectoryFollowerCommand(trajectory3, driveBase),   
+                //     new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
+                // )
+                //go to terminal, pause at terminal and intake 2 balls, then go to og shooting pose and shoot
+                // new ParallelCommandGroup(
+                //     getTrajectoryFollowerCommand(trajectory2, driveBase),   
+                //     //TODO: test if errorInMeters needs to be updated to 100
+                //     // new WaitToPause(driveBase, terminalTargetPose, errorInMeters, 1),
+                //     new WaitToShoot(driveBase, shooter, targetPose2, 100, -0.8, HubType.UPPER)
+
+                // ),
+                );
     }
 
     @Override
     public void initialize() {
         super.initialize();
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
-        SmartDashboard.putNumber("Auton target x", targetPose2.getX());
-        SmartDashboard.putNumber("Auton target y", targetPose2.getY());
+        // SmartDashboard.putNumber("Auton target x", targetPose2.getX());
+        // SmartDashboard.putNumber("Auton target y", targetPose2.getY());
     }
 
     @Override

@@ -23,6 +23,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
+    //teleop
     public ShootAllBalls(DriveBase driveBase, ConveyorSystem conveyorSystem, Shooter shooter, Vision vision) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
@@ -37,6 +38,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       );
     } 
 
+    //auton
     public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
@@ -46,7 +48,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         // new AlignAngleToTarget(driveBase, vision),
         new StartShooter(shooter, false),
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
-        new WaitCommand(1),
+        new WaitCommand(2),
         new StopShooter(shooter)
       );
     } 
