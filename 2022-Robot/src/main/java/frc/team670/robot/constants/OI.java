@@ -8,6 +8,8 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climber.ExtendClimber;
 import frc.team670.robot.commands.climber.RetractClimber;
+import frc.team670.robot.commands.conveyor.ToggleConveyor;
+import frc.team670.robot.commands.deployer.RaiseIntakeToAngle;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
@@ -27,11 +29,12 @@ public class OI extends OIBase {
 
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   private static MustangController operatorController = new MustangController(RobotMap.OPERATOR_CONTROLLER_PORT);
+  private static MustangController backupController = new MustangController(RobotMap.BACKUP_CONTROLLER_PORT);
 
   // operator controls
   private static JoystickButton triggerIntaking = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton triggerOuttaking = new JoystickButton(getOperatorController(), XboxButtons.B);
-  private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
+  private static JoystickButton raiseIntake = new JoystickButton(getOperatorController(), XboxButtons.A);
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
@@ -45,6 +48,14 @@ public class OI extends OIBase {
   private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
   private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B);
+
+  // backup controls
+  private static JoystickButton toggleConveyor = new JoystickButton(getBackupController(), XboxButtons.X);
+  private static JoystickButton raiseC1 = new JoystickButton(getBackupController(), XboxButtons.A);
+  private static JoystickButton lowerC1 = new JoystickButton(getBackupController(), XboxButtons.B);
+  private static JoystickButton lowerC1ForC2 = new JoystickButton(getBackupController(), XboxButtons.Y);
+  private static JoystickButton raiseC2 = new JoystickButton(getBackupController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton lowerC2 = new JoystickButton(getBackupController(), XboxButtons.LEFT_BUMPER);
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -66,6 +77,10 @@ public class OI extends OIBase {
 
   public static MustangController getOperatorController() {
     return operatorController;
+  }
+
+  public static MustangController getBackupController() {
+    return backupController;
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
@@ -99,6 +114,15 @@ public class OI extends OIBase {
 
     extendDiagonalClimber.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
     retractDiagonalClimber.whenPressed(new RetractClimber(diagonalClimber, false));
+
+    raiseIntake.whenPressed(new RaiseIntakeToAngle(30, deployer));
+
+    toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));
+    raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.HIGH));
+    lowerC1.whenPressed(new RetractClimber(verticalClimber,false));
+    lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
+    raiseC2.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
+    lowerC2.whenPressed(new RetractClimber(diagonalClimber,false));
 
     //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
   }

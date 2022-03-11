@@ -214,7 +214,7 @@ public class Shooter extends MustangSubsystemBase {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForHighGoalDistance(double distance) {
-        double predictedVal = speedAtDistanceForHighGoal.predict(distance);
+        double predictedVal = speedAtDistanceForHighGoal.predict(distance) + 100; // adding 100 to shoot into the outer upper part of the upper hub
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedHigh", expectedSpeed);
         SmartDashboard.putNumber("predictedValHigh", predictedVal);
