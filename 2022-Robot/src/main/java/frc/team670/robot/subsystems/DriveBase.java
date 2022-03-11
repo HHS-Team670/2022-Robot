@@ -15,18 +15,16 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -68,7 +66,7 @@ public class DriveBase extends HDrive {
 
   private NavX navXMicro;
 
-  private DifferentialDrivePoseEstimator poseEstimator;
+  private DifferentialDriveOdometry odometry;
 
   SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
 
@@ -146,12 +144,13 @@ public class DriveBase extends HDrive {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
     timer.start();
-    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-    new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-      VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
-      VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
-    ); //vision
+    // poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+    // new Pose2d(START_X, START_Y, START_ANGLE_RAD),
+    //   VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+    //   VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+    //   VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    // ); //vision
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
     
     initBrakeMode();
     middle.setIdleMode(IdleMode.kCoast);
@@ -392,8 +391,9 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
     vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
-    poseEstimator.update(Rotation2d.fromDegrees(
-      getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    // poseEstimator.update(Rotation2d.fromDegrees(
+    //   getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
     Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
@@ -443,7 +443,7 @@ public class DriveBase extends HDrive {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
+    return odometry.getPoseMeters();
   }
 
   /**
@@ -455,7 +455,7 @@ public class DriveBase extends HDrive {
     //zeroHeading();
     navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
     SmartDashboard.putNumber("starting heading", getHeading());
-    poseEstimator.resetPosition(pose2d, pose2d.getRotation());
+    odometry.resetPosition(pose2d, Rotation2d.fromDegrees(getHeading()));
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
