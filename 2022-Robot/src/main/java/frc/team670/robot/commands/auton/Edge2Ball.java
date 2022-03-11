@@ -38,13 +38,14 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     private DriveBase driveBase;
 
     // path names:
-    // "ATarmacEdge2Ball"
-    // "BTarmacEdgeCenter2Ball"
+    // "ATarmacEdge2Ball" \ "ATarmacEdge2BallExtension"
+    // "BTarmacEdgeCenter2Ball" \ "BTarmacEdgeCenter2BallExtension"
     // "BTarmacEdgeLower2Ball"
     // Valid hubTypes are "upper" and "lower"
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
         trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
-        extension = PathPlanner.loadPath("ATarmac2BallExtension", 1, 0.5);
+        // extension = PathPlanner.loadPath("ATarmacEdge2BallExtension", 1, 0.5);
+        extension = PathPlanner.loadPath(pathName.toString() + "Extension", 1, 0.5);
 
         this.driveBase = driveBase;
         
@@ -74,10 +75,6 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
                         new ToggleIntake(deployer),
                         new RunIntakeWithConveyor(intake, conveyor)
                     ),
-                    // if doing lower, adjustment should be +2 meters
-                    // if doing upper, adjustment should be -0.85 meters
-                    // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.85, "upper"),
-                    // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2, "lower"),
                     waitCommand,
                     new ShootAllBalls(conveyor, shooter)
                 )
