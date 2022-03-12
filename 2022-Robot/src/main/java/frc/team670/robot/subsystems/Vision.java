@@ -1,11 +1,5 @@
 package frc.team670.robot.subsystems;
 
-import org.photonvision.PhotonUtils;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
@@ -14,8 +8,7 @@ import frc.team670.robot.constants.RobotConstants;
 
 
 /**
- * Stores values off of NetworkTables for easy retrieval and gives them
- * Listeners to update the stored values as they are changed.
+ * Calculates the distance away from the target using the camera and green light
  * 
  * @author Katia Bravo, Riya Gupta, Ethan Chang
  */

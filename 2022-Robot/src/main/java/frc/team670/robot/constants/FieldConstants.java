@@ -5,7 +5,6 @@ package frc.team670.robot.constants;
  * @author Mihir, Marius, Wilson, Radhika, Katia, Kiara
  */
 public class FieldConstants {
-    public static final double DISTANCE_TO_GOAL_FROM_START = 3.24; // TODO: Change this later when we find out
 
     // Field Dimensions
     public static final double FIELD_HEIGHT = 8.23;
@@ -17,6 +16,7 @@ public class FieldConstants {
     public static final double HUB_X_POSITION_METERS = HUB_X_POSITION_INCHES / 39.37;
     public static final double HUB_Y_POSITION_INCHES = 162;
     public static final double HUB_Y_POSITION_METERS = HUB_Y_POSITION_INCHES / 39.37;
+    
     // Hub
     public static final double LOW_HUB_HEIGHT = 1.04;
     public static final double HIGH_HUB_HEIGHT = 2.64;
