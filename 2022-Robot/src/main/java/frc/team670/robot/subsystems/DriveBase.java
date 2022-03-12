@@ -395,7 +395,7 @@ public class DriveBase extends HDrive {
     //   getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
-    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
+    Vision.VisionMeasurement visionMeasurement = vision.getPoseVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
       // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
