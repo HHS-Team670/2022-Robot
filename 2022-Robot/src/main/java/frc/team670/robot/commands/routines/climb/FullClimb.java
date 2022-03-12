@@ -43,9 +43,7 @@ public class FullClimb extends CommandBase implements MustangCommand {
   // Called once when the command executes
   @Override
   public void execute() {
-    SmartDashboard.putNumber("climb stp", currentStep);
-    Logger.consoleLog("%s", controller.getDPadState());
-    if(controller.getDPadState() == MustangController.DPadState.NEUTRAL && !justAdvanced){
+    if(!justAdvanced){
       if(controller.getDPadState() == MustangController.DPadState.RIGHT){
         climbers.climbProcedure(++currentStep);
         justAdvanced = true;
@@ -55,7 +53,7 @@ public class FullClimb extends CommandBase implements MustangCommand {
         justAdvanced = true;
       }
     }
-    else{
+    else if(controller.getDPadState() == MustangController.DPadState.NEUTRAL){
       justAdvanced = false;
     }
   }

@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -280,6 +281,7 @@ public class Shooter extends MustangSubsystemBase {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
             if (vision.hasTarget()) {
                 distanceToTarget = vision.getDistanceToTargetM();
+                Logger.consoleLog();
                 SmartDashboard.putNumber("speed-chooser", 0);
             }
             if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison

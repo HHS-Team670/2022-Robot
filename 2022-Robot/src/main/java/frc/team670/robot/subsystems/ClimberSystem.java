@@ -25,7 +25,7 @@ import frc.team670.robot.constants.RobotMap;
 public class ClimberSystem extends MustangSubsystemBase{
 
     public enum Level {
-        RETRACTED(0), LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION), HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
+        RETRACTED(0.1), LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION), HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
         INTERMEDIATE_HIGH(DIAGONAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION),
         INTERMEDIATE_MID(VERTICAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION);
 
@@ -44,7 +44,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     }
 
-    protected static final double ALLOWED_ERR_ROTATIONS = 0.05;
+    protected static final double ALLOWED_ERR_ROTATIONS = 0.09;
 
     protected static final double NORMAL_OUTPUT = 20; // this should be the current output when running normally
     protected static final int SMARTMOTION_SLOT = 0;
@@ -52,11 +52,11 @@ public class ClimberSystem extends MustangSubsystemBase{
     protected static final double VERTICAL_MOTOR_ROTATIONS_PER_SPOOL_ROTATION = 24;
     protected static final double DIAGONAL_MOTOR_ROTATIONS_PER_SPOOL_ROTATION = 25;
 
-    protected static final double VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    protected static final double VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED = 1;
     protected static final double VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = 109; // from 3/6 testing
     protected static final double VERTICAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION = 83;
 
-    protected static final double DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 0;
+    protected static final double DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED = 1;
     protected static final double DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION = -128;
     protected static final double DIAGONAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION = -60;
 
@@ -103,7 +103,7 @@ public class ClimberSystem extends MustangSubsystemBase{
     }
 
     public boolean isRobotClimbing(){
-        return (verticalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations || diagonalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations);
+        return (verticalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations || Math.abs(diagonalClimber.getCurrentLevel().rotations) > Level.RETRACTED.rotations);
     }
 
     @Override
@@ -129,31 +129,36 @@ public class ClimberSystem extends MustangSubsystemBase{
                 break;
             case 1:
                 verticalClimber.climb(Level.MID);
+                diagonalClimber.retract();
+                break;
+            case 2:
+                verticalClimber.retract();
+                diagonalClimber.retract();
                 break;
             case 3:
+                diagonalClimber.climb(Level.HIGH);
                 verticalClimber.retract();
                 break;
             case 4:
+                verticalClimber.climb(Level.INTERMEDIATE_MID);
                 diagonalClimber.climb(Level.HIGH);
                 break;
             case 5:
-                verticalClimber.climb(Level.INTERMEDIATE_MID);
+                verticalClimber.retract();
+                diagonalClimber.climb(Level.HIGH);
+                break;
+            default:
                 break;
         }
     }
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putBoolean("isRunning", isRunning());
+        SmartDashboard.putBoolean("commandinitited", defaultCommandInited);
         if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && !defaultCommandInited){
             initDefaultCommand();
+            Logger.consoleLog("%s", defaultCommandInited);
             defaultCommandInited = true;
-        }
-        if(verticalClimber.getCurrentLevel() == Level.INTERMEDIATE_MID && verticalClimber.isAtTarget()){
-            MustangScheduler.getInstance().schedule(new SequentialCommandGroup(
-                new WaitCommand(0.5),
-                new RetractClimber(verticalClimber, false)
-            ), verticalClimber);
         }
     }
 
@@ -232,7 +237,7 @@ public class ClimberSystem extends MustangSubsystemBase{
             this.kP = p;
             this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
             this.MOTOR_ROTATIONS_AT_MAX_EXTENSION = motorRotationsAtMaxExtension;
-            this.SOFT_LIMIT_AT_RETRACTED = this.MOTOR_ROTATIONS_AT_RETRACTED + .5f;
+            this.SOFT_LIMIT_AT_RETRACTED = this.MOTOR_ROTATIONS_AT_RETRACTED + .1;
             this.SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 1;
             this.MAX_ACC = maxAcc;
             this.MAX_VEL = maxVel;
@@ -344,7 +349,7 @@ public class ClimberSystem extends MustangSubsystemBase{
             if (!isZeroedAtStart) {
                 return HealthState.UNKNOWN;
             } else {
-                if ((isLimitSwitchTripped() && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
+                if ((isLimitSwitchTripped() && currentLevel != Level.RETRACTED && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
                         || (motor == null || motor.getLastError() != REVLibError.kOk)) {
                     return HealthState.RED;
                 }
