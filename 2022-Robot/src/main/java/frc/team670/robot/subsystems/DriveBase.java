@@ -301,8 +301,8 @@ public class DriveBase extends HDrive {
    * Gets the output current of all the motor controllers on the robot
    */
   public double getRobotOutputCurrent() {
-    double output = left1.getOutputCurrent() + left2.getOutputCurrent() + right1.getOutputCurrent()
-        + right2.getOutputCurrent();
+    double output = left1.getOutputCurrent() + left2.getOutputCurrent() 
+      + right1.getOutputCurrent() + right2.getOutputCurrent();
     return output;
   }
 
@@ -390,16 +390,17 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
 
-    vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
+    // vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
     // poseEstimator.update(Rotation2d.fromDegrees(
     //   getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
-    Vision.VisionMeasurement visionMeasurement = vision.getPoseVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
+    // Vision.VisionMeasurement visionMeasurement = vision.getPoseVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
-    if (visionMeasurement != null) {
+    if (vision.hasTarget()) {
+    // if (visionMeasurement != null) {
       // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
-      SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
+      SmartDashboard.putNumber("Image Capture Time", vision.getVisionCaptureTime());
       SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {
       // Logger.consoleError("Did not find targets!");
@@ -623,12 +624,6 @@ public class DriveBase extends HDrive {
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
-  // @Override
-  // public void resetOdometry(frc.team670.mustanglib.subsystems.path.Pose2d pose)
-  // {
-  // // TODO Auto-generated method stub
-
-  // }
   @Override
   public void toggleIdleMode() {
     for (SparkMAXLite motor : allMotors) {
@@ -638,12 +633,6 @@ public class DriveBase extends HDrive {
         motor.setIdleMode(IdleMode.kBrake);
       }
     }
-  }
-
-  @Override
-  public void debugSubsystem() {
-    // TODO Auto-generated method stub
-
   }
 
   public static double getLinearSpeed(){
@@ -656,6 +645,12 @@ public class DriveBase extends HDrive {
 
   public NavX getNavX() {
     return navXMicro;
+  }
+
+  @Override
+  public void debugSubsystem() {
+    // TODO Auto-generated method stub
+
   }
 
 

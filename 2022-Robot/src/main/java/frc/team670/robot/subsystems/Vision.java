@@ -39,16 +39,6 @@ public class Vision extends VisionSubsystemBase{
         setCameraName(RobotConstants.VISION_CAMERA_NAME);
     }
 
-    @Override
-    public VisionMeasurement getPoseVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
-        Pose2d targetOffset = super.getPoseVisionMeasurements(heading, targetPose, cameraOffset).pose;
-        if (targetOffset != null){
-            Pose2d newPose = targetOffset.transformBy(changeInPose(heading));
-            return new VisionMeasurement(newPose, visionCapTime);
-        }
-        return null;
-    }
-
     public void mustangPeriodic() {
         super.processImage(RobotConstants.CAMERA_HEIGHT_METERS, 
             FieldConstants.HIGH_HUB_HEIGHT, RobotConstants.CAMERA_ANGLE_DEGREES);
@@ -94,6 +84,17 @@ public class Vision extends VisionSubsystemBase{
 
     /*
     // Code used for poseEstimation, turns out not needed since odometry is enough
+
+    @Override
+    public VisionMeasurement getPoseVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
+        Pose2d targetOffset = super.getPoseVisionMeasurements(heading, targetPose, cameraOffset).pose;
+        if (targetOffset != null){
+            Pose2d newPose = targetOffset.transformBy(changeInPose(heading));
+            return new VisionMeasurement(newPose, visionCapTime);
+        }
+        return null;
+    }
+
     public Transform2d changeInPose(double heading) {
         // d_0 is the distance from the start position of the robot to the high hub
         // d_c is the distance from the start position of the robot to the current position (calculated by the Law of Cosines)
