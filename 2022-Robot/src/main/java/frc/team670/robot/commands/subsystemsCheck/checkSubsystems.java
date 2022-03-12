@@ -32,7 +32,6 @@ public class CheckSubsystems extends SequentialCommandGroup implements MustangCo
         healthReqs.put(vision, HealthState.GREEN);
         
         addCommands(
-
                 new ToggleIntake(deployer),
                 new ToggleIntake(deployer),
 

@@ -2,9 +2,6 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.REVLibError;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -17,14 +14,9 @@ import frc.team670.robot.constants.RobotMap;
 /**
  * Connects the intake to the shooter
  * 
- * @author Armaan
- * @author Soham
- * @author Edward
+ * @author Armaan, Soham, Edward
  */
 public class ConveyorSystem extends MustangSubsystemBase {
-	// Conveyor status
-
-	private Deployer deployer;
 
 	public enum Status {
 		OFF,
@@ -33,6 +25,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		SHOOTING
 	}
 
+	private Deployer deployer;
 	private Conveyor intakeConveyor, shooterConveyor;
 	private Status status = Status.OFF;
 	private Timer timer = new Timer();
@@ -89,8 +82,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		Logger.consoleLog("Conveyor Status: OUTTAKING");
 	}
 
-	// Uses the current state of the conveyor to determine what parts need to be
-	// shut down
+	// Uses current state of conveyor to determine what parts need to be shut down
 	private void checkState() {
 		switch (status) {
 			case INTAKING:
