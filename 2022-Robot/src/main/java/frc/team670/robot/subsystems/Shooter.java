@@ -281,7 +281,6 @@ public class Shooter extends MustangSubsystemBase {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
             if (vision.hasTarget()) {
                 distanceToTarget = vision.getDistanceToTargetM();
-                Logger.consoleLog();
                 SmartDashboard.putNumber("speed-chooser", 0);
             }
             if(Math.abs(distanceToTarget-RobotConstants.VISION_ERROR_CODE) < 10){ // double comparison

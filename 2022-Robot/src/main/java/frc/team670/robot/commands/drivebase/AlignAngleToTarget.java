@@ -32,18 +32,23 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     double prevCapTime;
 
-    private final double ANGULAR_P = 0.03;
+    private final double ANGULAR_P = 0.05;
     private final double ANGULAR_D = 0.0;
     private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
     private double rotationSpeed;
     private double heading;
 
+    private boolean foundTarget = false;
+
+    private double startTimeMillis;
+
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         this.driveBase = driveBase;
         this.vision = vision;
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
+        startTimeMillis = System.currentTimeMillis() + 3000; //3 second cutoff
     }
 
     @Override
@@ -61,17 +66,14 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
-        
-        prevCapTime = 0.0;
-        relativeYawToTarget = vision.getAngleToTarget();
-        double capTime = vision.getVisionCaptureTime();
-        heading = driveBase.getHeading();
-        if (capTime != prevCapTime && relativeYawToTarget != RobotConstants.VISION_ERROR_CODE) {
+        if(vision.hasTarget()){
+            relativeYawToTarget = vision.getAngleToTarget();
+            heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
-            prevCapTime = capTime;
+            turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+            turnController.enableContinuousInput(-180, 180);
+            foundTarget = true;
         }
-        turnController = new PIDController(SmartDashboard.getNumber("p align", 0), 0, SmartDashboard.getNumber("d align", 0));
-        turnController.enableContinuousInput(-180, 180);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(driveBase.getHeading() - targetAngle) <= 0.5);
+        return (!foundTarget || Math.abs(driveBase.getHeading() - targetAngle) <= 1.5 || ( (int)( (startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
     }
 
     @Override
