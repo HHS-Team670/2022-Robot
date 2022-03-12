@@ -41,7 +41,6 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.commands.auton.AutoSelector;
-// import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -78,20 +77,21 @@ public class DriveBase extends HDrive {
   private NetworkTableEntry matchTimeEntry;
   private NetworkTableEntry isAutonEntry;
 
-  // Start pose variables
-  public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
-  public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
-  public static final double START_ANGLE_DEG = 0; //180;
-  public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
+  // More vision pose estimation stuff:
+  // // Start pose variables
+  // public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
+  // public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
+  // public static final double START_ANGLE_DEG = 0; //180;
+  // public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
-  // Constants used for doing robot to target pose conversion
-  public static final Pose2d TARGET_POSE = 
-    new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
-  //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
+  // // Constants used for doing robot to target pose conversion
+  // public static final Pose2d TARGET_POSE = 
+  //   new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
+  // //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
 
-  //2020 robot camera offset
-  public static final Pose2d CAMERA_OFFSET = TARGET_POSE
-      .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+  // //2020 robot camera offset
+  // public static final Pose2d CAMERA_OFFSET = TARGET_POSE
+  //     .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
 
   private XboxRobotOrientedDrive defaultCommand;
