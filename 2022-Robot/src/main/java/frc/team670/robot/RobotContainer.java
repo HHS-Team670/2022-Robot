@@ -69,7 +69,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber);
+    addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber, climbers);
   }
 
   public void robotInit() {
@@ -137,7 +137,6 @@ public class RobotContainer extends RobotContainerBase {
     leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber, diagonalClimber);
     driveBase.initDefaultCommand();
-    climbers.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
     // MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
@@ -170,8 +169,11 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    // SmartDashboard.putNumber("current", pd.getTotalCurrent());
-    // SmartDashboard.putNumber("energy", pd.getTotalEnergy());
-    // SmartDashboard.putNumber("power", pd.getTotalPower());
+    SmartDashboard.putNumber("current", pd.getTotalCurrent());
+    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+    SmartDashboard.putNumber("power", pd.getTotalPower());
+    for(int i = 0; i < pd.getNumChannels(); i++){
+      SmartDashboard.putNumber(("Channel " + i), pd.getCurrent(i));
+    }
   }
 }

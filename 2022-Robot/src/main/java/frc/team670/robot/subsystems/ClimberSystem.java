@@ -75,6 +75,8 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     private MustangController mController;
 
+    private boolean defaultCommandInited = false;
+
     public ClimberSystem(MustangController mController) {
         verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, SMARTMOTION_SLOT, VERTICAL_kFF, VERTICAL_kP, false,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
@@ -107,12 +109,16 @@ public class ClimberSystem extends MustangSubsystemBase{
     @Override
     public HealthState checkHealth() {
         HealthState verticalClimberHealth = verticalClimber.checkHealth();
-        if(verticalClimberHealth == HealthState.GREEN && diagonalClimber.checkHealth().getId() <= HealthState.YELLOW.getId()){
+        if(verticalClimberHealth == HealthState.GREEN && diagonalClimber.checkHealth().getId() >= HealthState.YELLOW.getId()){
             return HealthState.YELLOW;
         }
         else{
             return verticalClimberHealth;
         }
+    }
+
+    public boolean isRunning(){
+        return (verticalClimber.isRunning() || diagonalClimber.isRunning());
     }
 
     public void climbProcedure(int step){
@@ -138,6 +144,11 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
+        SmartDashboard.putBoolean("isRunning", isRunning());
+        if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && !defaultCommandInited){
+            initDefaultCommand();
+            defaultCommandInited = true;
+        }
         if(verticalClimber.getCurrentLevel() == Level.INTERMEDIATE_MID && verticalClimber.isAtTarget()){
             MustangScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new WaitCommand(0.5),
@@ -195,7 +206,7 @@ public class ClimberSystem extends MustangSubsystemBase{
         private boolean isReversed;
         private boolean isZeroedAtStart = false;
 
-        private Level currentLevel;
+        private Level currentLevel = Level.RETRACTED;
 
         /**
          * @param motorId                      The CAN id for the motor controller
@@ -267,6 +278,10 @@ public class ClimberSystem extends MustangSubsystemBase{
                     SMARTMOTION_SLOT);
         }
 
+        private boolean isRunning(){
+            return leadEncoder.getVelocity() > 0;
+        }
+
         public Level getCurrentLevel(){
             return currentLevel;
         }
@@ -303,6 +318,10 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         public boolean isHookedOnBar() {
             return onBar;
+        }
+
+        public boolean isZeroed(){
+            return isZeroedAtStart;
         }
 
         private void climb(double rotations) {

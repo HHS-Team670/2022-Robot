@@ -71,8 +71,8 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             targetAngle = heading - relativeYawToTarget;
             prevCapTime = capTime;
         }
-        rotationSpeed = MathUtil.clamp(turnController.calculate(targetAngle, 0), -0.3, 0.3); // Max speed can be 0.3
-        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : rotationSpeed, true); // 0.3 is just a constant safe
+        // rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be 0.3
+        driveBase.curvatureDrive(0, heading < targetAngle ? -0.15 : 0.15, true); // 0.3 is just a constant safe
                                                                                  // quick-turn rotational speed
     }
 
