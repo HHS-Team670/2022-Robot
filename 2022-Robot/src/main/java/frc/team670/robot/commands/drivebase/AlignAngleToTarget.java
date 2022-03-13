@@ -48,7 +48,6 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
         this.vision = vision;
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
-        startTimeMillis = System.currentTimeMillis() + 3000; //3 second cutoff
     }
 
     @Override
@@ -74,6 +73,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
+        startTimeMillis = System.currentTimeMillis() + 3000; //3 second cutoff
     }
 
     @Override
