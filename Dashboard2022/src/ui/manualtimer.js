@@ -38,6 +38,10 @@ function stopTimer () {
     runtimer = false;
 }
 
+function pauseTimer () {
+    runtimer = false;
+}
+
 function getTimeString (minutes, seconds) {
     return (seconds == 60 ? minutes + 1 : minutes) + ':' 
         + (Math.round(seconds) < 10 ? "0" : "") 
@@ -70,6 +74,10 @@ function setMatchPhase(phase) {
 document.getElementById("timer-stopper").onmouseup = function() {
     stopTimer();
     setMatchPhase(MatchPhases.NOT_STARTED);
+}
+
+document.getElementById("timer-pauser").onmouseup = function() {
+    pauseTimer();
 }
 
 
