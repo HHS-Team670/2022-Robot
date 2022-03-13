@@ -44,6 +44,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
+        shooter.setLED(true);
         if(useDynamicSpeed)
             shooter.setRPM();
         //Auton removed this because it messes up auton shooting distances
