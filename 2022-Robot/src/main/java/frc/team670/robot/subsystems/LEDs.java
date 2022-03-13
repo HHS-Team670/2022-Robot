@@ -14,9 +14,9 @@ public class LEDs extends LEDSubsystem {
 
     private LEDColor allianceColor, oppositeAllianceColor;
 
-    public LEDs(int port, int length, Shooter shooter, Intake intake, ConveyorSystem conveyors,
+    public LEDs(int port, int startIndex, int endIndex, Shooter shooter, Intake intake, ConveyorSystem conveyors,
             ClimberSystem climbers) {
-        super(port, length);
+        super(port, startIndex, endIndex);
         this.shooter = shooter;
         this.intake = intake;
         this.conveyors = conveyors;

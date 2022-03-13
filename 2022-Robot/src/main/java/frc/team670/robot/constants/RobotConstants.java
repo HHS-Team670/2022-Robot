@@ -58,7 +58,8 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double CAMERA_ANGLE_DEGREES = 25;
         // public static final double CAMERA_DISTANCE_TO_FRONT = 0.22;
 
-        public static final int LED_LENGTH = 70;
+        public static final int LED_START_INDEX = 24;
+        public static final int LED_END_INDEX = 66;
 
         // Autonomous Constants
         public static final DifferentialDriveKinematics kDriveKinematics = 
