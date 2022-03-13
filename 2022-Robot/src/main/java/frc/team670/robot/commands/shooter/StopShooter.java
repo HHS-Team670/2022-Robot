@@ -29,6 +29,7 @@ public class StopShooter extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
+        shooter.setLED(false);
         shooter.stop();
     }
 

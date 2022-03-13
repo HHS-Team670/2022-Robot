@@ -328,6 +328,10 @@ public class Shooter extends MustangSubsystemBase {
         return MEASURED_DISTANCE_HIGH_METER[0];
     }
 
+    public void setLED(boolean on) {
+        vision.switchLEDS(on);
+    }
+
     @Override
     public void debugSubsystem() {
         SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
