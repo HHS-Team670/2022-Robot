@@ -39,8 +39,11 @@ public class LEDs extends LEDSubsystem {
             rainbow(false);
         } else if (!isBlinking) {
             if (climbers.isRobotClimbing()) {
+                blink(LEDColor.PURPLE.dimmer());
+            } else if(shooter.foundTarget()){
                 blink(LEDColor.GREEN.dimmer());
-            } else if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
+            }
+            else if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
                 solid(oppositeAllianceColor.dimmer());
             } else if (shooter.getVelocity() > 0) { // shooter is shooting
                 if (shooter.isShooting()) {

@@ -3,7 +3,7 @@ package frc.team670.robot.commands.deployer;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -14,9 +14,11 @@ import frc.team670.robot.subsystems.Deployer;
  * 
  * @author AkshatAdsule
  */
-public class RaiseIntakeToAngle extends InstantCommand implements MustangCommand  {
+public class RaiseIntakeToAngle extends CommandBase implements MustangCommand  {
     private double angle;
     private Deployer deployer;
+
+    private boolean deployed;
 
     /**
      * Raises the intake to a specified angle
@@ -38,6 +40,17 @@ public class RaiseIntakeToAngle extends InstantCommand implements MustangCommand
 
     @Override
     public void initialize() {
-        deployer.setSystemTargetAngleInDegrees(angle);
+        deployed = deployer.isDeployed();
+        if(!deployed){
+            deployer.setSystemTargetAngleInDegrees(angle);
+        }
+        else{
+            deployer.setSystemTargetAngleInDegrees(0);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return deployer.hasReachedTargetPosition();
     }
 }

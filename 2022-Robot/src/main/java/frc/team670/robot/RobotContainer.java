@@ -49,9 +49,9 @@ public class RobotContainer extends RobotContainerBase {
   private static ConveyorSystem conveyorSystem = new ConveyorSystem(deployer);
   private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
-  private static Shooter shooter = new Shooter(vision);
+  private static Shooter shooter = new Shooter(vision, getOperatorController(), deployer, conveyorSystem);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
-  private static ClimberSystem climbers = new ClimberSystem(getDriverController());
+  private static ClimberSystem climbers = new ClimberSystem(getBackupController());
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_LENGTH, shooter, intake, conveyorSystem, climbers);
@@ -137,7 +137,6 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber, diagonalClimber);
-    driveBase.initDefaultCommand();
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
     // MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
@@ -167,6 +166,10 @@ public class RobotContainer extends RobotContainerBase {
 
   public static MustangController getDriverController() {
     return OI.getDriverController();
+  }
+
+  public static MustangController getBackupController() {
+    return OI.getBackupController();
   }
 
   public void periodic() {

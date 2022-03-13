@@ -11,8 +11,13 @@ import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.commands.conveyor.ToggleConveyor;
 import frc.team670.robot.commands.deployer.RaiseIntakeToAngle;
 import frc.team670.robot.commands.deployer.ToggleIntake;
+import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
+import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.intake.StopIntake;
+import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.intake.ToggleAndRunIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.OverrideDynamicRPM;
 import frc.team670.robot.commands.shooter.StopShooter;
@@ -32,30 +37,24 @@ public class OI extends OIBase {
   private static MustangController backupController = new MustangController(RobotMap.BACKUP_CONTROLLER_PORT);
 
   // operator controls
-  private static JoystickButton triggerIntaking = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton triggerOuttaking = new JoystickButton(getOperatorController(), XboxButtons.B);
-  private static JoystickButton raiseIntake = new JoystickButton(getOperatorController(), XboxButtons.A);
-  private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
-  private static JoystickButton stopShooter = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
-  private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
-  private static JoystickButton overrideDyanmicSpeed = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
+  private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
+  private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.X);
+  private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   
   // driver controls
-  private static JoystickButton extendVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.Y);
-  private static JoystickButton retractVerticalClimber = new JoystickButton(getDriverController(), XboxButtons.A);
-  private static JoystickButton retractVerticalClimberForC2Climb = new JoystickButton(getDriverController(), XboxButtons.BACK);
-  private static JoystickButton extendDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
-  private static JoystickButton retractDiagonalClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
-  private static JoystickButton turnVisionLEDsOn = new JoystickButton(getDriverController(), XboxButtons.X);
-  private static JoystickButton turnVisionLEDsOff = new JoystickButton(getDriverController(), XboxButtons.B);
+  private static JoystickButton alignToTarget = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton shootAllBalls = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
 
   // backup controls
   private static JoystickButton toggleConveyor = new JoystickButton(getBackupController(), XboxButtons.X);
-  private static JoystickButton raiseC1 = new JoystickButton(getBackupController(), XboxButtons.A);
-  private static JoystickButton lowerC1 = new JoystickButton(getBackupController(), XboxButtons.B);
-  private static JoystickButton lowerC1ForC2 = new JoystickButton(getBackupController(), XboxButtons.Y);
+  private static JoystickButton raiseC1 = new JoystickButton(getBackupController(), XboxButtons.Y);
+  private static JoystickButton lowerC1 = new JoystickButton(getBackupController(), XboxButtons.A);
+  private static JoystickButton lowerC1ForC2 = new JoystickButton(getBackupController(), XboxButtons.B);
   private static JoystickButton raiseC2 = new JoystickButton(getBackupController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton lowerC2 = new JoystickButton(getBackupController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton turnVisionLEDsOn = new JoystickButton(getBackupController(), XboxButtons.BACK);
+  private static JoystickButton turnVisionLEDsOff = new JoystickButton(getBackupController(), XboxButtons.START);
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -93,37 +92,27 @@ public class OI extends OIBase {
     Climber verticalClimber = (Climber) subsystemBases[6];
     Climber diagonalClimber = (Climber) subsystemBases[7];
 
-    // fullClimb.whenPressed(new FullClimb(climberSystem));
+    driveBase.initDefaultCommand();
+    shooter.initDefaultCommand();
 
-    triggerIntaking.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
+    // operator
     triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem, deployer));
+    stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
+    runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
+    stopIntake.whenPressed(new StopIntake(intake));
+    
+    // driver
+    shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter, vision));
+    alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
 
-
-    shootAllBalls.whenPressed(new ShootAllBalls(driveBase, conveyorSystem, shooter, vision));
-    stopShooter.whenPressed((new StopShooter(shooter)));
-    overrideDyanmicSpeed.whenPressed(new OverrideDynamicRPM(shooter));
-
-    toggleIntake.whenPressed(new ToggleIntake(deployer));
-
-    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
-    turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
-
-    extendVerticalClimber.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.MID));
-    retractVerticalClimber.whenPressed(new RetractClimber(verticalClimber, false));
-    retractVerticalClimberForC2Climb.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
-
-    extendDiagonalClimber.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
-    retractDiagonalClimber.whenPressed(new RetractClimber(diagonalClimber, false));
-
-    raiseIntake.whenPressed(new RaiseIntakeToAngle(30, deployer));
-
+    // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));
     raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.HIGH));
     lowerC1.whenPressed(new RetractClimber(verticalClimber,false));
     lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
     raiseC2.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
     lowerC2.whenPressed(new RetractClimber(diagonalClimber,false));
-
-    //resetNavx.whenPressed(new ResetNavX(driveBase.getNavX()));
+    turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
+    turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
   }
 }

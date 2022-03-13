@@ -7,29 +7,61 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.subsystems.ClimberSystem;
+import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.Shooter;
 
 /**
- * 
- * @author lakshbhambhani
+ * Once the driver aligns with the mid bar, climbs to the mid bar. It then
+ * climbs
+ * to the high bar from the mid bar, letting go of the mid bar.
  */
 public class OverrideDynamicRPM extends CommandBase implements MustangCommand {
 
-    private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    /**
-     * @param operatorController the operator controller object
-     */
-    public OverrideDynamicRPM(Shooter shooter) {
+    private MustangController controller;
+    private Shooter shooter;
+
+    private boolean justAdvanced = false;
+
+    public OverrideDynamicRPM(Shooter shooter, MustangController mController) {
+        addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
+        this.controller = mController;
         this.shooter = shooter;
     }
 
+    // Called once when the command executes
     @Override
-    public void initialize() {
-        shooter.useDynamicSpeed(!shooter.isUsingDynamicSpeed());
+    public void execute() {
+        if (!justAdvanced) {
+            if (controller.getDPadState() == MustangController.DPadState.RIGHT) {
+                shooter.useDynamicSpeed(false);
+                shooter.setTargetRPM(1550); // low hub touching the fender
+                justAdvanced = true;
+            } else if (controller.getDPadState() == MustangController.DPadState.LEFT) {
+                shooter.useDynamicSpeed(false);
+                shooter.setTargetRPM(shooter.getDefaultRPM()); // default is set to work for low outside tarmac line
+                justAdvanced = true;
+            } else if (controller.getDPadState() == MustangController.DPadState.UP) {
+                shooter.useDynamicSpeed(false);
+                shooter.setTargetRPM(3700); // high hub for right outside tarmac line
+                justAdvanced = true;
+            } else if (controller.getDPadState() == MustangController.DPadState.DOWN) {
+                shooter.useDynamicSpeed(true);
+                justAdvanced = true;
+            }
+        } else if (controller.getDPadState() == MustangController.DPadState.NEUTRAL) {
+            justAdvanced = false;
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 
     @Override

@@ -74,6 +74,10 @@ public class Intake extends MustangSubsystemBase {
     // Stops the intake
     public void stop() {
         roller.stopMotor();
+        if (deployer.isDeployed()) {
+            deployer.deploy(false);
+        }
+        conveyor.stopAll();
     }
 
     /**
