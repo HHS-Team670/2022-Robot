@@ -119,6 +119,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		status = Status.OFF;
 		intakeConveyor.stop();
 		shooterConveyor.stop();
+		deployer.setSystemTargetAngleInDegrees(0);
 		timer.reset();
 		timer.stop();
 	}
