@@ -71,8 +71,6 @@ public class DriveBase extends HDrive {
   private double delayTime = -1;
 
   private Timer timer = new Timer();
-  private NetworkTableEntry matchTimeEntry;
-  private NetworkTableEntry isAutonEntry;
 
   // More vision pose estimation stuff:
   // // Start pose variables
@@ -96,8 +94,6 @@ public class DriveBase extends HDrive {
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
-    matchTimeEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("MatchTime");
-    isAutonEntry = NetworkTableInstance.getDefault().getTable("/SmartDashboard").getEntry("IsAuton");
    
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
@@ -428,9 +424,10 @@ public class DriveBase extends HDrive {
       double matchTime = DriverStation.getMatchTime(); // new Date().getTime()/1000.0;
       boolean isAutonRn = DriverStation.isAutonomous();
       if (matchTime - (int) matchTime < 0.00001) {
-        matchTimeEntry.forceSetDouble(matchTime);
-        if (isAutonRn != isAutonEntry.getBoolean(isAutonRn))
-          isAutonEntry.forceSetBoolean(isAutonRn);
+        SmartDashboard.putNumber("MatchTime", matchTime);
+        boolean isAutonDashboardValue = SmartDashboard.getBoolean("IsAuton", false);
+        if (isAutonRn != isAutonDashboardValue)
+          SmartDashboard.putBoolean("IsAuton", isAutonRn);
       }
     }
   }
