@@ -200,19 +200,43 @@ NetworkTables.addKeyListener('/SmartDashboard/Shooter', (key, value) => {
 });
 
 
-// updates status lights for Climber
-NetworkTables.addKeyListener('/SmartDashboard/Climber', (key, value) => {
+// updates status lights for Climber 1
+NetworkTables.addKeyListener('/SmartDashboard/Climber 1', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
     var commands = statusLights.contentDocument;
     if (value === 'GREEN') {
-        document.getElementById('climber-status').style.fill = "rgb(0,255,0)";
+        document.getElementById('climber1-status').style.fill = "rgb(0,255,0)";
         document.getElementById('climber-status').style.stroke = "rgb(0,255,0)";
     } else if (value === 'YELLOW') {
-        document.getElementById('climber-status').style.fill = "rgb(255,255,0)";
-        document.getElementById('climber-status').style.stroke = "rgb(255,255,0)";
+        document.getElementById('climber1-status').style.fill = "rgb(255,255,0)";
+        document.getElementById('climber1-status').style.stroke = "rgb(255,255,0)";
     } else if (value === 'RED') {
-        document.getElementById('climber-status').style.fill = "rgb(255,0,0)";
-        document.getElementById('climber-status').style.stroke = "rgb(255,0,0)";
+        document.getElementById('climber1-status').style.fill = "rgb(255,0,0)";
+        document.getElementById('climber1-status').style.stroke = "rgb(255,0,0)";
+    }
+    else if (value === 'UNKNOWN') {
+        document.getElementById('climber1-status').style.fill = "rgb(255,255,255)";
+        document.getElementById('climber1-status').style.stroke = "rgb(255,255,255)";
+    }
+});
+
+// updates status lights for Climber 2
+NetworkTables.addKeyListener('/SmartDashboard/Climber 2', (key, value) => {
+    var statusLights = document.getElementById('status-lights-subsystems');
+    var commands = statusLights.contentDocument;
+    if (value === 'GREEN') {
+        document.getElementById('climber2-status').style.fill = "rgb(0,255,0)";
+        document.getElementById('climber2-status').style.stroke = "rgb(0,255,0)";
+    } else if (value === 'YELLOW') {
+        document.getElementById('climber2-status').style.fill = "rgb(255,255,0)";
+        document.getElementById('climber2-status').style.stroke = "rgb(255,255,0)";
+    } else if (value === 'RED') {
+        document.getElementById('climber2-status').style.fill = "rgb(255,0,0)";
+        document.getElementById('climber2-status').style.stroke = "rgb(255,0,0)";
+    }
+    else if (value === 'UNKNOWN') {
+        document.getElementById('climber2-status').style.fill = "rgb(255,255,255)";
+        document.getElementById('climber2-status').style.stroke = "rgb(255,255,255)";
     }
 });
 
