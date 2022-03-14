@@ -75,8 +75,8 @@ public class RobotContainer extends RobotContainerBase {
     } else {
       leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
     }
-    if(debugSubsystems){
-      for(MustangSubsystemBase subsystem : allSubsystems){
+    if (debugSubsystems) {
+      for (MustangSubsystemBase subsystem : allSubsystems) {
         subsystem.setDebugSubsystem(true);
       }
     }
@@ -97,7 +97,8 @@ public class RobotContainer extends RobotContainerBase {
         conveyorSystem, shooter, deployer);
     if (autonCommand == null) {
       Logger.consoleError("Auton Command is Null. Defaulting to Edge2Ball");
-      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer,
+          AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
     }
     return autonCommand;
   }
@@ -160,10 +161,11 @@ public class RobotContainer extends RobotContainerBase {
 
   @Override
   public void testInit() {
-    for(MustangSubsystemBase subsystem : allSubsystems){
+    for (MustangSubsystemBase subsystem : allSubsystems) {
       subsystem.setDebugSubsystem(true);
     }
-    MustangScheduler.getInstance().schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
+    MustangScheduler.getInstance()
+        .schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
   }
 
 }
