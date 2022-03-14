@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -555,6 +556,14 @@ public class DriveBase extends HDrive {
         RobotConstants.leftKDDriveVel);
   }
 
+  public SparkMaxPIDController getLeftSparkMaxPIDController(){
+    SparkMaxPIDController pidController = left1.getPIDController();
+    pidController.setP(RobotConstants.rightKPDriveVel);
+    pidController.setI(RobotConstants.rightKIDriveVel);
+    pidController.setD(RobotConstants.rightKDDriveVel);
+    return pidController;
+  }
+
   @Override
   public SimpleMotorFeedforward getLeftSimpleMotorFeedforward() {
     return new SimpleMotorFeedforward(RobotConstants.leftKsVolts, RobotConstants.leftKvVoltSecondsPerMeter,
@@ -565,6 +574,14 @@ public class DriveBase extends HDrive {
   public PIDController getRightPIDController() {
     return new PIDController(RobotConstants.rightKPDriveVel, RobotConstants.rightKIDriveVel,
         RobotConstants.rightKDDriveVel);
+  }
+
+  public SparkMaxPIDController getRightSparkMaxPIDController(){
+    SparkMaxPIDController pidController = right1.getPIDController();
+    pidController.setP(RobotConstants.rightKPDriveVel);
+    pidController.setI(RobotConstants.rightKIDriveVel);
+    pidController.setD(RobotConstants.rightKDDriveVel);
+    return pidController;
   }
 
   @Override
@@ -596,6 +613,16 @@ public class DriveBase extends HDrive {
     return navXMicro;
   }
 
+  public void holdPosition() {
+    getLeftSparkMaxPIDController().setReference(left1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
+    getRightSparkMaxPIDController().setReference(right1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
+  }
+
+  public void releasePosition() {
+    getLeftSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
+    getRightSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
+  }
+
   @Override
   public void debugSubsystem() {
     SmartDashboard.putNumber("Heading", getHeading());
@@ -610,7 +637,7 @@ public class DriveBase extends HDrive {
     if (vision.hasTarget()) {
       SmartDashboard.putNumber("Image Capture Time", vision.getVisionCaptureTime());
       SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
-    } 
+    }
   }
 
 }
