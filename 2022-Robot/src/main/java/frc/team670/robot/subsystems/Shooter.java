@@ -274,7 +274,6 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
         if (conveyor.getBallCount() > 0) {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
@@ -384,5 +383,6 @@ public class Shooter extends MustangSubsystemBase {
         SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
         SmartDashboard.putNumber("Shooter speed", targetRPM);
         SmartDashboard.putNumber("Shooter velocity", getVelocity());
+        SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
     }
 }

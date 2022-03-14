@@ -47,7 +47,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision, getOperatorController(), conveyorSystem);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
-  private static ClimberSystem climbers = new ClimberSystem(getBackupController());
+  private static ClimberSystem climbers = new ClimberSystem(getBackupController(), deployer);
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX,
