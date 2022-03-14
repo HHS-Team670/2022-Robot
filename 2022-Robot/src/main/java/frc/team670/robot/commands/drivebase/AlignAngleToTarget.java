@@ -14,10 +14,9 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Vision;
 
 /**
- * Rotates the turret to an angle with the goal of having the turret pointed in
- * the direction of the target for as much as possible.
+ * Rotates the drivebase to an angle
  * 
- * @author ctychen
+ * @author katia
  */
 public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 

@@ -10,6 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
+import frc.team670.robot.subsystems.Deployer;
 
 /**
  * Once the driver aligns with the mid bar, climbs to the mid bar. It then
@@ -22,11 +23,12 @@ public class FullClimb extends CommandBase implements MustangCommand {
 
   private MustangController controller;
   private ClimberSystem climbers;
+  private Deployer deployer;
 
   private int currentStep = 0;
   private boolean justAdvanced = false;
 
-  public FullClimb(ClimberSystem climbers, MustangController mController) {
+  public FullClimb(ClimberSystem climbers, Deployer deployer, MustangController mController) {
     Climber verticalClimber = climbers.getVerticalClimber();
     Climber diagonalClimber = climbers.getDiagonalClimber();
     addRequirements(verticalClimber, diagonalClimber, climbers);
@@ -36,6 +38,12 @@ public class FullClimb extends CommandBase implements MustangCommand {
     healthReqs.put(climbers, HealthState.GREEN);
     this.controller = mController;
     this.climbers = climbers;
+    this.deployer = deployer;
+  }
+
+  @Override
+  public void initialize(){
+    deployer.deploy(false);
   }
 
   // Called once when the command executes

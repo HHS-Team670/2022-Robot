@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
@@ -45,7 +47,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision, getOperatorController(), conveyorSystem);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
-  private static ClimberSystem climbers = new ClimberSystem(getBackupController());
+  private static ClimberSystem climbers = new ClimberSystem(getBackupController(), deployer);
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
   private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX,
@@ -73,8 +75,8 @@ public class RobotContainer extends RobotContainerBase {
     } else {
       leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
     }
-    if(debugSubsystems){
-      for(MustangSubsystemBase subsystem : allSubsystems){
+    if (debugSubsystems) {
+      for (MustangSubsystemBase subsystem : allSubsystems) {
         subsystem.setDebugSubsystem(true);
       }
     }
@@ -95,7 +97,8 @@ public class RobotContainer extends RobotContainerBase {
         conveyorSystem, shooter, deployer);
     if (autonCommand == null) {
       Logger.consoleError("Auton Command is Null. Defaulting to Edge2Ball");
-      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer,
+          AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
     }
     return autonCommand;
   }
@@ -155,4 +158,14 @@ public class RobotContainer extends RobotContainerBase {
       }
     }
   }
+
+  @Override
+  public void testInit() {
+    for (MustangSubsystemBase subsystem : allSubsystems) {
+      subsystem.setDebugSubsystem(true);
+    }
+    MustangScheduler.getInstance()
+        .schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
+  }
+
 }

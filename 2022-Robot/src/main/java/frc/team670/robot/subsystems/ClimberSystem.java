@@ -74,7 +74,9 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     private boolean defaultCommandInited = false;
 
-    public ClimberSystem(MustangController mController) {
+    private Deployer deployer;
+
+    public ClimberSystem(MustangController mController, Deployer deployer) {
         verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, SMARTMOTION_SLOT, VERTICAL_kFF, VERTICAL_kP, false,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
                 ALLOWED_ERR_ROTATIONS,
@@ -89,6 +91,7 @@ public class ClimberSystem extends MustangSubsystemBase{
         diagonalClimber.setName("Climber 2");
 
         this.mController = mController;
+        this.deployer = deployer;
     }
 
     public Climber getVerticalClimber() {
@@ -165,7 +168,7 @@ public class ClimberSystem extends MustangSubsystemBase{
     }
 
     public void initDefaultCommand(){
-        MustangScheduler.getInstance().setDefaultCommand(this, new FullClimb(this, mController));
+        MustangScheduler.getInstance().setDefaultCommand(this, new FullClimb(this, deployer, mController));
     }
 
     public class Climber extends MustangSubsystemBase {
