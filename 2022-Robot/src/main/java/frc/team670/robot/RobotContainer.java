@@ -21,6 +21,9 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.routines.CheckSubsystems;
+import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.constants.AutonTrajectory;
+import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -92,9 +95,10 @@ public class RobotContainer extends RobotContainerBase {
 
     MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
         conveyorSystem, shooter, deployer);
-    if (autonCommand == null)
-      Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
-
+    if (autonCommand == null) {
+      Logger.consoleError("Auton Command is Null. Defaulting to Edge2Ball");
+      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+    }
     return autonCommand;
   }
 
