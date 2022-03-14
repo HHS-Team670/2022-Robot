@@ -53,7 +53,7 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.0001;
+    private static final double V_P = 0.000025;
     private static final double V_I = 0.0;
     private static final double V_D = 0.0;
     private static final double V_FF = 0.00017618;
@@ -70,29 +70,29 @@ public class Shooter extends MustangSubsystemBase {
     private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
             RobotMap.SHOOTER_ULTRASONIC_EPIN);
 
-    private static final double[] MEASURED_DISTANCE_LOW_METER = {
-            0.18415,
-            0.48895,
-            0.79375,
-            1.09855,
-            1.40335,
-            2.01295,
-            2.62255,
-            3.23215,
-            3.84175
-    };
+    // private static final double[] MEASURED_DISTANCE_LOW_METER = {
+    //         0.18415,
+    //         0.48895,
+    //         0.79375,
+    //         1.09855,
+    //         1.40335,
+    //         2.01295,
+    //         2.62255,
+    //         3.23215,
+    //         3.84175
+    // };
 
-    private static final double[] MEASURED_LOW_RPM = {
-            1550,
-            1600,
-            1800,
-            2000,
-            2250,
-            2600,
-            2800,
-            3000,
-            3500
-    };
+    // private static final double[] MEASURED_LOW_RPM = {
+    //         1550,
+    //         1600,
+    //         1800,
+    //         2000,
+    //         2250,
+    //         2600,
+    //         2800,
+    //         3000,
+    //         3500
+    // };
 
     private static final double[] MEASURED_DISTANCE_HIGH_METER = {
             1.60655,
@@ -127,12 +127,11 @@ public class Shooter extends MustangSubsystemBase {
 
     private MustangController mController;
 
-    private Deployer deployer;
     private ConveyorSystem conveyor;
 
     private boolean foundTarget;
 
-    public Shooter(Vision vision, MustangController mController, Deployer deployer, ConveyorSystem conveyor) {
+    public Shooter(Vision vision, MustangController mController, ConveyorSystem conveyor) {
         this.vision = vision;
         controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
                 RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
@@ -153,7 +152,6 @@ public class Shooter extends MustangSubsystemBase {
         debugSubsystem();
 
         this.mController = mController;
-        this.deployer = deployer;
         this.conveyor = conveyor;
     }
 
@@ -281,8 +279,11 @@ public class Shooter extends MustangSubsystemBase {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
             }
-            if (vision.hasTarget() && vision.isValidImage()) {
+            if (vision.getLastValidDistanceMetersCaptured() != RobotConstants.VISION_ERROR_CODE) {
                 foundTarget = true;
+            }
+            else{
+                foundTarget = false;
             }
         } else {
             if (!vision.LEDSOverriden()) {
@@ -343,7 +344,7 @@ public class Shooter extends MustangSubsystemBase {
                 targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
             }
         }
-        if (targetRPM < 0 || targetRPM > MAX_RPM) {
+        if (targetRPM <= 0 || targetRPM > MAX_RPM) {
             targetRPM = getDefaultRPM();
         }
         setTargetRPM(targetRPM);

@@ -1,19 +1,15 @@
-package frc.team670.robot.commands.routines;
+package frc.team670.robot.commands.drivebase;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.subsystems.drivebase.DriveBase;
-import frc.team670.robot.constants.FieldConstants;
-import frc.team670.robot.constants.HubType;
-import frc.team670.robot.subsystems.Shooter;
 
 //calls WaitCommand (pauses) when robot is within a desired location
 public class WaitToPause extends CommandBase implements MustangCommand {

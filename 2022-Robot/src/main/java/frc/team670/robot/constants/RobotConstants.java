@@ -56,10 +56,9 @@ public class RobotConstants extends RobotConstantsBase {
         public static final String VISION_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
         public static final double CAMERA_HEIGHT_METERS = 0.75;
         public static final double CAMERA_ANGLE_DEGREES = 25;
-        // public static final double CAMERA_DISTANCE_TO_FRONT = 0.22;
 
-        public static final int LED_START_INDEX = 24;
-        public static final int LED_END_INDEX = 66;
+        public static final int LED_START_INDEX = 0;
+        public static final int LED_END_INDEX = 70;
 
         // Autonomous Constants
         public static final DifferentialDriveKinematics kDriveKinematics = 

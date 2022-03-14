@@ -119,7 +119,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		status = Status.OFF;
 		intakeConveyor.stop();
 		shooterConveyor.stop();
-		deployer.setSystemTargetAngleInDegrees(0);
 		timer.reset();
 		timer.stop();
 	}
@@ -129,13 +128,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	public int getBallCount() {
 		return intakeConveyor.getBallCount() + shooterConveyor.getBallCount();
 	}
-
-	// private void pushGameDataToDashboard() {
-    //     NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    //     NetworkTable table = instance.getTable("/SmartDashboard");
-    //     NetworkTableEntry gameData = table.getEntry("Balls");
-    //     gameData.setNumber(getBallCount());
-    // }
 
 	// Mustang Subsystem
 	@Override
@@ -153,11 +145,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	public void mustangPeriodic() {
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
-		// intakeConveyor.debugBeamBreaks();
-		// shooterConveyor.debugBeamBreaks();
 		checkState();
-		debugSubsystem();
-		// pushGameDataToDashboard();
 	}
 
 	public Status getStatus() {

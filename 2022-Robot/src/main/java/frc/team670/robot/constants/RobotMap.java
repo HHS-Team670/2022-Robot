@@ -11,7 +11,7 @@ public class RobotMap {
   public static final int BACKUP_CONTROLLER_PORT = 2;
 
   // Drive Base
-  public static final int SPARK_LEFT_MOTOR_1 = 10; // These are properly set.
+  public static final int SPARK_LEFT_MOTOR_1 = 10; 
   public static final int SPARK_LEFT_MOTOR_2 = 12;
   public static final int SPARK_RIGHT_MOTOR_1 = 15;
   public static final int SPARK_RIGHT_MOTOR_2 = 14;

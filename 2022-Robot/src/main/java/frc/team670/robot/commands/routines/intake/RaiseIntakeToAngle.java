@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.deployer;
+package frc.team670.robot.commands.routines.intake;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Deployer;
+import frc.team670.robot.subsystems.Intake;
 
 /**
  * Raises the intake to a specified angle
@@ -17,6 +18,7 @@ import frc.team670.robot.subsystems.Deployer;
 public class RaiseIntakeToAngle extends CommandBase implements MustangCommand  {
     private double angle;
     private Deployer deployer;
+    private Intake intake;
 
     private boolean deployed;
 
@@ -25,9 +27,10 @@ public class RaiseIntakeToAngle extends CommandBase implements MustangCommand  {
      * @param angle The angle to raise the deployer to
      * @param deployer The deployer
      */
-    public RaiseIntakeToAngle(double angle, Deployer deployer) {
+    public RaiseIntakeToAngle(double angle, Deployer deployer, Intake intake) {
         this.angle = angle;
         this.deployer = deployer;
+        this.intake = intake;
         addRequirements(deployer);
     }
 
@@ -47,6 +50,7 @@ public class RaiseIntakeToAngle extends CommandBase implements MustangCommand  {
         else{
             deployer.setSystemTargetAngleInDegrees(0);
         }
+        intake.roll(false);
     }
 
     @Override

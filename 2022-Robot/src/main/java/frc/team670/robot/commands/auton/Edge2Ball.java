@@ -24,7 +24,6 @@ import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.Vision;
 
 /**
  * Works for any of the 3 edge2ball paths

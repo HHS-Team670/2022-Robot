@@ -8,8 +8,6 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.subsystems.ClimberSystem;
-import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.Shooter;
 
 /**

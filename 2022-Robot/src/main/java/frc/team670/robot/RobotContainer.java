@@ -14,17 +14,10 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.subsystems.ClimberSystem;
-import frc.team670.robot.subsystems.ClimberSystem.Climber;
-import frc.team670.robot.subsystems.ConveyorSystem;
-import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
@@ -41,29 +34,24 @@ import frc.team670.robot.subsystems.Vision;
 
 public class RobotContainer extends RobotContainerBase {
 
-  private static MustangCommand m_autonomousCommand;
-  
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
   private static Deployer deployer = new Deployer();
   private static ConveyorSystem conveyorSystem = new ConveyorSystem(deployer);
   private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
-  private static Shooter shooter = new Shooter(vision, getOperatorController(), deployer, conveyorSystem);
+  private static Shooter shooter = new Shooter(vision, getOperatorController(), conveyorSystem);
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static ClimberSystem climbers = new ClimberSystem(getBackupController());
   private static Climber verticalClimber = climbers.getVerticalClimber();
   private static Climber diagonalClimber = climbers.getDiagonalClimber();
-  private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX, shooter, intake, conveyorSystem, climbers);
-  // private static ArrayList<Climber> climbers = ClimberContainer.getClimbers();
-  
+  private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX,
+      shooter, intake, conveyorSystem, climbers);
+
   private static OI oi = new OI();
   private static AutoSelector autoSelector = new AutoSelector();
 
-  // private static AutoSelector autoSelector = new AutoSelector(driveBase,
-  // intake, conveyor, indexer, shooter, turret,
-  // vision);
-
+  private static boolean debugSubsystems = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -77,13 +65,17 @@ public class RobotContainer extends RobotContainerBase {
     leds.setIsDisabled(true);
     vision.switchLEDS(false);
     Alliance alliance = DriverStation.getAlliance();
-    if(alliance == Alliance.Red) {
+    if (alliance == Alliance.Red) {
       leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
     } else {
       leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
     }
+    if(debugSubsystems){
+      for(MustangSubsystemBase subsystem : allSubsystems){
+        subsystem.setDebugSubsystem(true);
+      }
+    }
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -91,23 +83,6 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // ------------ Edge2Ball path names (copy/paste) ------------
-    //   - "ATarmacEdge2Ball"
-    //   - "BTarmacEdgeCenter2Ball"
-    //   - "BTarmacEdgeLower2Ball"
-    
-
-    // ------------ FourBallPath path names (copy/paste) ------------
-    //   - "BTarmac4BallTerminal"
-    //   - "BTarmacHighHubTerminal"
-    //   - "ATarmacEdge4Ball"
-
-    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
-    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.UPPER);
-
-    
-    //MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
     int autonRoutine = driveBase.getSelectedRoutine();
     double delayTime = driveBase.getDelayTime();
 
@@ -115,37 +90,31 @@ public class RobotContainer extends RobotContainerBase {
 
     MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
         conveyorSystem, shooter, deployer);
-    if (autonCommand== null)
+    if (autonCommand == null)
       Logger.consoleError("Auton Command is Null. Manually change Path and Deploy!");
 
-    // MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
-
-    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-
-    // Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
 
   public void autonomousInit() {
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
-    
+
     Logger.consoleLog("autoInit called");
     leds.setIsDisabled(false);
   }
 
   public void teleopInit() {
     leds.setIsDisabled(false);
-    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber, diagonalClimber);
+    oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
+        diagonalClimber);
     deployer.setEncoderPositionFromAbsolute();
     pd.setSwitchableChannel(false);
-    // MustangScheduler.getInstance().schedule(new RetractClimber(verticalClimber, true));
   }
 
   @Override
   public void disabled() {
     leds.setIsDisabled(true);
-    // deployer.deploy(false);
   }
 
   public static MustangController getOperatorController() {
@@ -173,11 +142,13 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("current", pd.getTotalCurrent());
-    SmartDashboard.putNumber("energy", pd.getTotalEnergy());
-    SmartDashboard.putNumber("power", pd.getTotalPower());
-    for(int i = 0; i < pd.getNumChannels(); i++){
-      SmartDashboard.putNumber(("Channel " + i), pd.getCurrent(i));
+    if (debugSubsystems) {
+      SmartDashboard.putNumber("current", pd.getTotalCurrent());
+      SmartDashboard.putNumber("energy", pd.getTotalEnergy());
+      SmartDashboard.putNumber("power", pd.getTotalPower());
+      for (int i = 0; i < pd.getNumChannels(); i++) {
+        SmartDashboard.putNumber(("Channel " + i), pd.getCurrent(i));
+      }
     }
   }
 }

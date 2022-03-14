@@ -15,7 +15,6 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.Vision;
 
 
 /**

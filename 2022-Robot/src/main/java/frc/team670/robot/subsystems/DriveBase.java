@@ -23,8 +23,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -49,13 +47,11 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class DriveBase extends HDrive {
   private Vision vision;
- 
+
   private SparkMAXLite left1, left2, right1, right2, middle;
   private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
 
   private MustangController mController;
-
-  private static final double CENTERDRIVE_ACCEL_RATE_LIMIT = 4; 
 
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
@@ -64,7 +60,8 @@ public class DriveBase extends HDrive {
 
   private DifferentialDriveOdometry odometry;
 
-  SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
+  SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,
+      RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
 
   private AutoSelector autoSelector = new AutoSelector();
   private int autoRoutine = -1;
@@ -72,29 +69,12 @@ public class DriveBase extends HDrive {
 
   private Timer timer = new Timer();
 
-  // More vision pose estimation stuff:
-  // // Start pose variables
-  // public static final double START_X = (FieldConstants.HUB_POSE_X - FieldConstants.HUB_RADIUS - 4.5) - RobotConstants.CAMERA_DISTANCE_TO_FRONT;
-  // public static final double START_Y = FieldConstants.HUB_POSE_Y;//2.4;
-  // public static final double START_ANGLE_DEG = 0; //180;
-  // public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
-
-  // // Constants used for doing robot to target pose conversion
-  // public static final Pose2d TARGET_POSE = 
-  //   new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
-  // //  new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
-
-  // //2020 robot camera offset
-  // public static final Pose2d CAMERA_OFFSET = TARGET_POSE
-  //     .transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
-
-
   private XboxRobotOrientedDrive defaultCommand;
 
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
     this.mController = mustangController;
-   
+
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -111,12 +91,13 @@ public class DriveBase extends HDrive {
     middleEncoder = middle.getEncoder();
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
-    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for right side
-    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR); 
+    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
+                                                                                                    // right side
+    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR);
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION); 
+    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION);
 
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
@@ -137,14 +118,17 @@ public class DriveBase extends HDrive {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
     timer.start();
-    // poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+    // poseEstimator = new
+    // DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
     // new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-    //   VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
-    //   VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
-    //   VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
+    // VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current
+    // state
+    // VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted
+    // the most
+    // VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
     // ); //vision
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
-    
+
     initBrakeMode();
     middle.setIdleMode(IdleMode.kCoast);
   }
@@ -168,7 +152,8 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(), middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
+        middle.isErrored());
   }
 
   /**
@@ -294,8 +279,8 @@ public class DriveBase extends HDrive {
    * Gets the output current of all the motor controllers on the robot
    */
   public double getRobotOutputCurrent() {
-    double output = left1.getOutputCurrent() + left2.getOutputCurrent() 
-      + right1.getOutputCurrent() + right2.getOutputCurrent();
+    double output = left1.getOutputCurrent() + left2.getOutputCurrent()
+        + right1.getOutputCurrent() + right2.getOutputCurrent();
     return output;
   }
 
@@ -375,52 +360,21 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    SmartDashboard.putNumber("Heading", getHeading());
-    SmartDashboard.putNumber("currentX", getPose().getX());
-    SmartDashboard.putNumber("currentY", getPose().getY());
-    SmartDashboard.putNumber("left 1 encoder", getLeftPositionTicks());
-    SmartDashboard.putNumber("right 1 encoder", getRightPositionTicks());
-    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
-    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
-
-    // vision.setStartPoseDeg(START_X, START_Y, START_ANGLE_DEG);
-    // poseEstimator.update(Rotation2d.fromDegrees(
-    //   getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
-    // Vision.VisionMeasurement visionMeasurement = vision.getPoseVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
-
-    if (vision.hasTarget()) {
-    // if (visionMeasurement != null) {
-      // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
-      SmartDashboard.putNumber("Image Capture Time", vision.getVisionCaptureTime());
-      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
-    } else {
-      // Logger.consoleError("Did not find targets!");
-    }
-
-    //removed the delay for 10 seconds
+    // removed the delay for 10 seconds
     int routine = autoSelector.getSelection();
     double time = autoSelector.getDelayTime();
-    // Logger.consoleLog("Inside periodic in Drivebase - delay time" + time);
-    // Logger.consoleLog("In Drivebase periodic: SmartDashboard contents: ", SmartDashboard.getKeys()); 
-    
+
     double oldTime = delayTime;
     int oldRoutine = routine;
     if (routine != -1) {
-          autoRoutine = routine;
-   }
+      autoRoutine = routine;
+    }
     if (time != -1) {
       delayTime = time;
     }
-    if (oldTime != delayTime || oldRoutine != routine){
-      // Logger.consoleLog("INSIDE PERIODIC, delayTime or routine has changed value"); 
-      // autoSelector.getCommandFromRoutine(autoRoutine, delayTime);
-
-    // Logger.consoleLog("Mustang Periodic() - Autoroutine variable: %s   DelayTime variable: %s", autoRoutine, delayTime);
-    
-    /** TODO We literally have no clue if any of this works */
-      // DUMMY VARIABLE, CHANGE LATER!!!
+    if (oldTime != delayTime || oldRoutine != routine) {
       double matchTime = DriverStation.getMatchTime(); // new Date().getTime()/1000.0;
       boolean isAutonRn = DriverStation.isAutonomous();
       if (matchTime - (int) matchTime < 0.00001) {
@@ -447,7 +401,7 @@ public class DriveBase extends HDrive {
    * @param pose2d The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose2d) {
-    //zeroHeading();
+    // zeroHeading();
     navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
     SmartDashboard.putNumber("starting heading", getHeading());
     odometry.resetPosition(pose2d, pose2d.getRotation());
@@ -531,7 +485,8 @@ public class DriveBase extends HDrive {
       }
       continue;
     }
-    // Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ", delayTime);
+    // Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ",
+    // delayTime);
     return delayTime;
   }
 
@@ -629,8 +584,8 @@ public class DriveBase extends HDrive {
     }
   }
 
-  public static double getLinearSpeed(){
-    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity()))/2;
+  public static double getLinearSpeed() {
+    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity())) / 2;
   }
 
   public void setCenterDrive(double speed) {
@@ -643,9 +598,19 @@ public class DriveBase extends HDrive {
 
   @Override
   public void debugSubsystem() {
-    // TODO Auto-generated method stub
+    SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("currentX", getPose().getX());
+    SmartDashboard.putNumber("currentY", getPose().getY());
+    SmartDashboard.putNumber("left 1 encoder", getLeftPositionTicks());
+    SmartDashboard.putNumber("right 1 encoder", getRightPositionTicks());
+    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
+    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
+    sendEncoderDataToDashboard();
 
+    if (vision.hasTarget()) {
+      SmartDashboard.putNumber("Image Capture Time", vision.getVisionCaptureTime());
+      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
+    } 
   }
-
 
 }

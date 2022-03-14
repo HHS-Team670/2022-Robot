@@ -213,7 +213,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-        debugSubsystem();
+
     }
 
     public boolean hasReachedTargetPosition() {

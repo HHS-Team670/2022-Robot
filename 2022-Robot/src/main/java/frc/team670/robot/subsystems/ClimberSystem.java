@@ -9,8 +9,6 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
@@ -18,7 +16,6 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.commands.routines.climb.FullClimb;
 import frc.team670.robot.constants.RobotMap;
 
@@ -391,8 +388,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         @Override
         public void mustangPeriodic() {
-            SmartDashboard.putBoolean("LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
-            SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
+            
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();
@@ -424,9 +420,11 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         @Override
         public void debugSubsystem() {
-            double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", 0);
             SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            climb(rotations);
+            // double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", 0);
+            // climb(rotations);
+            SmartDashboard.putBoolean("LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
+            SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
         }
 
     }
