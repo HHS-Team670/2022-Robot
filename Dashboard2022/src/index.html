@@ -106,21 +106,21 @@
       <image class="camera-stream" src="http://photonvision.local:1186/stream.mjpg?1646964104873"></image>
       <image class="camera-stream" src="http://photonvision.local:1184/stream.mjpg?1646964457545"></image>
     </div>
-    <div id = "match-phase">
+    <!-- <div id = "match-phase">
       <p>Match Phase: NOT STARTED</p>
-    </div>
+    </div> -->
 <!-- <svg id="warning-info" width="700" height="60">
     <rect x="45%" y="0%" width="55%" height="100%" style="stroke:rgb(0,200,0)" />
     <text id="warnings" x="47%" y="66%" style="text-anchor: start">Warnings:</text>-->
 
 <div id = "current-text">
-  <div><button x="0%" y="30%" class = "general-button" id="timer-starter" style = "margin-top:1%">Start Timer</button>
-    <button class = "general-button" id="timer-stopper" style = "margin-top:1%">Reset Timer</button></div>
+  <!-- <div><button x="0%" y="30%" class = "general-button" id="timer-starter" style = "margin-top:1%">Start Timer</button> -->
+    <!-- <button class = "general-button" id="timer-stopper" style = "margin-top:1%">Reset Timer</button></div> -->
     <!-- <button class = "general-button" id="timer-pauser" style = "margin-top:1%">Pause Timer</button></div> -->
     
     <svg id="current-text-svg" width="400" height="200">
-    <rect x="0%" y="30%" width="100%" height="30%" style="stroke:rgb(0,200,0)" />
-    <text id="timer" x="20%" y="45%" style="text-anchor: start" alignment-baseline="top">Time of Match:</text>
+    <rect id="dynamic-speed-indicator-bg" x="0%" y="30%" width="100%" height="30%" style="stroke:rgb(0,200,0)" />
+    <text id="dynamic-speed-indicator" x="20%" y="45%" style="text-anchor: start; stroke:rgba(255, 255, 255, 0.582)" alignment-baseline="top"> USING DYNAMIC SPEED</text>
     
     <rect x="0%" y="50%" width="100%" height="50%" style="stroke:rgb(0,200,0)" />
     <text id="balls-in-robot" x="20%" y="75%" style="text-anchor: start" alignment-baseline="top">Balls in Robot:</text>
@@ -184,7 +184,7 @@
               <label for="delay-time">Delay Time</label>
               <input type="number" min="0" max="15" name="delay-time" value="0" />
             </div>
-            <button type="button" class="general-button" id="confirm-button" onclick="sendAuton();">OK</button>
+            <button type="button" class="general-button" id="confirm-button" onclick="sendAuton();">SEND</button>
         </form>
         
     </div>
@@ -197,7 +197,7 @@
     <script src="networktables/networktables.js"></script>
     <script src="connection.js"></script>
     <script src="ui.js"></script>
-    <script src="ui/livetimer.js"></script> <!--Use "ui/manualtimer.js" for a start/stop timer and 
+    <script src="ui/manualtimer.js"></script> <!--Use "ui/manualtimer.js" for a start/stop timer and 
                                                 "ui/livetimer.js" for a timer which pulls the match time directly 
                                                 (currently untested and probably doesn't work)-->
 

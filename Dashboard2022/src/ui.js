@@ -2,7 +2,6 @@
 var PopupClass = require('js-popup');
 
 document.getElementById('big-warning').style.display = "none";
-// document.getElementById('auton-chooser').style.display = "none";
 
 // initial camera settings
 var driveReversed = false;
@@ -42,25 +41,6 @@ function setPaths(upper) {
     resetAndAddDropdownListeners();
 }
 
-// function setUpperPaths(evt) {
-//     var content = document.querySelector(".dropup-content");
-//     content.innerHTML = "";
-
-//     var p1 = document.createElement("p");
-//     p1.appendChild(document.createTextNode("ATarmacEdge2Ball"));
-    
-//     var p2 = document.createElement("p");
-//     p2.appendChild(document.createTextNode("BTarmacEdgeCenter2Ball"));
-
-//     var p3 = document.createElement("p");
-//     p3.appendChild(document.createTextNode("BTarmacEdgeLower2Ball"));
-
-//     var p4 = document.createElement("p");
-//     p4.appendChild(document.createTextNode("BTarmacHighHubTerminal"));
-
-//     content.append(p1, p2, p3, p4);
-//     resetAndAddDropdownListeners();
-// }
 
 var lower = document.querySelector('#Lower');
 lower.onclick = () => {setPaths(false)};
@@ -275,6 +255,20 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
     }
 });
 
+// updates status lights for vision
+NetworkTables.addKeyListener('/SmartDashboard/using-dynamic-speed', (key, value) => {
+    var dynamicSpeedIndicator = document.querySelector("#dynamic-speed-indicator");
+    if (value === 'TRUE') {
+        dynamicSpeedIndicator.textContent = "USING DYNAMIC SPEED";
+        dynamicSpeedIndicator.style.stroke = "white";
+        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "none";
+    } else {
+        dynamicSpeedIndicator.textContent = "OVERRIDED DYNAMIC SPEED";
+        dynamicSpeedIndicator.style.stroke = "black";
+        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "yellow";
+    }
+});
+
 document.getElementById("confirm-button").onclick = function() {
   sendAuton();
 };
@@ -357,57 +351,50 @@ function getAutonFromMap() {
     // console.log("SELECTED VALUE", document.querySelector('input[name="path"]:checked').value);
     console.log("SELECTED VALUE", selectedPath);
     // switch (document.querySelector('input[name="path"]:checked').value) {
-    switch (document.querySelector('input[name="hub-type"]:checked').value) {
-        case "Upper":
-            switch(selectedPath) {
-                case "ATarmacEdge2Ball":
-                    return 0.0;
-                case "BTarmacEdgeCenter2Ball":
-                    return 1.0;
-                case "BTarmacEdgeLower2Ball":
-                    return 2.0;
-                case "BTarmacHighHubTerminal":
-                    return 3.0;
-            }
-        case "Lower":
-            switch(selectedPath) {
-                case "ATarmacEdge2Ball":
-                    return 4.0;
-                case "BTarmacEdgeCenter2Ball":
-                    return 5.0;
-                case "BTarmacEdgeLower2Ball":
-                    return 6.0;
-            }
+    if (document.querySelector('input[name="hub-type"]:checked') != null) {
+        switch (document.querySelector('input[name="hub-type"]:checked').value) {
+            case "Upper":
+                switch(selectedPath) {
+                    case "ATarmacEdge2Ball":
+                        return 0.0;
+                    case "BTarmacEdgeCenter2Ball":
+                        return 1.0;
+                    case "BTarmacEdgeLower2Ball":
+                        return 2.0;
+                    case "BTarmacHighHubTerminal":
+                        return 3.0;
+                }
+            case "Lower":
+                switch(selectedPath) {
+                    case "ATarmacEdge2Ball":
+                        return 4.0;
+                    case "BTarmacEdgeCenter2Ball":
+                        return 5.0;
+                    case "BTarmacEdgeLower2Ball":
+                        return 6.0;
+                }
+        }
     }
     return -1;
-
 }
 
 function getDelayTime() {
     return ((parseFloat(document.querySelector('#delay input[name="delay-time"]').value)))
 }
 
-// function getLocation(offset, value) {
-//     switch (value) {
-//         case "Generator 2":
-//             return 0 + offset;
-//         case "Generator 3":
-//             return 3 + offset;
-//         case "Trench":
-//             return 6 + offset;
-//     }
-//     return -1;
-// }
 
 function sendAuton() {
     var autonCommand = getAutonFromMap();
     var delayTime = getDelayTime();
     console.log("SELECTED AUTON COMMAND", autonCommand);
-    var connected = NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
-    //var connected = NetworkTables.putValue('/Test/auton-chooser', autonCommand);
-    console.log("CONNECTED", connected);
+    NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
     NetworkTables.putValue('/SmartDashboard/delayTime', delayTime);
-    //NetworkTables.putValue('/Test/delayTime', delayTime);
-    console.log(NetworkTables.getValue('/SmartDashboard/auton-chooser', "didn't work"));
-    //console.log(NetworkTables.getValue('/Test/auton-chooser', "didn't work"));
+    if (autonCommand !== -1 && NetworkTables.getValue('/SmartDashboard/auton-chooser') === autonCommand && NetworkTables.isRobotConnected()
+    && NetworkTables.getKeys().length > 5) {
+        document.getElementById('auton-status').style.fill = "rgb(0,255,0)";
+        document.getElementById('auton-status').style.stroke = "rgb(0,255,0)";
+    } else {
+        document.getElementById('auton-status').style.fill = "rgb(255,0,0)";
+        document.getElementById('auton-status').style.stroke = "rgb(255,0,0)";
+    }
 }

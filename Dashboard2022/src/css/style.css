@@ -229,6 +229,7 @@ body.login #login {
     width:400px;
 }
 
+
 #big-warning {
     position: absolute;
     background: red;
@@ -336,6 +337,7 @@ fieldset#position {
     transform: translate(5vw, 71.5vh);
 
 }
+
 
 .general-button { 
     background-color: rgb(25, 105, 25);
