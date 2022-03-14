@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -151,4 +153,13 @@ public class RobotContainer extends RobotContainerBase {
       }
     }
   }
+
+  @Override
+  public void testInit() {
+    for(MustangSubsystemBase subsystem : allSubsystems){
+      subsystem.setDebugSubsystem(true);
+    }
+    MustangScheduler.getInstance().schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
+  }
+
 }
