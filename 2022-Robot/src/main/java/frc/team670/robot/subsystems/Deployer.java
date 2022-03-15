@@ -213,7 +213,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-
+        debugSubsystem();
     }
 
     public boolean hasReachedTargetPosition() {
@@ -226,6 +226,10 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         double angle = 0;
         if(deploy){
             angle = 90;
+            setRotatorMode(true);
+        }
+        else{
+            setRotatorMode(false);
         }
         setSystemTargetAngleInDegrees(angle);
         return hasReachedTargetPosition();
@@ -265,5 +269,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("rel-Encoder", this.rotator_encoder.getPosition());
         SmartDashboard.putNumber("rel-Encoder-vel", this.rotator_encoder.getVelocity());
         SmartDashboard.putNumber("angle", getCurrentAngleInDegrees());
+        SmartDashboard.putBoolean("isDeployed", isDeployed());
     }
 }
