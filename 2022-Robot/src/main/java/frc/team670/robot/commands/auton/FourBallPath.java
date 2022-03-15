@@ -103,19 +103,19 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                 new ParallelCommandGroup(
                     getTrajectoryFollowerCommand(trajectory, driveBase),
                     new RunIntakeWithConveyor(intake, conveyor),
-                    new WaitToShoot(driveBase, shooter, targetPose, 100, -1.5, HubType.UPPER)
+                    new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER)
                 ), 
                 new AutoShootToIntake(conveyor, shooter, intake),
                 getTrajectoryFollowerCommand(trajectory2, driveBase),   
 
                 new ParallelCommandGroup(
                     new RunIntakeWithConveyor(intake, conveyor),
-                    new WaitCommand(1)
+                    new WaitCommand(0.5)
                 ),
                 getTrajectoryFollowerCommand(trajectory3, driveBase), 
                 new ParallelCommandGroup(
                     new StopDriveBase(driveBase),
-                    new WaitToShoot(driveBase, shooter, targetPose, 100, -0.8, HubType.UPPER)
+                    new WaitToShoot(driveBase, shooter, targetPose, 100, -1.1, HubType.UPPER)
                 ),  
                 
                 new ShootAllBalls(conveyor, shooter)

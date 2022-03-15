@@ -143,6 +143,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	@Override
 	public void mustangPeriodic() {
+		debugSubsystem();
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
 		checkState();

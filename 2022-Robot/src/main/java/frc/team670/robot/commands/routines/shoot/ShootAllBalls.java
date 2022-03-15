@@ -27,7 +27,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
       addCommands(
         new StartShooter(shooter),  
         new RunConveyor(conveyorSystem, ConveyorSystem.Status.SHOOTING),
-        new WaitCommand(2),
+        new WaitCommand(shooter.getWaitTime()),
         new StopShooter(shooter)
       );
     }

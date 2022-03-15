@@ -1,5 +1,7 @@
 package frc.team670.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.MathUtil;

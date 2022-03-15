@@ -88,16 +88,23 @@ public class DriveBase extends HDrive {
     right2 = rightControllers.get(1);
 
     left1Encoder = left1.getEncoder();
+    left2Encoder = left2.getEncoder();
     right1Encoder = right1.getEncoder();
+    right2Encoder = right2.getEncoder();
     middleEncoder = middle.getEncoder();
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
+    left2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
     right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
+                                                                                                    // right side
+    right2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
                                                                                                     // right side
     middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR);
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION);
 
     allMotors.addAll(leftControllers);
@@ -361,6 +368,7 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
+    debugSubsystem();
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
     // removed the delay for 10 seconds

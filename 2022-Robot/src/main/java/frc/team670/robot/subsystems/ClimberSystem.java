@@ -128,6 +128,7 @@ public class ClimberSystem extends MustangSubsystemBase{
                 diagonalClimber.retract();
                 break;
             case 1:
+                deployer.deploy(false);
                 verticalClimber.climb(Level.MID);
                 diagonalClimber.retract();
                 break;

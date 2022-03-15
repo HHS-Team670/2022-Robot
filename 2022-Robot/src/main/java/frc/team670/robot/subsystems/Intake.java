@@ -44,9 +44,7 @@ public class Intake extends MustangSubsystemBase {
 
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
-        if (!deployer.isDeployed()) {
-            deployer.deploy(true);
-        }
+        deployer.deploy(true);
         if (reversed) {
             roller.set(intake_roller_speed * -1);
 
@@ -74,9 +72,7 @@ public class Intake extends MustangSubsystemBase {
     // Stops the intake
     public void stop() {
         roller.stopMotor();
-        if (deployer.isDeployed()) {
-            deployer.deploy(false);
-        }
+        deployer.deploy(false);
         conveyor.stopAll();
     }
 

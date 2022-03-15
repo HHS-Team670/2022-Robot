@@ -104,6 +104,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void autonomousInit() {
+    shooter.useDynamicSpeed(false);
+    shooter.setWaitTime(1);
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
 
@@ -112,6 +114,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void teleopInit() {
+    shooter.useDynamicSpeed(true);
+    shooter.setWaitTime(2);
     leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
         diagonalClimber);

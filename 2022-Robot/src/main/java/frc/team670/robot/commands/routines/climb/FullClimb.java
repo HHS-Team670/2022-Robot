@@ -41,11 +41,6 @@ public class FullClimb extends CommandBase implements MustangCommand {
     this.deployer = deployer;
   }
 
-  @Override
-  public void initialize(){
-    deployer.deploy(false);
-  }
-
   // Called once when the command executes
   @Override
   public void execute() {
