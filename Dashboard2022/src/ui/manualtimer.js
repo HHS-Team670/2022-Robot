@@ -38,9 +38,9 @@ function stopTimer () {
     runtimer = false;
 }
 
-function pauseTimer () {
-    runtimer = false;
-}
+// function pauseTimer () {
+//     runtimer = false;
+// }
 
 function getTimeString (minutes, seconds) {
     return (seconds == 60 ? minutes + 1 : minutes) + ':' 
@@ -76,9 +76,9 @@ document.getElementById("timer-stopper").onmouseup = function() {
     setMatchPhase(MatchPhases.NOT_STARTED);
 }
 
-document.getElementById("timer-pauser").onmouseup = function() {
-    pauseTimer();
-}
+// document.getElementById("timer-pauser").onmouseup = function() {
+//     pauseTimer();
+// }
 
 
 document.getElementById("timer-starter").onmouseup = function() {

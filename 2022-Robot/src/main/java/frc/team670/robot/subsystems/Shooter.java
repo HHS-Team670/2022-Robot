@@ -290,6 +290,8 @@ public class Shooter extends MustangSubsystemBase {
             }
             foundTarget = false;
         }
+        SmartDashboard.putString("using-dynamic-speed", useDynamicSpeed ? "TRUE" : "FALSE");
+
     }
 
     public boolean foundTarget() {
