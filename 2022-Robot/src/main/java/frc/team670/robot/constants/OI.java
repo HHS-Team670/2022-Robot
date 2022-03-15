@@ -10,6 +10,7 @@ import frc.team670.robot.commands.climber.ExtendClimber;
 import frc.team670.robot.commands.climber.RetractClimber;
 import frc.team670.robot.commands.conveyor.ToggleConveyor;
 import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
+import frc.team670.robot.commands.drivebase.HoldPosition;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
@@ -41,6 +42,7 @@ public class OI extends OIBase {
   private static JoystickButton alignToTarget = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
+  private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
 
   // backup controls
   private static JoystickButton toggleConveyor = new JoystickButton(getBackupController(), XboxButtons.X);
@@ -101,7 +103,7 @@ public class OI extends OIBase {
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
     toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); //TODO: still doesn't work, gotta figure it out, angles off
-    
+    holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); //TODO: still doesn't work, gotta figure it out, angles off
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));

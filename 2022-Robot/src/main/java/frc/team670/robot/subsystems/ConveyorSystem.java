@@ -91,7 +91,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 					if (intakeConveyor.getBallCount() == 1) {
 						intakeConveyor.stop();
 						status = Status.OFF;
-						deployer.setSystemTargetAngleInDegrees(0);
 					}
 				}
 				break;
@@ -112,6 +111,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 			case OFF:
 				break;
 		}
+
 	}
 
 	// Stops the conveyors

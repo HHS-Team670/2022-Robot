@@ -155,10 +155,8 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putBoolean("commandinitited", defaultCommandInited);
         if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && !defaultCommandInited){
             initDefaultCommand();
-            Logger.consoleLog("%s", defaultCommandInited);
             defaultCommandInited = true;
         }
     }

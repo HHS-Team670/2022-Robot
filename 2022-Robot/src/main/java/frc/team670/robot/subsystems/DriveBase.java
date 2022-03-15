@@ -32,6 +32,7 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -71,6 +72,9 @@ public class DriveBase extends HDrive {
   private Timer timer = new Timer();
 
   private XboxRobotOrientedDrive defaultCommand;
+
+  SparkMaxPIDController leftPIDController;
+  SparkMaxPIDController rightPIDController;
 
   public DriveBase(MustangController mustangController, Vision vision) {
     this.vision = vision;
@@ -139,6 +143,28 @@ public class DriveBase extends HDrive {
 
     initBrakeMode();
     middle.setIdleMode(IdleMode.kCoast);
+
+    leftPIDController = left1.getPIDController();
+    rightPIDController = right1.getPIDController();
+
+    leftPIDController.setP(RobotConstants.rightKPDriveVel);
+    leftPIDController.setI(RobotConstants.rightKIDriveVel);
+    leftPIDController.setD(RobotConstants.rightKDDriveVel);
+
+    rightPIDController.setP(RobotConstants.rightKPDriveVel);
+    rightPIDController.setI(RobotConstants.rightKIDriveVel);
+    rightPIDController.setD(RobotConstants.rightKDDriveVel);
+
+    leftPIDController.setOutputRange(-1, 1);
+    rightPIDController.setOutputRange(-1, 1);
+
+    SmartDashboard.putNumber("lp", 0);
+    SmartDashboard.putNumber("li", 0);
+    SmartDashboard.putNumber("ld", 0);
+    SmartDashboard.putNumber("rp", 0);
+    SmartDashboard.putNumber("ri", 0);
+    SmartDashboard.putNumber("rd", 0);
+
   }
 
   /**
@@ -368,7 +394,18 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    debugSubsystem();
+    SmartDashboard.putNumber("lPos", left1Encoder.getPosition());
+    SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
+    SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
+
+    leftPIDController.setP(SmartDashboard.getNumber("lp", 0));
+    leftPIDController.setI(SmartDashboard.getNumber("li", 0));
+    leftPIDController.setD(SmartDashboard.getNumber("ld", 0));
+    rightPIDController.setP(SmartDashboard.getNumber("rp", 0));
+    rightPIDController.setI(SmartDashboard.getNumber("ri", 0));
+    rightPIDController.setD(SmartDashboard.getNumber("rd", 0));
+
+
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
 
     // removed the delay for 10 seconds
@@ -565,11 +602,7 @@ public class DriveBase extends HDrive {
   }
 
   public SparkMaxPIDController getLeftSparkMaxPIDController(){
-    SparkMaxPIDController pidController = left1.getPIDController();
-    pidController.setP(RobotConstants.rightKPDriveVel);
-    pidController.setI(RobotConstants.rightKIDriveVel);
-    pidController.setD(RobotConstants.rightKDDriveVel);
-    return pidController;
+    return leftPIDController;
   }
 
   @Override
@@ -585,11 +618,7 @@ public class DriveBase extends HDrive {
   }
 
   public SparkMaxPIDController getRightSparkMaxPIDController(){
-    SparkMaxPIDController pidController = right1.getPIDController();
-    pidController.setP(RobotConstants.rightKPDriveVel);
-    pidController.setI(RobotConstants.rightKIDriveVel);
-    pidController.setD(RobotConstants.rightKDDriveVel);
-    return pidController;
+    return rightPIDController;
   }
 
   @Override
@@ -622,13 +651,18 @@ public class DriveBase extends HDrive {
   }
 
   public void holdPosition() {
+    // Logger.consoleLog("left setpoint: %s", getLeftSparkMaxPIDController().getR);
+    SmartDashboard.putNumber("lsetpoint", left1Encoder.getPosition());
+    SmartDashboard.putNumber("rsetpoint", right1Encoder.getPosition());
     getLeftSparkMaxPIDController().setReference(left1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
     getRightSparkMaxPIDController().setReference(right1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
+    setCenterDrive(0.1);
   }
 
   public void releasePosition() {
     getLeftSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
     getRightSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
+    setCenterDrive(0);
   }
 
   @Override

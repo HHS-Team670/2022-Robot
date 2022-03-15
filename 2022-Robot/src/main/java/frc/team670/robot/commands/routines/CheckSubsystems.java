@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
@@ -40,7 +41,7 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
             ClimberSystem climbers, MustangController controller) {
         verticalClimber = climbers.getVerticalClimber();
         diagonalClimber = climbers.getDiagonalClimber();
-        addRequirements(verticalClimber, diagonalClimber, climbers);
+        addRequirements(intake, deployer, conveyors, shooter, verticalClimber, diagonalClimber, climbers);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(deployer, HealthState.GREEN);
@@ -48,7 +49,7 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
         healthReqs.put(shooter, HealthState.GREEN);
         healthReqs.put(verticalClimber, HealthState.GREEN);
         healthReqs.put(diagonalClimber, HealthState.GREEN);
-        healthReqs.put(climbers, HealthState.GREEN);        
+        healthReqs.put(climbers, HealthState.GREEN);
         this.intake = intake;
         this.deployer = deployer;
         this.conveyors = conveyors;
