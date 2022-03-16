@@ -256,16 +256,34 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
 });
 
 // updates status lights for vision
-NetworkTables.addKeyListener('/SmartDashboard/using-dynamic-speed', (key, value) => {
-    var dynamicSpeedIndicator = document.querySelector("#dynamic-speed-indicator");
-    if (value === 'TRUE') {
-        dynamicSpeedIndicator.textContent = "USING DYNAMIC SPEED";
-        dynamicSpeedIndicator.style.stroke = "white";
-        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "none";
-    } else {
-        dynamicSpeedIndicator.textContent = "OVERRIDED DYNAMIC SPEED";
-        dynamicSpeedIndicator.style.stroke = "black";
-        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "yellow";
+NetworkTables.addKeyListener('/SmartDashboard/overrided-rpm', (key, value) => {
+    var shooterSpeedIndicator = document.querySelector("#shooter-speed-indicator");
+    switch(value) {
+        case "NOT OVERRIDED":
+            shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
+            shooterSpeedIndicator.style.stroke = "white";
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
+            break;
+        case "LOW TOUCHING FENDER":
+            shooterSpeedIndicator.textContent = "OVERRIDED: LOW TOUCHING FENDER";
+            shooterSpeedIndicator.style.stroke = "black";
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(0, 255, 255)";
+            break;
+        case "LOW OUTSIDE TARMAC":
+            shooterSpeedIndicator.textContent = "OVERRIDED: LOW OUTSIDE TARMAC";
+            shooterSpeedIndicator.style.stroke = "black";
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(162, 0, 255)";
+            break;
+        case "HIGH JUST OUTSIDE TARMAC":
+            shooterSpeedIndicator.textContent = "OVERRIDED: HIGH JUST OUTSIDE TARMAC";
+            shooterSpeedIndicator.style.stroke = "black";
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(255, 0, 242)";
+            break;
+        default:
+            shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
+            shooterSpeedIndicator.style.stroke = "white";
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
+            break;
     }
 });
 

@@ -155,6 +155,7 @@ public class Shooter extends MustangSubsystemBase {
 
         this.mController = mController;
         this.conveyor = conveyor;
+        SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
     }
 
     public double getVelocity() {
@@ -292,8 +293,6 @@ public class Shooter extends MustangSubsystemBase {
             }
             foundTarget = false;
         }
-        SmartDashboard.putString("using-dynamic-speed", useDynamicSpeed ? "TRUE" : "FALSE");
-
     }
 
     public boolean foundTarget() {
