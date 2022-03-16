@@ -126,6 +126,7 @@ public class RobotContainer extends RobotContainerBase {
   @Override
   public void disabled() {
     leds.setIsDisabled(true);
+    SmartDashboard.delete("auton-chooser");
   }
 
   public static MustangController getOperatorController() {

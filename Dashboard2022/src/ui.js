@@ -186,7 +186,7 @@ NetworkTables.addKeyListener('/SmartDashboard/Climber 1', (key, value) => {
     var commands = statusLights.contentDocument;
     if (value === 'GREEN') {
         document.getElementById('climber1-status').style.fill = "rgb(0,255,0)";
-        document.getElementById('climber-status').style.stroke = "rgb(0,255,0)";
+        document.getElementById('climber1-status').style.stroke = "rgb(0,255,0)";
     } else if (value === 'YELLOW') {
         document.getElementById('climber1-status').style.fill = "rgb(255,255,0)";
         document.getElementById('climber1-status').style.stroke = "rgb(255,255,0)";

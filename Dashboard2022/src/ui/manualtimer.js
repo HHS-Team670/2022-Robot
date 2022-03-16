@@ -71,47 +71,47 @@ function setMatchPhase(phase) {
 }
 
 
-document.getElementById("timer-stopper").onmouseup = function() {
-    stopTimer();
-    setMatchPhase(MatchPhases.NOT_STARTED);
-}
+// document.getElementById("timer-stopper").onmouseup = function() {
+//     stopTimer();
+//     setMatchPhase(MatchPhases.NOT_STARTED);
+// }
 
 // document.getElementById("timer-pauser").onmouseup = function() {
 //     pauseTimer();
 // }
 
 
-document.getElementById("timer-starter").onmouseup = function() {
-    if (runtimer) return;
-    runtimer = true;
-    endTime = new Date().getTime() + FULL_MATCH_LENGTH_MILLIS;
+// document.getElementById("timer-starter").onmouseup = function() {
+//     if (runtimer) return;
+//     runtimer = true;
+//     endTime = new Date().getTime() + FULL_MATCH_LENGTH_MILLIS;
     
-    updateTimer(endTime);
+//     updateTimer(endTime);
 
-    timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
-    if (timeoutFunc != null) clearTimeout(timeoutFunc);
-    setMatchPhase(MatchPhases.AUTON);
+//     timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
+//     if (timeoutFunc != null) clearTimeout(timeoutFunc);
+//     setMatchPhase(MatchPhases.AUTON);
     
-    countDownTimer = setInterval(function() {
+//     countDownTimer = setInterval(function() {
         
-        updateTimer(endTime);
+//         updateTimer(endTime);
 
 
-        // TODO regex format the time
-        timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
+//         // TODO regex format the time
+//         timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
             
-        // If the count down is over, write some text 
-        if (timeDifference < 0) {
-            stopTimer();
-            setMatchPhase(MatchPhases.ENDED);
-            timeoutFunc = setTimeout(() => {
-                setMatchPhase(MatchPhases.NOT_STARTED); 
-                clearTimeout(timeoutFunc);
-                timeoutFunc = null;
-            }, 5000);
-        } else if (timeDifference <= FULL_MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
-            setMatchPhase(MatchPhases.TELEOP);
-        }
-    }, 1000);
-    runtimer = true;
-};
+//         // If the count down is over, write some text 
+//         if (timeDifference < 0) {
+//             stopTimer();
+//             setMatchPhase(MatchPhases.ENDED);
+//             timeoutFunc = setTimeout(() => {
+//                 setMatchPhase(MatchPhases.NOT_STARTED); 
+//                 clearTimeout(timeoutFunc);
+//                 timeoutFunc = null;
+//             }, 5000);
+//         } else if (timeDifference <= FULL_MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
+//             setMatchPhase(MatchPhases.TELEOP);
+//         }
+//     }, 1000);
+//     runtimer = true;
+// };
