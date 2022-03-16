@@ -22,13 +22,12 @@ import frc.team670.robot.subsystems.Vision;
 public class HoldPosition extends CommandBase implements MustangCommand {
 
     private DriveBase driveBase;
-    
-    private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-   
+    private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public HoldPosition(DriveBase driveBase) {
         this.driveBase = driveBase;
+        addRequirements(driveBase);
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
     }
@@ -54,17 +53,21 @@ public class HoldPosition extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         driveBase.getDriveTrain().feedWatchdog();
-        driveBase.setCenterDrive(0.1);
     }
 
     @Override
     public boolean isFinished() {
+        if (Math.abs(driveBase.getMustangController().getRightStickX()) > 0.1
+                || Math.abs(driveBase.getMustangController().getLeftStickX()) > 0.1
+                || Math.abs(driveBase.getMustangController().getLeftStickY()) > 0.1) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public void end(boolean interrupted) {
-        driveBase.stop();
+        driveBase.releasePosition();
         // driveBase.initDefaultCommand();
     }
 

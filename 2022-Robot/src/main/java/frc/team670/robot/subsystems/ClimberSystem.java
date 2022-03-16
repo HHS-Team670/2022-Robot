@@ -390,7 +390,6 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         @Override
         public void mustangPeriodic() {
-            
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();
