@@ -262,26 +262,31 @@ NetworkTables.addKeyListener('/SmartDashboard/overrided-rpm', (key, value) => {
         case "NOT OVERRIDED":
             shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
             shooterSpeedIndicator.style.stroke = "white";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "20%"
             document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
             break;
         case "LOW TOUCHING FENDER":
             shooterSpeedIndicator.textContent = "OVERRIDED: LOW TOUCHING FENDER";
             shooterSpeedIndicator.style.stroke = "black";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
             document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(0, 255, 255)";
             break;
         case "LOW OUTSIDE TARMAC":
             shooterSpeedIndicator.textContent = "OVERRIDED: LOW OUTSIDE TARMAC";
             shooterSpeedIndicator.style.stroke = "black";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
             document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(162, 0, 255)";
             break;
         case "HIGH JUST OUTSIDE TARMAC":
             shooterSpeedIndicator.textContent = "OVERRIDED: HIGH JUST OUTSIDE TARMAC";
             shooterSpeedIndicator.style.stroke = "black";
-            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(255, 0, 242)";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(234, 0, 255)";
             break;
         default:
             shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
             shooterSpeedIndicator.style.stroke = "white";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "20%"
             document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
             break;
     }
