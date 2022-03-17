@@ -173,4 +173,9 @@ public class RobotContainer extends RobotContainerBase {
         .schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
   }
 
+  @Override
+  public void disabledPeriodic() {
+    deployer.setEncoderPositionFromAbsolute();
+  }
+
 }

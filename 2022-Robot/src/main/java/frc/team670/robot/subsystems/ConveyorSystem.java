@@ -162,7 +162,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 class Conveyor {
 
 	private SparkMAXLite roller;
-	private double CONVEYOR_SPEED = 0.6;
+	private double CONVEYOR_SPEED = 0.7;
 	private int ballCount = 0;
 
 	private BeamBreak beamBreak;
