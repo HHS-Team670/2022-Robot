@@ -46,6 +46,19 @@ var lower = document.querySelector('#Lower');
 lower.onclick = () => {setPaths(false)};
 var upper = document.querySelector('#Upper');
 upper.onclick = () => {setPaths(true)};
+var toggleCamera = document.querySelector('#toggle-camera');
+toggleCamera.onclick = () => {
+    var cameraDiv = document.querySelector("#camera-streams")
+    if (document.querySelector(".camera-stream") == null) {
+        var cameraStreams = `<image class="camera-stream" src="http://photonvision.local:1186/stream.mjpg?1646964104873"></image>
+        <image class="camera-stream" src="http://photonvision.local:1184/stream.mjpg?1646964457545"></image>`
+        cameraDiv.insertAdjacentHTML( 'beforeend', cameraStreams );
+    } else {
+        while (cameraDiv.firstChild) {
+            cameraDiv.removeChild(cameraDiv.firstChild);
+        }
+    }
+}
 
 
 function resetAndAddDropdownListeners() {
@@ -256,16 +269,39 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
 });
 
 // updates status lights for vision
-NetworkTables.addKeyListener('/SmartDashboard/using-dynamic-speed', (key, value) => {
-    var dynamicSpeedIndicator = document.querySelector("#dynamic-speed-indicator");
-    if (value === 'TRUE') {
-        dynamicSpeedIndicator.textContent = "USING DYNAMIC SPEED";
-        dynamicSpeedIndicator.style.stroke = "white";
-        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "none";
-    } else {
-        dynamicSpeedIndicator.textContent = "OVERRIDED DYNAMIC SPEED";
-        dynamicSpeedIndicator.style.stroke = "black";
-        document.querySelector("#dynamic-speed-indicator-bg").style.fill = "yellow";
+NetworkTables.addKeyListener('/SmartDashboard/overrided-rpm', (key, value) => {
+    var shooterSpeedIndicator = document.querySelector("#shooter-speed-indicator");
+    switch(value) {
+        case "NOT OVERRIDED":
+            shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
+            shooterSpeedIndicator.style.stroke = "white";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "20%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
+            break;
+        case "LOW TOUCHING FENDER":
+            shooterSpeedIndicator.textContent = "OVERRIDED: LOW TOUCHING FENDER";
+            shooterSpeedIndicator.style.stroke = "black";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(0, 255, 255)";
+            break;
+        case "LOW OUTSIDE TARMAC":
+            shooterSpeedIndicator.textContent = "OVERRIDED: LOW OUTSIDE TARMAC";
+            shooterSpeedIndicator.style.stroke = "black";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(162, 0, 255)";
+            break;
+        case "HIGH JUST OUTSIDE TARMAC":
+            shooterSpeedIndicator.textContent = "OVERRIDED: HIGH JUST OUTSIDE TARMAC";
+            shooterSpeedIndicator.style.stroke = "black";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "0%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "rgb(234, 0, 255)";
+            break;
+        default:
+            shooterSpeedIndicator.textContent = "USING DYNAMIC SPEED";
+            shooterSpeedIndicator.style.stroke = "white";
+            shooterSpeedIndicator.x.baseVal[0].valueAsString = "20%"
+            document.querySelector("#shooter-speed-indicator-bg").style.fill = "none";
+            break;
     }
 });
 
@@ -389,7 +425,7 @@ function sendAuton() {
     console.log("SELECTED AUTON COMMAND", autonCommand);
     NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
     NetworkTables.putValue('/SmartDashboard/delayTime', delayTime);
-    if (autonCommand !== -1 && NetworkTables.getValue('/SmartDashboard/auton-chooser') === autonCommand && NetworkTables.isRobotConnected()
+    if (autonCommand !== -1 && NetworkTables.getValue('/SmartDashboard/auton-chooser') === autonCommand
     && NetworkTables.getKeys().length > 5) {
         document.getElementById('auton-status').style.fill = "rgb(0,255,0)";
         document.getElementById('auton-status').style.stroke = "rgb(0,255,0)";
