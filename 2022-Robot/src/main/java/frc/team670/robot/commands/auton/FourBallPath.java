@@ -85,7 +85,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         terminalTargetPose = new Pose2d(1.72, 1.50, Rotation2d.fromDegrees(-176.97)); //middle pose where robot is at terminal
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
-        targetPose3 = trajectory3.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
+        targetPose3 = trajectory3.getStates().get(trajectory3.getStates().size() - 1).poseMeters;
 
         //splitting highhuberterminalP2 into 2:
         // targetPose = new Pose2d(5.47, 2.13, Rotation2d.fromDegrees(-135.00));
