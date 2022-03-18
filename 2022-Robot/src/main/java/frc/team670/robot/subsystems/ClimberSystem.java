@@ -128,6 +128,7 @@ public class ClimberSystem extends MustangSubsystemBase{
                 diagonalClimber.retract();
                 break;
             case 1:
+                deployer.deploy(false);
                 verticalClimber.climb(Level.MID);
                 diagonalClimber.retract();
                 break;
@@ -154,10 +155,8 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putBoolean("commandinitited", defaultCommandInited);
         if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && !defaultCommandInited){
             initDefaultCommand();
-            Logger.consoleLog("%s", defaultCommandInited);
             defaultCommandInited = true;
         }
     }
@@ -391,7 +390,6 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         @Override
         public void mustangPeriodic() {
-            
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();

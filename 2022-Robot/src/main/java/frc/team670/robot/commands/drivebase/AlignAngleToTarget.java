@@ -93,7 +93,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (!foundTarget || Math.abs(driveBase.getHeading() - targetAngle) <= 1.5 || ( (int)( (startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
+        return (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 1.5 && driveBase.getWheelSpeeds().rightMetersPerSecond > 0.1)  || ( (int)( (startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
     }
 
     @Override

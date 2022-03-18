@@ -37,16 +37,17 @@ public class Vision extends VisionSubsystemBase{
             RobotConstants.CAMERA_HEIGHT_METERS, 
             FieldConstants.HIGH_HUB_HEIGHT, 
             RobotConstants.CAMERA_ANGLE_DEGREES);
-        SmartDashboard.putBoolean("leds", LEDsTurnedOn());
-        if (super.hasTarget()) {
-            SmartDashboard.putNumber("Vision Distance", distance);
-            SmartDashboard.putNumber("Vision Angle (yaw)", angle);
-        }
+        
     }
 
     @Override
     public void debugSubsystem() {
         // TODO Auto-generated method stub
+        if (super.hasTarget()) {
+            SmartDashboard.putNumber("Vision Distance", distance);
+            SmartDashboard.putNumber("Vision Angle (yaw)", angle);
+        }
+        SmartDashboard.putBoolean("leds", LEDsTurnedOn());
     }
 
 }

@@ -47,6 +47,8 @@ public class Shooter extends MustangSubsystemBase {
     private static double MIN_RPM = 0;
     private static double MAX_RPM = 4750;
 
+    private double waitTime = 2;
+
     private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
     private int shootingCurrentCount = 0;
@@ -153,6 +155,7 @@ public class Shooter extends MustangSubsystemBase {
 
         this.mController = mController;
         this.conveyor = conveyor;
+        SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
     }
 
     public double getVelocity() {
@@ -290,8 +293,6 @@ public class Shooter extends MustangSubsystemBase {
             }
             foundTarget = false;
         }
-        SmartDashboard.putString("using-dynamic-speed", useDynamicSpeed ? "TRUE" : "FALSE");
-
     }
 
     public boolean foundTarget() {
@@ -375,6 +376,14 @@ public class Shooter extends MustangSubsystemBase {
 
     public void setLED(boolean on) {
         vision.switchLEDS(on);
+    }
+
+    public double getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
     }
 
     @Override

@@ -91,7 +91,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 					if (intakeConveyor.getBallCount() == 1) {
 						intakeConveyor.stop();
 						status = Status.OFF;
-						deployer.setSystemTargetAngleInDegrees(0);
 					}
 				}
 				break;
@@ -112,6 +111,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 			case OFF:
 				break;
 		}
+
 	}
 
 	// Stops the conveyors
@@ -143,6 +143,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	@Override
 	public void mustangPeriodic() {
+		debugSubsystem();
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
 		checkState();
@@ -161,7 +162,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 class Conveyor {
 
 	private SparkMAXLite roller;
-	private double CONVEYOR_SPEED = 0.6;
+	private double CONVEYOR_SPEED = 0.7;
 	private int ballCount = 0;
 
 	private BeamBreak beamBreak;

@@ -1,5 +1,7 @@
 package frc.team670.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,8 +22,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private DutyCycleEncoder absEncoder;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = 0.28; // From 3/6
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.57; // From 3/6
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.05; // From 3/6
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.25; // From 3/6
     private static final double ABSOLUTE_ENCODER_GEAR_RATIO = 25.76582278;
 
     private static final double MAX_FLIPOUT_ROTATIONS = -8.142;
@@ -213,7 +215,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-
+        debugSubsystem();
     }
 
     public boolean hasReachedTargetPosition() {
@@ -222,10 +224,14 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean deploy(boolean deploy){
-        setEncoderPositionFromAbsolute();
+        // setEncoderPositionFromAbsolute();
         double angle = 0;
         if(deploy){
             angle = 90;
+            setRotatorMode(true);
+        }
+        else{
+            setRotatorMode(false);
         }
         setSystemTargetAngleInDegrees(angle);
         return hasReachedTargetPosition();
@@ -265,5 +271,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("rel-Encoder", this.rotator_encoder.getPosition());
         SmartDashboard.putNumber("rel-Encoder-vel", this.rotator_encoder.getVelocity());
         SmartDashboard.putNumber("angle", getCurrentAngleInDegrees());
+        SmartDashboard.putBoolean("isDeployed", isDeployed());
     }
 }

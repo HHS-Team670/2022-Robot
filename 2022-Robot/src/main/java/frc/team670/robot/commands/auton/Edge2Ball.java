@@ -15,6 +15,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
 import frc.team670.robot.constants.AutonTrajectory;
@@ -44,7 +45,7 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
         trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
         // extension = PathPlanner.loadPath("ATarmacEdge2BallExtension", 1, 0.5);
-        extension = PathPlanner.loadPath(pathName.toString() + "Extension", 1, 0.5);
+        extension = PathPlanner.loadPath(pathName.toString() + "Extension", 0.5, 0.25);
 
         this.driveBase = driveBase;
         
@@ -62,26 +63,41 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         
         WaitToShoot waitCommand;
         if(hubType == HubType.UPPER)
-            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -0.93, HubType.UPPER);
+            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, HubType.UPPER);
         else
             waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2.4, HubType.LOWER);
 
-        addCommands(
+        if(extension != null) {
+            addCommands(
+                new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory, driveBase),
+                    new SequentialCommandGroup( 
+                        new ParallelCommandGroup(
+                            new RunIntakeWithConveyor(intake, conveyor)
+                        ),
+                        waitCommand,
+                        new AutoShootToIntake(conveyor, shooter, intake)
+                    )
+                ), 
+                getTrajectoryFollowerCommand(extension, driveBase), 
+                new ShootAllBalls(conveyor, shooter),
+                new StopDriveBase(driveBase)
+            );
+        } else {
+            addCommands(
             new ParallelCommandGroup(
-            getTrajectoryFollowerCommand(trajectory, driveBase),
-                new SequentialCommandGroup( 
-                    new ParallelCommandGroup(
-                        new ToggleIntake(deployer),
-                        new RunIntakeWithConveyor(intake, conveyor)
-                    ),
-                    waitCommand,
-                    new ShootAllBalls(conveyor, shooter)
+                getTrajectoryFollowerCommand(trajectory, driveBase),
+                    new SequentialCommandGroup( 
+                        new ParallelCommandGroup(
+                            new RunIntakeWithConveyor(intake, conveyor)
+                        ),
+                        waitCommand,
+                        new ShootAllBalls(conveyor, shooter)
+                    )
                 )
-            ), 
-            getTrajectoryFollowerCommand(extension, driveBase), 
-            new ShootAllBalls(conveyor, shooter),
-            new StopDriveBase(driveBase)
-        );
+            );
+        }
+        
     }
 
     @Override
