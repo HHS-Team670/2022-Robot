@@ -33,8 +33,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	public ConveyorSystem(Deployer deployer) {
 		this.deployer = deployer;
-		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
-		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK, 0.7); // This is done cuz we were seeing some cases where the ball would go past the beam break and touch the shooter wheel and so it would just blurp it out but different speeds solve it
+		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK, 0.6);
 	}
 
 	public void debugBeamBreaks() {
@@ -167,9 +167,10 @@ class Conveyor {
 
 	private BeamBreak beamBreak;
 
-	public Conveyor(int motorID, int beamBreakID) {
+	public Conveyor(int motorID, int beamBreakID, double conveyorSpeed) {
 		roller = SparkMAXFactory.buildSparkMAX(motorID, SparkMAXFactory.defaultConfig, Motor_Type.NEO_550);
 		beamBreak = new BeamBreak(beamBreakID);
+		CONVEYOR_SPEED = conveyorSpeed;
 	}
 
 	public int getBallCount() {

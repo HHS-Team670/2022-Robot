@@ -31,6 +31,10 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public static final int MAX_ACCEL_DOWNWARDS = 700;
     public static final int MAX_ACCEL_UPWARDS = 1900;
 
+    private boolean rotatorSetpointCancelled = false;
+
+    private double angle;
+
 
     /**
      * PID and SmartMotion constants for the flipout rotator go here.
@@ -216,22 +220,27 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
+        if(angle == 90 && getCurrentAngleInDegrees() > 70 && !rotatorSetpointCancelled){
+            clearSetpoint();
+            rotatorSetpointCancelled = true;
+        }
     }
 
     public boolean hasReachedTargetPosition() {
-        boolean hasReachedTarget = (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+        boolean hasReachedTarget = (rotator.get() == 0 || MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
         return hasReachedTarget;
     }
 
     public boolean deploy(boolean deploy){
         // setEncoderPositionFromAbsolute();
-        double angle = 0;
+        angle = 0;
         if(deploy){
             angle = 90;
             setRotatorMode(true);
         }
         else{
             setRotatorMode(false);
+            rotatorSetpointCancelled = false;
         }
         setSystemTargetAngleInDegrees(angle);
         return hasReachedTargetPosition();
@@ -249,7 +258,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean isDeployed(){
-        return (getCurrentAngleInDegrees() > 20 && (rotator.get() == 0 || hasReachedTargetPosition()));
+        return (angle==90); //(rotator.get() == 0 ||  we were doing this but can't anymore cuz of cancelling setpoint, bring back if you see any issues
     } 
 
     @Override

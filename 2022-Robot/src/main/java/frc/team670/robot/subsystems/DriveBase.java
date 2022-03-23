@@ -525,19 +525,6 @@ public class DriveBase extends HDrive {
     return autoRoutine;
   }
 
-  public double getDelayTime() {
-    while (delayTime == -1) {
-      if (timer.hasElapsed(10)) {
-        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
-        break;
-      }
-      continue;
-    }
-    // Logger.consoleLog("Inside getDelayTime in Drivebase - delay time: ",
-    // delayTime);
-    return delayTime;
-  }
-
   @Override
   public double getRightPositionTicks() {
     return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
