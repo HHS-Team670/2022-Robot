@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
@@ -20,9 +20,11 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.AutonPathWithDelay;
 import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.constants.OI;
@@ -37,8 +39,6 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.LEDs;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
-
-import frc.team670.robot.commands.auton.FourBallPath;
 
 public class RobotContainer extends RobotContainerBase {
 
@@ -70,14 +70,22 @@ public class RobotContainer extends RobotContainerBase {
     super();
     addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber, climbers);
     m_auto_chooser = new SendableChooser<MustangCommand>();
-    m_auto_chooser.addOption("4 Ball Auto", new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal));
-    m_auto_chooser.addOption("2 Ball Auto A Tarmac LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.LOWER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Close LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.LOWER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Far LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.LOWER));
-    m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.UPPER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER));
+    m_auto_chooser.setDefaultOption("4 Ball Auto",
+        new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal));
+    m_auto_chooser.addOption("2 Ball Auto A Tarmac LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
+        deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.LOWER));
+    m_auto_chooser.addOption("2 Ball Auto B Tarmac Close LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
+        deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.LOWER));
+    m_auto_chooser.addOption("2 Ball Auto B Tarmac Far LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
+        deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.LOWER));
+    m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
+        deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER));
+    m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new Edge2Ball(driveBase, intake, conveyorSystem,
+        shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.UPPER));
+    m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
+        deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER));
     SmartDashboard.putData(m_auto_chooser);
+    SmartDashboard.putNumber("Delay Time", 0);
   }
 
   public void robotInit() {
@@ -102,15 +110,7 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // double delayTime = 
-
-    MustangCommand autonCommand = m_auto_chooser.getSelected();
-  
-        if (autonCommand == null) {
-      Logger.consoleError("Auton Command is Null. Defaulting to Edge2Ball");
-      autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-      // autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER);
-    }
+    MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
     return autonCommand;
   }
 
@@ -190,7 +190,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   @Override
-  public void autonomousPeriodic(){
+  public void autonomousPeriodic() {
     driveBase.getDriveTrain().feed();
   }
 
