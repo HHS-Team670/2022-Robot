@@ -12,6 +12,8 @@ import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.Deployer;
 
+import frc.team670.mustanglib.utils.Logger;
+
 /**
  * Once the driver aligns with the mid bar, climbs to the mid bar. It then
  * climbs

@@ -37,6 +37,8 @@ import frc.team670.robot.subsystems.LEDs;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 
+import frc.team670.robot.commands.auton.FourBallPath;
+
 public class RobotContainer extends RobotContainerBase {
 
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
@@ -95,15 +97,28 @@ public class RobotContainer extends RobotContainerBase {
 
     MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, delayTime, driveBase, intake,
         conveyorSystem, shooter, deployer);
-    if (autonCommand == null) {
+   
+    // MustangCommand autonCommand;
+        
+    // FOUR BALL
+    // autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+    
+    //BTarmacLower (2 ball without extension)
+    // autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER);
+    
+    //ATarmacEdge (2 ball + extension)
+    // autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER); 
+
+        if (autonCommand == null) {
       Logger.consoleError("Auton Command is Null. Defaulting to Edge2Ball");
-      autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer,
-          AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+      autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+      // autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER);
     }
     return autonCommand;
   }
 
   public void autonomousInit() {
+    driveBase.getDriveTrain().setSafetyEnabled(false);
     shooter.useDynamicSpeed(false);
     shooter.setWaitTime(1);
     deployer.setEncoderPositionFromAbsolute();
@@ -126,7 +141,6 @@ public class RobotContainer extends RobotContainerBase {
   @Override
   public void disabled() {
     leds.setIsDisabled(true);
-    SmartDashboard.delete("auton-chooser");
   }
 
   public static MustangController getOperatorController() {
@@ -176,6 +190,11 @@ public class RobotContainer extends RobotContainerBase {
   @Override
   public void disabledPeriodic() {
     deployer.setEncoderPositionFromAbsolute();
+  }
+
+  @Override
+  public void autonomousPeriodic(){
+    driveBase.getDriveTrain().feed();
   }
 
 }

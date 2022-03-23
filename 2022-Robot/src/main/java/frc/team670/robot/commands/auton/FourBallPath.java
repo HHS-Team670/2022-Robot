@@ -26,6 +26,8 @@ import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.mustanglib.utils.Logger;
+
 
 /*
  * BTarmac4BallTerminal   
@@ -67,14 +69,16 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         //     trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
         // }
 
+
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
-            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2, 1);
+            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.2, 1);
             // trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
 
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2, 1);
-            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2, 1, true);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2.2, 1);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2.2, 1, true);
 
         }
+
 
         // if (pathName.equals("ATarmacEdge4Ball")) {
         //     trajectory = PathPlanner.loadPath("ATarmacEdge4BallP1", 2.0, 1);

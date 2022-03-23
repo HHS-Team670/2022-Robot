@@ -398,6 +398,8 @@ public class DriveBase extends HDrive {
     SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
     SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
 
+    SmartDashboard.putNumber("Heading", getHeading());
+
     leftPIDController.setP(SmartDashboard.getNumber("lp", 0));
     leftPIDController.setI(SmartDashboard.getNumber("li", 0));
     leftPIDController.setD(SmartDashboard.getNumber("ld", 0));

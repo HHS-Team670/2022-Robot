@@ -107,7 +107,7 @@ public class OI extends OIBase {
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));
-    raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.HIGH));
+    raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.MID));
     lowerC1.whenPressed(new RetractClimber(verticalClimber,false));
     lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
     raiseC2.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
