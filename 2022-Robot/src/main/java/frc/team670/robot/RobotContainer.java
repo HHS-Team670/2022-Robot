@@ -21,7 +21,6 @@ import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.AutonPathWithDelay;
-import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.routines.CheckSubsystems;
@@ -57,7 +56,6 @@ public class RobotContainer extends RobotContainerBase {
       shooter, intake, conveyorSystem, climbers);
 
   private static OI oi = new OI();
-  private static AutoSelector autoSelector = new AutoSelector();
 
   private static boolean debugSubsystems = false;
 
@@ -128,6 +126,7 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     shooter.useDynamicSpeed(true);
     shooter.setWaitTime(2);
+    driveBase.setTeleopRampRate();
     leds.setIsDisabled(false);
     oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
         diagonalClimber);

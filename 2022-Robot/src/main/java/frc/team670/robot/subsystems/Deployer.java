@@ -1,14 +1,11 @@
 package frc.team670.robot.subsystems;
 
-import java.util.Arrays;
-
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.constants.RobotMap;
@@ -232,7 +229,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean deploy(boolean deploy){
-        // setEncoderPositionFromAbsolute();
         angle = 0;
         if(deploy){
             angle = 90;
@@ -258,24 +254,21 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean isDeployed(){
-        return (angle==90); //(rotator.get() == 0 ||  we were doing this but can't anymore cuz of cancelling setpoint, bring back if you see any issues
+        return (angle==90);
     } 
 
     @Override
     public boolean getTimeout() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public void moveByPercentOutput(double output) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void debugSubsystem() {
-        // TODO Auto-generated method stub
         SmartDashboard.putNumber("abs-Encoder", absEncoder.get());
         SmartDashboard.putNumber("rel-Encoder", this.rotator_encoder.getPosition());
         SmartDashboard.putNumber("rel-Encoder-vel", this.rotator_encoder.getVelocity());

@@ -106,9 +106,4 @@ public class Intake extends MustangSubsystemBase {
         
     }
 
-    public void adjustLinearSpeedBasedOnDrivebaseSpeed(){
-        double drivebaseSpeed = DriveBase.getLinearSpeed();
-        intake_roller_speed = drivebaseSpeed/4; //TODO: COMPLETE MATH BASED ON GEARING
-    }
-
 }

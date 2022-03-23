@@ -18,27 +18,24 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.HDrive;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -62,16 +59,7 @@ public class DriveBase extends HDrive {
 
   private DifferentialDriveOdometry odometry;
 
-  SlewRateLimiter limiter = new SlewRateLimiter(RobotConstants.HYPER_DRIVE_ACCELERATION_LIMIT,
-      RobotConstants.HYPER_DRIVE_DECCELERATION_LIMIT);
-
-  private AutoSelector autoSelector = new AutoSelector();
-  private int autoRoutine = -1;
-  private double delayTime = -1;
-
-  private Timer timer = new Timer();
-
-  private XboxRobotOrientedDrive defaultCommand;
+  private MustangCommand defaultCommand;
 
   SparkMaxPIDController leftPIDController;
   SparkMaxPIDController rightPIDController;
@@ -128,17 +116,7 @@ public class DriveBase extends HDrive {
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
-    // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-    timer.start();
-    // poseEstimator = new
-    // DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-    // new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-    // VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current
-    // state
-    // VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted
-    // the most
-    // VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))
-    // ); //vision
+
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
     initBrakeMode();
@@ -157,13 +135,6 @@ public class DriveBase extends HDrive {
 
     leftPIDController.setOutputRange(-1, 1);
     rightPIDController.setOutputRange(-1, 1);
-
-    SmartDashboard.putNumber("lp", 0);
-    SmartDashboard.putNumber("li", 0);
-    SmartDashboard.putNumber("ld", 0);
-    SmartDashboard.putNumber("rp", 0);
-    SmartDashboard.putNumber("ri", 0);
-    SmartDashboard.putNumber("rd", 0);
 
   }
 
@@ -194,7 +165,7 @@ public class DriveBase extends HDrive {
    * Sets all motors to Brake Mode
    */
   public void initBrakeMode() {
-    setMotorsBrakeMode(allMotors, IdleMode.kBrake);
+    setMotorsNeutralMode(IdleMode.kBrake);
   }
 
   /**
@@ -202,23 +173,6 @@ public class DriveBase extends HDrive {
    */
   public void initCoastMode() {
     setMotorsNeutralMode(IdleMode.kCoast);
-  }
-
-  /*
-   * Gets the input voltage of all the motor controllers on the robot
-   */
-  public double getRobotInputVoltage() {
-    double output = left1.getBusVoltage() + left2.getBusVoltage() + right1.getBusVoltage() + right2.getBusVoltage();
-    return output;
-  }
-
-  /*
-   * Gets the output voltage of all the motor controllers on the robot
-   */
-  public double getRobotOutputVoltage() {
-    double output = left1.getAppliedOutput() + left2.getAppliedOutput() + right1.getAppliedOutput()
-        + right2.getAppliedOutput();
-    return output;
   }
 
   /**
@@ -237,85 +191,6 @@ public class DriveBase extends HDrive {
     for (CANSparkMax m : allMotors) {
       m.setIdleMode(mode);
     }
-  }
-
-  /**
-   * Sets array of motor to coast mode
-   */
-  public void setMotorsCoastMode(List<CANSparkMax> motorGroup, IdleMode mode) {
-    for (CANSparkMax m : motorGroup) {
-      m.setIdleMode(IdleMode.kCoast);
-    }
-  }
-
-  /**
-   * Sets array of motor to brake mode
-   */
-  public void setMotorsBrakeMode(List<SparkMAXLite> motorGroup, IdleMode mode) {
-    for (CANSparkMax m : motorGroup) {
-      m.setIdleMode(IdleMode.kBrake);
-    }
-  }
-
-  /*
-   * Gets the voltage fed into the motor controllers on the left side of the robot
-   */
-  public double getLeftInputVoltage() {
-    double output = left1.getBusVoltage() + left2.getBusVoltage();
-    return output;
-  }
-
-  /*
-   * Get the voltage fed into the motor controllers on the right side of the robot
-   */
-  public double getRightInputVoltage() {
-    double output = right1.getBusVoltage() + right2.getBusVoltage();
-    return output;
-  }
-
-  /*
-   * Gets the output voltage of the motor controllers on the left side of the
-   * robot
-   */
-  public double getLeftOutputVoltage() {
-    double output = left1.getAppliedOutput() + left2.getAppliedOutput();
-    return output;
-  }
-
-  /*
-   * Gets the output voltage of the motor controllers on the right side of the
-   * robot
-   */
-  public double getRightOutputVoltage() {
-    double output = right1.getAppliedOutput() + right2.getAppliedOutput();
-    return output;
-  }
-
-  /*
-   * Gets the output current (in amps) of the motor controllers on the left side
-   * of the robot
-   */
-  public double getLeftOutputCurrent() {
-    double output = left1.getOutputCurrent() + left2.getOutputCurrent();
-    return output;
-  }
-
-  /*
-   * Gets the output current (in amps) of the motor controllers on the right side
-   * of the robot
-   */
-  public double getRightOutputCurrent() {
-    double output = right1.getOutputCurrent() + right2.getOutputCurrent();
-    return output;
-  }
-
-  /*
-   * Gets the output current of all the motor controllers on the robot
-   */
-  public double getRobotOutputCurrent() {
-    double output = left1.getOutputCurrent() + left2.getOutputCurrent()
-        + right1.getOutputCurrent() + right2.getOutputCurrent();
-    return output;
   }
 
   /**
@@ -394,44 +269,8 @@ public class DriveBase extends HDrive {
 
   @Override
   public void mustangPeriodic() {
-    SmartDashboard.putNumber("lPos", left1Encoder.getPosition());
-    SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
-    SmartDashboard.putNumber("rPos", right1Encoder.getPosition());
-
     SmartDashboard.putNumber("Heading", getHeading());
-
-    leftPIDController.setP(SmartDashboard.getNumber("lp", 0));
-    leftPIDController.setI(SmartDashboard.getNumber("li", 0));
-    leftPIDController.setD(SmartDashboard.getNumber("ld", 0));
-    rightPIDController.setP(SmartDashboard.getNumber("rp", 0));
-    rightPIDController.setI(SmartDashboard.getNumber("ri", 0));
-    rightPIDController.setD(SmartDashboard.getNumber("rd", 0));
-
-
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-
-    // removed the delay for 10 seconds
-    int routine = autoSelector.getSelection();
-    double time = autoSelector.getDelayTime();
-
-    double oldTime = delayTime;
-    int oldRoutine = routine;
-    if (routine != -1) {
-      autoRoutine = routine;
-    }
-    if (time != -1) {
-      delayTime = time;
-    }
-    if (oldTime != delayTime || oldRoutine != routine) {
-      double matchTime = DriverStation.getMatchTime(); // new Date().getTime()/1000.0;
-      boolean isAutonRn = DriverStation.isAutonomous();
-      if (matchTime - (int) matchTime < 0.00001) {
-        SmartDashboard.putNumber("MatchTime", matchTime);
-        boolean isAutonDashboardValue = SmartDashboard.getBoolean("IsAuton", false);
-        if (isAutonRn != isAutonDashboardValue)
-          SmartDashboard.putBoolean("IsAuton", isAutonRn);
-      }
-    }
   }
 
   /**
@@ -512,17 +351,6 @@ public class DriveBase extends HDrive {
   @Override
   public MustangController getMustangController() {
     return mController;
-  }
-
-  public int getSelectedRoutine() {
-    while (autoRoutine == -1) {
-      if (timer.hasElapsed(10)) {
-        // Logger.consoleLog("couldn't find autoRoutine in getSelectedRoutine()");
-        break;
-      }
-      continue;
-    }
-    return autoRoutine;
   }
 
   @Override
@@ -627,16 +455,8 @@ public class DriveBase extends HDrive {
     }
   }
 
-  public static double getLinearSpeed() {
-    return (Math.abs(left1Encoder.getVelocity() + left2Encoder.getVelocity())) / 2;
-  }
-
   public void setCenterDrive(double speed) {
     middle.set(speed);
-  }
-
-  public NavX getNavX() {
-    return navXMicro;
   }
 
   public void holdPosition() {
