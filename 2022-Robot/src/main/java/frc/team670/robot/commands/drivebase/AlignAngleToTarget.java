@@ -38,8 +38,6 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     private boolean foundTarget = false;
 
-    private double startTimeMillis;
-
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         this.driveBase = driveBase;
         this.vision = vision;
@@ -70,7 +68,6 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
-        startTimeMillis = System.currentTimeMillis() + 3000; //3 second cutoff
     }
 
     @Override
@@ -93,7 +90,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 4 && driveBase.getWheelSpeeds().rightMetersPerSecond > 0.1)  || ( (int)( (startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
+        return (((!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))));
     }
 
     @Override

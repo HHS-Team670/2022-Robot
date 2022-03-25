@@ -64,8 +64,12 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	// Helper method of runconveyor
 	private void intakeConveyor() {
-		intakeConveyor.run(true);
-		shooterConveyor.run(true);
+		if(intakeConveyor.getBallCount() == 0){
+			intakeConveyor.run(true);
+		}
+		if(shooterConveyor.getBallCount() == 0){
+			shooterConveyor.run(true);
+		}
 		status = Status.INTAKING;
 		Logger.consoleLog("Conveyor Status: INTAKING");
 	}

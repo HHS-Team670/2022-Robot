@@ -67,7 +67,6 @@ public class Shooter extends MustangSubsystemBase {
     private double INITIAL_DIFF = 0;
     private static double SPEED_ALLOWED_ERROR = 100.0;
     private static double SHOOTING_CURRENT = 0.0;
-    private static double VELOCITY_FOR_RAMP_RATE = 10.0;
     private static double manual_velocity;
 
     private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
@@ -166,26 +165,7 @@ public class Shooter extends MustangSubsystemBase {
     public void run() {
         SmartDashboard.putNumber("Shooter target speed", targetRPM + speedAdjust);
         Logger.consoleLog("Shooter target speed: %s", targetRPM);
-        if (getVelocity() < VELOCITY_FOR_RAMP_RATE) {
-            setRampRate(true);
-        } else {
-            setRampRate(false);
-        }
-
         shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
-    }
-
-    /**
-     * @param setRamp true if we want a ramp rate (use this for getting the shooter
-     *                up to speed), false when we're ready to shoot and don't need
-     *                one
-     */
-    private void setRampRate(boolean setRamp) {
-        if (setRamp) {
-            mainController.setClosedLoopRampRate(RAMP_RATE);
-        } else {
-            mainController.setClosedLoopRampRate(0);
-        }
     }
 
     public void setTargetRPM(double targetRPM) {
@@ -255,8 +235,10 @@ public class Shooter extends MustangSubsystemBase {
 
     public void stop() {
         shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
-        // setTargetRPM(500);
-        // run(); 
+    }
+
+    public void idle(){
+        shooter_mainPIDController.setReference(3000, ControlType.kVelocity);
     }
 
     public boolean isUpToSpeed() {
@@ -280,7 +262,6 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        // Logger.consoleLog("Shooter velocity: %s", getVelocity());
         if (conveyor.getBallCount() > 0) {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
@@ -296,6 +277,9 @@ public class Shooter extends MustangSubsystemBase {
                 vision.switchLEDS(false);
             }
             foundTarget = false;
+        }
+        if(conveyor.getStatus() == ConveyorSystem.Status.INTAKING){
+            idle();
         }
     }
 

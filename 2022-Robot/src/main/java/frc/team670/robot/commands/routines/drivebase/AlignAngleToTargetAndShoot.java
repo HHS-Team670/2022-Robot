@@ -41,8 +41,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     private double heading;
 
     private boolean foundTarget = false;
-
-    private double startTimeMillis;
+    private boolean alreadyAlligned = false;
 
     public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
@@ -77,7 +76,9 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
-        startTimeMillis = System.currentTimeMillis() + 3000; // 3 second cutoff
+        if(relativeYawToTarget < 3){
+            alreadyAlligned = true;
+        }
         shooter.setRPM();
         shooter.run();
     }
@@ -108,13 +109,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     @Override
     public boolean isFinished() {
-        return shooter.isUpToSpeed() && (((!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))));
-        
-        
-        // ((shooter.isUpToSpeed()
-        //         && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3)
-        //                 && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1))
-        //         || ((int) ((startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
+        return shooter.isUpToSpeed() && (alreadyAlligned || !foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3));
     }
 
     @Override
