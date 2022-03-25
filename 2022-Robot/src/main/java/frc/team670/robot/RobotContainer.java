@@ -44,7 +44,7 @@ public class RobotContainer extends RobotContainerBase {
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
   private static Deployer deployer = new Deployer();
-  private static ConveyorSystem conveyorSystem = new ConveyorSystem(deployer);
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
   private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision, getOperatorController(), conveyorSystem);

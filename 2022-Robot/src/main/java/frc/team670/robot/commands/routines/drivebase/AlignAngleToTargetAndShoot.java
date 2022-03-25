@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.drivebase;
+package frc.team670.robot.commands.routines.drivebase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,17 +10,21 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 
 /**
- * Rotates the drivebase to an angle
+ * Rotates the drivebase to an angle and then starts the conveyor
  * 
- * @author katia
+ * @author laksh
  */
-public class AlignAngleToTarget extends CommandBase implements MustangCommand {
+public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCommand {
 
     private DriveBase driveBase;
+    private ConveyorSystem conveyor;
+    private Shooter shooter;
     private Vision vision;
     private double targetAngle;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -40,11 +44,14 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     private double startTimeMillis;
 
-    public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
+    public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
+        this.conveyor = conveyor;
         this.vision = vision;
+        this.shooter = shooter;
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
+        addRequirements(conveyor, shooter);
     }
 
     @Override
@@ -62,7 +69,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
-        if(vision.hasTarget()){
+        if (vision.hasTarget()) {
             relativeYawToTarget = vision.getLastValidAngleCaptured();
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
@@ -70,7 +77,9 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
-        startTimeMillis = System.currentTimeMillis() + 3000; //3 second cutoff
+        startTimeMillis = System.currentTimeMillis() + 3000; // 3 second cutoff
+        shooter.setRPM();
+        shooter.run();
     }
 
     @Override
@@ -78,14 +87,20 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be
                                                                                                    // 0.3
-        if(rotationSpeed > 0 && rotationSpeed < 0.15){
+        if (rotationSpeed > 0 && rotationSpeed < 0.15) {
             rotationSpeed = 0.15;
-        } 
-        else if(rotationSpeed < 0 && rotationSpeed > -0.15){
+        } else if (rotationSpeed < 0 && rotationSpeed > -0.15) {
             rotationSpeed = -0.15;
-        }  
+        }
 
-        Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s", rotationSpeed, targetAngle, heading);
+        if (shooter.isUpToSpeed() && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))
+                && !conveyor.isRunning()) {
+            conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
+            Logger.consoleLog("Balls shot Shooter speed: %s", shooter.getVelocity());
+        }
+
+        // Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s",
+        // rotationSpeed, targetAngle, heading);
         driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true); // 0.3 is just a
                                                                                                     // constant safe
         // quick-turn rotational speed
@@ -93,12 +108,19 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 4 && driveBase.getWheelSpeeds().rightMetersPerSecond > 0.1)  || ( (int)( (startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
+        return shooter.isUpToSpeed() && (((!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))));
+        
+        
+        // ((shooter.isUpToSpeed()
+        //         && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3)
+        //                 && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1))
+        //         || ((int) ((startTimeMillis - System.currentTimeMillis()) / 1000.0) <= 0));
     }
 
     @Override
     public void end(boolean interrupted) {
         driveBase.stop();
+        conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
         // driveBase.initDefaultCommand();
     }
 

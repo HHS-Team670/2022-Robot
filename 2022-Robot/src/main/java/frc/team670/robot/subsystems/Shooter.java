@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -164,6 +165,7 @@ public class Shooter extends MustangSubsystemBase {
 
     public void run() {
         SmartDashboard.putNumber("Shooter target speed", targetRPM + speedAdjust);
+        Logger.consoleLog("Shooter target speed: %s", targetRPM);
         if (getVelocity() < VELOCITY_FOR_RAMP_RATE) {
             setRampRate(true);
         } else {
@@ -253,7 +255,8 @@ public class Shooter extends MustangSubsystemBase {
 
     public void stop() {
         shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
-        setTargetRPM(0);
+        // setTargetRPM(500);
+        // run(); 
     }
 
     public boolean isUpToSpeed() {
@@ -277,6 +280,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        // Logger.consoleLog("Shooter velocity: %s", getVelocity());
         if (conveyor.getBallCount() > 0) {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
@@ -330,7 +334,7 @@ public class Shooter extends MustangSubsystemBase {
                 distanceToTarget = vision.getLastValidDistanceMetersCaptured();
                 SmartDashboard.putNumber("speed-chooser", 0);
             }
-            if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10) { // double comparison
+            if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10 || distanceToTarget < getMinHighDistanceInMeter()) { // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
                 SmartDashboard.putNumber("speed-chooser", 1);
             }
