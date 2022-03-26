@@ -57,7 +57,7 @@ public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
 
-  private static boolean debugSubsystems = false;
+  private static boolean debugSubsystems = true;
 
   private SendableChooser<MustangCommand> m_auto_chooser;
 

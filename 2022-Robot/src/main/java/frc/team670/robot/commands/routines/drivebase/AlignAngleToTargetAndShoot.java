@@ -33,9 +33,10 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     double prevCapTime;
 
-    private final double ANGULAR_P = 0.03;
-    private final double ANGULAR_D = 0.0;
-    private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+    private double ANGULAR_P = 0.012;
+    private double ANGULAR_I = 0.000001;
+    private double ANGULAR_D = 0.000005;
+    private PIDController turnController = new PIDController(ANGULAR_P, ANGULAR_I, ANGULAR_D);
 
     private double rotationSpeed;
     private double heading;
@@ -72,11 +73,11 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             relativeYawToTarget = vision.getLastValidAngleCaptured();
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
-            turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+            turnController = new PIDController(ANGULAR_P, ANGULAR_I, ANGULAR_D);
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
-        if(relativeYawToTarget < 3){
+        if (relativeYawToTarget < 1) {
             alreadyAlligned = true;
         }
         shooter.setRPM();
@@ -85,6 +86,11 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     @Override
     public void execute() {
+        if (vision.hasTarget()) {
+            relativeYawToTarget = vision.getLastValidAngleCaptured();
+            targetAngle = heading - relativeYawToTarget;
+            foundTarget = true;
+        }
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be
                                                                                                    // 0.3
@@ -94,14 +100,14 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             rotationSpeed = -0.15;
         }
 
-        if (shooter.isUpToSpeed() && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))
+        if (shooter.isUpToSpeed() && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 1))
                 && !conveyor.isRunning()) {
             conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
             Logger.consoleLog("Balls shot Shooter speed: %s", shooter.getVelocity());
         }
 
-        // Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s",
-        // rotationSpeed, targetAngle, heading);
+        Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s",
+                rotationSpeed, targetAngle, heading);
         driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true); // 0.3 is just a
                                                                                                     // constant safe
         // quick-turn rotational speed
@@ -109,11 +115,15 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     @Override
     public boolean isFinished() {
-        return shooter.isUpToSpeed() && (alreadyAlligned || !foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3));
+        Logger.consoleLog("isFinished");
+        return shooter.isUpToSpeed()
+                && (alreadyAlligned || !foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
+                        && Math.abs(driveBase.getWheelSpeeds().rightMetersPerSecond) < 0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
+        Logger.consoleLog("End");
         driveBase.stop();
         conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
         // driveBase.initDefaultCommand();

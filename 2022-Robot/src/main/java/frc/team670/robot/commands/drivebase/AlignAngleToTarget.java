@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -29,8 +30,8 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     double prevCapTime;
 
-    private final double ANGULAR_P = 0.03;
-    private final double ANGULAR_D = 0.0;
+    private double ANGULAR_P = 0.014;
+    private double ANGULAR_D = 0.0015;
     private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
     private double rotationSpeed;
@@ -60,11 +61,13 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
+        ANGULAR_P = SmartDashboard.getNumber("Align P", ANGULAR_P);
+        ANGULAR_D = SmartDashboard.getNumber("Align D", ANGULAR_D);
         if(vision.hasTarget()){
             relativeYawToTarget = vision.getLastValidAngleCaptured();
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
-            turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+            turnController = new PIDController(ANGULAR_P, SmartDashboard.getNumber("Align I", 0), ANGULAR_D);
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
@@ -72,15 +75,19 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
+        if (vision.hasTarget()) {
+            relativeYawToTarget = vision.getLastValidAngleCaptured();
+            targetAngle = heading - relativeYawToTarget;
+            foundTarget = true;
+        }
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be
                                                                                                    // 0.3
-        if(rotationSpeed > 0 && rotationSpeed < 0.15){
+        if (rotationSpeed > 0 && rotationSpeed < 0.15) {
             rotationSpeed = 0.15;
-        } 
-        else if(rotationSpeed < 0 && rotationSpeed > -0.15){
+        } else if (rotationSpeed < 0 && rotationSpeed > -0.15) {
             rotationSpeed = -0.15;
-        }  
+        }
 
         Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s", rotationSpeed, targetAngle, heading);
         driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true); // 0.3 is just a
@@ -90,7 +97,8 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (((!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 3))));
+        return (((!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
+                && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1))));
     }
 
     @Override
