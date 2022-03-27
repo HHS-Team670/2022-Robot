@@ -33,7 +33,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     double prevCapTime;
 
-    private double ANGULAR_P = 0.012;
+    private double ANGULAR_P = 0.013;
     private double ANGULAR_I = 0.000001;
     private double ANGULAR_D = 0.000005;
     private PIDController turnController = new PIDController(ANGULAR_P, ANGULAR_I, ANGULAR_D);
@@ -42,7 +42,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     private double heading;
 
     private boolean foundTarget = false;
-    private boolean alreadyAlligned = false;
+    private boolean alreadyAligned = false;
 
     public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
@@ -78,7 +78,9 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             foundTarget = true;
         }
         if (relativeYawToTarget < 1) {
-            alreadyAlligned = true;
+            alreadyAligned = true;
+        } else {
+            alreadyAligned = false;
         }
         shooter.setRPM();
         shooter.run();
@@ -100,31 +102,32 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             rotationSpeed = -0.15;
         }
 
-        if (shooter.isUpToSpeed() && (!foundTarget || (Math.abs(driveBase.getHeading() - targetAngle) <= 1))
-                && !conveyor.isRunning()) {
-            conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
-            Logger.consoleLog("Balls shot Shooter speed: %s", shooter.getVelocity());
-        }
+        // if (shooter.isUpToSpeed() && (!foundTarget ||
+        // (Math.abs(driveBase.getHeading() - targetAngle) <= 1))
+        // && !conveyor.isRunning()) {
+        // conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
+        // Logger.consoleLog("Balls shot Shooter speed: %s", shooter.getVelocity());
+        // }
 
         Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s",
                 rotationSpeed, targetAngle, heading);
-        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true); // 0.3 is just a
-                                                                                                    // constant safe
+        driveBase.curvatureDrive(0, -rotationSpeed, true); // 0.3 is just a
+                                                           // constant safe
         // quick-turn rotational speed
     }
 
     @Override
     public boolean isFinished() {
-        Logger.consoleLog("isFinished");
         return shooter.isUpToSpeed()
-                && (alreadyAlligned || !foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
+                && (alreadyAligned || !foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
                         && Math.abs(driveBase.getWheelSpeeds().rightMetersPerSecond) < 0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
-        Logger.consoleLog("End");
         driveBase.stop();
+        vision.getCamera().takeInputSnapshot();
+        vision.getCamera().takeOutputSnapshot();
         conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
         // driveBase.initDefaultCommand();
     }

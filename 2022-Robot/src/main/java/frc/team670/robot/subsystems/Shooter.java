@@ -56,10 +56,10 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.000025;
-    private static final double V_I = 0.0;
+    private static final double V_P = 0.00004;
+    private static final double V_I = 0;
     private static final double V_D = 0.0;
-    private static final double V_FF = 0.00017618;
+    private static final double V_FF = 0.00017;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -262,6 +262,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        SmartDashboard.putNumber("shooter velocity", getVelocity());
         if (conveyor.getBallCount() > 0) {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
@@ -273,9 +274,9 @@ public class Shooter extends MustangSubsystemBase {
                 foundTarget = false;
             }
         } else {
-            if (!vision.LEDSOverriden()) {
-                vision.switchLEDS(false);
-            }
+            // if (!vision.LEDSOverriden()) {
+            //     vision.switchLEDS(false);
+            // }
             foundTarget = false;
         }
         if(conveyor.getStatus() == ConveyorSystem.Status.INTAKING){
@@ -314,6 +315,7 @@ public class Shooter extends MustangSubsystemBase {
         double targetRPM = getTargetRPM();
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
+
             if (foundTarget) {
                 distanceToTarget = vision.getLastValidDistanceMetersCaptured();
                 SmartDashboard.putNumber("speed-chooser", 0);
