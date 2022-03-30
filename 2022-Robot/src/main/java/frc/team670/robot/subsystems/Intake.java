@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.mustanglib.dataCollection.sensors.ColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -26,6 +27,7 @@ public class Intake extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
     private PicoColorMatcher colorMatcher;
+    // private ColorMatcher colorMatcher;
 
     private ConveyorSystem conveyor;
     private Deployer deployer;
@@ -34,6 +36,7 @@ public class Intake extends MustangSubsystemBase {
         this.conveyor = conveyor;
         this.deployer = deployer;
         this.colorMatcher = new PicoColorMatcher();
+        // colorMatcher = new ColorMatcher();
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
