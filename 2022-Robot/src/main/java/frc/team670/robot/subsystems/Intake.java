@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -24,6 +25,7 @@ public class Intake extends MustangSubsystemBase {
     private int exceededCurrentLimitCount = 0;
 
     private SparkMAXLite roller;
+    private PicoColorMatcher colorMatcher;
 
     private ConveyorSystem conveyor;
     private Deployer deployer;
@@ -31,6 +33,7 @@ public class Intake extends MustangSubsystemBase {
     public Intake(ConveyorSystem conveyor, Deployer deployer) {
         this.conveyor = conveyor;
         this.deployer = deployer;
+        this.colorMatcher = new PicoColorMatcher();
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
@@ -98,6 +101,8 @@ public class Intake extends MustangSubsystemBase {
         if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
             stop();
         }
+        int color = colorMatcher.detectColor();
+        SmartDashboard.putNumber("CS: detected color", color);
     }
 
     @Override
