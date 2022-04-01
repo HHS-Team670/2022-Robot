@@ -47,6 +47,9 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     private double startTimeMillis;
     private double initialYaw;
 
+    private double modularError;
+    private double distToTarget;
+
     public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
         this.conveyor = conveyor;
@@ -74,6 +77,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     public void initialize() {
         if (vision.hasTarget()) {
             relativeYawToTarget = vision.getAngleToTarget();
+            distToTarget = vision.getDistanceToTargetM();
             initialYaw = relativeYawToTarget;
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
@@ -89,6 +93,14 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         } else {
             alreadyAligned = false;
         }
+
+        if(distToTarget > 3){
+            modularError = 1;
+        }
+        else{
+            modularError = 4;
+        }
+
         startTimeMillis = System.currentTimeMillis();
         shooter.setRPM();
         shooter.run();
@@ -127,7 +139,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     @Override
     public boolean isFinished() {
         return shooter.isUpToSpeed()
-                && (alreadyAligned || !foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
+                && (alreadyAligned || !foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= modularError)
                         && Math.abs(driveBase.getWheelSpeeds().rightMetersPerSecond) < 0.1));
     }
 
