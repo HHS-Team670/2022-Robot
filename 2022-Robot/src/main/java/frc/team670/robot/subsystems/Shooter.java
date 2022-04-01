@@ -264,20 +264,22 @@ public class Shooter extends MustangSubsystemBase {
     public void mustangPeriodic() {
         SmartDashboard.putNumber("shooter velocity", getVelocity());
         if (conveyor.getBallCount() > 0) {
+            vision.getCamera().setDriverMode(false);
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
             }
-            if (vision.getLastValidDistanceMetersCaptured() != RobotConstants.VISION_ERROR_CODE) {
+            if (vision.getDistanceToTargetM() != RobotConstants.VISION_ERROR_CODE) {
                 foundTarget = true;
             }
             else{
                 foundTarget = false;
             }
         } else {
-            // if (!vision.LEDSOverriden()) {
-            //     vision.switchLEDS(false);
-            // }
+            if (!vision.LEDSOverriden()) {
+                vision.switchLEDS(true);
+            }
             foundTarget = false;
+            vision.getCamera().setDriverMode(true);
         }
         if(conveyor.getStatus() == ConveyorSystem.Status.INTAKING){
             idle();
@@ -312,12 +314,12 @@ public class Shooter extends MustangSubsystemBase {
      */
 
     public void setRPM() {
-        double targetRPM = getTargetRPM();
+        double targetRPM = 0;
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
 
             if (foundTarget) {
-                distanceToTarget = vision.getLastValidDistanceMetersCaptured();
+                distanceToTarget = vision.getDistanceToTargetM();
                 SmartDashboard.putNumber("speed-chooser", 0);
             }
             if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10 || distanceToTarget < getMinHighDistanceInMeter()) { // double comparison
@@ -335,6 +337,9 @@ public class Shooter extends MustangSubsystemBase {
             } else {
                 targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
             }
+        }
+        else{
+            SmartDashboard.putNumber("speed-chooser", 3);
         }
         if (targetRPM <= 0 || targetRPM > MAX_RPM) {
             targetRPM = getDefaultRPM();

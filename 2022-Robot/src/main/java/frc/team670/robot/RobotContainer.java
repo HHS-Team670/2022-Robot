@@ -7,6 +7,8 @@
 
 package frc.team670.robot;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -84,6 +86,8 @@ public class RobotContainer extends RobotContainerBase {
         deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER));
     SmartDashboard.putData(m_auto_chooser);
     SmartDashboard.putNumber("Delay Time", 0);
+    PhotonCamera drivCamera = new PhotonCamera(RobotConstants.DRIVER_CAMERA_NAME);
+    drivCamera.setDriverMode(true);
   }
 
   public void robotInit() {

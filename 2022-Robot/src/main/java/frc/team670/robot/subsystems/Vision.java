@@ -30,6 +30,7 @@ public class Vision extends VisionSubsystemBase{
     public Vision(PowerDistribution pd) {
         super(pd);
         setCameraName(RobotConstants.VISION_CAMERA_NAME);
+        super.getCamera().setDriverMode(true);
     }
 
     public void mustangPeriodic() {
