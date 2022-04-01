@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -55,10 +56,10 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.000025;
-    private static final double V_I = 0.0;
+    private static final double V_P = 0.00004;
+    private static final double V_I = 0;
     private static final double V_D = 0.0;
-    private static final double V_FF = 0.00017618;
+    private static final double V_FF = 0.00017;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -66,7 +67,6 @@ public class Shooter extends MustangSubsystemBase {
     private double INITIAL_DIFF = 0;
     private static double SPEED_ALLOWED_ERROR = 100.0;
     private static double SHOOTING_CURRENT = 0.0;
-    private static double VELOCITY_FOR_RAMP_RATE = 10.0;
     private static double manual_velocity;
 
     private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
@@ -164,26 +164,8 @@ public class Shooter extends MustangSubsystemBase {
 
     public void run() {
         SmartDashboard.putNumber("Shooter target speed", targetRPM + speedAdjust);
-        if (getVelocity() < VELOCITY_FOR_RAMP_RATE) {
-            setRampRate(true);
-        } else {
-            setRampRate(false);
-        }
-
+        Logger.consoleLog("Shooter target speed: %s", targetRPM);
         shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
-    }
-
-    /**
-     * @param setRamp true if we want a ramp rate (use this for getting the shooter
-     *                up to speed), false when we're ready to shoot and don't need
-     *                one
-     */
-    private void setRampRate(boolean setRamp) {
-        if (setRamp) {
-            mainController.setClosedLoopRampRate(RAMP_RATE);
-        } else {
-            mainController.setClosedLoopRampRate(0);
-        }
     }
 
     public void setTargetRPM(double targetRPM) {
@@ -253,7 +235,10 @@ public class Shooter extends MustangSubsystemBase {
 
     public void stop() {
         shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
-        setTargetRPM(0);
+    }
+
+    public void idle(){
+        shooter_mainPIDController.setReference(3000, ControlType.kVelocity);
     }
 
     public boolean isUpToSpeed() {
@@ -277,11 +262,13 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        SmartDashboard.putNumber("shooter velocity", getVelocity());
         if (conveyor.getBallCount() > 0) {
+            vision.getCamera().setDriverMode(false);
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
             }
-            if (vision.getLastValidDistanceMetersCaptured() != RobotConstants.VISION_ERROR_CODE) {
+            if (vision.getDistanceToTargetM() != RobotConstants.VISION_ERROR_CODE) {
                 foundTarget = true;
             }
             else{
@@ -289,9 +276,13 @@ public class Shooter extends MustangSubsystemBase {
             }
         } else {
             if (!vision.LEDSOverriden()) {
-                vision.switchLEDS(false);
+                vision.switchLEDS(true);
             }
             foundTarget = false;
+            vision.getCamera().setDriverMode(true);
+        }
+        if(conveyor.getStatus() == ConveyorSystem.Status.INTAKING){
+            idle();
         }
     }
 
@@ -323,14 +314,15 @@ public class Shooter extends MustangSubsystemBase {
      */
 
     public void setRPM() {
-        double targetRPM = getTargetRPM();
+        double targetRPM = 0;
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
+
             if (foundTarget) {
-                distanceToTarget = vision.getLastValidDistanceMetersCaptured();
+                distanceToTarget = vision.getDistanceToTargetM();
                 SmartDashboard.putNumber("speed-chooser", 0);
             }
-            if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10) { // double comparison
+            if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10 || distanceToTarget < getMinHighDistanceInMeter()) { // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
                 SmartDashboard.putNumber("speed-chooser", 1);
             }
@@ -345,6 +337,9 @@ public class Shooter extends MustangSubsystemBase {
             } else {
                 targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
             }
+        }
+        else{
+            SmartDashboard.putNumber("speed-chooser", 3);
         }
         if (targetRPM <= 0 || targetRPM > MAX_RPM) {
             targetRPM = getDefaultRPM();

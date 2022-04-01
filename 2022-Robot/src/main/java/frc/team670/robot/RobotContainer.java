@@ -7,6 +7,8 @@
 
 package frc.team670.robot;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -44,7 +46,7 @@ public class RobotContainer extends RobotContainerBase {
   private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
 
   private static Deployer deployer = new Deployer();
-  private static ConveyorSystem conveyorSystem = new ConveyorSystem(deployer);
+  private static ConveyorSystem conveyorSystem = new ConveyorSystem();
   private static Intake intake = new Intake(conveyorSystem, deployer);
   private static Vision vision = new Vision(pd);
   private static Shooter shooter = new Shooter(vision, getOperatorController(), conveyorSystem);
@@ -57,7 +59,7 @@ public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
 
-  private static boolean debugSubsystems = false;
+  private static boolean debugSubsystems = true;
 
   private SendableChooser<MustangCommand> m_auto_chooser;
 
@@ -84,6 +86,8 @@ public class RobotContainer extends RobotContainerBase {
         deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER));
     SmartDashboard.putData(m_auto_chooser);
     SmartDashboard.putNumber("Delay Time", 0);
+    PhotonCamera drivCamera = new PhotonCamera(RobotConstants.DRIVER_CAMERA_NAME);
+    drivCamera.setDriverMode(true);
   }
 
   public void robotInit() {

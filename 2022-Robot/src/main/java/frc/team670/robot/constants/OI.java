@@ -17,6 +17,7 @@ import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
+import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -37,10 +38,12 @@ public class OI extends OIBase {
   private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
   private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
-  
+  private static JoystickButton alignAndShoot = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
+
   // driver controls
-  private static JoystickButton alignToTarget = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
-  private static JoystickButton shootAllBalls = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
 
@@ -98,12 +101,14 @@ public class OI extends OIBase {
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
     runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     stopIntake.whenPressed(new StopIntake(intake));
+    alignAndShoot.whenPressed(new ShootAllBalls(conveyorSystem, shooter, driveBase, vision));
+    stopShooter.whenPressed(new StopShooter(shooter));
     
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
     toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); //TODO: still doesn't work, gotta figure it out, angles off
-    holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); //TODO: still doesn't work, gotta figure it out, angles off
+    holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); 
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));

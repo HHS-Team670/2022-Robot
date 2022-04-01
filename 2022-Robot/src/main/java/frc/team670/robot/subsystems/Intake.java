@@ -45,6 +45,9 @@ public class Intake extends MustangSubsystemBase {
     // Runs the main intake motor in the specified direction
     public void roll(boolean reversed) {
         deployer.deploy(true);
+        if(conveyor.getBallCount() == 2){
+            return;
+        }
         if (reversed) {
             roller.set(intake_roller_speed * -1);
 

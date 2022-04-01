@@ -30,10 +30,9 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
-import frc.team670.mustanglib.subsystems.drivebase.HDrive;
+import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
@@ -44,11 +43,11 @@ import frc.team670.robot.constants.RobotMap;
  * 
  * @author lakshbhambhani
  */
-public class DriveBase extends HDrive {
+public class DriveBase extends TankDrive {
   private Vision vision;
 
-  private SparkMAXLite left1, left2, right1, right2, middle;
-  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder, middleEncoder;
+  private SparkMAXLite left1, left2, right1, right2;
+  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
   private MustangController mController;
 
@@ -72,7 +71,6 @@ public class DriveBase extends HDrive {
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
         RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
-    middle = SparkMAXFactory.buildSparkMAX(RobotMap.SPARK_MIDDLE_MOTOR, SparkMAXFactory.defaultConfig, Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -83,7 +81,6 @@ public class DriveBase extends HDrive {
     left2Encoder = left2.getEncoder();
     right1Encoder = right1.getEncoder();
     right2Encoder = right2.getEncoder();
-    middleEncoder = middle.getEncoder();
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
     left2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
@@ -91,17 +88,14 @@ public class DriveBase extends HDrive {
                                                                                                     // right side
     right2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
                                                                                                     // right side
-    middleEncoder.setVelocityConversionFactor(RobotConstants.HDRIVE_VELOCITY_CONVERSION_FACTOR);
 
     left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    middleEncoder.setPositionConversionFactor(RobotConstants.HDRIVE_METERS_PER_ROTATION);
 
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
-    allMotors.add(middle);
 
     // The DifferentialDrive inverts the right side automatically, however we want
     // invert straight
@@ -111,7 +105,7 @@ public class DriveBase extends HDrive {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 }, middle,
+    super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 },
         false, false, .1, true);
 
     // initialized NavX and sets Odometry
@@ -120,7 +114,6 @@ public class DriveBase extends HDrive {
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
     initBrakeMode();
-    middle.setIdleMode(IdleMode.kCoast);
 
     leftPIDController = left1.getPIDController();
     rightPIDController = right1.getPIDController();
@@ -157,8 +150,7 @@ public class DriveBase extends HDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored(),
-        middle.isErrored());
+    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored());
   }
 
   /**
@@ -455,23 +447,17 @@ public class DriveBase extends HDrive {
     }
   }
 
-  public void setCenterDrive(double speed) {
-    middle.set(speed);
-  }
-
   public void holdPosition() {
     // Logger.consoleLog("left setpoint: %s", getLeftSparkMaxPIDController().getR);
     SmartDashboard.putNumber("lsetpoint", left1Encoder.getPosition());
     SmartDashboard.putNumber("rsetpoint", right1Encoder.getPosition());
     getLeftSparkMaxPIDController().setReference(left1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
     getRightSparkMaxPIDController().setReference(right1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
-    setCenterDrive(0.1);
   }
 
   public void releasePosition() {
     getLeftSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
     getRightSparkMaxPIDController().setReference(0, CANSparkMax.ControlType.kDutyCycle);
-    setCenterDrive(0);
   }
 
   @Override
