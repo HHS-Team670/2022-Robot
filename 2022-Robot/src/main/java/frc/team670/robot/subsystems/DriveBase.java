@@ -262,6 +262,8 @@ public class DriveBase extends TankDrive {
   @Override
   public void mustangPeriodic() {
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
+    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 

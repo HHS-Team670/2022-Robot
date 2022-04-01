@@ -25,6 +25,7 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.AutonPathWithDelay;
 import frc.team670.robot.commands.auton.Edge2Ball;
 import frc.team670.robot.commands.auton.FourBallPath;
+import frc.team670.robot.commands.auton.Long4MeterPath;
 import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
@@ -112,7 +113,8 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
+    //MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
+    MustangCommand autonCommand = new Long4MeterPath(driveBase, intake, conveyorSystem, shooter);
     return autonCommand;
   }
 
