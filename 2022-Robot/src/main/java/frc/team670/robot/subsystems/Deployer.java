@@ -19,8 +19,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private DutyCycleEncoder absEncoder;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = 0.06; // From 3/6
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.35; // From 3/6
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = 0.65; // From 3/31 
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.9; // From 3/31
     private static final double ABSOLUTE_ENCODER_GEAR_RATIO = 25.76582278;
 
     private static final double MAX_FLIPOUT_ROTATIONS = -8.142;

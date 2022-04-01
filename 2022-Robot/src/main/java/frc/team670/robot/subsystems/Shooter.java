@@ -314,7 +314,7 @@ public class Shooter extends MustangSubsystemBase {
      */
 
     public void setRPM() {
-        double targetRPM = 0;
+        double targetRPM = getTargetRPM();
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
 

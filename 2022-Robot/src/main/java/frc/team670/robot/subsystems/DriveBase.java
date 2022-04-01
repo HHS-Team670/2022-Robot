@@ -264,7 +264,10 @@ public class DriveBase extends TankDrive {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
+    SmartDashboard.putNumber("pose X", getPose().getX());
+    SmartDashboard.putNumber("pose Y", getPose().getY());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+    sendEncoderDataToDashboard();
   }
 
   /**
@@ -290,14 +293,14 @@ public class DriveBase extends TankDrive {
     REVLibError rE = right1Encoder.setPosition(0);
     SmartDashboard.putString("Encoder return value left", lE.toString());
     SmartDashboard.putString("Encoder return value right", rE.toString());
-    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
-    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
     }
+    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
+    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
   }
 
   public void resetOdometry() {
