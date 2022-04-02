@@ -18,6 +18,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private double rpm;
 
     /**
      * @param shooter         the shooter object
@@ -25,6 +26,15 @@ public class StartShooter extends CommandBase implements MustangCommand {
      */
     public StartShooter(Shooter shooter) {
         this.shooter = shooter;
+        rpm = 0;
+        addRequirements(shooter);
+        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+        healthReqs.put(shooter, HealthState.GREEN);
+    }
+
+    public StartShooter(Shooter shooter, double rpm) {
+        this.shooter = shooter;
+        this.rpm = rpm;
         addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
@@ -32,7 +42,11 @@ public class StartShooter extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        shooter.setRPM();
+        if (rpm != 0){
+            shooter.setTargetRPM(rpm);
+        } else{
+            shooter.setRPM();
+        }
         shooter.run();
     }
 

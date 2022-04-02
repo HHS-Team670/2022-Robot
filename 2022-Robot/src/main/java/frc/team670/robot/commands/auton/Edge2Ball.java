@@ -10,14 +10,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.SetTargetRPM;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -36,6 +40,9 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     private Trajectory trajectory, extension;
     private Pose2d targetPose;
     private DriveBase driveBase;
+    private Shooter shooter;
+    private double upperGoalRPM = shooter.getDefaultRPM(); //UPDATE THIS FOR RPM!!
+
 
     // path names:
     // "ATarmacEdge2Ball" \ "ATarmacEdge2BallExtension"
@@ -44,9 +51,18 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
     // Valid hubTypes are "upper" and "lower"
     public Edge2Ball(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer, AutonTrajectory pathName, HubType hubType) {
         trajectory = PathPlanner.loadPath(pathName.toString(), 1, 0.5);
-        // extension = PathPlanner.loadPath("ATarmacEdge2BallExtension", 1, 0.5);
         extension = PathPlanner.loadPath(pathName.toString() + "Extension", 0.5, 0.25);
 
+        //UPDATE THIS!
+        if (pathName.equals(AutonTrajectory.ATarmacEdge2Ball)){
+            upperGoalRPM = 30;
+        } else if (pathName.equals(AutonTrajectory.BTarmacEdgeCenter2Ball)){
+            upperGoalRPM = 30;
+        } else if (pathName.equals(AutonTrajectory.BTarmacEdgeLower2Ball)){
+            upperGoalRPM = 30;
+        }
+
+        this.shooter = shooter;
         this.driveBase = driveBase;
         
         double errorInMeters = 0.25;
@@ -61,26 +77,26 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         SmartDashboard.putNumber("Auton target x", targetPose.getX());
         SmartDashboard.putNumber("Auton target y", targetPose.getY());
         
-        WaitToShoot waitCommand;
-        if(hubType == HubType.UPPER)
-            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, HubType.UPPER);
-        else
-            waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, 2.4, HubType.LOWER);
+        // WaitToShoot waitCommand;
+        // if(hubType == HubType.UPPER)
+            // waitCommand = new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, -1.2, HubType.UPPER);
 
+        
         if(extension != null) {
             addCommands(
                 new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                     new SequentialCommandGroup( 
-                        new ParallelCommandGroup(
-                            new RunIntakeWithConveyor(intake, conveyor)
-                        ),
-                        waitCommand,
-                        new AutoShootToIntake(conveyor, shooter, intake)
+                        // new ParallelCommandGroup(
+                            new RunIntakeWithConveyor(intake, conveyor),
+                        // ),
+                        // new SetTargetRPM(shooter, upperGoalRPM),
+                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        new AutoShootToIntake(conveyor, shooter, intake, upperGoalRPM)
                     )
                 ), 
                 getTrajectoryFollowerCommand(extension, driveBase), 
-                new ShootAllBalls(conveyor, shooter),
+                new ShootAllBalls(conveyor, shooter, upperGoalRPM),
                 new StopDriveBase(driveBase)
             );
         } else {
@@ -88,11 +104,12 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
             new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                     new SequentialCommandGroup( 
-                        new ParallelCommandGroup(
-                            new RunIntakeWithConveyor(intake, conveyor)
-                        ),
-                        waitCommand,
-                        new ShootAllBalls(conveyor, shooter)
+                        // new ParallelCommandGroup(
+                            new RunIntakeWithConveyor(intake, conveyor),
+                        // ),
+                        // new SetTargetRPM(shooter, upperGoalRPM),
+                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        new ShootAllBalls(conveyor, shooter, upperGoalRPM)
                     )
                 )
             );

@@ -25,10 +25,18 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
     private double error;
     private double distanceFromHub;
     private HubType hubType;
+    private double rpm;
   
+//set rpm
+public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double rpm) {
+  this(driveBase, shooter, targetPose, errorInMeters, HubType.LOWER);
+  this.rpm = rpm;
+} 
+
     //default to low hub
     public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters) {
       this(driveBase, shooter, targetPose, errorInMeters, HubType.LOWER);
+      rpm = 0;
     } 
 
     //error is in meters
@@ -45,7 +53,7 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       distanceFromHub = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(shooter, HealthState.GREEN);
-
+      rpm = 0;
 
     } 
 
@@ -57,11 +65,14 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
     public WaitToShoot(DriveBase driveBase, Shooter shooter, Pose2d targetPose, double errorInMeters, double addedDistance, HubType hubType) {
       this(driveBase, shooter, targetPose, errorInMeters, hubType);
       distanceFromHub+= addedDistance;
+      rpm = 0;
     }
 
     @Override
     public void initialize() {
-      if (hubType == HubType.LOWER){
+      if (rpm != 0){
+        shooter.setTargetRPM(rpm);
+      } else if (hubType == HubType.LOWER){
         double lowGoalRPM = shooter.getTargetRPMForLowGoalDistance(distanceFromHub);
         shooter.setTargetRPM(lowGoalRPM);
       } else if (hubType == HubType.UPPER){
