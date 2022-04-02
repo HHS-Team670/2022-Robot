@@ -56,10 +56,10 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.000025;
-    private static final double V_I = 0.0;
+    private static final double V_P = 0.00004;
+    private static final double V_I = 0.0000001;
     private static final double V_D = 0.0;
-    private static final double V_FF = 0.00017618;
+    private static final double V_FF = 0.00017;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;

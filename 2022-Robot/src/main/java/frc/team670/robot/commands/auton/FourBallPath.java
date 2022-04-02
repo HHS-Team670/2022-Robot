@@ -19,6 +19,8 @@ import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.commands.conveyor.RunConveyor;
+
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -71,11 +73,11 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
 
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
-            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2.2, 1);
+            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 3, 1);
             // trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
 
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 2.2, 1);
-            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 2.2, 1, true);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 3, 1.5);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 3, 1.5, true);
 
         }
 
@@ -109,6 +111,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                     new RunIntakeWithConveyor(intake, conveyor),
                     new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER)
                 ), 
+                new StopDriveBase(driveBase),
                 new AutoShootToIntake(conveyor, shooter, intake),
                 getTrajectoryFollowerCommand(trajectory2, driveBase),   
 
@@ -122,7 +125,8 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                     new WaitToShoot(driveBase, shooter, targetPose, 100, -1.1, HubType.UPPER)
                 ),  
                 
-                new ShootAllBalls(conveyor, shooter)
+                // new ShootAllBalls(conveyor, shooter)
+                new RunConveyor(conveyor, ConveyorSystem.Status.SHOOTING)
             )
                 // /*VERSION THAT SHOULD WORK/OG*
                 //  new SequentialCommandGroup(
