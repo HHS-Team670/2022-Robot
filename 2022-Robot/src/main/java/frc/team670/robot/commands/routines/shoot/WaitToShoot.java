@@ -13,6 +13,7 @@ import frc.team670.mustanglib.subsystems.drivebase.DriveBase;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.mustanglib.utils.Logger;
 
 //only shoots when the robot is within a desired location
 public class WaitToShoot extends CommandBase implements MustangCommand {
@@ -82,7 +83,8 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
       double distanceY = driveBase.getPose().getY() - target.getY();
       //pythagorean theorem
       double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-     
+      SmartDashboard.putNumber("distance", distance);
+      SmartDashboard.putNumber("error", this.error);
       if (distance < this.error){
         return true;
       }
@@ -91,6 +93,10 @@ public class WaitToShoot extends CommandBase implements MustangCommand {
         return false;
     }
 
+    @Override
+    public void end(boolean interrupted) {
+      Logger.consoleLog("finished WaitToShoot");
+    }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
