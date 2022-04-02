@@ -19,6 +19,7 @@ import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.conveyor.RunConveyor;
 
 import frc.team670.robot.constants.AutonTrajectory;
@@ -93,10 +94,12 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                         new ParallelCommandGroup(
                             getTrajectoryFollowerCommand(trajectory, driveBase),
                             new RunIntakeWithConveyor(intake, conveyor),
-                            new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER) //values come from regression table
+                            // new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER) //values come from regression table
+                            new StartShooter(shooter) //values come from regression table
+
                         ),
                         new StopDriveBase(driveBase),
-                        new AutoShootToIntake(conveyor, shooter, intake, 34.42), //high goal rpm
+                        new AutoShootToIntake(conveyor, shooter, intake, 3492), //high goal rpm
                         getTrajectoryFollowerCommand(trajectory2, driveBase),
 
                         new ParallelCommandGroup(
@@ -106,7 +109,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                         getTrajectoryFollowerCommand(trajectory3, driveBase),
                         new ParallelCommandGroup(
                             new StopDriveBase(driveBase),
-                            new WaitToShoot(driveBase, shooter, targetPose, 100, 42.97)), //high goal rpm
+                            // new WaitToShoot(driveBase, shooter, targetPose, 100, 42.97)), //high goal rpm
+                            new StartShooter(shooter, 3497)), //high goal rpm
+
 
                         new RunConveyor(conveyor, ConveyorSystem.Status.SHOOTING)
                         //  new ShootAllBalls(conveyor, shooter, upperGoalRPM)

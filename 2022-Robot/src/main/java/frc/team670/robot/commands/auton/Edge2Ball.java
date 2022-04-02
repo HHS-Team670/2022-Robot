@@ -21,6 +21,7 @@ import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
 import frc.team670.robot.commands.routines.shoot.SetTargetRPM;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.AutonTrajectory;
 import frc.team670.robot.constants.HubType;
@@ -91,7 +92,8 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
                             new RunIntakeWithConveyor(intake, conveyor),
                         // ),
                         // new SetTargetRPM(shooter, upperGoalRPM),
-                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        new StartShooter(shooter, upperGoalRPM),
                         new AutoShootToIntake(conveyor, shooter, intake, upperGoalRPM)
                     )
                 ), 
@@ -108,7 +110,9 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
                             new RunIntakeWithConveyor(intake, conveyor),
                         // ),
                         // new SetTargetRPM(shooter, upperGoalRPM),
-                        new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        // new WaitToShoot(driveBase, shooter, targetPose, errorInMeters, upperGoalRPM),
+                        new StartShooter(shooter, upperGoalRPM),
+
                         new ShootAllBalls(conveyor, shooter, upperGoalRPM)
                     )
                 )
