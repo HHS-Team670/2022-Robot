@@ -47,6 +47,9 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	// Actions
 	// Runs the Conveyor in the given mode
 	public void runConveyor(Status mode) {
+		if(getStatus() != mode){
+			timer.stop();
+		}
 		if (mode == Status.INTAKING) {
 			if(getBallCount() != 2){
 				intakeConveyor();
