@@ -12,6 +12,7 @@ import frc.team670.robot.commands.conveyor.ToggleConveyor;
 import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.commands.drivebase.HoldPosition;
 import frc.team670.robot.commands.intake.StopIntake;
+import frc.team670.robot.commands.intake.ToggleColorSensorOverride;
 import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
@@ -53,6 +54,7 @@ public class OI extends OIBase {
   private static JoystickButton lowerC2 = new JoystickButton(getBackupController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getBackupController(), XboxButtons.BACK);
   private static JoystickButton turnVisionLEDsOff = new JoystickButton(getBackupController(), XboxButtons.START);
+  private static JoystickButton toggleColorSensorOverride = new JoystickButton(getBackupController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -114,5 +116,6 @@ public class OI extends OIBase {
     lowerC2.whenPressed(new RetractClimber(diagonalClimber,false));
     turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
     turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
+    toggleColorSensorOverride.whenPressed(new ToggleColorSensorOverride(conveyorSystem));
   }
 }

@@ -3,7 +3,9 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
+import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -27,14 +29,18 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	private Deployer deployer;
 	private Conveyor intakeConveyor, shooterConveyor;
+	private PicoColorMatcher colorMatcher = new PicoColorMatcher();
 	private Status status = Status.OFF;
 	private Timer timer = new Timer();
+	private int currentAllianceNumber;
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
+	private boolean colorSensorOverride = false;
 
 	public ConveyorSystem(Deployer deployer) {
 		this.deployer = deployer;
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK, 0.7); // This is done cuz we were seeing some cases where the ball would go past the beam break and touch the shooter wheel and so it would just blurp it out but different speeds solve it
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK, 0.6);
+		colorMatcher = new PicoColorMatcher();
 	}
 
 	public void debugBeamBreaks() {
@@ -86,11 +92,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	private void checkState() {
 		switch (status) {
 			case INTAKING:
-				if (shooterConveyor.getBallCount() == 1) {
-					shooterConveyor.stop();
-					if (intakeConveyor.getBallCount() == 1) {
-						intakeConveyor.stop();
-						status = Status.OFF;
+				int colorNum = colorMatcher.detectColor();
+				if(colorNum == -1 || colorNum == currentAllianceNumber || colorSensorOverride) {
+					if (shooterConveyor.getBallCount() == 1) {
+						shooterConveyor.stop();
+						if (intakeConveyor.getBallCount() == 1) {
+							intakeConveyor.stop();
+							status = Status.OFF;
+						}
 					}
 				}
 				break;
@@ -155,7 +164,16 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	@Override
 	public void debugSubsystem() {
+		colorMatcher.detectColor();
 		debugBeamBreaks();
+	}
+
+	public void setAllianceColorNumer(int num) {
+		currentAllianceNumber = num;
+	}
+
+	public void toggleColorSensorOverride() {
+		colorSensorOverride = !colorSensorOverride;
 	}
 }
 

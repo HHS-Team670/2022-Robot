@@ -90,6 +90,7 @@ public class RobotContainer extends RobotContainerBase {
     leds.setIsDisabled(true);
     vision.switchLEDS(false);
     Alliance alliance = DriverStation.getAlliance();
+    conveyorSystem.setAllianceColorNumer(alliance == Alliance.Red ? 1 : 0);
     if (alliance == Alliance.Red) {
       leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
     } else {
