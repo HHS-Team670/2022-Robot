@@ -7,6 +7,8 @@
 
 package frc.team670.robot;
 
+import java.awt.Color;
+
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -73,12 +75,6 @@ public class RobotContainer extends RobotContainerBase {
     m_auto_chooser = new SendableChooser<MustangCommand>();
     m_auto_chooser.setDefaultOption("4 Ball Auto",
         new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal));
-    m_auto_chooser.addOption("2 Ball Auto A Tarmac LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
-        deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.LOWER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Close LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
-        deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.LOWER));
-    m_auto_chooser.addOption("2 Ball Auto B Tarmac Far LOW", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
-        deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.LOWER));
     m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
         deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER));
     m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new Edge2Ball(driveBase, intake, conveyorSystem,
@@ -125,8 +121,12 @@ public class RobotContainer extends RobotContainerBase {
     shooter.setWaitTime(1);
     deployer.setEncoderPositionFromAbsolute();
     driveBase.initBrakeMode();
-
     Logger.consoleLog("autoInit called");
+    if (getAutonomousCommand().equals(new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal))) {
+      leds.solid(LEDColor.PURPLE);
+    } else if (getAutonomousCommand().equals(new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER))) {
+      leds.solid(LEDColor.BLUE);
+    }
     leds.setIsDisabled(false);
   }
 
