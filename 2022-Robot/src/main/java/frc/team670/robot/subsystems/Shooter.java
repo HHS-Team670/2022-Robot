@@ -56,10 +56,10 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.00004;
-    private static final double V_I = 0.0000001;
-    private static final double V_D = 0.0;
-    private static final double V_FF = 0.00017;
+    private static final double V_P = 0.000037;
+    private static final double V_I = 0;//0.0000001;
+    private static final double V_D = 0.00004;
+    private static final double V_FF = 0.000173;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -158,6 +158,11 @@ public class Shooter extends MustangSubsystemBase {
         this.mController = mController;
         this.conveyor = conveyor;
         SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
+
+        SmartDashboard.putNumber("SHOOTER_P", V_P);
+        SmartDashboard.putNumber("SHOOTER_I", V_I);
+        SmartDashboard.putNumber("SHOOTER_D", V_D);
+        SmartDashboard.putNumber("SHOOTER_FF", V_FF);
     }
 
     public double getVelocity() {
@@ -269,8 +274,12 @@ public class Shooter extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         SmartDashboard.putNumber("shooter velocity", getVelocity());
+        SmartDashboard.putNumber("Shooter targetRPM", targetRPM);
+        shooter_mainPIDController.setP(SmartDashboard.getNumber("SHOOTER_P", 0), VELOCITY_SLOT);
+        shooter_mainPIDController.setI(SmartDashboard.getNumber("SHOOTER_I", 0), VELOCITY_SLOT);
+        shooter_mainPIDController.setD(SmartDashboard.getNumber("SHOOTER_D", 0), VELOCITY_SLOT);
+        shooter_mainPIDController.setFF(SmartDashboard.getNumber("SHOOTER_FF", 0), VELOCITY_SLOT);
         if (conveyor.getBallCount() > 0) {
-            vision.getCamera().setDriverMode(false);
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);
             }
@@ -284,18 +293,11 @@ public class Shooter extends MustangSubsystemBase {
                 vision.switchLEDS(true);
             }
             foundTarget = false;
-            vision.getCamera().setDriverMode(true);
         }
-        // if (conveyor.getStatus() == ConveyorSystem.Status.INTAKING) {
-        //     idle();
-        // }
-        // else if(conveyor.getStatus() == ConveyorSystem.Status.OFF){
-        //     stop();
-        // }
 
-        // if(!isRPMSetCorrectly() && conveyor.getStatus() == ConveyorSystem.Status.SHOOTING){
-        //     conveyor.stopAll();
-        // }
+        if(!isRPMSetCorrectly() && conveyor.getStatus() == ConveyorSystem.Status.SHOOTING){
+            conveyor.stopAll();
+        }
     }
 
     public boolean foundTarget() {

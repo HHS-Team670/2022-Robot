@@ -13,6 +13,7 @@ import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.commands.drivebase.HoldPosition;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.StopAll;
+import frc.team670.robot.commands.routines.drivebase.AlignAngleToTargetAndShoot;
 import frc.team670.robot.commands.routines.intake.EmptyRobot;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
@@ -101,7 +102,7 @@ public class OI extends OIBase {
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
     runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     stopIntake.whenPressed(new StopIntake(intake));
-    alignAndShoot.whenPressed(new ShootAllBalls(conveyorSystem, shooter, driveBase, vision));
+    alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
     
     // driver

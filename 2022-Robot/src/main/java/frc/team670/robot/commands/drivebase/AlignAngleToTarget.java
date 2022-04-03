@@ -31,7 +31,8 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     double prevCapTime;
 
     private double ANGULAR_P = 0.014;
-    private double ANGULAR_D = 0.0015;
+    private double ANGULAR_I = 0.000001;
+    private double ANGULAR_D = 0.000003;
     private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
     private double rotationSpeed;
@@ -61,13 +62,11 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
-        ANGULAR_P = SmartDashboard.getNumber("Align P", ANGULAR_P);
-        ANGULAR_D = SmartDashboard.getNumber("Align D", ANGULAR_D);
         if(vision.hasTarget()){
             relativeYawToTarget = vision.getAngleToTarget();
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
-            turnController = new PIDController(ANGULAR_P, SmartDashboard.getNumber("Align I", 0), ANGULAR_D);
+            turnController = new PIDController(ANGULAR_P, ANGULAR_I, ANGULAR_D);
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }

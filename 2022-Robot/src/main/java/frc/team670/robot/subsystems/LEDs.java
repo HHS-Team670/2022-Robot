@@ -1,5 +1,6 @@
 package frc.team670.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.LEDColor;
 
@@ -37,6 +38,9 @@ public class LEDs extends LEDSubsystem {
     public void mustangPeriodic() {
         if (isDisabled) {
             rainbow(false);
+            if(DriverStation.isAutonomous()){
+                
+            }
         } else if (!isBlinking) {
             if (climbers.isRobotClimbing()) {
                 blink(LEDColor.PURPLE.dimmer());

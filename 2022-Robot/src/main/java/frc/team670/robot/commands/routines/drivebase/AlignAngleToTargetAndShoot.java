@@ -149,7 +149,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         vision.getCamera().takeInputSnapshot();
         vision.getCamera().takeOutputSnapshot();
         conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
-        Logger.consoleLog("Time for Align + Shoot: %s Angle: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw);
+        Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget);
         // driveBase.initDefaultCommand();
     }
 

@@ -54,7 +54,7 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double TILT_ANGLE_DEGREES = 43;
         public static final int VISION_ERROR_CODE = -99999;
         public static final String VISION_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-        public static final String DRIVER_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
+        public static final String DRIVER_CAMERA_NAME = "HD_USB_Camera (1)";
         public static final double CAMERA_HEIGHT_METERS = 0.75;
         public static final double CAMERA_ANGLE_DEGREES = 25;
 
