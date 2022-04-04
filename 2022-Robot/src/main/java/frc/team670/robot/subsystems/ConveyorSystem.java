@@ -24,7 +24,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		OFF,
 		INTAKING,
 		OUTTAKING,
-		SHOOTING
+		SHOOTING,
 	}
 
 	private Deployer deployer;
@@ -88,12 +88,24 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		Logger.consoleLog("Conveyor Status: OUTTAKING");
 	}
 
+	private boolean shouldRejectBall() {
+		if(colorSensorOverride) {
+			return false;
+		}
+		int detectedColorNum = colorMatcher.detectColor();
+		boolean isUnknownColor = detectedColorNum == -1;
+		boolean isAllianceColor = detectedColorNum == currentAllianceNumber;
+		return !isUnknownColor && !isAllianceColor;
+	}
+
 	// Uses current state of conveyor to determine what parts need to be shut down
 	private void checkState() {
 		switch (status) {
 			case INTAKING:
-				int colorNum = colorMatcher.detectColor();
-				if(colorNum == -1 || colorNum == currentAllianceNumber || colorSensorOverride) {
+				if(shouldRejectBall()) {
+					intakeConveyor.run(false);
+				} else {
+					intakeConveyor.run(true);
 					if (shooterConveyor.getBallCount() == 1) {
 						shooterConveyor.stop();
 						if (intakeConveyor.getBallCount() == 1) {
@@ -213,6 +225,7 @@ class Conveyor {
 			roller.set(CONVEYOR_SPEED);
 		}
 	}
+
 
 	// Stops the conveyor
 	public void stop() {
