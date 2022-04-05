@@ -46,7 +46,7 @@ public class Shooter extends MustangSubsystemBase {
     private static double DEFAULT_SPEED = 2200;
 
     private static double MIN_RPM = 0;
-    private static double MAX_RPM = 4750;
+    private static double MAX_RPM = 5600;
 
     private double waitTime = 2;
 
@@ -56,10 +56,11 @@ public class Shooter extends MustangSubsystemBase {
 
     private static final double NORMAL_CURRENT = 0;
 
-    private static final double V_P = 0.000037;
+    private static final double V_P = 0.000035;
     private static final double V_I = 0;//0.0000001;
     private static final double V_D = 0.00004;
-    private static final double V_FF = 0.000173;
+    private static final double V_FF = 0.000175\[]
+    ;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -119,6 +120,56 @@ public class Shooter extends MustangSubsystemBase {
             4200,
             4500
     };
+
+    private static final double[] MEASURED_DISTANCE_HIGH_METER_RISKY = {
+        1.60655,
+        1.91135,
+        2.21615,
+        2.5,
+        2.97,
+        3.13055,
+        3.66,
+        3.99,
+        4.54,
+        4.65455, 
+        4.9,
+        5.2,
+        5.5,
+        5.8,
+        6.1,
+        6.4,
+        
+
+
+
+;
+
+private static final double[] MEASURED_HIGH_RPM_RISKY = {
+        3150,
+        3350,
+        3650,
+        3650,
+        3700,
+        3850,
+        3900,
+        4200,
+        4200,
+        4500,
+        4700,
+        4975,
+        5200,
+        5250,
+        5315,
+        5250,
+        
+        
+
+
+
+
+
+
+};
 
     private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
             MEASURED_DISTANCE_HIGH_METER,
