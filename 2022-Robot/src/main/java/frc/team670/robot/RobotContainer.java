@@ -170,6 +170,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
+    // Logger.consoleLog(m_auto_chooser.getSelected().toString());
     if (debugSubsystems) {
       SmartDashboard.putNumber("current", pd.getTotalCurrent());
       SmartDashboard.putNumber("energy", pd.getTotalEnergy());

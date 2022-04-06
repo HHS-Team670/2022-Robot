@@ -90,7 +90,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         else{
             foundTarget = false;
         }
-        if (relativeYawToTarget < 1) {
+        if (Math.abs(relativeYawToTarget) < 1) {
             alreadyAligned = true;
         } else {
             alreadyAligned = false;
@@ -147,7 +147,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         vision.getCamera().takeInputSnapshot();
         vision.getCamera().takeOutputSnapshot();
         conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
-        Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget);
+        Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s Interrupted: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget, interrupted);
         // driveBase.initDefaultCommand();
     }
 
