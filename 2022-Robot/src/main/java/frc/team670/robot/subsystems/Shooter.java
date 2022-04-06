@@ -59,8 +59,7 @@ public class Shooter extends MustangSubsystemBase {
     private static final double V_P = 0.000035;
     private static final double V_I = 0;//0.0000001;
     private static final double V_D = 0.00004;
-    private static final double V_FF = 0.000175\[]
-    ;
+    private static final double V_FF = 0.000175;
     private static final double RAMP_RATE = 0.0;
 
     private double MIN_RUNNING_RPM = 0.0;
@@ -137,12 +136,8 @@ public class Shooter extends MustangSubsystemBase {
         5.5,
         5.8,
         6.1,
-        6.4,
-        
-
-
-
-;
+        6.4
+    };
 
 private static final double[] MEASURED_HIGH_RPM_RISKY = {
         3150,
@@ -161,14 +156,6 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
         5250,
         5315,
         5250,
-        
-        
-
-
-
-
-
-
 };
 
     private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
@@ -286,8 +273,11 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
      *         calculated from the linear regression.
      */
     public double getTargetRPMForHighGoalDistance(double distance) {
-        double predictedVal = speedAtDistanceForHighGoal.predict(distance); // adding 50 to shoot into the outer
+        // double predictedVal = speedAtDistanceForHighGoal.predict(distance); // adding 50 to shoot into the outer
                                                                             // upper part of the upper hub
+                                                                            // Logger.consoleLog(speedAtDistanceForHighGoal.)
+        double predictedVal = (304.674 * distance) + 2552.62;
+        // double predictedVal = ((-0.0351164 * Math.pow(distance, 7)) + (2.70326 * Math.pow(distance, 5)) + (-65.2966 * Math.pow(distance, 3)) + (1107.6 * distance) + 1650.32); // again, automatic regression kinda scuffed so we got this from desmos https://www.desmos.com/calculator/dudvqxlhj2 
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
         SmartDashboard.putNumber("expectedSpeedHigh", expectedSpeed);
         SmartDashboard.putNumber("predictedValHigh", predictedVal);

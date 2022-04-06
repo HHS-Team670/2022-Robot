@@ -86,6 +86,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
+    conveyorSystem.setShooter(shooter);
     leds.setIsDisabled(true);
     vision.switchLEDS(false);
     Alliance alliance = DriverStation.getAlliance();
@@ -107,9 +108,9 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    //MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
-    //MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
-    MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
+    MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
+    // MustangCommand autonCommand = new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal);
+    // MustangCommand autonCommand = new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER);
     return autonCommand;
   }
 

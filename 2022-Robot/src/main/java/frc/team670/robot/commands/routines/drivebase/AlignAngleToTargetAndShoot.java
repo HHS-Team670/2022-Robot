@@ -50,6 +50,8 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
     private double modularError;
     private double distToTarget;
 
+    private double MIN_RPM = 0.152;
+
     public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
         this.conveyor = conveyor;
@@ -94,12 +96,8 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
             alreadyAligned = false;
         }
 
-        if(distToTarget > 3){
-            modularError = 1;
-        }
-        else{
-            modularError = 4;
-        }
+        modularError = Math.max(Math.min(2/distToTarget, 2), 1);
+
 
         startTimeMillis = System.currentTimeMillis();
         shooter.setRPM();
@@ -116,10 +114,10 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be
                                                                                                    // 0.3
-        if (rotationSpeed > 0 && rotationSpeed < 0.15) {
-            rotationSpeed = 0.15;
-        } else if (rotationSpeed < 0 && rotationSpeed > -0.15) {
-            rotationSpeed = -0.15;
+        if (rotationSpeed > 0 && rotationSpeed < MIN_RPM) {
+            rotationSpeed = MIN_RPM;
+        } else if (rotationSpeed < 0 && rotationSpeed > -MIN_RPM) {
+            rotationSpeed = -MIN_RPM;
         }
 
         // if (shooter.isUpToSpeed() && (!foundTarget ||
