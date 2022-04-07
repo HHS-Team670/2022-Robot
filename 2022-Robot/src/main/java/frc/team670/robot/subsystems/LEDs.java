@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.robot.RobotContainer;
+import frc.team670.mustanglib.utils.Logger;
+
 
 public class LEDs extends LEDSubsystem {
 
@@ -37,13 +39,16 @@ public class LEDs extends LEDSubsystem {
 
     @Override
     public void mustangPeriodic() {
-        if (isDisabled) {
-            rainbow(false);
-            if(RobotContainer.getAutoChooser().toString().contains("FourBallPath")){
+        if (DriverStation.isDisabled()) {
+            String path = RobotContainer.getAutoChooser().getSelected().toString();
+            if(path.contains("FourBallPath")){
                 solid(LEDColor.GREEN);
             }
-            else if(RobotContainer.getAutoChooser().toString().contains("Edge2Ball")){
+            else if(path.contains("Edge2Ball")){
                 solid(LEDColor.BLUE);
+            }
+            else{
+                rainbow(false);
             }
         } else if (!isBlinking) {
             if (climbers.isRobotClimbing()) {
