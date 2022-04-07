@@ -197,10 +197,10 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
         this.conveyor = conveyor;
         SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
 
-        SmartDashboard.putNumber("SHOOTER_P", V_P);
-        SmartDashboard.putNumber("SHOOTER_I", V_I);
-        SmartDashboard.putNumber("SHOOTER_D", V_D);
-        SmartDashboard.putNumber("SHOOTER_FF", V_FF);
+        // SmartDashboard.putNumber("SHOOTER_P", V_P);
+        // SmartDashboard.putNumber("SHOOTER_I", V_I);
+        // SmartDashboard.putNumber("SHOOTER_D", V_D);
+        // SmartDashboard.putNumber("SHOOTER_FF", V_FF);
     }
 
     public double getVelocity() {
@@ -319,10 +319,10 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
     public void mustangPeriodic() {
         SmartDashboard.putNumber("shooter velocity", getVelocity());
         SmartDashboard.putNumber("Shooter targetRPM", targetRPM);
-        shooter_mainPIDController.setP(SmartDashboard.getNumber("SHOOTER_P", 0), VELOCITY_SLOT);
-        shooter_mainPIDController.setI(SmartDashboard.getNumber("SHOOTER_I", 0), VELOCITY_SLOT);
-        shooter_mainPIDController.setD(SmartDashboard.getNumber("SHOOTER_D", 0), VELOCITY_SLOT);
-        shooter_mainPIDController.setFF(SmartDashboard.getNumber("SHOOTER_FF", 0), VELOCITY_SLOT);
+        // shooter_mainPIDController.setP(SmartDashboard.getNumber("SHOOTER_P", 0), VELOCITY_SLOT);
+        // shooter_mainPIDController.setI(SmartDashboard.getNumber("SHOOTER_I", 0), VELOCITY_SLOT);
+        // shooter_mainPIDController.setD(SmartDashboard.getNumber("SHOOTER_D", 0), VELOCITY_SLOT);
+        // shooter_mainPIDController.setFF(SmartDashboard.getNumber("SHOOTER_FF", 0), VELOCITY_SLOT);
         if (conveyor.getBallCount() > 0) {
             if (!vision.LEDSOverriden()) {
                 vision.switchLEDS(true);

@@ -1,0 +1,172 @@
+<xml version="1.0">
+<dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
+		<location x="784" y="0"/>
+		<width>747</width>
+		<height>585</height>
+		<property name="MJPG Server URL" value="http://photonvision.local:1184/stream.mjpg?1649290153489"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
+		<location x="0" y="0"/>
+		<width>783</width>
+		<height>587</height>
+		<property name="MJPG Server URL" value="http://photonvision.local:1181/stream.mjpg?1649290153489"/>
+	</static-widget>
+	<widget field="SendableChooser[0]" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1312" y="649"/>
+	</widget>
+	<widget field="pose Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="903" y="634"/>
+	</widget>
+	<widget field="pose X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="183" y="608"/>
+	</widget>
+	<widget field="rel-Encoder-vel" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="796" y="743"/>
+	</widget>
+	<widget field="Vision" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="335" y="607"/>
+	</widget>
+	<widget field="Beam Break on 9:" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1117" y="658"/>
+	</widget>
+	<widget field="Beam Break on 8:" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1120" y="691"/>
+	</widget>
+	<widget field="isDeployed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="461" y="603"/>
+	</widget>
+	<widget field="Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1158" y="627"/>
+	</widget>
+	<widget field="right velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="623" y="608"/>
+	</widget>
+	<widget field="ConveyorSystem" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="765" y="597"/>
+	</widget>
+	<widget field="Shooter P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="837" y="666"/>
+	</widget>
+	<widget field="Right S Velocity Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="760"/>
+	</widget>
+	<widget field="Shooter Velocity Setpoint" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="740"/>
+	</widget>
+	<widget field="Shooter speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="720"/>
+	</widget>
+	<widget field="Deployer" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="700"/>
+	</widget>
+	<widget field="Left S Position Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="680"/>
+	</widget>
+	<widget field="Delay Time" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="660"/>
+	</widget>
+	<widget field="Right M Position Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="640"/>
+	</widget>
+	<widget field="angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="620"/>
+	</widget>
+	<widget field="Auton target y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="754" y="638"/>
+	</widget>
+	<widget field="Auton target x" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="610" y="645"/>
+	</widget>
+	<widget field="udist" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1178" y="724"/>
+	</widget>
+	<widget field="Shooter velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="485" y="630"/>
+	</widget>
+	<widget field="Climber Target on 3:" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="404" y="690"/>
+	</widget>
+	<widget field="Conveyor Off" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="298" y="642"/>
+	</widget>
+	<widget field="Climber Target on 2:" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="359" y="702"/>
+	</widget>
+	<widget field="LEDs" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="338" y="686"/>
+	</widget>
+	<widget field="Intake" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="400" y="749"/>
+		<height>20</height>
+	</widget>
+	<widget field="Left S Velocity Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="218" y="669"/>
+	</widget>
+	<widget field="Right M Velocity Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="435" y="697"/>
+	</widget>
+	<widget field="Climber 2" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="519" y="758"/>
+	</widget>
+	<widget field="Climber 1" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="585" y="697"/>
+	</widget>
+	<widget field="abs-Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1158" y="752"/>
+	</widget>
+	<widget field="left velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="164" y="719"/>
+	</widget>
+	<widget field="Shooter Ramp Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="351" y="722"/>
+	</widget>
+	<widget field="Left M Position Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="546" y="738"/>
+	</widget>
+	<widget field="Shooter targetRPM" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="818" y="696"/>
+	</widget>
+	<widget field="SHOOTER_P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="892" y="723"/>
+	</widget>
+	<widget field="SHOOTER_I" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="604" y="670"/>
+	</widget>
+	<widget field="SHOOTER_D" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="658" y="682"/>
+	</widget>
+	<widget field="Shooter" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="681" y="718"/>
+	</widget>
+	<widget field="Shooter FF" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="408" y="671"/>
+	</widget>
+	<widget field="Conveyor Ball Count" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="433" y="701"/>
+	</widget>
+	<widget field="SHOOTER_FF" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="501" y="727"/>
+	</widget>
+	<widget field="overrided-rpm" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="477" y="747"/>
+	</widget>
+	<widget field="shooter velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="303" y="728"/>
+	</widget>
+	<widget field="rel-Encoder" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="215" y="689"/>
+	</widget>
+	<widget field="Right S Position Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="608" y="735"/>
+	</widget>
+	<widget field="Left M Velocity Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="369" y="760"/>
+	</widget>
+	<widget field="ClimberSystem" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="196" y="758"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>
