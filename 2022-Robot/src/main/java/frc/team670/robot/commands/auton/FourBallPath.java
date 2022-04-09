@@ -95,10 +95,10 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                             getTrajectoryFollowerCommand(trajectory, driveBase),
                             new RunIntakeWithConveyor(intake, conveyor),
                             // new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER) //values come from regression table
-                            new StartShooter(shooter, 3480) //values come from regression table 3442
+                            new StartShooter(shooter, 3650) //values come from regression table 3442 //3480
                         ),
                         new StopDriveBase(driveBase),
-                        new AutoShootToIntake(conveyor, shooter, intake, 3480), //high goal rpm 3442
+                        new AutoShootToIntake(conveyor, shooter, intake, 3650), //high goal rpm 3442 //3480
                         getTrajectoryFollowerCommand(trajectory2, driveBase),
 
                         new WaitCommand(0.5),
@@ -106,7 +106,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                         new ParallelCommandGroup(
                             new StopDriveBase(driveBase),
                             // new WaitToShoot(driveBase, shooter, targetPose, 100, 42.97)), //high goal rpm
-                            new StartShooter(shooter, 3550)), //high goal rpm 3497
+                            new StartShooter(shooter, 3650)), //high goal rpm 3497
 
 
                         new RunConveyor(conveyor, ConveyorSystem.Status.SHOOTING)

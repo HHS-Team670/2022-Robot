@@ -72,7 +72,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     private MustangController mController;
 
-    private boolean defaultCommandInited = false;
+    private double defaultInitedCounter = 0;
 
     private Deployer deployer;
 
@@ -155,10 +155,10 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && !defaultCommandInited){
+        if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && defaultInitedCounter % 100 == 0){
             initDefaultCommand();
-            defaultCommandInited = true;
         }
+        defaultInitedCounter++;
     }
 
     @Override

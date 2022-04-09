@@ -52,6 +52,8 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
     private double MIN_RPM = 0.152;
 
+    double shooterRPM;
+
     public AlignAngleToTargetAndShoot(DriveBase driveBase, Vision vision, ConveyorSystem conveyor, Shooter shooter) {
         this.driveBase = driveBase;
         this.conveyor = conveyor;
@@ -100,7 +102,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
 
 
         startTimeMillis = System.currentTimeMillis();
-        shooter.setRPM();
+        shooterRPM = shooter.setRPM();
         shooter.run();
     }
 
@@ -147,7 +149,7 @@ public class AlignAngleToTargetAndShoot extends CommandBase implements MustangCo
         vision.getCamera().takeInputSnapshot();
         vision.getCamera().takeOutputSnapshot();
         conveyor.runConveyor(ConveyorSystem.Status.SHOOTING);
-        Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s Interrupted: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget, interrupted);
+        Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s Interrupted: %s, Distance: %s ShooterSpeed: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget, interrupted, distToTarget, shooterRPM);
         // driveBase.initDefaultCommand();
     }
 

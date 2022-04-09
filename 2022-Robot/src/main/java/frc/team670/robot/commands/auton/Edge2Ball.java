@@ -55,11 +55,11 @@ public class Edge2Ball extends SequentialCommandGroup implements MustangCommand 
         
         //UPDATE THIS!
         if (pathName.equals(AutonTrajectory.ATarmacEdge2Ball)){
-            upperGoalRPM = 3470;
+            upperGoalRPM = 3570;
         } else if (pathName.equals(AutonTrajectory.BTarmacEdgeCenter2Ball)){
-            upperGoalRPM = 3470;
+            upperGoalRPM = 3570;
         } else if (pathName.equals(AutonTrajectory.BTarmacEdgeLower2Ball)){
-            upperGoalRPM = 3470;
+            upperGoalRPM = 3570;
         }
 
         this.shooter = shooter;

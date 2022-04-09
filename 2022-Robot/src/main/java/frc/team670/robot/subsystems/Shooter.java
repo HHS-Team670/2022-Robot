@@ -276,7 +276,7 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
         // double predictedVal = speedAtDistanceForHighGoal.predict(distance); // adding 50 to shoot into the outer
                                                                             // upper part of the upper hub
                                                                             // Logger.consoleLog(speedAtDistanceForHighGoal.)
-        double predictedVal = (304.674 * distance) + 2552.62;
+        double predictedVal = (300.674 * distance) + 2552.62 + 50; // raised by a 100 and dropped multiplier from 304.674
         if(distance < 3){
             predictedVal += 250;
         }
@@ -371,7 +371,7 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
      * If that doesn't work either, then it will run the shooter at default speed
      */
 
-    public void setRPM() {
+    public double setRPM() {
         double targetRPM = 0;
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
@@ -399,7 +399,7 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
             rpmVelSetCorrectly = false;
         }
         setTargetRPM(targetRPM);
-
+        return targetRPM;
     }
 
     public void useDynamicSpeed(boolean isDynamic) {
