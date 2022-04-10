@@ -32,7 +32,7 @@ public class EmptyRobot extends ParallelCommandGroup implements MustangCommand {
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
-            new ToggleIntake(deployer),
+            // new ToggleIntake(deployer),
             new RunIntake(intake, true),
             new RunConveyor(conveyor, ConveyorSystem.Status.OUTTAKING));
     }

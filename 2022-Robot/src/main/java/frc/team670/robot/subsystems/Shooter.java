@@ -276,7 +276,7 @@ private static final double[] MEASURED_HIGH_RPM_RISKY = {
         // double predictedVal = speedAtDistanceForHighGoal.predict(distance); // adding 50 to shoot into the outer
                                                                             // upper part of the upper hub
                                                                             // Logger.consoleLog(speedAtDistanceForHighGoal.)
-        double predictedVal = (300.674 * distance) + 2552.62 + 50; // raised by a 100 and dropped multiplier from 304.674
+        double predictedVal = (300.674 * distance) + 2552.62 + 100; // raised by a 100 and dropped multiplier from 304.674
         if(distance < 3){
             predictedVal += 250;
         }
