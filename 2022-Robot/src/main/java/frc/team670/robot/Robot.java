@@ -13,13 +13,14 @@ import frc.team670.mustanglib.RobotBase;
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
+ * creating this project, you must also update build.gradle
+ * 
+ * Robot has a RobotContainer and calls corresponding methods (autonomousInit,
+ * periodic, etc), but also runs health checks and other useful functions.
  * 
  */
 public class Robot extends RobotBase {
-
-  public Robot(){
-    super(new RobotContainer());
-  }
-  
+	public Robot() {
+		super(new RobotContainer());
+	}
 }
