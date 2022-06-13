@@ -8,16 +8,12 @@ public class RobotConstants extends RobotConstantsBase {
         
         public static final double DRIVEBASE_VELOCITY_CONVERSION_FACTOR = 
             RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
-        public static final double HDRIVE_VELOCITY_CONVERSION_FACTOR = 
-            RobotConstants.HDRIVE_METERS_PER_ROTATION / 60;
 
         // Drive Base Gearing
         public static final double DRIVEBASE_GEAR_RATIO = 10.71;
-        public static final double HDRIVE_GEAR_RATIO = 11.08; // TODO: Check with mech
 
-        // Drive/HDrive Base Wheel Diameter in Inches
+        // Drive Wheel Diameter in Inches
         public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
-        public static final double HDRIVE_WHEEL_DIAMETER = 4; // TODO: Check with mech
 
         // Inches per rotation of the NEO motors on the drivebase
         public static final double DRIVEBASE_INCHES_PER_ROTATION = 
@@ -30,8 +26,6 @@ public class RobotConstants extends RobotConstantsBase {
         // Number of meters per roatation of a drivebase/hdrive wheel
         public static final double DRIVEBASE_METERS_PER_ROTATION = 
             (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER * Math.PI * 0.0254;
-        public static final double HDRIVE_METERS_PER_ROTATION = 
-            (1 / HDRIVE_GEAR_RATIO) * HDRIVE_WHEEL_DIAMETER * Math.PI * 0.0254;
 
         // Talon PID Constants
         public static final int kTimeoutMs = 0;
@@ -65,23 +59,23 @@ public class RobotConstants extends RobotConstantsBase {
         public static final DifferentialDriveKinematics kDriveKinematics = 
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
-        public static final double leftKPDriveVel = 2; //1.8156;//3.7932; //2.25;
-        public static final double leftKIDriveVel = 0.00;
-        public static final double leftKDDriveVel = 0; //0.26
+        public static final double leftKPDriveVel = 2;
+        public static final double leftKIDriveVel = 0;
+        public static final double leftKDDriveVel = 0;
 
-        public static final double rightKPDriveVel = leftKPDriveVel; //2.4;
-        public static final double rightKIDriveVel = leftKIDriveVel; //0.00;
-        public static final double rightKDDriveVel = leftKDDriveVel; //0.0;
+        public static final double rightKPDriveVel = leftKPDriveVel;
+        public static final double rightKIDriveVel = leftKIDriveVel;
+        public static final double rightKDDriveVel = leftKDDriveVel;
 
         public static final double kMaxSpeedInchesPerSecond = 6;
         public static final double kMaxAccelerationInchesPerSecondSquared = 6;
 
-        public static final double kMaxSpeedMetersPerSecond = 2;// 1; //0.305;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2;// 1; //0.305;
+        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
         public static final double endVelocityMetersPerSecond = 0;
 
-        public static final double kMaxSpeedMetersPerSecond2 = 0.3;// 1; //0.305;
-        public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.3;// 1; //0.305;
+        public static final double kMaxSpeedMetersPerSecond2 = 0.3;
+        public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.3;
         public static final double endVelocityMetersPerSecond2 = 0.2;
 
         public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = 
@@ -94,18 +88,11 @@ public class RobotConstants extends RobotConstantsBase {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = .7;
         public static final boolean kNavXReversed = true;
-
-        // slew rate
-        public static final double HYPER_DRIVE_ACCELERATION_LIMIT = 10.0;
-        public static final double HYPER_DRIVE_DECCELERATION_LIMIT = 100.0;
-
-
-        /*
-        // Non-used constants
-
+        
         // Robot Dimensions in Inches
-        public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.5, DRIVEBASE_TO_GROUND = 2.03;
-
-        public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
-        */
+        public static final double ROBOT_LENGTH = 29.5,
+                                   ROBOT_WIDTH = 30.5,
+                                   DRIVEBASE_TO_GROUND = 2.03,
+                                   ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
+        
 }
