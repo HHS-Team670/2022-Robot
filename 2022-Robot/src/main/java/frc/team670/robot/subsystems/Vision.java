@@ -47,6 +47,7 @@ public class Vision extends VisionSubsystemBase{
             SmartDashboard.putNumber("Vision Distance", distance);
             SmartDashboard.putNumber("Vision Angle (yaw)", angle);
         }
+        SmartDashboard.putNumber("distance to target", getDistanceToTargetM());
         SmartDashboard.putBoolean("leds", LEDsTurnedOn());
     }
 

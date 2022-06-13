@@ -40,21 +40,21 @@ public class OverrideDynamicRPM extends CommandBase implements MustangCommand {
             if (controller.getDPadState() == MustangController.DPadState.RIGHT) {
                 shooter.useDynamicSpeed(false);
                 shooter.setTargetRPM(1550); // low hub touching the fender
-                SmartDashboard.putString("overrided-rpm", "LOW TOUCHING FENDER");
+                //SmartDashboard.putString("overrided-rpm", "LOW TOUCHING FENDER");
                 justAdvanced = true;
             } else if (controller.getDPadState() == MustangController.DPadState.LEFT) {
                 shooter.useDynamicSpeed(false);
                 shooter.setTargetRPM(shooter.getDefaultRPM()); // default is set to work for low outside tarmac line
-                SmartDashboard.putString("overrided-rpm", "LOW OUTSIDE TARMAC");
+                //SmartDashboard.putString("overrided-rpm", "LOW OUTSIDE TARMAC");
                 justAdvanced = true;
             } else if (controller.getDPadState() == MustangController.DPadState.UP) {
                 shooter.useDynamicSpeed(false);
                 shooter.setTargetRPM(3700); // high hub for right outside tarmac line
-                SmartDashboard.putString("overrided-rpm", "HIGH JUST OUTSIDE TARMAC");
+                //SmartDashboard.putString("overrided-rpm", "HIGH JUST OUTSIDE TARMAC");
                 justAdvanced = true;
             } else if (controller.getDPadState() == MustangController.DPadState.DOWN) {
                 shooter.useDynamicSpeed(true);
-                SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
+                //SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
                 justAdvanced = true;
             }
         } else if (controller.getDPadState() == MustangController.DPadState.NEUTRAL) {

@@ -9,19 +9,15 @@
 package frc.team670.robot.subsystems;
 
 import java.util.List;
-
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-// import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -30,7 +26,8 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a shooter with 2 NEOs
+ * Represents a shooter with 2 NEOs.
+ * Shoots using Vision, Ultrasonic, and manual overrides.
  * 
  * @author wilsonpotato, gentleTiger123, arghunter, smishra467
  */
@@ -57,7 +54,7 @@ public class Shooter extends MustangSubsystemBase {
     private static final double NORMAL_CURRENT = 0;
 
     private static final double V_P = 0.000035;
-    private static final double V_I = 0;//0.0000001;
+    private static final double V_I = 0;
     private static final double V_D = 0.00004;
     private static final double V_FF = 0.000175;
     private static final double RAMP_RATE = 0.0;
@@ -74,93 +71,7 @@ public class Shooter extends MustangSubsystemBase {
     private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
             RobotMap.SHOOTER_ULTRASONIC_EPIN);
 
-    // private static final double[] MEASURED_DISTANCE_LOW_METER = {
-    // 0.18415,
-    // 0.48895,
-    // 0.79375,
-    // 1.09855,
-    // 1.40335,
-    // 2.01295,
-    // 2.62255,
-    // 3.23215,
-    // 3.84175
-    // };
-
-    // private static final double[] MEASURED_LOW_RPM = {
-    // 1550,
-    // 1600,
-    // 1800,
-    // 2000,
-    // 2250,
-    // 2600,
-    // 2800,
-    // 3000,
-    // 3500
-    // };
-
-    private static final double[] MEASURED_DISTANCE_HIGH_METER = {
-            1.60655,
-            1.91135,
-            2.21615,
-            2.97,
-            3.13055,
-            3.66,
-            4.54,
-            4.65455
-    };
-
-    // private static final double[] MEASURED_HIGH_RPM = {
-    //         3150,
-    //         3350,
-    //         3650,
-    //         3700,
-    //         3850,
-    //         3900,
-    //         4200,
-    //         4500
-    // };
-
-//     private static final double[] MEASURED_DISTANCE_HIGH_METER_RISKY = {
-//         1.60655,
-//         1.91135,
-//         2.21615,
-//         2.5,
-//         2.97,
-//         3.13055,
-//         3.66,
-//         3.99,
-//         4.54,
-//         4.65455, 
-//         4.9,
-//         5.2,
-//         5.5,
-//         5.8,
-//         6.1,
-//         6.4
-//     };
-
-// private static final double[] MEASURED_HIGH_RPM_RISKY = {
-//         3150,
-//         3350,
-//         3650,
-//         3650,
-//         3700,
-//         3850,
-//         3900,
-//         4200,
-//         4200,
-//         4500,
-//         4700,
-//         4975,
-//         5200,
-//         5250,
-//         5315,
-//         5250,
-// };
-
-    // private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
-    //         MEASURED_DISTANCE_HIGH_METER,
-    //         MEASURED_HIGH_RPM);
+    private static final double MIN_DISTANCE_HIGH_METERS = 1.60655;
 
     private static final int VELOCITY_SLOT = 0;
     private Vision vision;
@@ -195,12 +106,7 @@ public class Shooter extends MustangSubsystemBase {
 
         this.mController = mController;
         this.conveyor = conveyor;
-        SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
-
-        // SmartDashboard.putNumber("SHOOTER_P", V_P);
-        // SmartDashboard.putNumber("SHOOTER_I", V_I);
-        // SmartDashboard.putNumber("SHOOTER_D", V_D);
-        // SmartDashboard.putNumber("SHOOTER_FF", V_FF);
+    
     }
 
     public double getVelocity() {
@@ -208,8 +114,6 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public void run() {
-        SmartDashboard.putNumber("Shooter target speed", targetRPM + speedAdjust);
-        Logger.consoleLog("Shooter target speed: %s", targetRPM);
         shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
     }
 
@@ -249,42 +153,31 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     /**
+     * Gets target RPM for low goal based on the given distance using a prediction function
      * 
      * @param distance In meters, the distance we are shooting at
-     * @return The predicted "best fit" RPM for the motors to spin at based on the
-     *         distance,
-     *         calculated from the linear regression.
+     * @return The predicted "best fit" RPM for the shooter to spin at based on the given distance.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
-        double predictedVal = ((224 * distance) + 1517); // speedAtDistanceForLowGoal.predict(distance); direct function
-                                                         // was working better than the regressor
+        double predictedVal = ((224 * distance) + 1517);
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
-        SmartDashboard.putNumber("expectedSpeedLow", expectedSpeed);
-        SmartDashboard.putNumber("predictedValLow", predictedVal);
-        SmartDashboard.putNumber("distanceLow", distance);
         return expectedSpeed;
     }
 
     /**
+     * Gets target RPM for high goal based on the given distance using regression
      * 
      * @param distance In meters, the distance we are shooting at
      * @return The predicted "best fit" RPM for the motors to spin at based on the
-     *         distance,
-     *         calculated from the linear regression.
+     *         distance, calculated from the linear regression.
      */
     public double getTargetRPMForHighGoalDistance(double distance) {
-        // double predictedVal = speedAtDistanceForHighGoal.predict(distance); // adding 50 to shoot into the outer
-                                                                            // upper part of the upper hub
-                                                                            // Logger.consoleLog(speedAtDistanceForHighGoal.)
-        double predictedVal = (300.674 * distance) + 2552.62 + 100; // raised by a 100 and dropped multiplier from 304.674
+        double predictedVal = (300.674 * distance) + 2652.62; // These values worked best at SVR
         if(distance < 3){
             predictedVal += 250;
         }
-        // double predictedVal = ((-0.0351164 * Math.pow(distance, 7)) + (2.70326 * Math.pow(distance, 5)) + (-65.2966 * Math.pow(distance, 3)) + (1107.6 * distance) + 1650.32); // again, automatic regression kinda scuffed so we got this from desmos https://www.desmos.com/calculator/dudvqxlhj2 
+        
         double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
-        SmartDashboard.putNumber("expectedSpeedHigh", expectedSpeed);
-        SmartDashboard.putNumber("predictedValHigh", predictedVal);
-        SmartDashboard.putNumber("distanceHigh", distance);
         return expectedSpeed;
     }
 
@@ -297,14 +190,11 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public boolean isUpToSpeed() {
-        return Math.abs(getVelocity() - (targetRPM + this.speedAdjust)) < SPEED_ALLOWED_ERROR; // margin of
-                                                                                               // error
+        return Math.abs(getVelocity() - (targetRPM + this.speedAdjust)) < SPEED_ALLOWED_ERROR; // margin of error
     }
 
     public void test() {
-        shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity),
-                ControlType.kVelocity);
-        SmartDashboard.putNumber("Shooter speed", mainController.getEncoder().getVelocity());
+        shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);
     }
 
     @Override
@@ -317,25 +207,19 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("shooter velocity", getVelocity());
-        SmartDashboard.putNumber("Shooter targetRPM", targetRPM);
-        // shooter_mainPIDController.setP(SmartDashboard.getNumber("SHOOTER_P", 0), VELOCITY_SLOT);
-        // shooter_mainPIDController.setI(SmartDashboard.getNumber("SHOOTER_I", 0), VELOCITY_SLOT);
-        // shooter_mainPIDController.setD(SmartDashboard.getNumber("SHOOTER_D", 0), VELOCITY_SLOT);
-        // shooter_mainPIDController.setFF(SmartDashboard.getNumber("SHOOTER_FF", 0), VELOCITY_SLOT);
         if (conveyor.getBallCount() > 0) {
-            if (!vision.LEDSOverriden()) {
+
+            if (!vision.LEDSOverriden())
                 vision.switchLEDS(true);
-            }
-            if (vision.getDistanceToTargetM() != RobotConstants.VISION_ERROR_CODE) {
+
+            if (vision.getDistanceToTargetM() != RobotConstants.VISION_ERROR_CODE)
                 foundTarget = true;
-            } else {
+            else
                 foundTarget = false;
-            }
+
         } else {
-            if (!vision.LEDSOverriden()) {
+            if (!vision.LEDSOverriden())
                 vision.switchLEDS(true);
-            }
             foundTarget = false;
         }
 
@@ -364,40 +248,48 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     /**
-     * If vision works, it gets the distance to target from vision,
-     * predicts the RPM based off the distance,
-     * and sets that as the Target RPM
-     * If vision doesn't work, it tries to use the ultrasonic sensors
+     * If vision works:
+     *   Gets the distance to target from vision,
+     *   predicts the RPM based off the distance,
+     *   and sets that as the Target RPM.
+     * If vision doesn't work:
+     *   it tries to use the ultrasonic sensors
      * If that doesn't work either, then it will run the shooter at default speed
      */
 
     public double setRPM() {
         double targetRPM = 0;
+        String shooterSpeedChooser = "Manual (dynamicSpeed == false)"; //For debugging purposes. Uncomment the print to SmartDashboard at the bottom of this method.
+        
+        // If using vision or ultrasonic...
         if (useDynamicSpeed) {
             double distanceToTarget = RobotConstants.VISION_ERROR_CODE;
 
             if (foundTarget) {
                 distanceToTarget = vision.getDistanceToTargetM();
                 targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
-                SmartDashboard.putNumber("speed-chooser", 0);
+                shooterSpeedChooser = "Vision";
             }
             if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10
                     || distanceToTarget < getMinHighDistanceInMeter()) { // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
                 targetRPM = getTargetRPMForLowGoalDistance(distanceToTarget);
-                SmartDashboard.putNumber("speed-chooser", 1);
+                shooterSpeedChooser = "Ultrasonic";
             }
-            SmartDashboard.putNumber("distance to target", distanceToTarget);
             rpmVelSetCorrectly = true;
-        } else {
+        } else { // If using a manual override...
             targetRPM = getTargetRPM();
             rpmVelSetCorrectly = true;
-            SmartDashboard.putNumber("speed-chooser", 3);
+            shooterSpeedChooser = "Manual (dynamicSpeed == false)";
         }
+        
+        // If target RPM somehow got set to an invalid number...
         if (targetRPM <= 0 || targetRPM > MAX_RPM) {
             targetRPM = 0;
             rpmVelSetCorrectly = false;
         }
+
+        //SmartDashboard.putString("shooter-speed-chooser", shooterSpeedChooser);
         setTargetRPM(targetRPM);
         return targetRPM;
     }
@@ -412,15 +304,14 @@ public class Shooter extends MustangSubsystemBase {
 
     public double getUltrasonicDistanceInMeters() {
         double dist = Units.inchesToMeters(ultrasonic.getDistance());
-        if (dist <= 0.8) {
+        if (dist <= 0.8)
             return dist;
-        } else {
+        else
             return RobotConstants.VISION_ERROR_CODE;
-        }
     }
 
     public double getMinHighDistanceInMeter() {
-        return MEASURED_DISTANCE_HIGH_METER[0];
+        return MIN_DISTANCE_HIGH_METERS;
     }
 
     public void setLED(boolean on) {
@@ -438,11 +329,13 @@ public class Shooter extends MustangSubsystemBase {
     @Override
     public void debugSubsystem() {
         SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
-        SmartDashboard.putNumber("Shooter FF", V_FF);
-        SmartDashboard.putNumber("Shooter P", V_P);
+        SmartDashboard.putNumber("Shooter velocity", getVelocity());
+        SmartDashboard.putNumber("SHOOTER_P", V_P);
+        SmartDashboard.putNumber("SHOOTER_I", V_I);
+        SmartDashboard.putNumber("SHOOTER_D", V_D);
+        SmartDashboard.putNumber("SHOOTER_FF", V_FF);
         SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
         SmartDashboard.putNumber("Shooter speed", targetRPM);
-        SmartDashboard.putNumber("Shooter velocity", getVelocity());
-        SmartDashboard.putNumber("udist", getUltrasonicDistanceInMeters());
+        SmartDashboard.putNumber("Ultrasonic Distance", getUltrasonicDistanceInMeters());
     }
 }
