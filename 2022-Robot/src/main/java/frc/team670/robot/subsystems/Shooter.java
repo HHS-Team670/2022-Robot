@@ -21,7 +21,7 @@ import frc.team670.mustanglib.dataCollection.sensors.DIOUltrasonic;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
+// import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -109,58 +109,58 @@ public class Shooter extends MustangSubsystemBase {
             4.65455
     };
 
-    private static final double[] MEASURED_HIGH_RPM = {
-            3150,
-            3350,
-            3650,
-            3700,
-            3850,
-            3900,
-            4200,
-            4500
-    };
+    // private static final double[] MEASURED_HIGH_RPM = {
+    //         3150,
+    //         3350,
+    //         3650,
+    //         3700,
+    //         3850,
+    //         3900,
+    //         4200,
+    //         4500
+    // };
 
-    private static final double[] MEASURED_DISTANCE_HIGH_METER_RISKY = {
-        1.60655,
-        1.91135,
-        2.21615,
-        2.5,
-        2.97,
-        3.13055,
-        3.66,
-        3.99,
-        4.54,
-        4.65455, 
-        4.9,
-        5.2,
-        5.5,
-        5.8,
-        6.1,
-        6.4
-    };
+//     private static final double[] MEASURED_DISTANCE_HIGH_METER_RISKY = {
+//         1.60655,
+//         1.91135,
+//         2.21615,
+//         2.5,
+//         2.97,
+//         3.13055,
+//         3.66,
+//         3.99,
+//         4.54,
+//         4.65455, 
+//         4.9,
+//         5.2,
+//         5.5,
+//         5.8,
+//         6.1,
+//         6.4
+//     };
 
-private static final double[] MEASURED_HIGH_RPM_RISKY = {
-        3150,
-        3350,
-        3650,
-        3650,
-        3700,
-        3850,
-        3900,
-        4200,
-        4200,
-        4500,
-        4700,
-        4975,
-        5200,
-        5250,
-        5315,
-        5250,
-};
+// private static final double[] MEASURED_HIGH_RPM_RISKY = {
+//         3150,
+//         3350,
+//         3650,
+//         3650,
+//         3700,
+//         3850,
+//         3900,
+//         4200,
+//         4200,
+//         4500,
+//         4700,
+//         4975,
+//         5200,
+//         5250,
+//         5315,
+//         5250,
+// };
 
-    private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
-            MEASURED_DISTANCE_HIGH_METER,
-            MEASURED_HIGH_RPM);
+    // private static final LinearRegression speedAtDistanceForHighGoal = new LinearRegression(
+    //         MEASURED_DISTANCE_HIGH_METER,
+    //         MEASURED_HIGH_RPM);
 
     private static final int VELOCITY_SLOT = 0;
     private Vision vision;
