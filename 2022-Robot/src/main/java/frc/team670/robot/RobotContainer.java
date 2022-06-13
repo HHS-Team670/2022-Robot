@@ -84,7 +84,6 @@ public class RobotContainer extends RobotContainerBase {
   
 	public void robotInit() {
 		conveyorSystem.setShooter(shooter);
-		leds.setIsDisabled(true);
 		vision.switchLEDS(false);
 		Alliance alliance = DriverStation.getAlliance();
 		if (alliance == Alliance.Red) {
@@ -121,14 +120,12 @@ public class RobotContainer extends RobotContainerBase {
 		} else if (getAutonomousCommand().equals(new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER))) {
 			leds.solid(LEDColor.BLUE);
 		}
-		leds.setIsDisabled(false);
 	}
 
 	public void teleopInit() {
 		shooter.useDynamicSpeed(true);
 		shooter.setWaitTime(2);
 		driveBase.setTeleopRampRate();
-		leds.setIsDisabled(false);
 		oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
 			diagonalClimber);
 		deployer.setEncoderPositionFromAbsolute();
@@ -137,7 +134,6 @@ public class RobotContainer extends RobotContainerBase {
 
 	@Override
 	public void disabled() {
-		leds.setIsDisabled(true);
 	}
 
 	public static MustangController getOperatorController() {

@@ -4,17 +4,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.robot.RobotContainer;
-import frc.team670.mustanglib.utils.Logger;
 
-
+/**
+ * Represents the LED light strips on the robot.
+ * These LEDs change color depending on the selected autonomous path, the number of cargo in the conveyor, and the shooting status.
+ * 
+ * @author AkshatAdsule, LakshBhambhani
+ */
 public class LEDs extends LEDSubsystem {
 
     private Shooter shooter;
     private Intake intake;
     private ConveyorSystem conveyors;
     private ClimberSystem climbers;
-
-    private boolean isDisabled;
 
     private LEDColor allianceColor, oppositeAllianceColor;
 
@@ -25,11 +27,6 @@ public class LEDs extends LEDSubsystem {
         this.intake = intake;
         this.conveyors = conveyors;
         this.climbers = climbers;
-        this.isDisabled = true;
-    }
-
-    public void setIsDisabled(boolean isDisabled) {
-        this.isDisabled = isDisabled;
     }
 
     public void setAllianceColors(LEDColor alliance, LEDColor oppositeAlliance) {
@@ -41,35 +38,30 @@ public class LEDs extends LEDSubsystem {
     public void mustangPeriodic() {
         if (DriverStation.isDisabled()) {
             String path = RobotContainer.getAutoChooser().getSelected().toString();
-            if(path.contains("FourBallPath")){
+            if(path.contains("FourBallPath"))
                 solid(LEDColor.GREEN.dimmer());
-            }
-            else if(path.contains("Edge2Ball")){
+            else if(path.contains("Edge2Ball"))
                 solid(LEDColor.BLUE.dimmer());
-            }
-            else{
+            else
                 rainbow(false);
-            }
         } else if (!isBlinking) {
-            if (climbers.isRobotClimbing()) {
+            if (climbers.isRobotClimbing())
                 blink(LEDColor.PURPLE.dimmer());
-            } else if(shooter.foundTarget()){
+            else if(shooter.foundTarget())
                 blink(LEDColor.GREEN.dimmer());
-            }
-            else if (conveyors.getBallCount() == 2) { // show amount of balls in conveyor
+            else if (conveyors.getBallCount() == 2) // show amount of balls in conveyor
                 solid(oppositeAllianceColor.dimmer());
-            } else if (shooter.getVelocity() > 0) { // shooter is shooting
-                if (shooter.isShooting()) {
+            else if (shooter.getVelocity() > 0) // shooter is shooting
+                if (shooter.isShooting())
                     blink(oppositeAllianceColor.dimmer(), 10);
-                }
-            } else if (conveyors.getBallCount() == 1) { // show amount of balls in conveyor
+            else if (conveyors.getBallCount() == 1) // show amount of balls in conveyor
                 progressBar(allianceColor.dimmer(), oppositeAllianceColor.dimmer(), 0.5);
-            } else if (intake.isRolling()) { // intake is running
+            else if (intake.isRolling()) // intake is running
                 blink(allianceColor.dimmer(), 10);
-            } else {
+            else
                 rainbow(false);
-            }
         }
+
         super.mustangPeriodic(); // to handle blinks and setting the led state
     }
 
