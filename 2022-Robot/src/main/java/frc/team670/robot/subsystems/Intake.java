@@ -10,7 +10,9 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotMap;
 
 /*
- * Governs the intake subsystem
+ * Represents the intake roller. Does NOT control the
+ * deployer (moves the intake arm down & up) or the 
+ * conveyor system (rollers that bring ball from intake to outtake)
  * @author Khicken, Sanatan, Armaan
 */
 public class Intake extends MustangSubsystemBase {
@@ -37,12 +39,18 @@ public class Intake extends MustangSubsystemBase {
         roller.setIdleMode(IdleMode.kBrake);
     }
 
-    // Returns true if the intake is rolling
+    /**
+     * Returns true if the roller is moving
+     * @return True if the motor is rolling
+     */
     public boolean isRolling() {
         return (roller.get() != 0);
     }
 
-    // Runs the main intake motor in the specified direction
+    /**
+     * Runs the main intake motor in the specified direction
+     * @param reversed True for backwards, false for forwards
+     */
     public void roll(boolean reversed) {
         deployer.deploy(true);
         if(conveyor.getBallCount() == 2){
@@ -56,7 +64,10 @@ public class Intake extends MustangSubsystemBase {
         }
     }
 
-    // Returns true if the intake is jammed
+    /**
+     * Returns true if the intake is jammed. Detected by checking if the current stays above the peak current for 4 or more cycles
+     * @return
+     */
     public boolean isJammed() {
         double intakeCurrent = roller.getOutputCurrent();
         if (intakeCurrent > 0.2) {
@@ -72,7 +83,9 @@ public class Intake extends MustangSubsystemBase {
         return false;
     }
 
-    // Stops the intake
+    /**
+     * Stops the intake rollers, retracts the intake, and stops all conveyor rollers.
+     */
     public void stop() {
         roller.stopMotor();
         if(deployer.isDeployed()){
@@ -96,8 +109,6 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
-        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
         if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
             stop();
         }
@@ -105,6 +116,8 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void debugSubsystem() {
+        SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
     }
 
 }

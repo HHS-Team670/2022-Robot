@@ -340,7 +340,7 @@ public class Shooter extends MustangSubsystemBase {
     }
 }
 
-/**
+/** Data for regression. Not directly used in code, but these should be saved, according to Laksh
 private static final double[] MEASURED_DISTANCE_LOW_METER = {
     0.18415,
     0.48895,
