@@ -5,7 +5,7 @@ import com.revrobotics.REVLibError;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.Logger;
+// import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -80,7 +80,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 			shooterConveyor.run(true);
 		}
 		status = Status.INTAKING;
-		Logger.consoleLog("Conveyor Status: INTAKING");
+		// Logger.consoleLog("Conveyor Status: INTAKING");
 	}
 
 	// Helper method of runconveyor
@@ -88,7 +88,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		intakeConveyor.run(true);
 		shooterConveyor.run(true);
 		status = Status.SHOOTING;
-		Logger.consoleLog("Conveyor Status: SHOOTING");
+		// Logger.consoleLog("Conveyor Status: SHOOTING");
 	}
 
 	// Helper method of runconveyor
@@ -98,7 +98,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 			shooterConveyor.run(false);
 		}
 		status = Status.OUTTAKING;
-		Logger.consoleLog("Conveyor Status: OUTTAKING");
+		// Logger.consoleLog("Conveyor Status: OUTTAKING");
 	}
 
 	// Uses current state of conveyor to determine what parts need to be shut down
