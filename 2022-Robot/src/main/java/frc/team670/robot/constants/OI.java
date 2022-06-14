@@ -39,14 +39,14 @@ public class OI extends OIBase {
   private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
   private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
-  private static JoystickButton alignAndShoot = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
-  private static JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
-
-  // driver controls
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
+
+  // driver controls
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
+  private static JoystickButton alignAndShoot = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton stopShooter = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
 
   // backup controls
   private static JoystickButton toggleConveyor = new JoystickButton(getBackupController(), XboxButtons.X);
