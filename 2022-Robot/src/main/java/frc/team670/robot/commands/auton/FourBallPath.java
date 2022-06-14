@@ -32,16 +32,10 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.utils.Logger;
 
 /*
- * BTarmac4BallTerminal   
-    * Starts flush with the edge of B tarmac.
-    * Picks up 1 additional ball and shoots both low.
-    * Picks up 1 from the ground and 1 from terminal and shoots both low.
  * BTarmac4BallTerminal2Ball
     * Starts on the edge of B tarmac facing the middle ball.
     * Intakes middle ball, shoots high.
     * Goes to terminal and picks up 2 balls 
- * ATarmacEdge4Ball
-    * Starts on the edge of the A tarmac with 1 ball. Scores a total of 4 balls.
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
 public class FourBallPath extends SequentialCommandGroup implements MustangCommand {
@@ -52,7 +46,6 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     // WaitCommand
     private Trajectory trajectory, trajectory2, trajectory3;
 
-    private Pose2d targetPose, targetPose2, terminalTargetPose, targetPose3;
     private DriveBase driveBase;
 
     public FourBallPath(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter, Deployer deployer,
@@ -60,27 +53,11 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         this.driveBase = driveBase;
 
-        // trajectory = PathPlanner.loadPath(pathName.toString() + "P1", 2.0, 1);
-        // trajectory2 = PathPlanner.loadPath(pathName.toString() + "P2", 2.0, 1);
-        // trajectory = PathPlanner.loadPath(pathName.toString(), 2, 2);
-
-        // if (pathName.equals("BTarmac4BallTerminal")) {
-        // trajectory = PathPlanner.loadPath("BTarmac4BallTerminalP1", 2.0, 1);
-        // trajectory2 = PathPlanner.loadPath("BTarmac4BallTerminalP2", 2.0, 1);
-        // }
-
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
             trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 3, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.1", 3, 1.5);
-            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP2.2", 3, 1.5, true);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 3, 1.5);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP3", 3, 1.5, true);
         }
-
-        double errorInMeters = 0.2;
-        terminalTargetPose = new Pose2d(1.72, 1.50, Rotation2d.fromDegrees(-176.97)); // middle pose where robot is at
-                                                                                      // terminal
-        targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
-        targetPose2 = trajectory2.getStates().get(trajectory2.getStates().size() - 1).poseMeters;
-        targetPose3 = trajectory3.getStates().get(trajectory3.getStates().size() - 1).poseMeters;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -94,23 +71,19 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                         new ParallelCommandGroup(
                             getTrajectoryFollowerCommand(trajectory, driveBase),
                             new RunIntakeWithConveyor(intake, conveyor),
-                            // new WaitToShoot(driveBase, shooter, targetPose, 100, -1.25, HubType.UPPER) //values come from regression table
-                            new StartShooter(shooter, 3650) //values come from regression table 3442 //3480
+                            new StartShooter(shooter, 3650)
                         ),
                         new StopDriveBase(driveBase),
-                        new AutoShootToIntake(conveyor, shooter, intake, 3650), //high goal rpm 3442 //3480
+                        new AutoShootToIntake(conveyor, shooter, intake, 3650),
                         getTrajectoryFollowerCommand(trajectory2, driveBase),
 
                         new WaitCommand(0.5),
                         getTrajectoryFollowerCommand(trajectory3, driveBase),
                         new ParallelCommandGroup(
                             new StopDriveBase(driveBase),
-                            // new WaitToShoot(driveBase, shooter, targetPose, 100, 42.97)), //high goal rpm
-                            new StartShooter(shooter, 3650)), //high goal rpm 3497
-
-
+                            new StartShooter(shooter, 3650)
+                        ),
                         new RunConveyor(conveyor, ConveyorSystem.Status.SHOOTING)
-                        //  new ShootAllBalls(conveyor, shooter, upperGoalRPM)
             ));
     }
 
@@ -118,8 +91,6 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
     public void initialize() {
         super.initialize();
         driveBase.resetOdometry(trajectory.getStates().get(0).poseMeters);
-        // SmartDashboard.putNumber("Auton target x", targetPose2.getX());
-        // SmartDashboard.putNumber("Auton target y", targetPose2.getY());
     }
 
     @Override

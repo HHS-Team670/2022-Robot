@@ -12,6 +12,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.routines.shoot.WaitToShoot;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
@@ -23,7 +24,6 @@ import frc.team670.robot.subsystems.Shooter;
  * Starts flush with the edge of B tarmac and shoots preloaded ball
  * Picks up 2 balls along B tarmac edge
  * picks up 2 balls from terminal and comes back to shoot
- * all shooting lower hub
  * https://miro.com/app/board/uXjVOWE2OxQ=/
  */
 public class BTarmac5BallTerminal extends SequentialCommandGroup implements MustangCommand {
@@ -37,7 +37,6 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("BTarmac5BallTerminalP2", 2.0, 1);
-        //trajectory2 starts and stops at the same spot, shoots from that spot
         
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -56,8 +55,8 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                 new SequentialCommandGroup(
                     new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
                     new AutoShootToIntake(conveyor, shooter, intake),
-                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters)
-                    // new ShootAllBalls(conveyor, shooter)
+                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                    new ShootAllBalls(conveyor, shooter)
                 )
             ),
             new StopDriveBase(driveBase)

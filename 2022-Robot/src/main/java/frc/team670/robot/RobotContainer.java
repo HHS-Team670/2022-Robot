@@ -21,7 +21,7 @@ import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.AutonPathWithDelay;
-import frc.team670.robot.commands.auton.Edge2Ball;
+import frc.team670.robot.commands.auton.TwoBallPath;
 import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.constants.AutonTrajectory;
@@ -72,12 +72,12 @@ public class RobotContainer extends RobotContainerBase {
 		m_auto_chooser = new SendableChooser<MustangCommand>();
 		m_auto_chooser.setDefaultOption("4 Ball Auto",
 			new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal));
-		m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
-			deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER));
-		m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new Edge2Ball(driveBase, intake, conveyorSystem,
-			shooter, deployer, AutonTrajectory.BTarmacEdgeCenter2Ball, HubType.UPPER));
-		m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH", new Edge2Ball(driveBase, intake, conveyorSystem, shooter,
-			deployer, AutonTrajectory.BTarmacEdgeLower2Ball, HubType.UPPER));
+		m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
+			deployer, AutonTrajectory.ATarmac2Ball, HubType.UPPER));
+		m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new TwoBallPath(driveBase, intake, conveyorSystem,
+			shooter, deployer, AutonTrajectory.BTarmacCenter2Ball, HubType.UPPER));
+		m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH", new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
+			deployer, AutonTrajectory.BTarmacLower2Ball, HubType.UPPER));
 		SmartDashboard.putData(m_auto_chooser);
 		SmartDashboard.putNumber("Delay Time", 0);
 	}
@@ -117,7 +117,7 @@ public class RobotContainer extends RobotContainerBase {
 		Logger.consoleLog("autoInit called");
 		if (getAutonomousCommand().equals(new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal))) {
 			leds.solid(LEDColor.PURPLE);
-		} else if (getAutonomousCommand().equals(new Edge2Ball(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmacEdge2Ball, HubType.UPPER))) {
+		} else if (getAutonomousCommand().equals(new TwoBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmac2Ball, HubType.UPPER))) {
 			leds.solid(LEDColor.BLUE);
 		}
 	}

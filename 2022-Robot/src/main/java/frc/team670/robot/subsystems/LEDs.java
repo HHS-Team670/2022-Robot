@@ -40,7 +40,7 @@ public class LEDs extends LEDSubsystem {
             String path = RobotContainer.getAutoChooser().getSelected().toString();
             if(path.contains("FourBallPath"))
                 solid(LEDColor.GREEN.dimmer());
-            else if(path.contains("Edge2Ball"))
+            else if(path.contains("TwoBallPath"))
                 solid(LEDColor.BLUE.dimmer());
             else
                 rainbow(false);
