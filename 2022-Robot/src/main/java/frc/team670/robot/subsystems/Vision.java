@@ -12,7 +12,7 @@ import frc.team670.robot.constants.RobotConstants;
  * 
  * @author Katia Bravo, Riya Gupta, Ethan Chang
  */
-public class Vision extends VisionSubsystemBase{
+public class Vision extends VisionSubsystemBase {
 
     /*
     * 11' 8" --> trying to do 35 feet --tested with 30 feet
