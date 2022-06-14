@@ -11,7 +11,6 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -269,7 +268,7 @@ public class ClimberSystem extends MustangSubsystemBase{
             target = 0.0;
             currentAtHookedCount = 0;
             this.ALLOWED_ERROR = allowedError;
-            SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);
+            //SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);
         }
 
         public void setSmartMotionConstants() {
@@ -330,7 +329,6 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         private void climb(double rotations) {
             target = rotations;
-            Logger.consoleLog("Climber with Motor ID %s rotation target %s", MOTOR_ID, rotations);
             leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion, SMARTMOTION_SLOT);
         }
 
@@ -422,8 +420,9 @@ public class ClimberSystem extends MustangSubsystemBase{
         @Override
         public void debugSubsystem() {
             SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            // double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", 0);
-            // climb(rotations);
+            double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", -1); // for this to work, uncomment
+                                                                                                    // "SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);"
+                                                                                                    // at the end of the Climber constructor
             SmartDashboard.putBoolean("LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
             SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
         }
