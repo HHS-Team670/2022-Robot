@@ -7,7 +7,5 @@ public enum AutonTrajectory {
     BTarmacLower2Ball,
 
     //4 ball
-    BTarmac4BallTerminal,
     BTarmacHighHubTerminal,
-    ATarmacEdge4Ball
 }
