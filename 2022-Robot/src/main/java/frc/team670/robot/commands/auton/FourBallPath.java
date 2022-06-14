@@ -5,8 +5,6 @@ import java.util.Map;
 
 import com.pathplanner.lib.PathPlanner;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,22 +12,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
-import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
-import frc.team670.robot.commands.routines.shoot.WaitToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.conveyor.RunConveyor;
-
 import frc.team670.robot.constants.AutonTrajectory;
-import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.mustanglib.utils.Logger;
 
 /*
  * BTarmac4BallTerminal2Ball

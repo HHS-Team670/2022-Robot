@@ -2,10 +2,7 @@ package frc.team670.robot.commands.auton;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.pathplanner.lib.PathPlanner;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;

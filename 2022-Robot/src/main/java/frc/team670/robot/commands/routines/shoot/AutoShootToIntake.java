@@ -4,13 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.conveyor.RunConveyor;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;

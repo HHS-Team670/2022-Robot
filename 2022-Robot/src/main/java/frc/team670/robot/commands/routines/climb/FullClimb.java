@@ -12,8 +12,6 @@ import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.Deployer;
 
-import frc.team670.mustanglib.utils.Logger;
-
 /**
  * Once the driver aligns with the mid bar, climbs to the mid bar. It then
  * climbs
@@ -25,7 +23,6 @@ public class FullClimb extends CommandBase implements MustangCommand {
 
   private MustangController controller;
   private ClimberSystem climbers;
-  private Deployer deployer;
 
   private int currentStep = 0;
   private boolean justAdvanced = false;
@@ -40,7 +37,6 @@ public class FullClimb extends CommandBase implements MustangCommand {
     healthReqs.put(climbers, HealthState.GREEN);
     this.controller = mController;
     this.climbers = climbers;
-    this.deployer = deployer;
   }
 
   // Called once when the command executes

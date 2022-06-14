@@ -8,7 +8,6 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.conveyor.RunConveyor;
-import frc.team670.robot.commands.deployer.ToggleIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
