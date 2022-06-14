@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
 import frc.team670.robot.constants.FieldConstants;
@@ -46,6 +47,8 @@ public class Vision extends VisionSubsystemBase {
         if (super.hasTarget()) {
             SmartDashboard.putNumber("Vision Distance", distance);
             SmartDashboard.putNumber("Vision Angle (yaw)", angle);
+            SmartDashboard.putNumber("Image Capture Time", getVisionCaptureTime());
+            SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
         }
         SmartDashboard.putNumber("distance to target", getDistanceToTargetM());
         SmartDashboard.putBoolean("leds", LEDsTurnedOn());

@@ -23,7 +23,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -48,7 +47,6 @@ import frc.team670.robot.constants.RobotMap;
  * @author lakshbhambhani
  */
 public class DriveBase extends TankDrive {
-  private Vision vision;
 
   private SparkMAXLite left1, left2, right1, right2;
   private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -67,14 +65,16 @@ public class DriveBase extends TankDrive {
   SparkMaxPIDController leftPIDController;
   SparkMaxPIDController rightPIDController;
 
-  public DriveBase(MustangController mustangController, Vision vision) {
-    this.vision = vision;
+  public DriveBase(MustangController mustangController) {
     this.mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
         RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
+    
+    allMotors.addAll(leftControllers);
+    allMotors.addAll(rightControllers);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -86,35 +86,23 @@ public class DriveBase extends TankDrive {
     right1Encoder = right1.getEncoder();
     right2Encoder = right2.getEncoder();
 
-    left1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
-    left2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
-    right1Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
-                                                                                                    // right side
-    right2Encoder.setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR); // Do not invert for
-                                                                                                    // right side
-
-    left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-    right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
-
-    allMotors.addAll(leftControllers);
-    allMotors.addAll(rightControllers);
+    for(SparkMAXLite motorController : allMotors) {
+      // Do NOT invert for the right side here
+      motorController.getEncoder().setVelocityConversionFactor(RobotConstants.DRIVEBASE_VELOCITY_CONVERSION_FACTOR);
+      motorController.getEncoder().setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    }
 
     // The DifferentialDrive inverts the right side automatically, however we want
-    // invert straight
-    // from the Spark so that we can still use it properly with the
-    // CANPIDController, so we need to tell
-    // differenetial drive to not invert.
+    // invert straight from the Spark so that we can still use it properly with the
+    // CANPIDController, so we need to tell differenetial drive to not invert.
     setMotorsInvert(leftControllers, false);
-    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
+    setMotorsInvert(rightControllers, true); // Invert right controllers here so they will work properly with the CANPIDController
 
     super.setMotorControllers(new MotorController[] { left1, left2 }, new MotorController[] { right1, right2 },
         false, false, .1, true);
 
-    // initialized NavX and sets Odometry
+    // initialized NavX and sets Odometry. Position is zeroed.
     navXMicro = new NavX(RobotMap.NAVX_PORT);
-
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
     initBrakeMode();
@@ -136,7 +124,7 @@ public class DriveBase extends TankDrive {
   }
 
   /**
-   * Used to initialized teleop command for the driveBase
+   * Makes the DriveBase's default command initialize teleop
    */
   public void initDefaultCommand() {
     defaultCommand = new XboxRobotOrientedDrive(this, mController);
@@ -150,7 +138,7 @@ public class DriveBase extends TankDrive {
   /**
    * Checks the health for driveBase. RED if all motors are dead, GREEN if all
    * motors are alive and navx is connected, YELLOW if a motor is disconnected or
-   * nav is not connected
+   * navX is not connected
    */
   @Override
   public HealthState checkHealth() {
@@ -161,14 +149,14 @@ public class DriveBase extends TankDrive {
    * Sets all motors to Brake Mode
    */
   public void initBrakeMode() {
-    setMotorsNeutralMode(IdleMode.kBrake);
+    setMotorsNeutralMode(allMotors, IdleMode.kBrake);
   }
 
   /**
    * Sets all motors to Coast Mode
    */
   public void initCoastMode() {
-    setMotorsNeutralMode(IdleMode.kCoast);
+    setMotorsNeutralMode(allMotors, IdleMode.kCoast);
   }
 
   /**
@@ -181,10 +169,12 @@ public class DriveBase extends TankDrive {
   }
 
   /**
-   * Sets array of motors to be of a specified mode
+   * Sets all motors in the specified list to be in the specified mode
+   * @param motors Motors to be set to a particular IdleMode
+   * @param mode The target mode (coast or brake)
    */
-  public void setMotorsNeutralMode(IdleMode mode) {
-    for (CANSparkMax m : allMotors) {
+  public void setMotorsNeutralMode(List<SparkMAXLite> motors, IdleMode mode) {
+    for (CANSparkMax m : motors) {
       m.setIdleMode(mode);
     }
   }
@@ -236,6 +226,7 @@ public class DriveBase extends TankDrive {
   }
 
   /**
+   * Sets the ramp rate for the list of motors passed in.
    * @param rampRate The ramp rate in seconds from 0 to full throttle
    */
   public void setRampRate(List<SparkMAXLite> motors, double rampRate) {
@@ -265,19 +256,13 @@ public class DriveBase extends TankDrive {
 
   @Override
   public void mustangPeriodic() {
-    SmartDashboard.putNumber("Heading", getHeading());
-    SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
-    SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
-    SmartDashboard.putNumber("pose X", getPose().getX());
-    SmartDashboard.putNumber("pose Y", getPose().getY());
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-    sendEncoderDataToDashboard();
   }
 
   /**
    * Returns the currently-estimated pose of the robot.
    *
-   * @return The pose.
+   * @return current Pose2d, calculated by odometry
    */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
@@ -291,24 +276,19 @@ public class DriveBase extends TankDrive {
   public void resetOdometry(Pose2d pose2d) {
     // zeroHeading();
     navXMicro.reset(pose2d.getRotation().getDegrees() * (RobotConstants.kNavXReversed ? -1. : 1.));
-    SmartDashboard.putNumber("starting heading", getHeading());
     odometry.resetPosition(pose2d, pose2d.getRotation());
+
+    //If encoders aren't being properly zeroed, check if lE and rE are REVLibError.kOk
     REVLibError lE = left1Encoder.setPosition(0);
     REVLibError rE = right1Encoder.setPosition(0);
-    SmartDashboard.putString("Encoder return value left", lE.toString());
-    SmartDashboard.putString("Encoder return value right", rE.toString());
-    int counter = 0;
-    while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
-      lE = left1Encoder.setPosition(0);
-      rE = right1Encoder.setPosition(0);
-      counter++;
-    }
-    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition());
-    SmartDashboard.putNumber("Encoder positions right", right1Encoder.getPosition());
   }
 
+  /**
+   * Resets the odometry to 0 and zeroes the encoders.
+   */
   public void resetOdometry() {
     zeroHeading();
+    odometry.resetPosition(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)), Rotation2d.fromDegrees(0.0));
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
   }
@@ -329,7 +309,7 @@ public class DriveBase extends TankDrive {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
 
-  public void zeroSensors() {
+  public void zeroEncoders() {
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
   }
@@ -445,6 +425,9 @@ public class DriveBase extends TankDrive {
         RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
+  /**
+   * Toggles the idle of each motor from either kBrake or kCoast to the other one.
+   */
   @Override
   public void toggleIdleMode() {
     for (SparkMAXLite motor : allMotors) {
@@ -457,9 +440,6 @@ public class DriveBase extends TankDrive {
   }
 
   public void holdPosition() {
-    // Logger.consoleLog("left setpoint: %s", getLeftSparkMaxPIDController().getR);
-    SmartDashboard.putNumber("lsetpoint", left1Encoder.getPosition());
-    SmartDashboard.putNumber("rsetpoint", right1Encoder.getPosition());
     getLeftSparkMaxPIDController().setReference(left1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
     getRightSparkMaxPIDController().setReference(right1Encoder.getPosition(), CANSparkMax.ControlType.kPosition);
   }
@@ -478,12 +458,12 @@ public class DriveBase extends TankDrive {
     SmartDashboard.putNumber("right 1 encoder", getRightPositionTicks());
     SmartDashboard.putNumber("left velocity", left1Encoder.getVelocity());
     SmartDashboard.putNumber("right velocity", right1Encoder.getVelocity());
+    SmartDashboard.putNumber("left position", left1Encoder.getPosition());
+    SmartDashboard.putNumber("right position", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("pose X", getPose().getX());
+    SmartDashboard.putNumber("pose Y", getPose().getY());
     sendEncoderDataToDashboard();
-
-    if (vision.hasTarget()) {
-      SmartDashboard.putNumber("Image Capture Time", vision.getVisionCaptureTime());
-      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
-    }
   }
 
 }
