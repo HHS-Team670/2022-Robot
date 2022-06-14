@@ -39,7 +39,11 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a H drive base.
+ * Represents the 2022 drivebase.
+ * It was originally an omni drivebase, but the hyperdrive (center module)
+ * was disabled before the first competition because of technical issues.
+ * The hyperdrive was removed altogether before the second competition,
+ * and all references to the center drive were removed.
  * 
  * @author lakshbhambhani
  */
@@ -47,7 +51,7 @@ public class DriveBase extends TankDrive {
   private Vision vision;
 
   private SparkMAXLite left1, left2, right1, right2;
-  private static RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
+  private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
   private MustangController mController;
 
