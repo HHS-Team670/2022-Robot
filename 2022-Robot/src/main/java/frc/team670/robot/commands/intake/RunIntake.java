@@ -38,16 +38,10 @@ public class RunIntake extends InstantCommand implements MustangCommand {
         this(intake, false);
     }
     
-    /*
-    starts to roll the intake
-    */
     public void initialize() {
         intake.roll(reversed);
     }
 
-    /* 
-    returns the health state
-    */
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
