@@ -5,7 +5,6 @@ import com.revrobotics.REVLibError;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-// import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -21,7 +20,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	public enum Status {
 		OFF,
 		INTAKING,
-		OUTTAKING,
+		EJECTING,
 		SHOOTING
 	}
 
@@ -63,8 +62,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		} else if (mode == Status.SHOOTING) {
 			shootConveyor();
 			timer.start();
-		} else if (mode == Status.OUTTAKING) {
-			outtakeConveyor();
+		} else if (mode == Status.EJECTING) {
+			ejectConveyor();
 			timer.start();
 		} else if (mode == Status.OFF) {
 			stopAll();
@@ -80,7 +79,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 			shooterConveyor.run(true);
 		}
 		status = Status.INTAKING;
-		// Logger.consoleLog("Conveyor Status: INTAKING");
 	}
 
 	// Helper method of runconveyor
@@ -88,17 +86,15 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		intakeConveyor.run(true);
 		shooterConveyor.run(true);
 		status = Status.SHOOTING;
-		// Logger.consoleLog("Conveyor Status: SHOOTING");
 	}
 
 	// Helper method of runconveyor
-	private void outtakeConveyor() {
+	private void ejectConveyor() {
 		intakeConveyor.run(false);
 		if(getBallCount() == 1){
 			shooterConveyor.run(false);
 		}
-		status = Status.OUTTAKING;
-		// Logger.consoleLog("Conveyor Status: OUTTAKING");
+		status = Status.EJECTING;
 	}
 
 	// Uses current state of conveyor to determine what parts need to be shut down
@@ -113,7 +109,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 					}
 				}
 				break;
-			case OUTTAKING:
+			case EJECTING:
 				if (getBallCount() == 0) {
 					if (timer.advanceIfElapsed(CONVEYOR_IDLE_CHECK_PERIOD)) {
 						stopAll();

@@ -24,7 +24,6 @@ public class AutoShootToIntake extends SequentialCommandGroup implements Mustang
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        // new ShootAllBalls(conveyorSystem, shooter),
         new ShootAllBalls(conveyorSystem, shooter, rpm),
         new RunIntakeWithConveyor(intake, conveyorSystem)
       );
@@ -36,7 +35,6 @@ public class AutoShootToIntake extends SequentialCommandGroup implements Mustang
       healthReqs.put(shooter, HealthState.GREEN);
 
       addCommands(
-        // new ShootAllBalls(conveyorSystem, shooter),
         new ShootAllBalls(conveyorSystem, shooter),
         new RunIntakeWithConveyor(intake, conveyorSystem)
       );

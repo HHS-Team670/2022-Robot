@@ -14,16 +14,13 @@ import frc.team670.robot.subsystems.Intake;
 
 
 /**
- * Runs the intake for the time required to intake one ball? Needs to be checked
- * @author Sanatan
+ * Starts the intake and sets conveyor mode to Intaking
+ * @author LakshBhambhani
  */
-
 
 public class RunIntakeWithConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-
-    // Sets up everything
 
     public RunIntakeWithConveyor(Intake intake, ConveyorSystem conveyor) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -33,8 +30,6 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
             new RunIntake(intake),
             new SetConveyorMode(conveyor, ConveyorSystem.Status.INTAKING));
     }
-
-    // Returns health state
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {

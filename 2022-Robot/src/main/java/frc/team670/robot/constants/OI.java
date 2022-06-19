@@ -14,7 +14,7 @@ import frc.team670.robot.commands.drivebase.HoldPosition;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.drivebase.AlignAngleToTargetAndShoot;
-import frc.team670.robot.commands.routines.intake.EmptyRobot;
+import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
@@ -98,7 +98,7 @@ public class OI extends OIBase {
     shooter.initDefaultCommand();
 
     // operator
-    triggerOuttaking.whenPressed(new EmptyRobot(intake, conveyorSystem, deployer));
+    triggerOuttaking.whenPressed(new EjectCargo(intake, conveyorSystem, deployer));
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
     runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     stopIntake.whenPressed(new StopIntake(intake));
