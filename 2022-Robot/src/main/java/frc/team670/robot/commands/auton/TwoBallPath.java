@@ -12,7 +12,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.ShootThenIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.constants.AutonTrajectory;
@@ -64,7 +64,7 @@ public class TwoBallPath extends SequentialCommandGroup implements MustangComman
                     new StartShooter(shooter, upperGoalRPM)
                 ), 
                 new StopDriveBase(driveBase),
-                new AutoShootToIntake(conveyor, shooter, intake, upperGoalRPM),
+                new ShootThenIntake(conveyor, shooter, intake, upperGoalRPM),
                 getTrajectoryFollowerCommand(extension, driveBase), 
                 new StopDriveBase(driveBase),
                 new ShootAllBalls(conveyor, shooter, 3800)

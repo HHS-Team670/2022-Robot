@@ -15,7 +15,9 @@ import frc.team670.robot.constants.HubType;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.utils.Logger;
 
-//only shoots when the robot is within a desired location
+/**
+ * Only shoots when the robot is within a desired location
+*/
 public class WaitToShoot extends CommandBase implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;

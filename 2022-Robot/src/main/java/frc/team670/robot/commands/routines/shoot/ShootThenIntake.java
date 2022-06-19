@@ -12,13 +12,18 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
-
-public class AutoShootToIntake extends SequentialCommandGroup implements MustangCommand {
+/**
+ * Calls ShootAllBalls, then starts the intake & sets Conveyor to Intaking mode
+ */
+public class ShootThenIntake extends SequentialCommandGroup implements MustangCommand {
 
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
   
-    public AutoShootToIntake(ConveyorSystem conveyorSystem, Shooter shooter, Intake intake, double rpm) {      
+    /**
+     * Shoots all the balls at a hard-coded RPM (Used by auton)
+     */
+    public ShootThenIntake(ConveyorSystem conveyorSystem, Shooter shooter, Intake intake, double rpm) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);
@@ -29,7 +34,10 @@ public class AutoShootToIntake extends SequentialCommandGroup implements Mustang
       );
     } 
 
-    public AutoShootToIntake(ConveyorSystem conveyorSystem, Shooter shooter, Intake intake) {      
+    /**
+     * Shoots all the balls with a vision-calculated RPM
+     */
+    public ShootThenIntake(ConveyorSystem conveyorSystem, Shooter shooter, Intake intake) {      
       healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
       healthReqs.put(conveyorSystem, HealthState.GREEN);
       healthReqs.put(shooter, HealthState.GREEN);

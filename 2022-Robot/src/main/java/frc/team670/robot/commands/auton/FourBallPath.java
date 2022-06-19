@@ -13,7 +13,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
-import frc.team670.robot.commands.routines.shoot.AutoShootToIntake;
+import frc.team670.robot.commands.routines.shoot.ShootThenIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.constants.AutonTrajectory;
@@ -66,7 +66,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                             new StartShooter(shooter, 3650)
                         ),
                         new StopDriveBase(driveBase),
-                        new AutoShootToIntake(conveyor, shooter, intake, 3650),
+                        new ShootThenIntake(conveyor, shooter, intake, 3650),
                         getTrajectoryFollowerCommand(trajectory2, driveBase),
 
                         new WaitCommand(0.5),

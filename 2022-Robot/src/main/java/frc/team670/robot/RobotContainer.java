@@ -20,7 +20,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.LEDColor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.AutonPathWithDelay;
+import frc.team670.robot.commands.auton.AutonPathWithDelay;
 import frc.team670.robot.commands.auton.TwoBallPath;
 import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.routines.CheckSubsystems;

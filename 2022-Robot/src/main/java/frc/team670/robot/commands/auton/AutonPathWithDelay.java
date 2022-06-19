@@ -1,4 +1,4 @@
-package frc.team670.robot.commands;
+package frc.team670.robot.commands.auton;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class AutonPathWithDelay extends CommandBase implements MustangCommand {
     }
 
     public void execute() {
-        SmartDashboard.putNumber("current time millis", System.currentTimeMillis());
+        //SmartDashboard.putNumber("current time millis", System.currentTimeMillis());
         if ((int) ((targetTimeMillis - System.currentTimeMillis()) / 1000.0) >= 0) {
             SmartDashboard.putNumber("countdown", (int) ((targetTimeMillis - System.currentTimeMillis()) / 1000.0));
         }

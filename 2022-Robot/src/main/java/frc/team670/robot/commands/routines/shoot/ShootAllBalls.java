@@ -17,6 +17,10 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Vision;
 
+/**
+ * Shoots all the balls in the conveyor
+ * @author LakshBhambhani, EliseVambenepe
+ */
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
 
   private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -33,7 +37,9 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         new StopShooter(shooter));
   }
 
-  //hardcode rpm
+  /**
+   * Shoots all the balls with a hardcoded RPM
+   */
   public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter, double rpm) {
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(conveyorSystem, HealthState.GREEN);
@@ -46,6 +52,9 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         new StopShooter(shooter));
   }
 
+  /**
+   * Shoots all the balls with dynamic RPM (either vision or ultrasonic)
+   */
   public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter, DriveBase driveBase, Vision vision) {
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(conveyorSystem, HealthState.GREEN);

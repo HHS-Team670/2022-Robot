@@ -25,8 +25,6 @@ public class StopAll extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    // Sets up everything
-
     public StopAll(Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
@@ -36,8 +34,6 @@ public class StopAll extends ParallelCommandGroup implements MustangCommand {
             new StopIntake(intake),
             new StopConveyor(conveyor));
     }
-
-    // Returns health state
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
