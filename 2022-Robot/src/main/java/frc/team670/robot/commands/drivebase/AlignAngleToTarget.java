@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.PIDConstantSet;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Vision;
 
@@ -22,24 +23,23 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
-    private DriveBase driveBase;
-    private Vision vision;
-    private double targetAngle;
-    private Map<MustangSubsystemBase, HealthState> healthReqs;
+    protected DriveBase driveBase;
+    protected Vision vision;
+    protected double targetAngle;
+    protected static final double MIN_RPM = 0.152;
+    protected Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    private double relativeYawToTarget;
+    protected double relativeYawToTarget;
 
     double prevCapTime;
 
-    private double ANGULAR_P = 0.014;
-    private double ANGULAR_I = 0.000001;
-    private double ANGULAR_D = 0.000003;
-    private PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+    PIDConstantSet ANGULAR = new PIDConstantSet(0.014, 0.000001, 0.000003);
+    protected PIDController turnController = new PIDController(ANGULAR.P, ANGULAR.I, ANGULAR.D);
 
-    private double rotationSpeed;
-    private double heading;
+    protected double rotationSpeed;
+    protected double heading;
 
-    private boolean foundTarget = false;
+    protected boolean foundTarget = false;
 
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         this.driveBase = driveBase;
@@ -67,7 +67,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             relativeYawToTarget = vision.getAngleToTarget();
             heading = driveBase.getHeading();
             targetAngle = heading - relativeYawToTarget;
-            turnController = new PIDController(ANGULAR_P, ANGULAR_I, ANGULAR_D);
+            turnController = new PIDController(ANGULAR.P, ANGULAR.I, ANGULAR.D);
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
@@ -85,13 +85,13 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Speed is capped at > 0.3
 
-        if (rotationSpeed > 0 && rotationSpeed < 0.15) // Minimum rotation speed (magnitude) of 0.15
-            rotationSpeed = 0.15;
-        else if (rotationSpeed < 0 && rotationSpeed > -0.15)
-            rotationSpeed = -0.15;
+        if (rotationSpeed > 0 && rotationSpeed < MIN_RPM) // Minimum rotation speed (magnitude)
+            rotationSpeed = MIN_RPM;
+        else if (rotationSpeed < 0 && rotationSpeed > -MIN_RPM)
+            rotationSpeed = -MIN_RPM;
         
 
-        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true);
+        driveBase.curvatureDrive(0, -rotationSpeed, true);
     }
 
     @Override
