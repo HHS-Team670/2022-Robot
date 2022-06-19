@@ -13,9 +13,8 @@ import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.Deployer;
 
 /**
- * Once the driver aligns with the mid bar, climbs to the mid bar. It then
- * climbs
- * to the high bar from the mid bar, letting go of the mid bar.
+ * FullClimb is constantly being run (isFinished() always returns false).
+ * When the D-pad is pressed on the controller, the climb advances by one stage
  */
 public class FullClimb extends CommandBase implements MustangCommand {
 
@@ -30,29 +29,31 @@ public class FullClimb extends CommandBase implements MustangCommand {
   public FullClimb(ClimberSystem climbers, Deployer deployer, MustangController mController) {
     Climber verticalClimber = climbers.getVerticalClimber();
     Climber diagonalClimber = climbers.getDiagonalClimber();
+    
+    this.controller = mController;
+    this.climbers = climbers;
+    
     addRequirements(verticalClimber, diagonalClimber, climbers);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(verticalClimber, HealthState.GREEN);
     healthReqs.put(diagonalClimber, HealthState.GREEN);
     healthReqs.put(climbers, HealthState.GREEN);
-    this.controller = mController;
-    this.climbers = climbers;
   }
 
-  // Called once when the command executes
   @Override
   public void execute() {
+    MustangController.DPadState state = controller.getDPadState();
+    
     if(!justAdvanced){
-      if(controller.getDPadState() == MustangController.DPadState.RIGHT){
+      if(state == MustangController.DPadState.RIGHT){
         climbers.climbProcedure(++currentStep);
         justAdvanced = true;
       } 
-      else if(controller.getDPadState() == MustangController.DPadState.LEFT){
+      else if(state == MustangController.DPadState.LEFT){
         climbers.climbProcedure(--currentStep);
         justAdvanced = true;
       }
-    }
-    else if(controller.getDPadState() == MustangController.DPadState.NEUTRAL){
+    } else if(state == MustangController.DPadState.NEUTRAL){
       justAdvanced = false;
     }
   }
