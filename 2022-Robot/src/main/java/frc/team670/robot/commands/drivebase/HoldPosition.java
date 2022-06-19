@@ -10,9 +10,9 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Rotates the drivebase to an angle
+ * Calls the drivebase's holdPosition() method until the driver attempts to start driving again
  * 
- * @author katia
+ * @author lakshbhambhani
  */
 public class HoldPosition extends CommandBase implements MustangCommand {
 
@@ -32,14 +32,6 @@ public class HoldPosition extends CommandBase implements MustangCommand {
         return healthReqs;
     }
 
-    /**
-     * Gets the relative angle to the target from camera when possible, converts to
-     * absolute angle, and sets that to the turret's target position.
-     * 
-     * If vision data is unavailable, use position on the field to determine the
-     * approximate angle to the target and account for heading to turn.
-     * 
-     */
     @Override
     public void initialize() {
         driveBase.holdPosition();
@@ -50,6 +42,7 @@ public class HoldPosition extends CommandBase implements MustangCommand {
         driveBase.getDriveTrain().feedWatchdog();
     }
 
+    // Finished when controller has input
     @Override
     public boolean isFinished() {
         if (Math.abs(driveBase.getMustangController().getRightStickX()) > 0.1
@@ -63,7 +56,6 @@ public class HoldPosition extends CommandBase implements MustangCommand {
     @Override
     public void end(boolean interrupted) {
         driveBase.releasePosition();
-        // driveBase.initDefaultCommand();
     }
 
 }
