@@ -13,7 +13,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.routines.shoot.ShootThenIntake;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
-import frc.team670.robot.commands.routines.shoot.WaitToShoot;
+import frc.team670.robot.commands.routines.shoot.WaitUntilLocationIsReached;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
@@ -29,11 +29,11 @@ import frc.team670.robot.subsystems.Shooter;
 public class BTarmac5BallTerminal extends SequentialCommandGroup implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Trajectory trajectory, trajectory2;
-    private double errorInMeters;
+    private double maxError; //meters
     private Pose2d targetPose;
 
     public BTarmac5BallTerminal(DriveBase driveBase, Intake intake, ConveyorSystem conveyor, Shooter shooter) {
-        errorInMeters = 0.5;;
+        maxError = 0.5;
         targetPose = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters;
         trajectory = PathPlanner.loadPath("BTarmac5BallTerminalP1", 2.0, 1);
         trajectory2 = PathPlanner.loadPath("BTarmac5BallTerminalP2", 2.0, 1);
@@ -53,9 +53,9 @@ public class BTarmac5BallTerminal extends SequentialCommandGroup implements Must
                     getTrajectoryFollowerCommand(trajectory2, driveBase)
                 ),
                 new SequentialCommandGroup(
-                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                    new WaitUntilLocationIsReached(driveBase, targetPose, maxError),
                     new ShootThenIntake(conveyor, shooter, intake),
-                    new WaitToShoot(driveBase, shooter, targetPose, errorInMeters),
+                    new WaitUntilLocationIsReached(driveBase, targetPose, maxError),
                     new ShootAllBalls(conveyor, shooter)
                 )
             ),
