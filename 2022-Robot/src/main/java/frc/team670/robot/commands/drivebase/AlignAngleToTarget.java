@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Vision;
 
 /**
- * Rotates the drivebase to an angle
+ * Rotates the drivebase to the vision target.
+ * If no vision target is detected during initialize(), the command exits immediately.
+ * If vision is obstructed while execute() is being run, the drivebase will turn until
+ *      it has reached the target angle calculated the last time vision saw the target.
  * 
  * @author katia
  */
@@ -78,7 +80,8 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             targetAngle = heading - relativeYawToTarget;
             foundTarget = true;
         }
-        
+        // no need to set foundTarget false, or else the robot will stop turning if vision is obstructed temporarily
+
         heading = driveBase.getHeading();
         rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Speed is capped at > 0.3
 
@@ -93,8 +96,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return (!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
-                && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1));
+        return (!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1) && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1));
     }
 
     @Override
