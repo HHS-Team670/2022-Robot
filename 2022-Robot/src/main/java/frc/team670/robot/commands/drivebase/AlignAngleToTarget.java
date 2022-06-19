@@ -78,31 +78,28 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             targetAngle = heading - relativeYawToTarget;
             foundTarget = true;
         }
+        
         heading = driveBase.getHeading();
-        rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Max speed can be
-                                                                                                   // 0.3
-        if (rotationSpeed > 0 && rotationSpeed < 0.15) {
-            rotationSpeed = 0.15;
-        } else if (rotationSpeed < 0 && rotationSpeed > -0.15) {
-            rotationSpeed = -0.15;
-        }
+        rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Speed is capped at > 0.3
 
-        Logger.consoleLog("Rotation speed: %s target angle: %s, heading %s", rotationSpeed, targetAngle, heading);
-        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true); // 0.3 is just a
-                                                                                                    // constant safe
-        // quick-turn rotational speed
+        if (rotationSpeed > 0 && rotationSpeed < 0.15) // Minimum rotation speed (magnitude) of 0.15
+            rotationSpeed = 0.15;
+        else if (rotationSpeed < 0 && rotationSpeed > -0.15)
+            rotationSpeed = -0.15;
+        
+
+        driveBase.curvatureDrive(0, heading < targetAngle ? -rotationSpeed : -rotationSpeed, true);
     }
 
     @Override
     public boolean isFinished() {
-        return (((!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
-                && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1))));
+        return (!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1)
+                && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1));
     }
 
     @Override
     public void end(boolean interrupted) {
         driveBase.stop();
-        // driveBase.initDefaultCommand();
     }
 
 }
