@@ -10,6 +10,10 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
+/**
+ * If the conveyor is intaking, it turns it off.
+ * If the conveyor is off or running in another mode, it switches to Intaking mode.
+ */
 public class ToggleConveyor extends InstantCommand implements MustangCommand {
 
     private ConveyorSystem conveyors;
@@ -30,7 +34,7 @@ public class ToggleConveyor extends InstantCommand implements MustangCommand {
         if(conveyors.getStatus() == Status.INTAKING) {
             conveyors.stopAll();
         } else {
-            conveyors.runConveyor(Status.INTAKING);
+            conveyors.setConveyorMode(Status.INTAKING);
         }
     }
     

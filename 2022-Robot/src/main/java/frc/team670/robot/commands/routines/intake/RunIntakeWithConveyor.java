@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
@@ -31,7 +31,7 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(intake),
-            new RunConveyor(conveyor, ConveyorSystem.Status.INTAKING));
+            new SetConveyorMode(conveyor, ConveyorSystem.Status.INTAKING));
     }
 
     // Returns health state

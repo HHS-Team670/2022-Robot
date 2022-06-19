@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.conveyor.RunConveyor;
+import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
@@ -33,7 +33,7 @@ public class EmptyRobot extends ParallelCommandGroup implements MustangCommand {
         addCommands(
             // new ToggleIntake(deployer),
             new RunIntake(intake, true),
-            new RunConveyor(conveyor, ConveyorSystem.Status.OUTTAKING));
+            new SetConveyorMode(conveyor, ConveyorSystem.Status.OUTTAKING));
     }
 
     // Returns health state
