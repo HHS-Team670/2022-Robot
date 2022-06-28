@@ -142,7 +142,16 @@ public class DriveBase extends TankDrive {
    */
   @Override
   public HealthState checkHealth() {
-    return checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored());
+    HealthState motorHealth = checkHealth(left1.isErrored(), left2.isErrored(), right1.isErrored(), right2.isErrored());
+    HealthState overallHealth;
+    if(motorHealth == HealthState.GREEN && navXMicro != null)
+      overallHealth = HealthState.GREEN;
+    else if(motorHealth != HealthState.RED && navXMicro == null)
+      overallHealth = HealthState.YELLOW;
+    else
+      overallHealth = motorHealth;
+
+    return overallHealth;
   }
 
   /**
