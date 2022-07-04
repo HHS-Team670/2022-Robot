@@ -53,8 +53,8 @@ public class TwoBallPath extends SequentialCommandGroup implements MustangComman
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
 
-        SmartDashboard.putNumber("Auton target x", targetPose.getX());
-        SmartDashboard.putNumber("Auton target y", targetPose.getY());
+        //SmartDashboard.putNumber("Auton target x", targetPose.getX());
+        //SmartDashboard.putNumber("Auton target y", targetPose.getY());
    
         if(extension != null) {
             addCommands(

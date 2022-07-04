@@ -265,10 +265,10 @@ public class ClimberSystem extends MustangSubsystemBase{
             setSmartMotionConstants();
 
             onBar = false;
-            target = 0.0;
+            target = 0;
             currentAtHookedCount = 0;
             this.ALLOWED_ERROR = allowedError;
-            //SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);
+            SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);
         }
 
         public void setSmartMotionConstants() {
@@ -388,6 +388,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
         @Override
         public void mustangPeriodic() {
+            debugSubsystem();
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();
