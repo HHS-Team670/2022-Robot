@@ -40,7 +40,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     }
 
-    protected static final double ALLOWED_ERR_ROTATIONS = 0.09;
+    protected static final double ALLOWED_ERR_POSITION = 1.5; // Position ranges from 0 (minimum extension) to about 108 for vertical climber, and more for diagonal.
 
     protected static final double NORMAL_OUTPUT = 20; // this should be the current output when running normally
     protected static final int SMARTMOTION_SLOT = 0;
@@ -78,12 +78,12 @@ public class ClimberSystem extends MustangSubsystemBase{
     public ClimberSystem(MustangController mController, Deployer deployer) {
         verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, SMARTMOTION_SLOT, VERTICAL_kFF, VERTICAL_kP, false,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
-                ALLOWED_ERR_ROTATIONS,
+                ALLOWED_ERR_POSITION,
                 MAX_ACC, MIN_VEL, MAX_VEL);
 
         diagonalClimber = new Climber(RobotMap.DIAGONAL_CLIMBER, SMARTMOTION_SLOT, DIAGONAL_kFF, DIAGONAL_kP, true,
                 DIAGONAL_MOTOR_ROTATIONS_AT_RETRACTED, DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
-                ALLOWED_ERR_ROTATIONS,
+                ALLOWED_ERR_POSITION,
                 MAX_ACC, MIN_VEL, MAX_VEL);
 
         verticalClimber.setName("Climber 1");
