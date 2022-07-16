@@ -18,10 +18,11 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.commands.routines.climb.FullClimb;
 import frc.team670.robot.constants.RobotMap;
 
-public class ClimberSystem extends MustangSubsystemBase{
+public class ClimberSystem extends MustangSubsystemBase {
 
     public enum Level {
-        RETRACTED(0.1), LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION), HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
+        RETRACTED(0.1), LOW(87.3), MID(VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
+        HIGH(DIAGONAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION),
         INTERMEDIATE_HIGH(DIAGONAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION),
         INTERMEDIATE_MID(VERTICAL_MOTOR_ROTATIONS_TO_PARTIAL_EXTENSION);
 
@@ -40,7 +41,8 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     }
 
-    protected static final double ALLOWED_ERR_POSITION = 1.5; // Position ranges from 0 (minimum extension) to about 108 for vertical climber, and more for diagonal.
+    protected static final double ALLOWED_ERR_POSITION = 1.5; // Position ranges from 0 (minimum extension) to about 108
+                                                              // for vertical climber, and more for diagonal.
 
     protected static final double NORMAL_OUTPUT = 20; // this should be the current output when running normally
     protected static final int SMARTMOTION_SLOT = 0;
@@ -101,27 +103,28 @@ public class ClimberSystem extends MustangSubsystemBase{
         return diagonalClimber;
     }
 
-    public boolean isRobotClimbing(){
-        return (verticalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations || Math.abs(diagonalClimber.getCurrentLevel().rotations) > Level.RETRACTED.rotations);
+    public boolean isRobotClimbing() {
+        return (verticalClimber.getCurrentLevel().rotations > Level.RETRACTED.rotations
+                || Math.abs(diagonalClimber.getCurrentLevel().rotations) > Level.RETRACTED.rotations);
     }
 
     @Override
     public HealthState checkHealth() {
         HealthState verticalClimberHealth = verticalClimber.checkHealth();
-        if(verticalClimberHealth == HealthState.GREEN && diagonalClimber.checkHealth().getId() >= HealthState.YELLOW.getId()){
+        if (verticalClimberHealth == HealthState.GREEN
+                && diagonalClimber.checkHealth().getId() >= HealthState.YELLOW.getId()) {
             return HealthState.YELLOW;
-        }
-        else{
+        } else {
             return verticalClimberHealth;
         }
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return (verticalClimber.isRunning() || diagonalClimber.isRunning());
     }
 
-    public void climbProcedure(int step){
-        switch(step){
+    public void climbProcedure(int step) {
+        switch (step) {
             case 0:
                 verticalClimber.retract();
                 diagonalClimber.retract();
@@ -155,7 +158,8 @@ public class ClimberSystem extends MustangSubsystemBase{
     @Override
     public void mustangPeriodic() {
         SmartDashboard.putNumber("ClimberSystem periodic is called", System.currentTimeMillis());
-        if(verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN && defaultInitedCounter % 100 == 0){
+        if (verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN
+                && defaultInitedCounter % 100 == 0) {
             initDefaultCommand();
         }
         defaultInitedCounter++;
@@ -166,7 +170,7 @@ public class ClimberSystem extends MustangSubsystemBase{
 
     }
 
-    public void initDefaultCommand(){
+    public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new FullClimb(this, deployer, mController));
     }
 
@@ -208,7 +212,7 @@ public class ClimberSystem extends MustangSubsystemBase{
         private SparkMaxLimitSwitch limitSwitch;
 
         private boolean isReversed;
-        private boolean isZeroedAtStart = false;
+        private boolean isZeroed = false;
 
         private Level currentLevel = Level.RETRACTED;
 
@@ -247,6 +251,8 @@ public class ClimberSystem extends MustangSubsystemBase{
 
             motor = SparkMAXFactory.buildFactorySparkMAX(motorId, Motor_Type.NEO);
             motor.setIdleMode(IdleMode.kBrake);
+
+            // soft limits are intially disabled
             motor.enableSoftLimit(SoftLimitDirection.kForward, false);
             motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
@@ -282,11 +288,11 @@ public class ClimberSystem extends MustangSubsystemBase{
                     SMARTMOTION_SLOT);
         }
 
-        private boolean isRunning(){
+        private boolean isRunning() {
             return leadEncoder.getVelocity() > 0;
         }
 
-        public Level getCurrentLevel(){
+        public Level getCurrentLevel() {
             return currentLevel;
         }
 
@@ -324,8 +330,8 @@ public class ClimberSystem extends MustangSubsystemBase{
             return onBar;
         }
 
-        public boolean isZeroed(){
-            return isZeroedAtStart;
+        public boolean isZeroed() {
+            return isZeroed;
         }
 
         private void climb(double rotations) {
@@ -333,7 +339,7 @@ public class ClimberSystem extends MustangSubsystemBase{
             leadController.setReference(rotations, CANSparkMax.ControlType.kSmartMotion, SMARTMOTION_SLOT);
         }
 
-        public void climb(Level level){
+        public void climb(Level level) {
             climb(level.getRotations());
             currentLevel = level;
         }
@@ -344,13 +350,18 @@ public class ClimberSystem extends MustangSubsystemBase{
         }
 
         public HealthState checkHealth() {
-            if (!isZeroedAtStart) {
+            if (!isZeroed) {
                 return HealthState.UNKNOWN;
             } else {
-                if ((isLimitSwitchTripped() && currentLevel != Level.RETRACTED && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
+                if ((isLimitSwitchTripped() && currentLevel != Level.RETRACTED
+                        && Math.abs(leadEncoder.getPosition()) > ALLOWED_ERROR)
                         || (motor == null || motor.getLastError() != REVLibError.kOk)) {
                     return HealthState.RED;
-                }
+                } 
+                
+                // else if (currentLevel == Level.RETRACTED && !isLimitSwitchTripped()) { // TODO: test this on robot
+                //     return HealthState.UNKNOWN;
+                // }
             }
             return HealthState.GREEN;
         }
@@ -379,40 +390,52 @@ public class ClimberSystem extends MustangSubsystemBase{
             return leadEncoder;
         }
 
-        public double getMinMotorPosition(){
+        public double getMinMotorPosition() {
             return MOTOR_ROTATIONS_AT_RETRACTED;
         }
 
-        public double getMaxMotorPosition(){
+        public double getMaxMotorPosition() {
             return MOTOR_ROTATIONS_AT_MAX_EXTENSION;
         }
 
         @Override
         public void mustangPeriodic() {
             debugSubsystem();
+
+            // if healthstate is unknown, zeroes
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();
                     leadEncoder.setPosition(0);
-                    if (Math.abs(leadEncoder.getPosition()) < 0.5) {
-                        motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-                        motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-                        if (!isReversed) {
-                            forwardLimit = SOFT_LIMIT_AT_EXTENSION;
-                            reverseLimit = SOFT_LIMIT_AT_RETRACTED;
 
-                        } else {
-                            forwardLimit = SOFT_LIMIT_AT_RETRACTED;
-                            reverseLimit = SOFT_LIMIT_AT_EXTENSION;
-                        }
-                        motor.setSoftLimit(SoftLimitDirection.kForward, (float) forwardLimit);
-                        motor.setSoftLimit(SoftLimitDirection.kReverse, (float) reverseLimit);
-                        if (Math.abs(motor.getSoftLimit(SoftLimitDirection.kForward) - forwardLimit) < 0.5
-                                && (Math.abs(motor.getSoftLimit(SoftLimitDirection.kReverse) - reverseLimit) < 0.5)) {
-                            isZeroedAtStart = true;
-                            currentLevel = Level.RETRACTED;
-                        }
+                    // after zeroing, if the position is less than 0.5, enables soft limits
+                    if (Math.abs(leadEncoder.getPosition()) < 0.5) {
+                        // motor.enableSoftLimit(SoftLimitDirection.kForward, true);
+                        // motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+                        // if (!isReversed) {
+                        // forwardLimit = SOFT_LIMIT_AT_EXTENSION;
+                        // reverseLimit = SOFT_LIMIT_AT_RETRACTED;
+
+                        // } else {
+                        // forwardLimit = SOFT_LIMIT_AT_RETRACTED;
+                        // reverseLimit = SOFT_LIMIT_AT_EXTENSION;
+                        // }
+                        // motor.setSoftLimit(SoftLimitDirection.kForward, (float) forwardLimit);
+                        // motor.setSoftLimit(SoftLimitDirection.kReverse, (float) reverseLimit);
+                        // if (Math.abs(motor.getSoftLimit(SoftLimitDirection.kForward) - forwardLimit)
+                        // < 0.5
+                        // && (Math.abs(motor.getSoftLimit(SoftLimitDirection.kReverse) - reverseLimit)
+                        // < 0.5)) {
+                        // isZeroed = true;
+                        // currentLevel = Level.RETRACTED;
+                        // }
+
+                        // isZeroed = true;
+                        // currentLevel = Level.RETRACTED;
                     }
+                    isZeroed = true;
+                    currentLevel = Level.RETRACTED;
+
                 } else {
                     run(-ClimberSystem.Climber.HOOKING_POWER);
                 }
@@ -422,12 +445,18 @@ public class ClimberSystem extends MustangSubsystemBase{
         @Override
         public void debugSubsystem() {
             SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", -1); // for this to work, uncomment
-                                                                                                    // "SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);"
-                                                                                                    // at the end of the Climber constructor
+            double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", -1); // for this to work,
+                                                                                                    // uncomment
+                                                                                                    // "SmartDashboard.putNumber("Climber
+                                                                                                    // Target on " +
+                                                                                                    // MOTOR_ID + ":",
+                                                                                                    // target);"
+                                                                                                    // at the end of the
+                                                                                                    // Climber
+                                                                                                    // constructor
             SmartDashboard.putBoolean("Climber LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
             SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            if(MOTOR_ID == 2)
+            if (MOTOR_ID == 2)
                 SmartDashboard.putNumber("C: isDebugSubsystem being called?", System.currentTimeMillis());
         }
 

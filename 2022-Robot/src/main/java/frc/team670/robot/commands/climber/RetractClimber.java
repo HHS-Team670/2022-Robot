@@ -41,8 +41,8 @@ public class RetractClimber extends CommandBase implements MustangCommand{
     if (zeroClimber) {
       return climber.isLimitSwitchTripped();
     } else {
-      // return climber.isAtTarget() || climber.isLimitSwitchTripped();
-      return climber.isLimitSwitchTripped();
+      return climber.isAtTarget() || climber.isLimitSwitchTripped();
+      // return climber.isLimitSwitchTripped();
     }
   }
 

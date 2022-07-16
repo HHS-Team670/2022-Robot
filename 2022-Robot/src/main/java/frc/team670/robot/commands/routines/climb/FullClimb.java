@@ -44,6 +44,9 @@ public class FullClimb extends CommandBase implements MustangCommand {
   public void execute() {
     MustangController.DPadState state = controller.getDPadState();
     
+    if (currentStep < 0) currentStep = 0;
+    else if (currentStep > 5) currentStep = 5;
+
     if(!justAdvanced){
       if(state == MustangController.DPadState.RIGHT){
         climbers.climbProcedure(++currentStep);
