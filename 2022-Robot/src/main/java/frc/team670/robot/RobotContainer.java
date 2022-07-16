@@ -83,6 +83,8 @@ public class RobotContainer extends RobotContainerBase {
 	}
   
 	public void robotInit() {
+		io.github.oblarg.oblog.Logger.configureLoggingAndConfig(this, false);
+
 		conveyorSystem.setShooter(shooter);
 		vision.switchLEDS(false);
 		Alliance alliance = DriverStation.getAlliance();
@@ -161,6 +163,7 @@ public class RobotContainer extends RobotContainerBase {
 	}
 
 	public void periodic() {
+		io.github.oblarg.oblog.Logger.updateEntries();
 		if (debugSubsystems) {
 			SmartDashboard.putNumber("current", pd.getTotalCurrent());
 			SmartDashboard.putNumber("energy", pd.getTotalEnergy());

@@ -9,13 +9,15 @@ import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.constants.RobotMap;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 /**
  * Represents the deployer for the intake
  * 
  * @author lakshbhambhani
  */
-public class Deployer extends SparkMaxRotatingSubsystem {
+public class Deployer extends SparkMaxRotatingSubsystem implements Loggable {
 
     private DutyCycleEncoder absEncoder;
 
@@ -30,6 +32,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private boolean rotatorSetpointCancelled = false;
 
+    @Log
     private double angle;
 
 
