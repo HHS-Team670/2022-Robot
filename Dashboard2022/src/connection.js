@@ -26,31 +26,41 @@ onkeydown = key => {
  */
 function onRobotConnection(connected) {
   var state = connected ? 'Robot connected!' : 'Robot disconnected.';
-  // console.log(state);
+  console.log(state);
   // ui.robotState.textContent = state;
-
+  if (loginShown){
+    setLogin();
+    var d2 = new Date();
+    console.log('>>>time: ' + d2.getSeconds() + '.' + d2.getMilliseconds());
+  }
   if (connected) {
     // On connect hide the connect popup
     document.body.classList.toggle('login', false);
     document.getElementById('login').style.display = "none";
     loginShown = false;
-  } else if (loginShown) {
-    setLogin();
-    var d2 = new Date();
-    console.log('>>>time: ' + d2.getSeconds() + '.' + d2.getMilliseconds());
-    console.log('-----not connected-----');
+  } else {
+    console.log("Disconnected");
   }
 }
 function setLogin() { 
   // Add Enter key handler
   // Enable the input and the button
-  address.disabled = connect.disabled = true;
+  address.disabled = connect.disabled = false;
   connect.textContent = 'Connect';
-
-  address.value = '10.6.70.2'; // while on network 670
-  console.log("address", address.value);
+  // Add the default address and select xxxx
+  address.value = '10.6.70.2';
+  address.focus();
+  address.setSelectionRange(8, 12);
   ipc.send('connect', address.value);
 }
+
+// On click try to connect and disable the input and the button
+// connect.onclick = () => {
+//   ipc.send('connect', address.value, 80);
+//   address.disabled = connect.disabled = true;
+//   connect.textContent = 'Connecting...';
+// };
+
 address.onkeydown = ev => {
   if (ev.key === 'Enter') {
     connect.click();

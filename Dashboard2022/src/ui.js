@@ -66,7 +66,6 @@ function resetAndAddDropdownListeners() {
     var paths = document.querySelectorAll(".path-dropdown .dropup-content p");
     for (let i = 0; i < paths.length; i+=1) {
         let path = paths[i];
-        console.log(path);
         path.onclick = updatePath;
     }
 }
@@ -309,30 +308,30 @@ document.getElementById("confirm-button").onclick = function() {
   sendAuton();
 };
 
-// listens for keystrokes from the external keypad and passes the corresponding values over networktables
-var keys = [];
-var allKeys = '';
-document.addEventListener("keyup", function(event) {
-    var pressed = event.key.replace("Enter", "");
-    allKeys += pressed;
-    var result = allKeys[allKeys.length - 1];
-    var nextTask = getFromMap(result);
+// // listens for keystrokes from the external keypad and passes the corresponding values over networktables
+// var keys = [];
+// var allKeys = '';
+// document.addEventListener("keyup", function(event) {
+//     var pressed = event.key.replace("Enter", "");
+//     allKeys += pressed;
+//     var result = allKeys[allKeys.length - 1];
+//     var nextTask = getFromMap(result);
 
-    console.log(nextTask);
-    allKeysPressed.push(nextTask);
+//     console.log(nextTask);
+//     allKeysPressed.push(nextTask);
 
-    // make sure the key pressed is a valid action
-    if (nextTask != null) {
-        if (nextTask.toUpperCase() === nextTask) NetworkTables.putValue('/SmartDashboard/xkeys-robotstates', nextTask);
-        else if (nextTask.includes("cancel")) NetworkTables.putValue('/SmartDashboard/xkeys-cancel', nextTask);
-        else if (nextTask.includes("shoot")) NetworkTables.putValue('/SmartDashboard/xkeys-shooter', nextTask);
-        else if (nextTask.includes("updraw")) NetworkTables.putValue('/SmartDashboard/xkeys-updraw', nextTask);
-        else if (nextTask.includes("climber")) NetworkTables.putValue('/SmartDashboard/xkeys-climber', nextTask);
-        else if (nextTask.includes("vision")) NetworkTables.putValue('/Vision/vision-data', nextTask);
-        else if (nextTask.includes("intake") || nextTask.includes("roller")) NetworkTables.putValue('/SmartDashboard/xkeys-intake', nextTask);
+//     // make sure the key pressed is a valid action
+//     if (nextTask != null) {
+//         if (nextTask.toUpperCase() === nextTask) NetworkTables.putValue('/SmartDashboard/xkeys-robotstates', nextTask);
+//         else if (nextTask.includes("cancel")) NetworkTables.putValue('/SmartDashboard/xkeys-cancel', nextTask);
+//         else if (nextTask.includes("shoot")) NetworkTables.putValue('/SmartDashboard/xkeys-shooter', nextTask);
+//         else if (nextTask.includes("updraw")) NetworkTables.putValue('/SmartDashboard/xkeys-updraw', nextTask);
+//         else if (nextTask.includes("climber")) NetworkTables.putValue('/SmartDashboard/xkeys-climber', nextTask);
+//         else if (nextTask.includes("vision")) NetworkTables.putValue('/Vision/vision-data', nextTask);
+//         else if (nextTask.includes("intake") || nextTask.includes("roller")) NetworkTables.putValue('/SmartDashboard/xkeys-intake', nextTask);
 
-    }
-});
+//     }
+// });
 
 function getFromMap(key) {
 
@@ -415,7 +414,7 @@ function getAutonFromMap() {
 }
 
 function getDelayTime() {
-    return ((parseFloat(document.querySelector('#delay input[name="delay-time"]').value)))
+    return parseFloat(document.querySelector('#delay input[name="delay-time"]').value)
 }
 
 

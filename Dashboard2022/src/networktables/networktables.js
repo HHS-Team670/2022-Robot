@@ -4,7 +4,7 @@ console.log('in networktables.js')
 
 var NetworkTables =
     (() => {
-        let keys = {}, connectionListeners = [], connected = false, globalListeners = [], keyListeners = {}, robotAddress = '10.6.70.2';
+        let keys = {}, connectionListeners = [], connected = false, globalListeners = [], keyListeners = {}, robotAddress = '127.0.0.1';
         ipc.send('ready');
         ipc.on('connected', (ev, con) => {
           console.log('networktables connected');

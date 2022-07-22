@@ -96,7 +96,7 @@ public class Intake extends MustangSubsystemBase {
         SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
         SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
         if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
-            stop();
+            stop(); 
         }
     }
 
