@@ -126,6 +126,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     public Deployer() {
         super(FLIPOUT_CONFIG);
+        setName("Deployer");
         absEncoder = new DutyCycleEncoder(RobotMap.FLIP_OUT_ABS_ENCODER);
         setEncoderPositionFromAbsolute();
         enableCoastMode();

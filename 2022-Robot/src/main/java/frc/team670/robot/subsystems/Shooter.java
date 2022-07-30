@@ -86,6 +86,7 @@ public class Shooter extends MustangSubsystemBase {
 
     public Shooter(Vision vision, MustangController mController, ConveyorSystem conveyor) {
         this.vision = vision;
+        setName("Shooter");
         controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
                 RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
 
@@ -337,6 +338,10 @@ public class Shooter extends MustangSubsystemBase {
         SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
         SmartDashboard.putNumber("Shooter speed", targetRPM);
         SmartDashboard.putNumber("Ultrasonic Distance", getUltrasonicDistanceInMeters());
+
+        double shooterVelocitySetpoint = manual_velocity;
+        double shooterVelocity = getVelocity();
+        writeToLogFile(shooterVelocitySetpoint + "," + shooterVelocity + "," + targetRPM + "," + getUltrasonicDistanceInMeters() + "," + V_P + "," + V_I + "," + V_D + "," + V_FF + "," + RAMP_RATE);
     }
 }
 

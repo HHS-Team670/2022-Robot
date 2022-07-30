@@ -236,6 +236,7 @@ public class ClimberSystem extends MustangSubsystemBase {
                 double motorRotationsAtRetracted,
                 double motorRotationsAtMaxExtension, double allowedError, double maxAcc, double minVel, double maxVel) {
 
+            setName("Climber" + motorId);
             this.kFF = ff;
             this.kP = p;
             this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
@@ -400,39 +401,12 @@ public class ClimberSystem extends MustangSubsystemBase {
 
         @Override
         public void mustangPeriodic() {
-            debugSubsystem();
 
             // if healthstate is unknown, zeroes
             if (getHealth(false) == HealthState.UNKNOWN) {
                 if (isLimitSwitchTripped()) {
                     stop();
                     leadEncoder.setPosition(0);
-
-                    // after zeroing, if the position is less than 0.5, enables soft limits
-                    if (Math.abs(leadEncoder.getPosition()) < 0.5) {
-                        // motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-                        // motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-                        // if (!isReversed) {
-                        // forwardLimit = SOFT_LIMIT_AT_EXTENSION;
-                        // reverseLimit = SOFT_LIMIT_AT_RETRACTED;
-
-                        // } else {
-                        // forwardLimit = SOFT_LIMIT_AT_RETRACTED;
-                        // reverseLimit = SOFT_LIMIT_AT_EXTENSION;
-                        // }
-                        // motor.setSoftLimit(SoftLimitDirection.kForward, (float) forwardLimit);
-                        // motor.setSoftLimit(SoftLimitDirection.kReverse, (float) reverseLimit);
-                        // if (Math.abs(motor.getSoftLimit(SoftLimitDirection.kForward) - forwardLimit)
-                        // < 0.5
-                        // && (Math.abs(motor.getSoftLimit(SoftLimitDirection.kReverse) - reverseLimit)
-                        // < 0.5)) {
-                        // isZeroed = true;
-                        // currentLevel = Level.RETRACTED;
-                        // }
-
-                        // isZeroed = true;
-                        // currentLevel = Level.RETRACTED;
-                    }
                     isZeroed = true;
                     currentLevel = Level.RETRACTED;
 

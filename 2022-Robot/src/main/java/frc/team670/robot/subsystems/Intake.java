@@ -2,7 +2,6 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -33,6 +32,7 @@ public class Intake extends MustangSubsystemBase {
     public Intake(ConveyorSystem conveyor, Deployer deployer) {
         this.conveyor = conveyor;
         this.deployer = deployer;
+        setName("Intake");
         // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
@@ -109,6 +109,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        debugSubsystem();
         if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
             stop();
         }
@@ -116,8 +117,9 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void debugSubsystem() {
-        SmartDashboard.putBoolean("Conveyor Off", conveyor.getStatus() == ConveyorSystem.Status.OFF);
-        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+        boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        int conveyorBallCount = conveyor.getBallCount();
+        super.writeToLogFile(isConveyorOff + "," + conveyorBallCount + ",");
     }
 
 }

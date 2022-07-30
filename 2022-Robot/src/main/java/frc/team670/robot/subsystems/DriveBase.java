@@ -67,6 +67,7 @@ public class DriveBase extends TankDrive {
 
   public DriveBase(MustangController mustangController) {
     this.mController = mustangController;
+    setName("Drivebase");
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
