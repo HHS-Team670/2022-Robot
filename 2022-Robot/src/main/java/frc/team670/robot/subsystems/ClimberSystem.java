@@ -88,8 +88,8 @@ public class ClimberSystem extends MustangSubsystemBase {
                 ALLOWED_ERR_POSITION,
                 MAX_ACC, MIN_VEL, MAX_VEL);
 
-        verticalClimber.setName("Climber 1");
-        diagonalClimber.setName("Climber 2");
+        verticalClimber.setName("Climber_1");
+        diagonalClimber.setName("Climber_2");
 
         this.mController = mController;
         this.deployer = deployer;
@@ -157,7 +157,6 @@ public class ClimberSystem extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("ClimberSystem periodic is called", System.currentTimeMillis());
         if (verticalClimber.checkHealth() == HealthState.GREEN && diagonalClimber.checkHealth() == HealthState.GREEN
                 && defaultInitedCounter % 100 == 0) {
             initDefaultCommand();
@@ -237,6 +236,7 @@ public class ClimberSystem extends MustangSubsystemBase {
                 double motorRotationsAtMaxExtension, double allowedError, double maxAcc, double minVel, double maxVel) {
 
             setName("Climber" + motorId);
+            setLogFileHeader("Climber Pos", "target", "isLimitSwitchTripped");
             this.kFF = ff;
             this.kP = p;
             this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;
@@ -276,7 +276,6 @@ public class ClimberSystem extends MustangSubsystemBase {
             target = 0;
             currentAtHookedCount = 0;
             this.ALLOWED_ERROR = allowedError;
-            SmartDashboard.putNumber("Climber Target on " + MOTOR_ID + ":", target);
         }
 
         public void setSmartMotionConstants() {
@@ -418,8 +417,8 @@ public class ClimberSystem extends MustangSubsystemBase {
 
         @Override
         public void debugSubsystem() {
-            SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", -1); // for this to work,
+            //SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
+            //double rotations = SmartDashboard.getNumber("Climber Target on " + MOTOR_ID + ":", -1); // for this to work,
                                                                                                     // uncomment
                                                                                                     // "SmartDashboard.putNumber("Climber
                                                                                                     // Target on " +
@@ -428,10 +427,10 @@ public class ClimberSystem extends MustangSubsystemBase {
                                                                                                     // at the end of the
                                                                                                     // Climber
                                                                                                     // constructor
-            SmartDashboard.putBoolean("Climber LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
-            SmartDashboard.putNumber("Climber Pos on " + MOTOR_ID + ":", leadEncoder.getPosition());
-            if (MOTOR_ID == 2)
-                SmartDashboard.putNumber("C: isDebugSubsystem being called?", System.currentTimeMillis());
+            //SmartDashboard.putBoolean("Climber LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
+
+
+            writeToLogFile(leadEncoder.getPosition(), target, isLimitSwitchTripped());
         }
 
     }

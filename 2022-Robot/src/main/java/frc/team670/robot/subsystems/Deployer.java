@@ -127,6 +127,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public Deployer() {
         super(FLIPOUT_CONFIG);
         setName("Deployer");
+        setLogFileHeader("abs-Encoder", "rel-encoder", "rel-encoder-vel", "angle", "isDeployed");
         absEncoder = new DutyCycleEncoder(RobotMap.FLIP_OUT_ABS_ENCODER);
         setEncoderPositionFromAbsolute();
         enableCoastMode();
@@ -275,5 +276,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("rel-Encoder-vel", this.rotator_encoder.getVelocity());
         SmartDashboard.putNumber("angle", getCurrentAngleInDegrees());
         SmartDashboard.putBoolean("isDeployed", isDeployed());
+
+        writeToLogFile(absEncoder.get(), this.rotator_encoder.getPosition(), this.rotator_encoder.getVelocity(), getCurrentAngleInDegrees(), isDeployed());
     }
 }

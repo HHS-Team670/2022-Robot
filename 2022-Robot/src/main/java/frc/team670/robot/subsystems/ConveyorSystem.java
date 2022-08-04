@@ -33,6 +33,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	public ConveyorSystem() {
 		setName("ConveyorSystem");
+		setLogFileHeader("Status");
 		intakeConveyor = new Conveyor(RobotMap.INTAKE_CONVEYOR_MOTOR, RobotMap.INTAKE_CONVEYOR_BEAMBREAK, 0.7); // This is done cuz we were seeing some cases where the ball would go past the beam break and touch the shooter wheel and so it would just blurp it out but different speeds solve it
 		shooterConveyor = new Conveyor(RobotMap.SHOOTER_CONVEYOR_MOTOR, RobotMap.SHOOTER_CONVEYOR_BEAMBREAK, 0.6);
 	}
@@ -172,6 +173,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	@Override
 	public void debugSubsystem() {
 		debugBeamBreaks();
+		writeToLogFile(status.toString());
 	}
 }
 
