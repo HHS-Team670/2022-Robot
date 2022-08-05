@@ -40,6 +40,7 @@ function onRobotConnection(connected) {
     loginShown = false;
   } else {
     console.log("Disconnected");
+    ipc.send('connect', address.value);
   }
 }
 function setLogin() { 
