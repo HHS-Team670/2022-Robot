@@ -15,6 +15,10 @@ public class RobotConstants extends RobotConstantsBase {
         // Drive Wheel Diameter in Inches
         public static final double DRIVE_BASE_WHEEL_DIAMETER = 6;
 
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.6096; //  Measure and set trackwidth
+
+        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.6096; //  Measure and set wheelbase
+
         // Inches per rotation of the NEO motors on the drivebase
         public static final double DRIVEBASE_INCHES_PER_ROTATION = 
             1 / DRIVEBASE_GEAR_RATIO * DRIVE_BASE_WHEEL_DIAMETER * Math.PI;

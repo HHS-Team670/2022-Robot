@@ -18,6 +18,27 @@ public class RobotMap {
   public static final int SPARK_MIDDLE_MOTOR = 13;
   public final static SerialPort.Port NAVX_PORT = SerialPort.Port.kUSB;
 
+  public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 25; //  Set front left module drive motor ID
+  public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 24; //  Set front left module steer motor ID
+  public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 34; //  Set front left steer encoder ID
+  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(293.466796875); //  Measure and set back right steer offset
+
+  public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 27; //  Set front right drive motor ID
+  public static final int BACK_LEFT_MODULE_STEER_MOTOR = 26; //  Set front right steer motor ID
+  public static final int BACK_LEFT_MODULE_STEER_ENCODER = 36; //  Set front right steer encoder ID
+  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(235.107421875); //  Measure and set back left steer offset
+
+  public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 23; //  Set back left drive motor ID
+  public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 22; //  Set back left steer motor ID
+  public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 32; //  Set back left steer encoder ID
+  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(354.02343750000006); //  Measure and set front right steer offset
+
+  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 21; //  Set back right drive motor ID
+  public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20; //  Set back right steer motor ID
+  public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 30; //  Set back right steer encoder ID
+  public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(133.68165088840513); //   Measure and set front left steer offset
+
+
   // Shooter
   public final static int SHOOTER_MAIN = 5;
   public final static int SHOOTER_FOLLOWER = 4;
