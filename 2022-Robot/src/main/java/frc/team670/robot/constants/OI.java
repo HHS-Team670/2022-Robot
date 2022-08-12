@@ -26,6 +26,7 @@ import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.SwerveDriveBase;
 import frc.team670.robot.subsystems.Vision;
 
 public class OI extends OIBase {
@@ -85,7 +86,8 @@ public class OI extends OIBase {
   }
 
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
-    DriveBase driveBase = (DriveBase) subsystemBases[0];
+    //DriveBase driveBase = (DriveBase) subsystemBases[0];
+    SwerveDriveBase driveBase = (SwerveDriveBase) subsystemBases[0];
     ConveyorSystem conveyorSystem = (ConveyorSystem) subsystemBases[1];
     Shooter shooter = (Shooter) subsystemBases[2];
     Intake intake = (Intake) subsystemBases[3];
@@ -102,14 +104,14 @@ public class OI extends OIBase {
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
     runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
     stopIntake.whenPressed(new StopIntake(intake));
-    alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
+    //alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
     
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
-    alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
+    //alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
     toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); //TODO: still doesn't work, gotta figure it out, angles off
-    holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); 
+    //holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); 
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));

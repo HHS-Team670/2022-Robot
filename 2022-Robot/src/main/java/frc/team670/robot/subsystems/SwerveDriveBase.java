@@ -4,24 +4,17 @@
 
 package frc.team670.robot.subsystems;
 
-import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
-import com.swervedrivespecialties.swervelib.SwerveModule;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.mustanglib.dataCollection.sensors.NavX;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.commands.drive.teleop.XboxSwerveDrive;
+import frc.team670.mustanglib.constants.SwerveConfig;
+import frc.team670.mustanglib.subsystems.drivebase.SwerveDrive;
+import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.*;
 
-public class SwerveDriveBase extends MustangSubsystemBase {
+public class SwerveDriveBase extends SwerveDrive {
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
@@ -48,166 +41,32 @@ public class SwerveDriveBase extends MustangSubsystemBase {
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
           Math.hypot(RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, RobotConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-          // Front left
-          new Translation2d(RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, RobotConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-          // Front right
-          new Translation2d(RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -RobotConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-          // Back left
-          new Translation2d(-RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, RobotConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0),
-          // Back right
-          new Translation2d(-RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -RobotConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0)
-  );
+  private MustangCommand defaultCommand;
+  private MustangController mController;
 
-  // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
-  // cause the angle reading to increase until it wraps back over to zero.
- private final NavX m_navx; 
+  public SwerveDriveBase(MustangController mustangController) {
+    super(new SwerveConfig(RobotConstants.DRIVETRAIN_TRACKWIDTH_METERS, RobotConstants.DRIVETRAIN_WHEELBASE_METERS, 
+                           MAX_VELOCITY_METERS_PER_SECOND, MAX_VOLTAGE, RobotMap.NAVX_PORT, 
+                           RobotMap.FRONT_LEFT_MODULE_DRIVE_MOTOR, RobotMap.FRONT_LEFT_MODULE_STEER_MOTOR, RobotMap.FRONT_LEFT_MODULE_STEER_ENCODER, RobotMap.FRONT_LEFT_MODULE_STEER_OFFSET, 
+                           RobotMap.FRONT_RIGHT_MODULE_DRIVE_MOTOR, RobotMap.FRONT_RIGHT_MODULE_STEER_MOTOR, RobotMap.FRONT_RIGHT_MODULE_STEER_ENCODER, RobotMap.FRONT_RIGHT_MODULE_STEER_OFFSET, 
+                           RobotMap.BACK_LEFT_MODULE_DRIVE_MOTOR, RobotMap.BACK_LEFT_MODULE_STEER_MOTOR, RobotMap.BACK_LEFT_MODULE_STEER_ENCODER, RobotMap.BACK_LEFT_MODULE_STEER_OFFSET, 
+                           RobotMap.BACK_RIGHT_MODULE_DRIVE_MOTOR, RobotMap.BACK_RIGHT_MODULE_STEER_MOTOR, RobotMap.BACK_RIGHT_MODULE_STEER_ENCODER, RobotMap.BACK_RIGHT_MODULE_STEER_OFFSET));
 
-  // These are our modules. We initialize them in the constructor.
-  private final SwerveModule m_frontLeftModule;
-  private final SwerveModule m_frontRightModule;
-  private final SwerveModule m_backLeftModule;
-  private final SwerveModule m_backRightModule;
-
-  private Rotation2d gyroOffset;
-  private double frontLeftPrevAngle, frontRightPrevAngle, backLeftPrevAngle, backRightPrevAngle;
-
-  private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
-  public SwerveDriveBase() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-    m_navx = new NavX(RobotMap.NAVX_PORT);
-    m_frontLeftModule = Mk4iSwerveModuleHelper.createNeo( 
-            // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
-            tab.getLayout("Front Left Module", BuiltInLayouts.kList)
-                    .withSize(2, 4)
-                    .withPosition(0, 0),
-            // This can either be STANDARD or FAST depending on your gear configuration
-            Mk4iSwerveModuleHelper.GearRatio.L1,
-            // This is the ID of the drive motor
-            RobotMap.FRONT_LEFT_MODULE_DRIVE_MOTOR,
-            // This is the ID of the steer motor
-            RobotMap.FRONT_LEFT_MODULE_STEER_MOTOR,
-            // This is the ID of the steer encoder
-            RobotMap.FRONT_LEFT_MODULE_STEER_ENCODER,
-            // This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
-            RobotMap.FRONT_LEFT_MODULE_STEER_OFFSET
-    );
-
-    // We will do the same for the other modules
-    m_frontRightModule = Mk4iSwerveModuleHelper.createNeo(
-            tab.getLayout("Front Right Module", BuiltInLayouts.kList)
-                    .withSize(2, 4)
-                    .withPosition(2, 0),
-            Mk4iSwerveModuleHelper.GearRatio.L1,
-            RobotMap.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
-            RobotMap.FRONT_RIGHT_MODULE_STEER_MOTOR,
-            RobotMap.FRONT_RIGHT_MODULE_STEER_ENCODER,
-            RobotMap.FRONT_RIGHT_MODULE_STEER_OFFSET
-    );
-
-    m_backLeftModule = Mk4iSwerveModuleHelper.createNeo(
-            tab.getLayout("Back Left Module", BuiltInLayouts.kList)
-                    .withSize(2, 4)
-                    .withPosition(4, 0),
-            Mk4iSwerveModuleHelper.GearRatio.L1,
-            RobotMap.BACK_LEFT_MODULE_DRIVE_MOTOR,
-            RobotMap.BACK_LEFT_MODULE_STEER_MOTOR,
-            RobotMap.BACK_LEFT_MODULE_STEER_ENCODER,
-            RobotMap.BACK_LEFT_MODULE_STEER_OFFSET
-    );
-
-    m_backRightModule = Mk4iSwerveModuleHelper.createNeo(
-            tab.getLayout("Back Right Module", BuiltInLayouts.kList)
-                    .withSize(2, 4)
-                    .withPosition(6, 0),
-            Mk4iSwerveModuleHelper.GearRatio.L1,
-            RobotMap.BACK_RIGHT_MODULE_DRIVE_MOTOR,
-            RobotMap.BACK_RIGHT_MODULE_STEER_MOTOR,
-            RobotMap.BACK_RIGHT_MODULE_STEER_ENCODER,
-            RobotMap.BACK_RIGHT_MODULE_STEER_OFFSET
-    );
+    mController = mustangController;
   }
+
 
   /**
-   * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
-   * 'forwards' direction.
+   * Makes the DriveBase's default command initialize teleop
    */
-  public void zeroGyroscope() {
-        SmartDashboard.putString("zeroGyro", "called zeroGyroscope");
-        gyroOffset = getGyroscopeRotation(false);
+  public void initDefaultCommand() {
+        defaultCommand = new XboxSwerveDrive(this, mController, MAX_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        MustangScheduler.getInstance().setDefaultCommand(this, defaultCommand);
   }
 
-  public Rotation2d getGyroscopeRotation() {
-          return getGyroscopeRotation(true);
+  public void cancelDefaultCommand() {
+        MustangScheduler.getInstance().cancel(defaultCommand);
   }
-  public Rotation2d getGyroscopeRotation(boolean offset) {
-    
-    if (m_navx.isMagnetometerCalibrated()) {
-        
-     // We will only get valid fused headings if the magnetometer is calibrated
-        if (offset) {
-                Rotation2d angle = Rotation2d.fromDegrees(-m_navx.getFusedHeading()).minus(gyroOffset);
-                
-                return angle;  
-        }
-        return Rotation2d.fromDegrees(-m_navx.getFusedHeading());
-    }
-
-    SmartDashboard.putNumber("navX", m_navx.getYawFieldCentric()- 360);
- // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-        if (offset) {      
-                return Rotation2d.fromDegrees(m_navx.getYawFieldCentric()-360).minus(gyroOffset);
-        }    
-        return Rotation2d.fromDegrees(m_navx.getYawFieldCentric()-360);
-  }
-
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    m_chassisSpeeds = chassisSpeeds;
-  }
-
-  @Override
-  public void mustangPeriodic() {
-    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-    //Testing purpose
-    for(int i = 0; i < 4; i++) {
-        SmartDashboard.putNumber("module # " + i + " speed", states[i].speedMetersPerSecond);
-        SmartDashboard.putNumber("module # " + i + " angle", states[i].angle.getRadians());
-    }
-    
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-
-    if (gyroOffset == null && !m_navx.isCalibrating()) {
-            zeroGyroscope();
-    }
-
-        double frontLeftSpeed = states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
-        double frontRightSpeed = states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
-        double backLeftSpeed = states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
-        double backRightSpeed =  states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
-
-        double frontLeftAngle = states[0].angle.getRadians();
-        double frontRightAngle = states[1].angle.getRadians();
-        double backLeftAngle = states[2].angle.getRadians();
-        double backRightAngle = states[3].angle.getRadians();
-
-        if (Math.abs(frontLeftSpeed) <= 0.01 && Math.abs(frontRightSpeed) <= 0.01 && Math.abs(backLeftSpeed) <= 0.01 && Math.abs(backRightSpeed) <= 0.01) {
-                frontLeftAngle = frontLeftPrevAngle;
-                frontRightAngle = frontRightPrevAngle;
-                backLeftAngle = backLeftPrevAngle;
-                backRightAngle = backRightPrevAngle;
-        } 
-
-        m_frontLeftModule.set(frontLeftSpeed, frontLeftAngle);
-        m_frontRightModule.set(frontRightSpeed, frontRightAngle);
-        m_backLeftModule.set(backLeftSpeed, backLeftAngle);
-        m_backRightModule.set(backRightSpeed, backRightAngle);
-
-        frontLeftPrevAngle = frontLeftAngle;
-        frontRightPrevAngle = frontRightAngle;
-        backLeftPrevAngle = backLeftAngle;
-        backRightPrevAngle = backRightAngle;
-   }
 
 @Override
 public HealthState checkHealth() {
