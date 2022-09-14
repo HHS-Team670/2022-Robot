@@ -76,7 +76,7 @@ public class ClimberSystem extends MustangSubsystemBase {
     private double defaultInitedCounter = 0;
 
     private Deployer deployer;
-
+    private int climberStep=0;
     public ClimberSystem(MustangController mController, Deployer deployer) {
         verticalClimber = new Climber(RobotMap.VERTICAL_CLIMBER, SMARTMOTION_SLOT, VERTICAL_kFF, VERTICAL_kP, false,
                 VERTICAL_MOTOR_ROTATIONS_AT_RETRACTED, VERTICAL_MOTOR_ROTATIONS_AT_MAX_EXTENSION,
@@ -153,6 +153,13 @@ public class ClimberSystem extends MustangSubsystemBase {
             default:
                 break;
         }
+    }
+    public void stepClimber(){
+        climberStep++;
+        if(climberStep>5){
+            climberStep=0;
+        }
+        climbProcedure(climberStep);
     }
 
     @Override

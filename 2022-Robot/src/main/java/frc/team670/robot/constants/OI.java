@@ -6,8 +6,11 @@ import frc.team670.mustanglib.constants.OIBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
-import frc.team670.robot.commands.climber.ExtendClimber;
-import frc.team670.robot.commands.climber.RetractClimber;
+// import frc.team670.robot.commands.climber.ExtendClimber;
+// import frc.team670.robot.commands.climber.RetractClimber;
+// import frc.team670.robot.commands.climber.StepClimber;
+import frc.team670.robot.commands.climber.*;
+
 import frc.team670.robot.commands.conveyor.ToggleConveyor;
 import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.commands.drivebase.HoldPosition;
@@ -37,8 +40,8 @@ public class OI extends OIBase {
   // operator controls
   private static JoystickButton triggerOuttaking = new JoystickButton(getOperatorController(), XboxButtons.B);
   private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
-  private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.X);
-  private static JoystickButton stopIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
+  private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
+  private static JoystickButton stepClimber = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
 
@@ -93,6 +96,7 @@ public class OI extends OIBase {
     Vision vision = (Vision) subsystemBases [5];
     Climber verticalClimber = (Climber) subsystemBases[6];
     Climber diagonalClimber = (Climber) subsystemBases[7];
+    ClimberSystem climber= (ClimberSystem)subsystemBases[8];
 
     driveBase.initDefaultCommand();
     shooter.initDefaultCommand();
@@ -101,9 +105,10 @@ public class OI extends OIBase {
     triggerOuttaking.whenPressed(new EjectCargo(intake, conveyorSystem, deployer));
     stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
     runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
-    stopIntake.whenPressed(new StopIntake(intake));
+    // stopIntake.whenPressed(new StopIntake(intake));
     alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
+    stepClimber.whenPressed(new StepClimber(climber,deployer));
     
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));

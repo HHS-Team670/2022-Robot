@@ -127,7 +127,7 @@ public class RobotContainer extends RobotContainerBase {
 		shooter.setWaitTime(2);
 		driveBase.setTeleopRampRate();
 		oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
-			diagonalClimber);
+			diagonalClimber,climbers);
 		deployer.setEncoderPositionFromAbsolute();
 		pd.setSwitchableChannel(false);
 	}
