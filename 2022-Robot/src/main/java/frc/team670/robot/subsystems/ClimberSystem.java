@@ -154,11 +154,20 @@ public class ClimberSystem extends MustangSubsystemBase {
                 break;
         }
     }
-    public void stepClimber(){
-        climberStep++;
-        if(climberStep>5){
-            climberStep=0;
+    public void stepClimber(boolean reversed){
+        if(!reversed){
+            climberStep++;
+            if(climberStep>5){
+                climberStep=0;
+            }
+        }else{
+            climberStep--;
+            if(climberStep<0){
+                climberStep=0;
+            }
         }
+        
+  
         climbProcedure(climberStep);
     }
 

@@ -21,16 +21,13 @@ public class StepClimber extends CommandBase implements MustangCommand {
 
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  private MustangController controller;
   private ClimberSystem climbers;
+  private boolean reversed;
 
-  private int currentStep = 0;
-  private boolean justAdvanced = false;
-
-  public StepClimber(ClimberSystem climbers, Deployer deployer) {
+  public StepClimber(ClimberSystem climbers, Deployer deployer,boolean reversed) {
     Climber verticalClimber = climbers.getVerticalClimber();
     Climber diagonalClimber = climbers.getDiagonalClimber();
-    
+    this.reversed=reversed;
     this.climbers = climbers;
     
     addRequirements(verticalClimber, diagonalClimber, climbers);
@@ -42,7 +39,8 @@ public class StepClimber extends CommandBase implements MustangCommand {
 
   @Override
   public void execute() {
-    climbers.stepClimber();
+    
+    climbers.stepClimber(reversed);
   }
 
 @Override

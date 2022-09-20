@@ -20,6 +20,7 @@ import frc.team670.robot.commands.routines.drivebase.AlignAngleToTargetAndShoot;
 import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
+import frc.team670.robot.commands.routines.intake.ToggleIntakeAndConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.vision.*;
@@ -41,8 +42,8 @@ public class OI extends OIBase {
 
   // operator controls
   private static JoystickButton triggerOuttaking = new JoystickButton(getOperatorController(), XboxButtons.B);
-  private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.A);
-  private static JoystickButton runIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
+  private static JoystickButton reverseClimber = new JoystickButton(getOperatorController(), XboxButtons.A);
+  private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stepClimber = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
@@ -106,12 +107,12 @@ public class OI extends OIBase {
 
     // operator
     triggerOuttaking.whenPressed(new EjectCargo(intake, conveyorSystem, deployer));
-    stopAll.whenPressed((new StopAll(intake, conveyorSystem, shooter)));
-    runIntake.whenPressed(new RunIntakeWithConveyor(intake, conveyorSystem));
+    reverseClimber.whenPressed(new StepClimber(climber,deployer,true));
+    toggleIntake.whenPressed(new ToggleIntakeAndConveyor(intake, conveyorSystem));
     // stopIntake.whenPressed(new StopIntake(intake));
     alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
-    stepClimber.whenPressed(new StepClimber(climber,deployer));
+    stepClimber.whenPressed(new StepClimber(climber,deployer,false));
     toggleLED.whenPressed(new ToggleLED( vision));
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
