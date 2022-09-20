@@ -34,6 +34,7 @@ public class Vision extends VisionSubsystemBase {
         setLogFileHeader("Distance to target", "leds", "Vision Distance", "Vision Angle (yaw)", "Image Capture Time", "Current Time Stamp");
         setCamera(RobotConstants.VISION_CAMERA_NAME);
         super.getCamera().setDriverMode(true);
+        
     }
 
     public void mustangPeriodic() {

@@ -22,6 +22,8 @@ import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.commands.routines.shoot.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.commands.vision.*;
+
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.ConveyorSystem;
@@ -44,7 +46,8 @@ public class OI extends OIBase {
   private static JoystickButton stepClimber = new JoystickButton(getOperatorController(), XboxButtons.X);
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
-
+  private static JoystickButton toggleLED = new JoystickButton(getOperatorController(), XboxButtons.BACK);
+  // private static JoystickButton turnVisionLEDsOffOp = new JoystickButton(getOperatorController(), XboxButtons.START);
   // driver controls
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
@@ -109,7 +112,8 @@ public class OI extends OIBase {
     alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
     stepClimber.whenPressed(new StepClimber(climber,deployer));
-    
+    toggleLED.whenPressed(new ToggleLED( vision));
+    // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
