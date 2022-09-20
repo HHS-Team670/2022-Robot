@@ -19,10 +19,9 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     private DutyCycleEncoder absEncoder;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.25; // From 3/31 
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO = -0.25; // From 3/31
     private static final double ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX = 0.07; // From 3/31
     private static final double ABSOLUTE_ENCODER_GEAR_RATIO = 25.76582278;
-
     private static final double MAX_FLIPOUT_ROTATIONS = -8.142;
     public static final int FLIPOUT_GEAR_RATIO = 50;
     public static final int MAX_ACCEL_DOWNWARDS = 700;
@@ -31,7 +30,6 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     private boolean rotatorSetpointCancelled = false;
 
     private double angle;
-
 
     /**
      * PID and SmartMotion constants for the flipout rotator go here.
@@ -139,12 +137,12 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     public double getAbsoluteEncoderRotations() {
         double pos = absEncoder.get();
-        while(pos > ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX + 0.1){
-           pos -= 1;
+        while (pos > ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_MAX + 0.1) {
+            pos -= 1;
         }
-        while(pos < ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO - 0.1){
+        while (pos < ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO - 0.1) {
             pos += 1;
-         }
+        }
         return pos;
     }
 
@@ -155,7 +153,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public void setEncoderPositionFromAbsolute() {
         clearSetpoint();
         rotator_encoder.setPosition(
-                -1 * (getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO) * ABSOLUTE_ENCODER_GEAR_RATIO);
+                -1 * (getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_FLIPOUT_ZERO)
+                        * ABSOLUTE_ENCODER_GEAR_RATIO);
         // Logger.consoleLog("Encoder position set: %s", rotator_encoder.getPosition());
     }
 
@@ -168,7 +167,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
 
     @Override
     public HealthState checkHealth() {
-       
+
         if (rotator.isErrored()) {
             return HealthState.RED;
         }
@@ -199,10 +198,9 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
         angleDegrees = MathUtil.clamp(angleDegrees, 0, 90);
         double currentAngle = getCurrentAngleInDegrees();
-        if(angleDegrees > currentAngle){
+        if (angleDegrees > currentAngle) {
             rotator_controller.setSmartMotionMaxAccel(MAX_ACCEL_DOWNWARDS, this.SMARTMOTION_SLOT);
-        }
-        else{
+        } else {
             rotator_controller.setSmartMotionMaxAccel(MAX_ACCEL_UPWARDS, this.SMARTMOTION_SLOT);
         }
         setSystemMotionTarget(convertFlipoutDegreesToRotations(angleDegrees));
@@ -219,25 +217,25 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
-        if(angle == 90 && getCurrentAngleInDegrees() > 70 && !rotatorSetpointCancelled){
+        if (angle == 90 && getCurrentAngleInDegrees() > 70 && !rotatorSetpointCancelled) {
             clearSetpoint();
             rotatorSetpointCancelled = true;
         }
     }
 
     public boolean hasReachedTargetPosition() {
-        boolean hasReachedTarget = (rotator.get() == 0 || MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+        boolean hasReachedTarget = (rotator.get() == 0
+                || MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
         return hasReachedTarget;
     }
 
-    public boolean deploy(boolean deploy){
+    public boolean deploy(boolean deploy) {
         angle = 0;
-        if(deploy){
+        if (deploy) {
             angle = 90;
             setRotatorMode(true);
             rotatorSetpointCancelled = false;
-        }
-        else{
+        } else {
             setRotatorMode(false);
         }
         setSystemTargetAngleInDegrees(angle);
@@ -255,9 +253,9 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         }
     }
 
-    public boolean isDeployed(){
-        return (angle==90);
-    } 
+    public boolean isDeployed() {
+        return (angle == 90);
+    }
 
     @Override
     public boolean getTimeout() {
@@ -277,6 +275,7 @@ public class Deployer extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("angle", getCurrentAngleInDegrees());
         SmartDashboard.putBoolean("isDeployed", isDeployed());
 
-        writeToLogFile(absEncoder.get(), this.rotator_encoder.getPosition(), this.rotator_encoder.getVelocity(), getCurrentAngleInDegrees(), isDeployed());
+        writeToLogFile(absEncoder.get(), this.rotator_encoder.getPosition(), this.rotator_encoder.getVelocity(),
+                getCurrentAngleInDegrees(), isDeployed());
     }
 }

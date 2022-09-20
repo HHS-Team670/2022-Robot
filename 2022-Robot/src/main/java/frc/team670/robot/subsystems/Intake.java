@@ -18,7 +18,7 @@ public class Intake extends MustangSubsystemBase {
 
     private static double intake_roller_speed = 0.6; // Experimentally found
 
-	public static final int JAMMED_COUNT_DEF = 150;
+    public static final int JAMMED_COUNT_DEF = 150;
 
     private double INTAKE_PEAK_CURRENT = 50; // Testing
 
@@ -35,6 +35,7 @@ public class Intake extends MustangSubsystemBase {
         setName("Intake");
         setLogFileHeader("isConveyorOff", "conveyorBallCount");
         // Intake roller should be inverted
+
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
         roller.setIdleMode(IdleMode.kBrake);
@@ -42,6 +43,7 @@ public class Intake extends MustangSubsystemBase {
 
     /**
      * Returns true if the roller is moving
+     * 
      * @return True if the motor is rolling
      */
     public boolean isRolling() {
@@ -50,11 +52,12 @@ public class Intake extends MustangSubsystemBase {
 
     /**
      * Runs the main intake motor in the specified direction
+     * 
      * @param reversed True for backwards, false for forwards
      */
     public void roll(boolean reversed) {
         deployer.deploy(true);
-        if(conveyor.getBallCount() == 2){
+        if (conveyor.getBallCount() == 2) {
             return;
         }
         if (reversed) {
@@ -66,7 +69,9 @@ public class Intake extends MustangSubsystemBase {
     }
 
     /**
-     * Returns true if the intake is jammed. Detected by checking if the current stays above the peak current for 4 or more cycles
+     * Returns true if the intake is jammed. Detected by checking if the current
+     * stays above the peak current for 4 or more cycles
+     * 
      * @return
      */
     public boolean isJammed() {
@@ -85,11 +90,12 @@ public class Intake extends MustangSubsystemBase {
     }
 
     /**
-     * Stops the intake rollers, retracts the intake, and stops all conveyor rollers.
+     * Stops the intake rollers, retracts the intake, and stops all conveyor
+     * rollers.
      */
     public void stop() {
         roller.stopMotor();
-        if(deployer.isDeployed()){
+        if (deployer.isDeployed()) {
             deployer.deploy(false);
         }
         conveyor.stopAll();
@@ -111,7 +117,7 @@ public class Intake extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
-        if(conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2){
+        if (conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2) {
             stop();
         }
     }
