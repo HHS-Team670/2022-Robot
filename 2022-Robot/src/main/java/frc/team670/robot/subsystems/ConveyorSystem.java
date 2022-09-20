@@ -28,7 +28,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	private Status status = Status.OFF;
 	private Timer timer = new Timer();
 	private final int CONVEYOR_IDLE_CHECK_PERIOD = 2;
-
 	private Shooter shooter;
 
 	public ConveyorSystem() {
