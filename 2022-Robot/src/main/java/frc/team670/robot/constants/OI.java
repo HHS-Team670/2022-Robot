@@ -48,7 +48,15 @@ public class OI extends OIBase {
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton toggleLED = new JoystickButton(getOperatorController(), XboxButtons.BACK);
-  // private static JoystickButton turnVisionLEDsOffOp = new JoystickButton(getOperatorController(), XboxButtons.START);
+  private static JoystickButton lowerC1 = new JoystickButton(getOperatorController(), XboxButtons.LEFT_TRIGGER_AXIS);
+  private static JoystickButton lowerC2 = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_TRIGGER_AXIS);
+  // private static JoystickButton lowerC1ForC2 = new
+  // JoystickButton(getOperatorController(), XboxButtons.B);
+  private static JoystickButton raiseC2 = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton raiseC1 = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
+
+  // private static JoystickButton turnVisionLEDsOffOp = new
+  // JoystickButton(getOperatorController(), XboxButtons.START);
   // driver controls
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
@@ -57,11 +65,16 @@ public class OI extends OIBase {
 
   // backup controls
   private static JoystickButton toggleConveyor = new JoystickButton(getBackupController(), XboxButtons.X);
-  private static JoystickButton raiseC1 = new JoystickButton(getBackupController(), XboxButtons.Y);
-  private static JoystickButton lowerC1 = new JoystickButton(getBackupController(), XboxButtons.A);
-  private static JoystickButton lowerC1ForC2 = new JoystickButton(getBackupController(), XboxButtons.B);
-  private static JoystickButton raiseC2 = new JoystickButton(getBackupController(), XboxButtons.RIGHT_BUMPER);
-  private static JoystickButton lowerC2 = new JoystickButton(getBackupController(), XboxButtons.LEFT_BUMPER);
+  // private static JoystickButton raiseC1 = new
+  // JoystickButton(getBackupController(), XboxButtons.Y);
+  // private static JoystickButton lowerC1 = new
+  // JoystickButton(getBackupController(), XboxButtons.A);
+  // private static JoystickButton lowerC1ForC2 = new
+  // JoystickButton(getBackupController(), XboxButtons.B);
+  // private static JoystickButton raiseC2 = new
+  // JoystickButton(getBackupController(), XboxButtons.RIGHT_BUMPER);
+  // private static JoystickButton lowerC2 = new
+  // JoystickButton(getBackupController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton turnVisionLEDsOn = new JoystickButton(getBackupController(), XboxButtons.BACK);
   private static JoystickButton turnVisionLEDsOff = new JoystickButton(getBackupController(), XboxButtons.START);
 
@@ -96,38 +109,40 @@ public class OI extends OIBase {
     ConveyorSystem conveyorSystem = (ConveyorSystem) subsystemBases[1];
     Shooter shooter = (Shooter) subsystemBases[2];
     Intake intake = (Intake) subsystemBases[3];
-    Deployer deployer = (Deployer) subsystemBases [4];
-    Vision vision = (Vision) subsystemBases [5];
+    Deployer deployer = (Deployer) subsystemBases[4];
+    Vision vision = (Vision) subsystemBases[5];
     Climber verticalClimber = (Climber) subsystemBases[6];
     Climber diagonalClimber = (Climber) subsystemBases[7];
-    ClimberSystem climber= (ClimberSystem)subsystemBases[8];
+    ClimberSystem climber = (ClimberSystem) subsystemBases[8];
 
     driveBase.initDefaultCommand();
     shooter.initDefaultCommand();
 
     // operator
     triggerOuttaking.whenPressed(new EjectCargo(intake, conveyorSystem, deployer));
-    reverseClimber.whenPressed(new StepClimber(climber,deployer,true));
+    reverseClimber.whenPressed(new StepClimber(climber, deployer, true));
     toggleIntake.whenPressed(new ToggleIntakeAndConveyor(intake, conveyorSystem));
     // stopIntake.whenPressed(new StopIntake(intake));
     alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
-    stepClimber.whenPressed(new StepClimber(climber,deployer,false));
-    toggleLED.whenPressed(new ToggleLED( vision));
+    stepClimber.whenPressed(new StepClimber(climber, deployer, false));
+    toggleLED.whenPressed(new ToggleLED(vision));
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
-    toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); //TODO: still doesn't work, gotta figure it out, angles off
-    holdPosition.toggleWhenPressed(new HoldPosition(driveBase)); 
+    toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); // TODO: still doesn't work, gotta
+                                                                                  // figure it out, angles off
+    holdPosition.toggleWhenPressed(new HoldPosition(driveBase));
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));
     raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.MID));
-    lowerC1.whenPressed(new RetractClimber(verticalClimber,false));
-    lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.INTERMEDIATE_MID));
+    lowerC1.whenPressed(new RetractClimber(verticalClimber, false));
+    // lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber,
+    // ClimberSystem.Level.INTERMEDIATE_MID));
     raiseC2.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
-    lowerC2.whenPressed(new RetractClimber(diagonalClimber,false));
+    lowerC2.whenPressed(new RetractClimber(diagonalClimber, false));
     turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
     turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
   }

@@ -1,15 +1,12 @@
 
-
 package frc.team670.robot.commands.vision;
 
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
 
 /**
@@ -17,12 +14,11 @@ import frc.team670.mustanglib.subsystems.VisionSubsystemBase;
  */
 public class ToggleLED extends InstantCommand implements MustangCommand {
 
-  
   VisionSubsystemBase vision;
 
   public ToggleLED(VisionSubsystemBase vision) {
     super();
-    
+
     this.vision = vision;
   }
 
