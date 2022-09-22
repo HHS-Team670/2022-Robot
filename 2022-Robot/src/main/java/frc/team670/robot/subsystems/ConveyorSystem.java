@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -160,6 +161,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 	@Override
 	public void mustangPeriodic() {
+		debugSubsystem();
 		intakeConveyor.updateConveyorState();
 		shooterConveyor.updateConveyorState();
 		checkState();
@@ -172,6 +174,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 	@Override
 	public void debugSubsystem() {
 		debugBeamBreaks();
+		SmartDashboard.putString("Conveyor state", status.toString());
 		writeToLogFile(status.toString());
 	}
 }
