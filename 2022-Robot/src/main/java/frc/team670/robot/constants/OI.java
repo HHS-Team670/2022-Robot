@@ -45,13 +45,13 @@ public class OI extends OIBase {
   private static JoystickButton reverseClimber = new JoystickButton(getOperatorController(), XboxButtons.A);
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), XboxButtons.Y);
   private static JoystickButton stepClimber = new JoystickButton(getOperatorController(), XboxButtons.X);
-  private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton toggleLED = new JoystickButton(getOperatorController(), XboxButtons.BACK);
   private static JoystickButton stopAll = new JoystickButton(getOperatorController(), XboxButtons.START);
   // private static JoystickButton turnVisionLEDsOffOp = new
   // JoystickButton(getOperatorController(), XboxButtons.START);
   // driver controls
+  private static JoystickButton alignToTarget = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
   private static JoystickButton alignAndShoot = new JoystickButton(getDriverController(), XboxButtons.LEFT_BUMPER);
