@@ -9,25 +9,28 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
 /**
- * Allows the operator to set a target RPM for the shooter without using vision or ultrasonic.
+ * Allows the operator to set a target RPM for the shooter without using vision
+ * or ultrasonic.
  * Most often used when vision malfunctions.
+ * 
  * @author LakshBhambhani
  */
-public class OverrideDynamicRPM extends CommandBase implements MustangCommand {
+public class DynamicRPMShootAllBalls extends CommandBase implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private MustangController controller;
     private Shooter shooter;
-
+    private long lastFire = 0;
     private boolean justAdvanced = false;
 
     String overridden_rpm = "NOT OVERIDDEN"; // Debugging field to check which manual rpm override is being used.
                                              // To see in SmartDashboard, uncomment the line in execute()
 
-    public OverrideDynamicRPM(Shooter shooter, MustangController mController) {
+    public DynamicRPMShootAllBalls(Shooter shooter, MustangController mController) {
         addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
@@ -45,27 +48,49 @@ public class OverrideDynamicRPM extends CommandBase implements MustangCommand {
                 shooter.setTargetRPM(1550); // low hub touching the fender
                 overridden_rpm = "LOW TOUCHING FENDER";
                 justAdvanced = true;
+                shootAllBalls();
+
             } else if (controller.getDPadState() == MustangController.DPadState.LEFT) {
                 shooter.useDynamicSpeed(false);
                 shooter.setTargetRPM(shooter.getDefaultRPM()); // default is set to work for low outside tarmac line
                 overridden_rpm = "LOW OUTSIDE TARMAC";
                 justAdvanced = true;
+                shootAllBalls();
             } else if (controller.getDPadState() == MustangController.DPadState.UP) {
                 shooter.useDynamicSpeed(false);
                 shooter.setTargetRPM(3700); // high hub for right outside tarmac line
                 overridden_rpm = "HIGH JUST OUTSIDE TARMAC";
                 justAdvanced = true;
+                shootAllBalls();
             } else if (controller.getDPadState() == MustangController.DPadState.DOWN) {
                 shooter.useDynamicSpeed(true);
                 overridden_rpm = "NOT OVERRIDED";
                 justAdvanced = true;
+                shootAllBalls();
             }
 
-            //SmartDashboard.putString("overridden-rpm", overridden_rpm);
+            // SmartDashboard.putString("overridden-rpm", overridden_rpm);
 
         } else if (controller.getDPadState() == MustangController.DPadState.NEUTRAL) {
             justAdvanced = false;
         }
+        if (System.currentTimeMillis() - lastFire > shooter.getWaitTime() * 1000) {
+            shooter.stop();
+        }
+    }
+
+    private void shootAllBalls() {
+        if (System.currentTimeMillis() - lastFire > shooter.getWaitTime() * 1000) {
+            if (shooter.isUsingDynamicSpeed()) {
+                shooter.setRPM();
+            }
+            shooter.run();
+            shooter.getConveyor().setConveyorMode(Status.SHOOTING);
+            lastFire = System.currentTimeMillis();
+        } else {
+            shooter.stop();
+        }
+
     }
 
     @Override

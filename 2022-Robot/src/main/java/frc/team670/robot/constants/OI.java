@@ -48,12 +48,11 @@ public class OI extends OIBase {
   private static JoystickButton alignToTarget = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton shootAllBalls = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
   private static JoystickButton toggleLED = new JoystickButton(getOperatorController(), XboxButtons.BACK);
-  private static JoystickButton lowerC1 = new JoystickButton(getOperatorController(), XboxButtons.LEFT_TRIGGER_AXIS);
-  private static JoystickButton lowerC2 = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_TRIGGER_AXIS);
+
   // private static JoystickButton lowerC1ForC2 = new
   // JoystickButton(getOperatorController(), XboxButtons.B);
-  private static JoystickButton raiseC2 = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
-  private static JoystickButton raiseC1 = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
+  private static JoystickButton toggleC2 = new JoystickButton(getOperatorController(), XboxButtons.RIGHT_BUMPER);
+  private static JoystickButton toggleC1 = new JoystickButton(getOperatorController(), XboxButtons.LEFT_BUMPER);
 
   // private static JoystickButton turnVisionLEDsOffOp = new
   // JoystickButton(getOperatorController(), XboxButtons.START);
@@ -127,6 +126,8 @@ public class OI extends OIBase {
     stopShooter.whenPressed(new StopShooter(shooter));
     stepClimber.whenPressed(new StepClimber(climber, deployer, false));
     toggleLED.whenPressed(new ToggleLED(vision));
+    toggleC1.whenPressed(new ToggleClimber(verticalClimber, ClimberSystem.Level.MID));
+    toggleC2.whenPressed(new ToggleClimber(diagonalClimber, ClimberSystem.Level.HIGH));
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
@@ -137,12 +138,7 @@ public class OI extends OIBase {
 
     // backup
     toggleConveyor.whenPressed(new ToggleConveyor(conveyorSystem));
-    raiseC1.whenPressed(new ExtendClimber(verticalClimber, ClimberSystem.Level.MID));
-    lowerC1.whenPressed(new RetractClimber(verticalClimber, false));
-    // lowerC1ForC2.whenPressed(new ExtendClimber(verticalClimber,
-    // ClimberSystem.Level.INTERMEDIATE_MID));
-    raiseC2.whenPressed(new ExtendClimber(diagonalClimber, ClimberSystem.Level.HIGH));
-    lowerC2.whenPressed(new RetractClimber(diagonalClimber, false));
+
     turnVisionLEDsOn.whenPressed(new SetVisionLEDs(true, vision));
     turnVisionLEDsOff.whenPressed(new SetVisionLEDs(false, vision));
   }

@@ -13,13 +13,13 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.Intake;
 
-
 /**
- * Ejects cargo out of the intake (usually used after intaking wrong color cargo)
+ * Ejects cargo out of the intake (usually used after intaking wrong color
+ * cargo)
+ * 
  * @author lakshbhambhani
  */
 
- 
 public class EjectCargo extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -29,10 +29,9 @@ public class EjectCargo extends ParallelCommandGroup implements MustangCommand {
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
-            new RunIntake(intake, true),
-            new SetConveyorMode(conveyor, ConveyorSystem.Status.EJECTING));
+                new RunIntake(intake, false),
+                new SetConveyorMode(conveyor, ConveyorSystem.Status.EJECTING));
     }
-
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
