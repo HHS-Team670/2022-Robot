@@ -99,6 +99,7 @@ function createWindow() {
     });
     ipc.on('update', (ev, mesg) => {
         console.log("inside ipc.on(update)");
+        console.log(client.isConnected());
         console.log(client.Update(mesg.id, mesg.val));
         console.log(mesg);
     });
