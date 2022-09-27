@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -18,7 +19,7 @@ import frc.team670.robot.subsystems.ConveyorSystem.Status;
  * conveyor system (rollers that bring ball from intake to outtake)
  * @author Khicken, Sanatan, Armaan, Jerry
 */
-public class Intake extends MustangSubsystemBase {
+public class IntakeColorMatcher extends MustangSubsystemBase {
 
     private static double intake_roller_speed = 0.6; // Experimentally found
 
@@ -35,9 +36,9 @@ public class Intake extends MustangSubsystemBase {
 
     private int rejectCount = 0;
 
-    private static PicoColorSensor picoColorSensor = new PicoColorSensor();
+    private static PicoColorMatcher picoColorMatcher = new PicoColorMatcher();
 
-    public Intake(ConveyorSystem conveyor, Deployer deployer) {
+    public IntakeColorMatcher(ConveyorSystem conveyor, Deployer deployer) {
         this.conveyor = conveyor;
         this.deployer = deployer;
         setName("Intake");
@@ -147,16 +148,15 @@ public class Intake extends MustangSubsystemBase {
     public void debugSubsystem() {
         boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
         int conveyorBallCount = conveyor.getBallCount();
-        boolean colorSensorConnected = picoColorSensor.isSensor0Connected();
-        PicoColorSensor.RawColor color = picoColorSensor.getRawColor0();
+        boolean colorSensorConnected = picoColorMatcher.isSensor0Connected();
+        int color = picoColorMatcher.detectColor();
         super.writeToLogFile(isConveyorOff, conveyorBallCount);
-        super.writeToLogFile(colorSensorConnected, color.blue, color.red);
+        super.writeToLogFile(colorSensorConnected, color);
     }
 
     public boolean wrongColor(){
-        PicoColorSensor.RawColor color = picoColorSensor.getRawColor0();
-        int threshold = 400; //Make a constant later
+        int color = picoColorMatcher.detectColor();
         //If we know with enough certainty it is the other alliance's color, reject it
-        return DriverStation.getAlliance() == Alliance.Blue ? color.red > color.blue + threshold : color.blue > color.red + threshold;
+        return DriverStation.getAlliance() == Alliance.Blue ? color == PicoColorMatcher.colors.RED.getColorNumber() : color == PicoColorMatcher.colors.BLUE.getColorNumber();
     }
 }
