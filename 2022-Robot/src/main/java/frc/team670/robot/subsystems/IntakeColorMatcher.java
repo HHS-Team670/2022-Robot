@@ -10,6 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
@@ -139,7 +140,7 @@ public class IntakeColorMatcher extends MustangSubsystemBase {
             }
         }
         else if(wrongColor()){
-            conveyor.setConveyorMode(Status.EJECTING); 
+            conveyor.setConveyorMode(Status.EJECTING); //Maybe use EjectCargo class?
             rejectCount = 1;
         }
     }
