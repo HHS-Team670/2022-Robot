@@ -106,6 +106,7 @@ public class Shooter extends MustangSubsystemBase {
 
         this.mController = mController;
         this.conveyor = conveyor;
+        SmartDashboard.putString("overrided-rpm", "NOT OVERRIDED");
     
     }
 

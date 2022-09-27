@@ -26,30 +26,28 @@ public class ToggleIntakeAndConveyor extends CommandBase implements MustangComma
     private double rpm;
 
     /**
-     * @param intake the intake object
+     * @param intake   the intake object
      * @param conveyor the conveyor
      * 
      */
-    public ToggleIntakeAndConveyor(Intake intake,ConveyorSystem conveyor) {
+    public ToggleIntakeAndConveyor(Intake intake, ConveyorSystem conveyor) {
         this.intake = intake;
-        this.conveyor=conveyor;
+        this.conveyor = conveyor;
         rpm = 0;
-        addRequirements(intake,conveyor);
-    
+        addRequirements(intake, conveyor);
+
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
 
     }
 
-
-
     @Override
     public void initialize() {
-        if(conveyor.isRunning()&&intake.isRolling()){
+        if (conveyor.isRunning() || intake.isRolling()) {
             conveyor.stopAll();
             intake.stop();
-        }else{
+        } else {
             conveyor.setConveyorMode(Status.INTAKING);
             intake.roll(false);
         }

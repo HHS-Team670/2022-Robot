@@ -3,6 +3,7 @@ package frc.team670.robot.commands.shooter;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -61,7 +62,7 @@ public class OverrideDynamicRPM extends CommandBase implements MustangCommand {
                 justAdvanced = true;
             }
 
-            //SmartDashboard.putString("overridden-rpm", overridden_rpm);
+            SmartDashboard.putString("overridden-rpm", overridden_rpm);
 
         } else if (controller.getDPadState() == MustangController.DPadState.NEUTRAL) {
             justAdvanced = false;

@@ -119,6 +119,7 @@ public class Intake extends MustangSubsystemBase {
         debugSubsystem();
         if (conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2) {
             stop();
+
         }
     }
 
