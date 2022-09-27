@@ -116,7 +116,7 @@ function createWindow() {
         icon: __dirname + '/../images/icon.png'
     });
     // Move window to top right of screen.
-    mainWindow.setPosition(50, 0);
+    mainWindow.setPosition(0, 0);
     // mainWindow.setPosition(940, 0);
     // Load window.
     mainWindow.loadURL(`file://${__dirname}/index.html`);
