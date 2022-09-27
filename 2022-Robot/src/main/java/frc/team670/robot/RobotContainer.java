@@ -111,7 +111,7 @@ public class RobotContainer extends RobotContainerBase {
 	public void autonomousInit() {
 		driveBase.getDriveTrain().setSafetyEnabled(false);
 		shooter.useDynamicSpeed(false);
-		shooter.setWaitTime(1);
+		shooter.setWaitTime(0.5);
 		deployer.setEncoderPositionFromAbsolute();
 		driveBase.initBrakeMode();
 		Logger.consoleLog("autoInit called");
