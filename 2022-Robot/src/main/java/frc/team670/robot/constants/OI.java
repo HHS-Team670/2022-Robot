@@ -121,9 +121,8 @@ public class OI extends OIBase {
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
-    alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
-    toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); // TODO: still doesn't work, gotta
-                                                                                  // figure it out, angles off
+    alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision, false)); // TODO: see if stop at last seen is helping or not
+    toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake));
     holdPosition.toggleWhenPressed(new HoldPosition(driveBase));
 
     // backup
