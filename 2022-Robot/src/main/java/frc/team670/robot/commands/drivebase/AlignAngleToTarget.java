@@ -26,7 +26,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     protected DriveBase driveBase;
     protected Vision vision;
     protected double targetAngle;
-    protected static final double MIN_RPM = 0.152;
+    protected static final double MIN_RPM = 0.2; // original = 0.152; TODO: find best min rpm
     protected Map<MustangSubsystemBase, HealthState> healthReqs;
 
     protected double relativeYawToTarget;
@@ -40,12 +40,22 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     protected double heading;
 
     protected boolean foundTarget = false;
+    protected boolean stopAtLastSeen;
 
     public AlignAngleToTarget(DriveBase driveBase, Vision vision) {
         this.driveBase = driveBase;
         this.vision = vision;
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
+        stopAtLastSeen = true;
+    }
+
+    public AlignAngleToTarget(DriveBase driveBase, Vision vision, boolean stopAtLastSeen) {
+        this.driveBase = driveBase;
+        this.vision = vision;
+        this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+        this.healthReqs.put(driveBase, HealthState.GREEN);
+        this.stopAtLastSeen = stopAtLastSeen;
     }
 
     @Override
@@ -83,7 +93,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
         // no need to set foundTarget false, or else the robot will stop turning if vision is obstructed temporarily
 
         heading = driveBase.getHeading();
-        rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.3, 0.3); // Speed is capped at > 0.3
+        rotationSpeed = MathUtil.clamp(turnController.calculate(heading, targetAngle), -0.5, 0.5); // original cap: 0.3; TODO: test aligning speed
 
         if (rotationSpeed > 0 && rotationSpeed < MIN_RPM) // Minimum rotation speed (magnitude)
             rotationSpeed = MIN_RPM;
