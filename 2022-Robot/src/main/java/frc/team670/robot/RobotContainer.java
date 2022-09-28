@@ -7,6 +7,8 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.util.Color;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -194,4 +196,10 @@ public class RobotContainer extends RobotContainerBase {
 		return m_auto_chooser;
 	}
 
+
+	public static void showColor(Color color){
+		float[] hsv = new float[3];
+		java.awt.Color.RGBtoHSB((int)(255*color.red), (int)(255*color.green), (int)(255*color.blue), hsv);
+		leds.solid(new LEDColor((int)(255*hsv[0]),(int)(255*hsv[1]),(int)(255*hsv[2])));
+	}
 }

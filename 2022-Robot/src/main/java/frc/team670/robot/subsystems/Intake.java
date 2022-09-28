@@ -4,11 +4,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.routines.intake.EjectCargo;
+import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
@@ -129,15 +133,18 @@ public class Intake extends MustangSubsystemBase {
             stop();
         }
 
+        RobotContainer.showColor(PicoColorMatcher.convertRawToColor(picoColorSensor.getRawColor0()));
         //If rejected keep rejecting until enough time has passed to say it has been successfull rejected
         if(rejectCount > 0){
             rejectCount++;
             if (rejectCount > 4) { //TESTING need to fine tune
                 rejectCount = 0; 
+                // new RunIntakeWithConveyor(this, conveyor);
                 conveyor.setConveyorMode(Status.INTAKING);
             }
         }
         else if(wrongColor()){
+            // new EjectCargo(this, conveyor, deployer);
             conveyor.setConveyorMode(Status.EJECTING); 
             rejectCount = 1;
         }
