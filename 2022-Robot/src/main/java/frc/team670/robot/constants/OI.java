@@ -116,11 +116,14 @@ public class OI extends OIBase {
     stopShooter.whenPressed(new StopShooter(shooter));
     stepClimber.whenPressed(new StepClimber(climber, deployer, false));
     toggleLED.whenPressed(new ToggleLED(vision));
-    stopAll.whenPressed(new StopAll(intake, conveyorSystem, shooter));
+    stopAll.whenPressed(new StopAll());
 
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
+    
+    
+
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
     toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); // TODO: still doesn't work, gotta
                                                                                   // figure it out, angles off

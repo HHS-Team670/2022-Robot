@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.conveyor.StopConveyor;
@@ -14,25 +15,29 @@ import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 
-
 /**
  * Stops all operator subsystems
+ * 
  * @author lakshbhambhani
  */
 
- 
 public class StopAll extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StopAll(Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    // public StopAll(Intake intake, ConveyorSystem conveyor, Shooter shooter) {
+    // healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    // healthReqs.put(intake, HealthState.GREEN);
+    // healthReqs.put(conveyor, HealthState.GREEN);
+    // addCommands(
+    // new StopShooter(shooter),
+    // new StopIntake(intake),
+    // new StopConveyor(conveyor));
+    // }
+
+    public StopAll() {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(intake, HealthState.GREEN);
-        healthReqs.put(conveyor, HealthState.GREEN);
-        addCommands(
-            new StopShooter(shooter),
-            new StopIntake(intake),
-            new StopConveyor(conveyor));
+        MustangScheduler.getInstance().cancelAll();
     }
 
     @Override

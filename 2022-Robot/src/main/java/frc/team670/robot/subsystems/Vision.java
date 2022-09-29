@@ -31,8 +31,8 @@ public class Vision extends VisionSubsystemBase {
     public Vision(PowerDistribution pd) {
         super(pd);
         setName("Vision");
-        setLogFileHeader("Distance to target", "leds", "Vision Distance", "Vision Angle (yaw)", "Image Capture Time", "Current Time Stamp");
-        setCamera(RobotConstants.VISION_CAMERA_NAME);
+        // setLogFileHeader("Distance to target", "leds", "Vision Distance", "Vision Angle (yaw)", "Image Capture Time", "Current Time Stamp");
+        setCameraName(RobotConstants.VISION_CAMERA_NAME);
         super.getCamera().setDriverMode(true);
         
     }
@@ -56,9 +56,9 @@ public class Vision extends VisionSubsystemBase {
             SmartDashboard.putNumber("Image Capture Time", getVisionCaptureTime());
             SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
             
-            writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), distance, angle, getVisionCaptureTime(), Timer.getFPGATimestamp());
+            // writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), distance, angle, getVisionCaptureTime(), Timer.getFPGATimestamp());
         } else {
-            writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), "No target!", "No target!", "No target!", "No target!");
+            // writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), "No target!", "No target!", "No target!", "No target!");
         }
 
         
