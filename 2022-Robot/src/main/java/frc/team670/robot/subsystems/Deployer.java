@@ -149,6 +149,8 @@ public class Deployer extends SparkMaxRotatingSubsystem {
     /**
      * Sets the rotator encoder's reference position to the constant obtained from
      * the absolute encoder corresponding to that position.
+     * //UECL :-) T34m_|\|u|\/|b
+     * // Command start the shooter
      */
     public void setEncoderPositionFromAbsolute() {
         clearSetpoint();

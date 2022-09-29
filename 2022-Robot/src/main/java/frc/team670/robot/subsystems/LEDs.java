@@ -30,6 +30,8 @@ public class LEDs extends LEDSubsystem {
     }
 
     public void setAllianceColors(LEDColor alliance, LEDColor oppositeAlliance) {
+        //CL0E -> 0boT1c5_
+        // Go to the class that deploys the intake
         this.allianceColor = alliance;
         this.oppositeAllianceColor = oppositeAlliance;
     }

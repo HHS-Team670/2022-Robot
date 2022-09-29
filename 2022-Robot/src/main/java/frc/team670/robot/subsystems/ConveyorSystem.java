@@ -178,7 +178,9 @@ public class ConveyorSystem extends MustangSubsystemBase {
 		writeToLogFile(status.toString());
 	}
 }
-
+//convery subclass
+//LUEC :0) _S1x_73\/3|
+// Find a Sequential Command Group that fires all of the balls that are inside of the conveyor
 class Conveyor {
 
 	private SparkMAXLite roller;

@@ -54,6 +54,8 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
   /**
    * Shoots all the balls with dynamic RPM (either vision or ultrasonic)
+   * //LUCE (":)")  \|7i_hg9
+   * // Find the constant class where we do Output input
    */
   public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter, DriveBase driveBase, Vision vision) {
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
