@@ -6,10 +6,13 @@ import java.util.Map;
 // import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
 // import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
@@ -23,6 +26,7 @@ public class ToggleIntakeAndConveyor extends CommandBase implements MustangComma
     private Intake intake;
     private ConveyorSystem conveyor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private Shooter shooter;
     private double rpm;
 
     /**
@@ -30,9 +34,10 @@ public class ToggleIntakeAndConveyor extends CommandBase implements MustangComma
      * @param conveyor the conveyor
      * 
      */
-    public ToggleIntakeAndConveyor(Intake intake, ConveyorSystem conveyor) {
+    public ToggleIntakeAndConveyor(Intake intake, ConveyorSystem conveyor, Shooter shooter) {
         this.intake = intake;
         this.conveyor = conveyor;
+        this.shooter = shooter;
         rpm = 0;
         addRequirements(intake, conveyor);
 
@@ -44,12 +49,17 @@ public class ToggleIntakeAndConveyor extends CommandBase implements MustangComma
 
     @Override
     public void initialize() {
-        if (conveyor.isRunning() || intake.isRolling()) {
+        /**if (conveyor.isRunning() || intake.isRolling()) {
             conveyor.stopAll();
             intake.stop();
         } else {
             conveyor.setConveyorMode(Status.INTAKING);
             intake.roll(false);
+        }*/
+        if(conveyor.isRunning() || intake.isRolling()) {
+            MustangScheduler.getInstance().schedule(new StopAll(intake, conveyor, shooter));
+        } else {
+            MustangScheduler.getInstance().schedule(new RunIntakeWithConveyor(intake, conveyor));
         }
     }
 
