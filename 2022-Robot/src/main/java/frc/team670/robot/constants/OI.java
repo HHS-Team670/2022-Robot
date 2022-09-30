@@ -110,7 +110,7 @@ public class OI extends OIBase {
     // operator
     triggerOuttaking.whenPressed(new EjectCargo(intake, conveyorSystem, deployer));
     reverseClimber.whenPressed(new StepClimber(climber, deployer, true));
-    toggleIntake.whenPressed(new ToggleIntakeAndConveyor(intake, conveyorSystem, shooter));
+    toggleIntake.whenReleased(new ToggleIntakeAndConveyor(intake, conveyorSystem, shooter));
     // stopIntake.whenPressed(new StopIntake(intake));
     alignAndShoot.whenPressed(new AlignAngleToTargetAndShoot(driveBase, vision, conveyorSystem, shooter));
     stopShooter.whenPressed(new StopShooter(shooter));
