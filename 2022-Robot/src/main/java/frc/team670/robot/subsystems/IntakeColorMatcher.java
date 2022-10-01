@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorSensor;
@@ -35,7 +36,8 @@ public class IntakeColorMatcher extends MustangSubsystemBase {
     private ConveyorSystem conveyor;
     private Deployer deployer;
 
-    private int rejectCount = 0;
+    private double EJECTION_REVERSAL_TIME = 0.1; //Still need to fine tune. 
+    private Timer ejectTimer = new Timer();
 
     private static PicoColorMatcher picoColorMatcher = new PicoColorMatcher();
 
@@ -132,16 +134,15 @@ public class IntakeColorMatcher extends MustangSubsystemBase {
         }
 
         //If rejected keep rejecting until enough time has passed to say it has been successfull rejected
-        if(rejectCount > 0){
-            rejectCount++;
-            if (rejectCount > 4) { //TESTING need to fine tune
-                rejectCount = 0; 
-                conveyor.setConveyorMode(Status.INTAKING);
-            }
+        if(ejectTimer.advanceIfElapsed(EJECTION_REVERSAL_TIME)){
+            ejectTimer.stop();
+            conveyor.setConveyorMode(Status.INTAKING);
         }
         else if(wrongColor()){
+            ejectTimer.reset();
+            ejectTimer.start();
+            roll(false);
             conveyor.setConveyorMode(Status.EJECTING); //Maybe use EjectCargo class?
-            rejectCount = 1;
         }
     }
 
