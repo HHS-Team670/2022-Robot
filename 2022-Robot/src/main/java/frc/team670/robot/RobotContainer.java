@@ -82,6 +82,8 @@ public class RobotContainer extends RobotContainerBase {
 			deployer, AutonTrajectory.BTarmacLower2Ball, HubType.UPPER));
 		SmartDashboard.putData(m_auto_chooser);
 		SmartDashboard.putNumber("Delay Time", 0);
+		oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
+			diagonalClimber,climbers);
 	}
   
 	public void robotInit() {
@@ -113,7 +115,7 @@ public class RobotContainer extends RobotContainerBase {
 	public void autonomousInit() {
 		driveBase.getDriveTrain().setSafetyEnabled(false);
 		shooter.useDynamicSpeed(false);
-		shooter.setWaitTime(1);
+		shooter.setWaitTime(0.5);
 		deployer.setEncoderPositionFromAbsolute();
 		driveBase.initBrakeMode();
 		Logger.consoleLog("autoInit called");
@@ -128,8 +130,6 @@ public class RobotContainer extends RobotContainerBase {
 		shooter.useDynamicSpeed(true);
 		shooter.setWaitTime(2);
 		driveBase.setTeleopRampRate();
-		oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
-			diagonalClimber,climbers);
 		deployer.setEncoderPositionFromAbsolute();
 		pd.setSwitchableChannel(false);
 	}
