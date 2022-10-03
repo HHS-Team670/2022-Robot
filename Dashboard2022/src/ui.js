@@ -50,8 +50,9 @@ var toggleCamera = document.querySelector('#toggle-camera');
 toggleCamera.onclick = () => {
     var cameraDiv = document.querySelector("#camera-streams")
     if (document.querySelector(".camera-stream") == null) {
-        var cameraStreams = `<image class="camera-stream" src="http://photonvision.local:1186/stream.mjpg?1646964104873"></image>
-        <image class="camera-stream" src="http://photonvision.local:1184/stream.mjpg?1646964457545"></image>`
+        // var cameraStreams = `<image class="camera-stream" src="http://photonvision.local:1186/stream.mjpg?1646964104873"></image>
+        // <image class="camera-stream" src="http://photonvision.local:1184/stream.mjpg?1646964457545"></image>`
+        var cameraStreams = `<image class="camera-stream" src="http://photonvision.local:1186/stream.mjpg?1646964104873"></image>`;
         cameraDiv.insertAdjacentHTML( 'beforeend', cameraStreams );
     } else {
         while (cameraDiv.firstChild) {
@@ -303,6 +304,11 @@ NetworkTables.addKeyListener('/SmartDashboard/overrided-rpm', (key, value) => {
             break;
     }
 });
+
+NetworkTables.addKeyListener('/SmartDashboard/aligned', (key, value) => {
+    var db = document.querySelector('.camera-stream');
+    value ? db.id = 'green-border' : db.id = '';
+})
 
 document.getElementById("confirm-button").onclick = function() {
   sendAuton();
