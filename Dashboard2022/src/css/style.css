@@ -161,6 +161,7 @@ body.login #login {
   }
 #warning-info {
     position: absolute;
+    /*top: 51vh;*/
     transform: translate(70vw, 60vh);
     /* width: 40vw;
     height: 10vh; */
@@ -168,7 +169,7 @@ body.login #login {
 }
 #robot-diagram {
     position: absolute;
-    transform: translate(50vw, 5vh);
+    transform: translate(50vw, 1vh);
     width: 50vw;
     height: 55vh;
 }
@@ -277,8 +278,9 @@ body.login #login {
 
 
 #auton-chooser {
-    position: relative;
-    transform: translate(5vw, 80vh);
+    position: absolute;
+    /*top: 51vh;*/
+    transform: translate(5vw, 72vh);
     display: flex;
     flex-direction: column wrap;
     justify-content: space-between;
@@ -336,6 +338,7 @@ fieldset#position {
 
 #current-text {
     position: absolute;
+    /*top: 51vh;*/
     width: 30vw;
     transform: translate(38vw, 70vh);
 }
@@ -370,6 +373,7 @@ fieldset#position {
 
 /* #camera-streams {
     width: 100vw;
+    height: 50vh;
     display: flex;
     flex-direction: row;
     align-items: center;

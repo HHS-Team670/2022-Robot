@@ -56,6 +56,8 @@ public class TwoBallPath extends SequentialCommandGroup implements MustangComman
         //SmartDashboard.putNumber("Auton target x", targetPose.getX());
         //SmartDashboard.putNumber("Auton target y", targetPose.getY());
    
+        extension = null; //UNCOMMENT IF YOU WANT TO USE EXTENSION! commented for debug purposes
+
         if(extension != null) {
             addCommands(
                 new ParallelCommandGroup(
@@ -75,10 +77,10 @@ public class TwoBallPath extends SequentialCommandGroup implements MustangComman
                 getTrajectoryFollowerCommand(trajectory, driveBase),
                     new SequentialCommandGroup( 
                         new RunIntakeWithConveyor(intake, conveyor),
-                        new StartShooter(shooter, upperGoalRPM),
-                        new ShootAllBalls(conveyor, shooter, upperGoalRPM)
+                        new StartShooter(shooter, upperGoalRPM)
                     )
-                )
+                ),
+                new ShootAllBalls(conveyor, shooter, upperGoalRPM)
             );
         }
         

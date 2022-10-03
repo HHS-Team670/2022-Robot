@@ -6,6 +6,7 @@ import java.util.Map;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -28,12 +29,13 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     protected Vision vision;
     protected double targetAngle;
     protected static final double MIN_RPM = 0.152;
+    private Timer timer = new Timer();
     protected Map<MustangSubsystemBase, HealthState> healthReqs;
 
     protected double relativeYawToTarget;
 
     double prevCapTime;
-
+    private int ANGLE_ALIGN_CANCEL=4;
     PIDConstantSet ANGULAR = new PIDConstantSet(0.014, 0.000001, 0.000003);
     protected PIDController turnController = new PIDController(ANGULAR.P, ANGULAR.I, ANGULAR.D);
 
@@ -72,6 +74,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
             turnController.enableContinuousInput(-180, 180);
             foundTarget = true;
         }
+        timer.start();
     }
 
     @Override
@@ -97,6 +100,11 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
+        if(timer.advanceIfElapsed(ANGLE_ALIGN_CANCEL)){
+            timer.reset();
+            timer.stop();
+            return true;
+        }
         return (!foundTarget || ((Math.abs(driveBase.getHeading() - targetAngle) <= 1) && driveBase.getWheelSpeeds().rightMetersPerSecond < 0.1));
     }
 

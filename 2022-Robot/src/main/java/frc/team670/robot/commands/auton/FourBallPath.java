@@ -46,9 +46,9 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
         this.driveBase = driveBase;
 
         if (pathName == AutonTrajectory.BTarmacHighHubTerminal) {
-            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 3, 1);
-            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 3, 1.5);
-            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP3", 3, 1.5, true);
+            trajectory = PathPlanner.loadPath("BTarmacHighHubTerminalP1", 2, 1);
+            trajectory2 = PathPlanner.loadPath("BTarmacHighHubTerminalP2", 2, 1);
+            trajectory3 = PathPlanner.loadPath("BTarmacHighHubTerminalP3", 2, 1, true);
         }
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -63,13 +63,11 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                         new ParallelCommandGroup(
                             getTrajectoryFollowerCommand(trajectory, driveBase),
                             new RunIntakeWithConveyor(intake, conveyor),
-                            new StartShooter(shooter, 3650)
+                            new StartShooter(shooter, 3575)
                         ),
                         new StopDriveBase(driveBase),
-                        new ShootThenIntake(conveyor, shooter, intake, 3650),
+                        new ShootThenIntake(conveyor, shooter, intake, 3650), //this one changes!!
                         getTrajectoryFollowerCommand(trajectory2, driveBase),
-
-                        new WaitCommand(0.5),
                         getTrajectoryFollowerCommand(trajectory3, driveBase),
                         new ParallelCommandGroup(
                             new StopDriveBase(driveBase),
