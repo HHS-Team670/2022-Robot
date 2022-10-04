@@ -7,10 +7,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorSensor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.ConveyorSystem.Status;
@@ -133,17 +135,21 @@ public class IntakeColorMatcher extends MustangSubsystemBase {
             stop();
         }
 
+        RobotContainer.showColor(PicoColorMatcher.getColor());
         //If rejected keep rejecting until enough time has passed to say it has been successfull rejected
-        if(ejectTimer.advanceIfElapsed(EJECTION_REVERSAL_TIME)){
-            ejectTimer.stop();
+        if(ejectTimer.advanceIfElapsed(EJECTION_REVERSAL_TIME)){ //hasElapsed prob fine
+            ejectTimer.stop(); 
             conveyor.setConveyorMode(Status.INTAKING);
+            // MustangScheduler.getInstance().schedule(new RunIntakeWithConveyor(this, conveyor));
         }
         else if(wrongColor()){
-            ejectTimer.reset();
-            ejectTimer.start();
+            // MustangScheduler.getInstance().schedule(new EjectCargo(this, conveyor, deployer));
             roll(false);
-            conveyor.setConveyorMode(Status.EJECTING); //Maybe use EjectCargo class?
+            conveyor.setConveyorMode(Status.EJECTING); 
+            ejectTimer.reset(); //prob not needed since i called advanceIfElapsed which should zero my start time. 
+            ejectTimer.start();
         }
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
     }
 
     @Override
