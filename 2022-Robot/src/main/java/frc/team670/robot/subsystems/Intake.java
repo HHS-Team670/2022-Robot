@@ -2,6 +2,7 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -121,6 +122,8 @@ public class Intake extends MustangSubsystemBase {
             stop();
 
         }
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+       
     }
 
     @Override

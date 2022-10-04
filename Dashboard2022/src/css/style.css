@@ -371,7 +371,7 @@ fieldset#position {
     height: 10vh;
 }
 
-/* #camera-streams {
+#camera-streams {
     width: 100vw;
     height: 50vh;
     display: flex;
@@ -383,12 +383,12 @@ fieldset#position {
 .camera-stream {
     width: 48vw;
     border: 1px solid rgb(8, 218, 8);
-} */
+}
 
-.camera-stream {
+/* .camera-stream {
     width: 60vw;
     border: 1px solid rgb(8, 218, 8);
-} 
+}  */
 
 #green-border {
     animation: blink .25s step-end infinite alternate;
