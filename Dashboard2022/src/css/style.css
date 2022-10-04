@@ -16,6 +16,13 @@ body {
     overflow: hidden;
     background: #222;
 }
+
+@keyframes blink { 
+    50% { border: 10px solid greenyellow } 
+    
+ }
+
+
 button, input[type="text"], input[type="number"], .select-container, select {
     color: white;
     background: #444;
@@ -269,6 +276,7 @@ body.login #login {
     transform: translate(0vw, 21vh);
 }
 
+
 #auton-chooser {
     position: absolute;
     /*top: 51vh;*/
@@ -375,5 +383,14 @@ fieldset#position {
 .camera-stream {
     width: 48vw;
     border: 1px solid rgb(8, 218, 8);
+}
+
+/* .camera-stream {
+    width: 60vw;
+    border: 1px solid rgb(8, 218, 8);
+}  */
+
+#green-border {
+    animation: blink .25s step-end infinite alternate;
 }
 

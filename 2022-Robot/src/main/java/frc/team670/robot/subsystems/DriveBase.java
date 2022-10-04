@@ -31,6 +31,7 @@ import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -64,6 +65,8 @@ public class DriveBase extends TankDrive {
 
   SparkMaxPIDController leftPIDController;
   SparkMaxPIDController rightPIDController;
+  
+  private double prevHeading;
 
   public DriveBase(MustangController mustangController) {
     this.mController = mustangController;
@@ -105,7 +108,7 @@ public class DriveBase extends TankDrive {
     // initialized NavX and sets Odometry. Position is zeroed.
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
-
+    prevHeading = getHeading();
     initBrakeMode();
 
     leftPIDController = left1.getPIDController();
@@ -267,6 +270,10 @@ public class DriveBase extends TankDrive {
   @Override
   public void mustangPeriodic() {
     odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+    if (SmartDashboard.getBoolean("aligned", false) && !MathUtils.doublesEqual(getHeading(), prevHeading, 0)) {
+      SmartDashboard.putBoolean("aligned", false);
+    }
+    prevHeading = getHeading();
   }
 
   /**

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -110,6 +111,7 @@ public class AlignAngleToTarget extends CommandBase implements MustangCommand {
     @Override
     public void end(boolean interrupted) {
         driveBase.stop();
+        SmartDashboard.putBoolean("aligned", true);
     }
 
 }

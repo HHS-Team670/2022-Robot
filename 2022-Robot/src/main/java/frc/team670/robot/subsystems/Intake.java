@@ -5,14 +5,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorMatcher;
 import frc.team670.mustanglib.dataCollection.sensors.PicoColorSensor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
 import frc.team670.robot.constants.RobotMap;
@@ -141,14 +142,16 @@ public class Intake extends MustangSubsystemBase {
         if(ejectTimer.advanceIfElapsed(EJECTION_REVERSAL_TIME)){ //hasElapsed prob fine
             ejectTimer.stop(); 
             conveyor.setConveyorMode(Status.INTAKING);
+            // MustangScheduler.getInstance().schedule(new RunIntakeWithConveyor(this, conveyor));
         }
         else if(wrongColor()){
-            // new EjectCargo(this, conveyor, deployer);
-            ejectTimer.reset(); //prob not needed since i called advanceIfElapsed which should zero my start time. 
-            ejectTimer.start();
+            // MustangScheduler.getInstance().schedule(new EjectCargo(this, conveyor, deployer));
             roll(false);
             conveyor.setConveyorMode(Status.EJECTING); 
+            ejectTimer.reset(); //prob not needed since i called advanceIfElapsed which should zero my start time. 
+            ejectTimer.start();
         }
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
     }
 
     @Override
