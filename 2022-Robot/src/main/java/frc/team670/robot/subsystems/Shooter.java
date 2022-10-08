@@ -341,7 +341,7 @@ public class Shooter extends MustangSubsystemBase {
 
         double shooterVelocitySetpoint = manual_velocity;
         double shooterVelocity = getVelocity();
-        writeToLogFile(shooterVelocitySetpoint, shooterVelocity, targetRPM, getUltrasonicDistanceInMeters(), V_P, V_I, V_D, V_FF, RAMP_RATE);
+        // writeToLogFile(shooterVelocitySetpoint, shooterVelocity, targetRPM, getUltrasonicDistanceInMeters(), V_P, V_I, V_D, V_FF, RAMP_RATE);
     }
 }
 

@@ -56,9 +56,9 @@ public class Vision extends VisionSubsystemBase {
             SmartDashboard.putNumber("Image Capture Time", getVisionCaptureTime());
             SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
             
-            writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), distance, angle, getVisionCaptureTime(), Timer.getFPGATimestamp());
+            // writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), distance, angle, getVisionCaptureTime(), Timer.getFPGATimestamp());
         } else {
-            writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), "No target!", "No target!", "No target!", "No target!");
+            // writeToLogFile(getDistanceToTargetM(), LEDsTurnedOn(), "No target!", "No target!", "No target!", "No target!");
         }
 
         

@@ -446,7 +446,7 @@ public class ClimberSystem extends MustangSubsystemBase {
             //SmartDashboard.putBoolean("Climber LimitSwitch for motor id " + MOTOR_ID, isLimitSwitchTripped());
 
 
-            writeToLogFile(leadEncoder.getPosition(), target, isLimitSwitchTripped());
+            // writeToLogFile(leadEncoder.getPosition(), target, isLimitSwitchTripped());
         }
 
     }
