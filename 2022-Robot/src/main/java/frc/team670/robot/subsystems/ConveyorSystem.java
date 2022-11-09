@@ -17,5 +17,31 @@ import frc.team670.robot.constants.RobotMap;
  * @author Armaan, Soham, Edward
  */
 public class ConveyorSystem extends MustangSubsystemBase {
+    Public Conveyor(){
 
+        
+        
+    }
+    public void SetC1(double speed) {
+        Conveyor1Motor.set(speed);
+
+
+
+    }
+    public void SetC2(double speed) {
+        Conveyor2Motor.set(speed);
+
+
+    }
+    @Override
+    public HealthState checkHeath(){
+        return null;
+
+    }
+    @Override
+    public void mustangPeriodic(){
+
+
+
+    }
 }
