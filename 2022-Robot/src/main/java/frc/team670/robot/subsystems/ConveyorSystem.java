@@ -18,4 +18,31 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class ConveyorSystem extends MustangSubsystemBase {
 
+    SparkMAXLite intakeConveyorMotor;
+    SparkMAXLite shooterConveyorMotor;
+
+    BeamBreak intakeConveyorBeamBreak;
+    BeamBreak shooterConveyorBeamBreak;
+
+    public ConveyorSystem() {
+        intakeConveyorMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
+        shooterConveyorMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
+        intakeConveyorBeamBreak = new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
+        shooterConveyorBeamBreak = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+    }
+
+    @Override
+    public HealthState checkHealth() {
+        return null;
+    }
+
+    @Override
+    public void mustangPeriodic() {
+        
+    }
+
+    @Override
+    public void debugSubsystem() {
+        
+    }
 }
