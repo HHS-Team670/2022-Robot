@@ -1,5 +1,7 @@
 package frc.team670.robot.subsystems;
 
+import org.ejml.ops.ConvertMatrixData;
+
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -21,12 +23,15 @@ public class ConveyorSystem extends MustangSubsystemBase {
     SparkMAXLite Conveyor2Motor;
     BeamBreak bb1;
     BeamBreak bb2;
-    public Conveyor(){
+    int ballcount;
+    String status;
+    public void Conveyor(){
         Conveyor1Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         Conveyor2Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
-        
+        this.ballcount=0;
+        this.status="intaking";
         
     }
     public void SetC1(double speed) {
@@ -41,14 +46,73 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     }
     @Override
-    public HealthState checkHeath(){
-        return null;
-
+    public HealthState checkHealth(){
+        return HealthState.GREEN;
     }
     @Override
     public void mustangPeriodic(){
-        bb1.IsTriggered;
+        ballCount();
+        motors();
+
+    }
+    public void motors(){
+        if (status.equals("shooting")){
+            if (ballcount==0){
+                Conveyor1Motor.set(0.7);
+                Conveyor2Motor.set(0);
+            }
+            else if (ballcount==1 && bb1.isTriggered()){
+                Conveyor2Motor.set(0.7);
+                Conveyor1Motor.set(0);
+            }
+            else if (ballcount==1 && bb2.isTriggered()){
+                Conveyor2Motor.set(0);
+            }
+            else if (ballcount==2){
+                Conveyor1Motor.set(0);
+                Conveyor2Motor.set(0);
+
+            }
+
+        }
+        else if (status.equals("shooting")){
+            if (ballcount==2){
+                Conveyor2Motor.set(1);
+                Conveyor1Motor.set(1);
+            }
+            else if (ballcount==1 && bb2.isTriggered()){
+                Conveyor2Motor.set(1);
+            } 
+            else if (ballcount==1 && bb1.isTriggered()){
+                Conveyor1Motor.set(1);
+                Conveyor2Motor.set(1);
+            }
+            else{
+                status="intaking";
+            }
+        }
+        else if (status.equals("shooting"));
+            Conveyor1Motor.set(0);
+            Conveyor2Motor.set(0);
+        }
 
 
+        
+    public void ballCount(){
+        if (bb1.isTriggered()==true && bb2.isTriggered()==true){
+            ballcount=2;
+            
+
+        }
+        else if ((bb1.isTriggered()==true && bb2.isTriggered()==false) || (bb1.isTriggered()==false && bb2.isTriggered()==true)){
+            ballcount=1;
+            if (bb1.isTriggered()){
+                motors();     
+            }
+        }
+        else if (bb1.isTriggered()==false && bb2.isTriggered()==false){
+            ballcount=0;
+        
+        }
     }
 }
