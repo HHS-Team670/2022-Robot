@@ -14,7 +14,7 @@ import frc.team670.robot.constants.RobotMap;
 /**
  * Connects the intake to the shooter
  * 
- * @author Kedar Haldar
+ * @author Kedar
  */
 public class ConveyorSystem extends MustangSubsystemBase {
 
@@ -113,5 +113,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
         
         // TODO Auto-generated method stub
         
+    }
+
+    public void setConveyorMode(ConveyorSystem conveyor) {
     }
 }
