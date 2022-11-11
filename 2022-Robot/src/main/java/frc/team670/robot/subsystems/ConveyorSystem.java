@@ -33,7 +33,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
         beam1= new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         beam2= new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         
-
+        setC1(10);
+        setC2(10);
         
     }
 
