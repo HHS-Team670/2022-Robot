@@ -31,7 +31,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         this.ballcount=0;
-        this.status="intaking";
+        this.status="Intaking";
         
     }
     public void SetC1(double speed) {
@@ -56,17 +56,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     }
     public void motors(){
-        if (status.equals("shooting")){
-            if (ballcount==0){
-                Conveyor1Motor.set(0.7);
+        if (status.equals("Intaking")){
+            if (ballcount==0||(ballcount==1 && bb2.isTriggered())){
+                Conveyor1Motor.set(0.5);
                 Conveyor2Motor.set(0);
             }
             else if (ballcount==1 && bb1.isTriggered()){
                 Conveyor2Motor.set(0.7);
-                Conveyor1Motor.set(0);
-            }
-            else if (ballcount==1 && bb2.isTriggered()){
-                Conveyor2Motor.set(0);
+                Conveyor1Motor.set(0.5);
             }
             else if (ballcount==2){
                 Conveyor1Motor.set(0);
@@ -76,24 +73,20 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
         }
         else if (status.equals("shooting")){
-            if (ballcount==2){
-                Conveyor2Motor.set(1);
-                Conveyor1Motor.set(1);
+            if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
+                Conveyor2Motor.set(0.7);
+                Conveyor1Motor.set(0.5);
             }
             else if (ballcount==1 && bb2.isTriggered()){
-                Conveyor2Motor.set(1);
-            } 
-            else if (ballcount==1 && bb1.isTriggered()){
-                Conveyor1Motor.set(1);
-                Conveyor2Motor.set(1);
+                Conveyor2Motor.set(0.7);
             }
             else{
                 status="intaking";
             }
         }
-        else if (status.equals("shooting"));
-            Conveyor1Motor.set(0);
-            Conveyor2Motor.set(0);
+        else if (status.equals("Ejecting"));
+            Conveyor1Motor.set(-1);
+            Conveyor2Motor.set(-1);
         }
 
 
@@ -114,5 +107,9 @@ public class ConveyorSystem extends MustangSubsystemBase {
             ballcount=0;
         
         }
+    }
+    public boolean Status(){
+        return (Conveyor1Motor.get()!=0)&&(Conveyor2Motor.get()!=0);
+
     }
 }
