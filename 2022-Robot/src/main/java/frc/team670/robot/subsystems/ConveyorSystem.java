@@ -24,8 +24,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
     BeamBreak bb2;
     int balls;
     int fix;
-    boolean fixerBB1 = false;
-    boolean fixerBB2 = false;
 
     public ConveyorSystem() {
         conveyor1Motor = SparkMAXFactory.buildSparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, SparkMAXFactory.defaultConfig,
@@ -104,7 +102,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     }
 
     public boolean isRunning(){
-        if(!(conveyor1Motor.get() == 0) || !(conveyor2Motor.get() == 0)){
+        if(conveyor1Motor.get() != 0 || conveyor2Motor.get() != 0){
             return true;
         }
         else{
@@ -119,7 +117,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     @Override
     public HealthState checkHealth() {
         // TODO Auto-generated method stub
-        return null;
+        return HealthState.GREEN;
     }
 
     @Override
@@ -127,6 +125,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
         // TODO Auto-generated method stub
 
         getBallCount();
+        stopConveyor1();
+        stopConveyor2();
     }
 
     @Override
