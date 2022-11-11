@@ -51,7 +51,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     }
     @Override
     public void mustangPeriodic(){
-        ballCount();
+        getBallCount();
         motors();
 
     }
@@ -91,7 +91,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 
         
-    public void ballCount(){
+    public void getBallCount(){
         if (bb1.isTriggered()==true && bb2.isTriggered()==true){
             ballcount=2;
             
@@ -111,5 +111,10 @@ public class ConveyorSystem extends MustangSubsystemBase {
     public boolean Status(){
         return (Conveyor1Motor.get()!=0)&&(Conveyor2Motor.get()!=0);
 
+    }
+    @Override
+    public void debugSubsystem() {
+        // TODO Auto-generated method stub
+        
     }
 }
