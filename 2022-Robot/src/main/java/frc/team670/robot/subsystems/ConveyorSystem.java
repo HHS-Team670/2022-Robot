@@ -103,6 +103,15 @@ public class ConveyorSystem extends MustangSubsystemBase {
         conveyor1Motor.stopMotor();
     }
 
+    public boolean isRunning(){
+        if(!(conveyor1Motor.get() == 0) || !(conveyor2Motor.get() == 0)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     // Add a get ball count method
     // Add independant stop methods
     //
@@ -118,7 +127,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
         // TODO Auto-generated method stub
 
         getBallCount();
-        stopConveyor2();
     }
 
     @Override

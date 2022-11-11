@@ -28,7 +28,7 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(intake),
-            new SetConveyorMode(conveyor, ConveyorSystem.Status.INTAKING));
+            new SetConveyorMode(conveyor));
     }
 
     @Override

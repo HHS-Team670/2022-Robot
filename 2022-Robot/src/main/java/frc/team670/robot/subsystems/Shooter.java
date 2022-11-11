@@ -224,7 +224,7 @@ public class Shooter extends MustangSubsystemBase {
             foundTarget = false;
         }
 
-        if(!isRPMSetCorrectly() && conveyor.getStatus() == ConveyorSystem.Status.SHOOTING){
+        if(!isRPMSetCorrectly() && conveyor.isRunning()){
             conveyor.stopAll();
         }
     }
