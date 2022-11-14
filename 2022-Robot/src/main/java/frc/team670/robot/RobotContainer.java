@@ -85,7 +85,7 @@ public class RobotContainer extends RobotContainerBase {
 	}
   
 	public void robotInit() {
-		conveyorSystem.setShooter(shooter);
+		// conveyorSystem.setShooter(shooter);
 		vision.switchLEDS(false);
 		Alliance alliance = DriverStation.getAlliance();
 		if (alliance == Alliance.Red) {
