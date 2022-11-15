@@ -20,6 +20,14 @@ public class ToggleConveyor extends InstantCommand implements MustangCommand {
 
     public ToggleConveyor(ConveyorSystem conveyors) {
         this.conveyors = conveyors;
+        if(conveyors.getStatus()==1){
+            conveyors.Stop();
+        } else{
+            conveyors.setStatus(1);
+        }
+
+
+        
     }
 
     @Override
@@ -38,5 +46,5 @@ public class ToggleConveyor extends InstantCommand implements MustangCommand {
             conveyors.shooterSpeed(0.7);
         }
     }
-    
-}
+    // just intaking
+}   
