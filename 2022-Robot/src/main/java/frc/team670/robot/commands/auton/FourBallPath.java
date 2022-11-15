@@ -73,7 +73,7 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
                             new StopDriveBase(driveBase),
                             new StartShooter(shooter, 3650)
                         ),
-                        new SetConveyorMode(conveyor)
+                        new SetConveyorMode(conveyor, 2)
             ));
     }
 

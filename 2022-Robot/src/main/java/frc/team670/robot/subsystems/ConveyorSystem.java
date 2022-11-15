@@ -24,6 +24,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     private BeamBreak intakeBeamBreak;
     private BeamBreak shooterBeamBreak;
     boolean shooterTrigger = false;
+    int status = 0;
 
 
     public ConveyorSystem(){
@@ -34,7 +35,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         shooterBeamBreak = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
     
     }
-    //Intake 
+     
     public int BallTracker(){
         int count = 0;
 
@@ -60,7 +61,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-    public void Pileup(){
+    public void Intake(){
         
         if(shooterBeamBreak.isTriggered()){
             shooterMotor.stopMotor();
@@ -80,7 +81,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         if(shooterTrigger && intakeBeamBreak.isTriggered()){
             shooterMotor.set(0.7);
             intakeMotor.set(0.7);
-            Pileup();
+            Intake();
         }
     }
 
@@ -88,6 +89,24 @@ public class ConveyorSystem extends MustangSubsystemBase {
     public void Eject(){
         shooterMotor.set(-0.7);
         intakeMotor.set(-0.7);
+    }
+
+    //Setting the status
+    public void setStatus(int x){
+        if(x == 1){
+            Intake();
+            status = 1;
+        } else if(x == 2){
+            Shoot();
+            status = 2;
+        } else if(x == 3){
+            Eject();
+            status = 3;
+        }
+    }
+    //get status
+    public int getStatus(){
+        return status;
     }
 
     public boolean isOn(){
@@ -103,7 +122,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         intakeMotor.stopMotor();
     }
 
-
+    
     
     
 
@@ -117,7 +136,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        Pileup();
+        Intake();
       
         
     }

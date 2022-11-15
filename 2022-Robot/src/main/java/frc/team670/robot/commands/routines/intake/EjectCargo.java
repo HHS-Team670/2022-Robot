@@ -30,7 +30,7 @@ public class EjectCargo extends ParallelCommandGroup implements MustangCommand {
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(intake, false),
-            new SetConveyorMode(conveyor));
+            new SetConveyorMode(conveyor, 3));
     }
 
 
