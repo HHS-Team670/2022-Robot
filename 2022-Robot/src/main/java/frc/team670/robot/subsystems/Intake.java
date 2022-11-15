@@ -34,7 +34,7 @@ public class Intake extends MustangSubsystemBase {
         this.conveyor = conveyor;
         this.deployer = deployer;
         setName("Intake");
-        // setLogFileHeader("isConveyorOff", "conveyorBallCount");
+        setLogFileHeader("isConveyorOff", "conveyorBallCount");
         // Intake roller should be inverted
 
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
@@ -118,18 +118,18 @@ public class Intake extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
-        if (conveyor.getBallCount() == 2) {
+        if (conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2) {
             stop();
 
         }
-        // SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
        
     }
 
     @Override
     public void debugSubsystem() {
-        // boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
-        // int conveyorBallCount = conveyor.getBallCount();
+        boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        int conveyorBallCount = conveyor.getBallCount();
         // super.writeToLogFile(isConveyorOff, conveyorBallCount);
     }
 
