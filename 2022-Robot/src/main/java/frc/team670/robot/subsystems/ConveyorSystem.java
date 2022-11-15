@@ -24,14 +24,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
     BeamBreak bb1;
     BeamBreak bb2;
     int ballcount;
-    String status;
+    String Status;
     public void Conveyor(){
         Conveyor1Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         Conveyor2Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         this.ballcount=0;
-        this.status="Intaking";
+        this.Status="Intaking";
         
     }
     public void SetC1(double speed) {
@@ -56,7 +56,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     }
     public void motors(){
-        if (status.equals("Intaking")){
+        if (Status.equals("Intaking")){
             if (ballcount==0||(ballcount==1 && bb2.isTriggered())){
                 Conveyor1Motor.set(0.5);
                 Conveyor2Motor.set(0);
@@ -72,7 +72,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
             }
 
         }
-        else if (status.equals("shooting")){
+        else if (Status.equals("shooting")){
             if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
                 Conveyor2Motor.set(0.7);
                 Conveyor1Motor.set(0.5);
@@ -81,10 +81,10 @@ public class ConveyorSystem extends MustangSubsystemBase {
                 Conveyor2Motor.set(0.7);
             }
             else{
-                status="intaking";
+                Status="intaking";
             }
         }
-        else if (status.equals("Ejecting"));
+        else if (Status.equals("Ejecting"));
             Conveyor1Motor.set(-1);
             Conveyor2Motor.set(-1);
         }
