@@ -208,7 +208,7 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        if (conveyor.getBallCount() > 0) {
+        if (conveyor.numOfBall() > 0) {
 
             if (!vision.LEDSOverriden())
                 vision.switchLEDS(true);
@@ -224,8 +224,8 @@ public class Shooter extends MustangSubsystemBase {
             foundTarget = false;
         }
 
-        if(!isRPMSetCorrectly() && conveyor.getStatus() == ConveyorSystem.Status.SHOOTING){
-            conveyor.stopAll();
+        if(!isRPMSetCorrectly() ){
+            conveyor.turnConveyorOff();
         }
     }
 

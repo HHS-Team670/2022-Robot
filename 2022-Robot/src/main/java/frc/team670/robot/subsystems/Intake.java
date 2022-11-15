@@ -58,7 +58,7 @@ public class Intake extends MustangSubsystemBase {
      */
     public void roll(boolean reversed) {
         deployer.deploy(true);
-        if (conveyor.getBallCount() == 2) {
+        if (conveyor.numOfBall() == 2) {
             return;
         }
         if (reversed) {
@@ -99,7 +99,7 @@ public class Intake extends MustangSubsystemBase {
         if (deployer.isDeployed()) {
             deployer.deploy(false);
         }
-        conveyor.stopAll();
+        conveyor.turnConveyorOff();
     }
 
     /**
@@ -118,18 +118,18 @@ public class Intake extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
-        if (conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2) {
+        if (!conveyor.isRunning() && conveyor.numOfBall() == 2) {
             stop();
 
         }
-        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.getBallCount());
+        SmartDashboard.putNumber("Conveyor Ball Count", conveyor.numOfBall());
        
     }
 
     @Override
     public void debugSubsystem() {
-        boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
-        int conveyorBallCount = conveyor.getBallCount();
+        // boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        // int conveyorBallCount = conveyor.getBallCount();
         // super.writeToLogFile(isConveyorOff, conveyorBallCount);
     }
 
