@@ -24,6 +24,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     BeamBreak bb2;
     int balls;
     int fix;
+    String status;
 
     public ConveyorSystem() {
         conveyor1Motor = SparkMAXFactory.buildSparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, SparkMAXFactory.defaultConfig,
@@ -109,6 +110,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
             return false;
         }
     }
+
 //if ze ball is leaving then shooter
 //if intaking
 //ejecting
@@ -119,17 +121,18 @@ public class ConveyorSystem extends MustangSubsystemBase {
  * create methods similar to stopConveyor for each part
  */
     public void setStatus(String statusString){
-        if (statusString == "Ejecting"){
+        this.status = statusString;
+        if (statusString.equals("Ejecting")){
             if(getBallCount() > 0){
                 setC1(-0.7);
                 setC2(-0.7);
             }
-        }else if(statusString == "Shooting"){
+        }else if(statusString.equals( "Shooting")){
             if(getBallCount() > 0){
                 setC2(0.7);
                 setC1(0.7);
             }
-        }else if(statusString == "Intaking"){
+        }else if(statusString.equals("Intaking")){
             if(getBallCount() < 2){
                 setC2(0.7);
                 setC1(0.7);
@@ -150,7 +153,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-
+//if intaking do this
+//if shooting or ejecting change //use if statements to change
         getBallCount();
         stopConveyor1();
         stopConveyor2();
