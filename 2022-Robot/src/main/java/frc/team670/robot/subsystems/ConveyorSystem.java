@@ -40,7 +40,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     public void setC2(double speed) {
         conveyor2Motor.set(speed);
-    }
+    }  
 
     // What if the if
     // statement is triggered multiple times,
@@ -107,6 +107,33 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
         else{
             return false;
+        }
+    }
+//if ze ball is leaving then shooter
+//if intaking
+//ejecting
+/*
+ * make seperate methods for turning things on & off
+ * ex: if Intake.isEmpty();
+ * do whatever
+ * create methods similar to stopConveyor for each part
+ */
+    public void setStatus(String statusString){
+        if (statusString == "Ejecting"){
+            if(getBallCount() > 0){
+                setC1(-0.7);
+                setC2(-0.7);
+            }
+        }else if(statusString == "Shooting"){
+            if(getBallCount() > 0){
+                setC2(0.7);
+                setC1(0.7);
+            }
+        }else if(statusString == "Intaking"){
+            if(getBallCount() < 2){
+                setC2(0.7);
+                setC1(0.7);
+            }
         }
     }
 
