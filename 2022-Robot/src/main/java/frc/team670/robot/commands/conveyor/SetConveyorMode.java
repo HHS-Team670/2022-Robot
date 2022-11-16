@@ -22,7 +22,8 @@ public class SetConveyorMode extends InstantCommand implements MustangCommand {
 
   private ConveyorSystem conveyors;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
-  private ConveyorSystem.Status mode;
+  private String mode;
+
 
 
   public SetConveyorMode(ConveyorSystem conveyors, String mode) {
@@ -34,7 +35,7 @@ public class SetConveyorMode extends InstantCommand implements MustangCommand {
   }
 
   public void initialize() {
-    conveyors.setConveyorMode(mode);
+    conveyors.motors(mode);
   }
 
 

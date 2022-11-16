@@ -13,11 +13,14 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotMap;
 
-/**
- * Connects the intake to the shooter
+/**\
  * 
+ * Connects the intake to the shooter
+ * anyone know how to use Enums
  * @author Armaan, Soham, Edward
  */
+
+
 public class ConveyorSystem extends MustangSubsystemBase {
     SparkMAXLite Conveyor1Motor;
     SparkMAXLite Conveyor2Motor;
@@ -52,18 +55,19 @@ public class ConveyorSystem extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic(){
         getBallCount();
-        motors();
+        motors(Status);
 
     }
-    public void motors(){
+    public void motors(String Status){
+        this.Status=Status;
         if (Status.equals("Intaking")){
             if (ballcount==0||(ballcount==1 && bb2.isTriggered())){
-                Conveyor1Motor.set(0.5);
+                Conveyor1Motor.set(0.7);
                 Conveyor2Motor.set(0);
             }
             else if (ballcount==1 && bb1.isTriggered()){
                 Conveyor2Motor.set(0.7);
-                Conveyor1Motor.set(0.5);
+                Conveyor1Motor.set(0.7);
             }
             else if (ballcount==2){
                 Conveyor1Motor.set(0);
@@ -75,7 +79,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         else if (Status.equals("shooting")){
             if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
                 Conveyor2Motor.set(0.7);
-                Conveyor1Motor.set(0.5);
+                Conveyor1Motor.set(0.7);
             }
             else if (ballcount==1 && bb2.isTriggered()){
                 Conveyor2Motor.set(0.7);
@@ -91,7 +95,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
 
         
-    public void getBallCount(){
+    public int getBallCount(){
         if (bb1.isTriggered()==true && bb2.isTriggered()==true){
             ballcount=2;
             
@@ -99,14 +103,11 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
         else if ((bb1.isTriggered()==true && bb2.isTriggered()==false) || (bb1.isTriggered()==false && bb2.isTriggered()==true)){
             ballcount=1;
-            if (bb1.isTriggered()){
-                motors();     
-            }
         }
         else if (bb1.isTriggered()==false && bb2.isTriggered()==false){
             ballcount=0;
-        
         }
+        return ballcount;
     }
     public boolean Status(){
         return (Conveyor1Motor.get()!=0)&&(Conveyor2Motor.get()!=0);
