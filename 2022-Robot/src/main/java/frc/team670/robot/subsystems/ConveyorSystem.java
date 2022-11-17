@@ -111,28 +111,26 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-//if ze ball is leaving then shooter
-//if intaking
-//ejecting
-/*
- * make seperate methods for turning things on & off
- * ex: if Intake.isEmpty();
- * do whatever
- * create methods similar to stopConveyor for each part
- */
+
+
+ // make seperate methods for turning things on & off
+ //ex: if Intake.isEmpty();
+ //do whatever
+ //create methods similar to stopConveyor for each part
+
     public void setStatus(String statusString){
         this.status = statusString;
-        if (statusString.equals("Ejecting")){
+        if (status.equals("Ejecting")){
             if(getBallCount() > 0){
                 setC1(-0.7);
                 setC2(-0.7);
             }
-        }else if(statusString.equals( "Shooting")){
+        }else if(status.equals("Shooting")){
             if(getBallCount() > 0){
                 setC2(0.7);
                 setC1(0.7);
             }
-        }else if(statusString.equals("Intaking")){
+        }else if(status.equals("Intaking")){
             if(getBallCount() < 2){
                 setC2(0.7);
                 setC1(0.7);
@@ -156,8 +154,13 @@ public class ConveyorSystem extends MustangSubsystemBase {
 //if intaking do this
 //if shooting or ejecting change //use if statements to change
         getBallCount();
-        stopConveyor1();
-        stopConveyor2();
+
+        if(status.equals("Intaking")){
+            stopConveyor1();
+            stopConveyor2();
+        }else if(getBallCount() == 0){
+            stopAll();
+        }
     }
 
     @Override
