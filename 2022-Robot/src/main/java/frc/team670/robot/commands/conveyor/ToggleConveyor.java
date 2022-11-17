@@ -8,7 +8,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.ConveyorSystem;
-import frc.team670.robot.subsystems.ConveyorSystem.Status;
+
 
 /**
  * If the conveyor is intaking, it turns it off.

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
@@ -20,21 +21,25 @@ import frc.team670.robot.constants.RobotMap;
  * @author Armaan, Soham, Edward
  */
 
-
-public class ConveyorSystem extends MustangSubsystemBase {
+public class ConveyorSystem extends MustangSubsystemBase{
+    public static enum Status { 
+        INTAKING,
+        SHOOTING,
+        EJECTING
+    }
     SparkMAXLite Conveyor1Motor;
     SparkMAXLite Conveyor2Motor;
     BeamBreak bb1;
     BeamBreak bb2;
     int ballcount;
-    String Status;
+    Status status;
     public void Conveyor(){
         Conveyor1Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         Conveyor2Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         this.ballcount=0;
-        this.Status="Intaking";
+        this.status=Status.INTAKING;
         
     }
     public void SetC1(double speed) {
@@ -60,7 +65,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     }
     public void motors(String Status){
         this.Status=Status;
-        if (Status.equals("Intaking")){
+        if (Status.equals("Inta")){
             if (ballcount==0||(ballcount==1 && bb2.isTriggered())){
                 Conveyor1Motor.set(0.7);
                 Conveyor2Motor.set(0);
@@ -74,25 +79,37 @@ public class ConveyorSystem extends MustangSubsystemBase {
                 Conveyor2Motor.set(0);
 
             }
-
-        }
-        else if (Status.equals("shooting")){
-            if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
-                Conveyor2Motor.set(0.7);
-                Conveyor1Motor.set(0.7);
-            }
-            else if (ballcount==1 && bb2.isTriggered()){
+        else if (Status.equals("SHOOTING")){
+             if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
+                 Conveyor2Motor.set(0.7);
+                 Conveyor1Motor.set(0.7);
+             }
+             else if (ballcount==1 && bb2.isTriggered()){
                 Conveyor2Motor.set(0.7);
             }
             else{
-                Status="intaking";
+                Status="INTAKING";
             }
         }
-        else if (Status.equals("Ejecting"));
+        else if (Status.equals("EJECTING")){
             Conveyor1Motor.set(-1);
             Conveyor2Motor.set(-1);
         }
+    } 
+} 
+        public Status getStatus(){
+            return status;
 
+
+        }
+
+
+    public void stopAll(){
+        Conveyor1Motor.set(0);
+        Conveyor2Motor.set(0);
+    }
+
+ 
 
         
     public int getBallCount(){
@@ -119,3 +136,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
         
     }
 }
+
+
+   
