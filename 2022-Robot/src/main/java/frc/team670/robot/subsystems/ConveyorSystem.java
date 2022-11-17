@@ -111,13 +111,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-
-
- // make seperate methods for turning things on & off
- //ex: if Intake.isEmpty();
- //do whatever
- //create methods similar to stopConveyor for each part
-
     public void setStatus(String statusString){
         this.status = statusString;
         if (status.equals("Ejecting")){
@@ -138,10 +131,6 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-    // Add a get ball count method
-    // Add independant stop methods
-    //
-
     @Override
     public HealthState checkHealth() {
         // TODO Auto-generated method stub
@@ -151,8 +140,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-//if intaking do this
-//if shooting or ejecting change //use if statements to change
+
         getBallCount();
 
         if(status.equals("Intaking")){
