@@ -18,17 +18,23 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class ConveyorSystem extends MustangSubsystemBase {
 
-    SparkMAXLite intakeConveyorMotor;
-    SparkMAXLite shooterConveyorMotor;
+    SparkMAXLite intakeMotor;
+    SparkMAXLite shooterMotor;
 
-    BeamBreak intakeConveyorBeamBreak;
-    BeamBreak shooterConveyorBeamBreak;
+    BeamBreak intakeBeamBreak;
+    BeamBreak shooterBeamBreak;
 
     public ConveyorSystem() {
-        intakeConveyorMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
-        shooterConveyorMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
-        intakeConveyorBeamBreak = new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
-        shooterConveyorBeamBreak = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+        intakeMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
+        shooterMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
+        intakeBeamBreak = new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
+        shooterBeamBreak = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+
+        //Independantly control each motor
+        //Prevent balls from accidentally shooting
+        //when the shooter beam break is triggered we want the shooter conveyor to stop
+        //when the intake beam break is triggered and the shooter conveyor is full, we want the intake conveyor to stop
+        //methods: stopAll(), isRunning()
     }
 
     @Override
@@ -38,7 +44,22 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        
+        if (shooterBeamBreak.isTriggered()) {
+            shooterMotor.set(0);
+        }
+    }
+
+    public void stopAll() {
+        intakeMotor.set(0);
+        shooterMotor.set(0);
+    }
+
+    public void setIntakeSpeed(double speed) {
+        intakeMotor.set(speed);
+    }
+
+    public void setShooterSpeed(double speed) {
+        shooterMotor.set(speed);
     }
 
     @Override
