@@ -25,7 +25,8 @@ public class ConveyorSystem extends MustangSubsystemBase{
     public static enum Status { 
         INTAKING,
         SHOOTING,
-        EJECTING
+        EJECTING,
+        OFF
     }
     SparkMAXLite Conveyor1Motor;
     SparkMAXLite Conveyor2Motor;
@@ -60,12 +61,12 @@ public class ConveyorSystem extends MustangSubsystemBase{
     @Override
     public void mustangPeriodic(){
         getBallCount();
-        motors(Status);
+        motors(this.status);
 
     }
-    public void motors(String Status){
-        this.Status=Status;
-        if (Status.equals("Inta")){
+    public void motors(ConveyorSystem.Status Status){
+        this.status=Status;
+        if (status==ConveyorSystem.Status.INTAKING){
             if (ballcount==0||(ballcount==1 && bb2.isTriggered())){
                 Conveyor1Motor.set(0.7);
                 Conveyor2Motor.set(0);
@@ -79,7 +80,7 @@ public class ConveyorSystem extends MustangSubsystemBase{
                 Conveyor2Motor.set(0);
 
             }
-        else if (Status.equals("SHOOTING")){
+        else if (status==ConveyorSystem.Status.SHOOTING){
              if (ballcount==2||(ballcount==1 && bb1.isTriggered())){
                  Conveyor2Motor.set(0.7);
                  Conveyor1Motor.set(0.7);
@@ -88,10 +89,10 @@ public class ConveyorSystem extends MustangSubsystemBase{
                 Conveyor2Motor.set(0.7);
             }
             else{
-                Status="INTAKING";
+                return;
             }
         }
-        else if (Status.equals("EJECTING")){
+        else if (status==ConveyorSystem.Status.EJECTING){
             Conveyor1Motor.set(-1);
             Conveyor2Motor.set(-1);
         }
@@ -134,6 +135,10 @@ public class ConveyorSystem extends MustangSubsystemBase{
     public void debugSubsystem() {
         // TODO Auto-generated method stub
         
+    }
+    public boolean isRunning(){
+        return (status!=ConveyorSystem.Status.OFF);
+
     }
 }
 

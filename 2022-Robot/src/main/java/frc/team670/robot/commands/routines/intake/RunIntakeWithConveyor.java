@@ -11,6 +11,7 @@ import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.ConveyorSystem.Status;
 
 
 /**
@@ -19,7 +20,7 @@ import frc.team670.robot.subsystems.Intake;
  */
 
 public class RunIntakeWithConveyor extends ParallelCommandGroup implements MustangCommand {
-
+    ConveyorSystem conveyors;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public RunIntakeWithConveyor(Intake intake, ConveyorSystem conveyor) {
@@ -28,8 +29,9 @@ public class RunIntakeWithConveyor extends ParallelCommandGroup implements Musta
         healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(intake),
-            new SetConveyorMode(conveyor, "Intaking"));
+            new SetConveyorMode(conveyor, ConveyorSystem.Status.INTAKING));
     }
+
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {

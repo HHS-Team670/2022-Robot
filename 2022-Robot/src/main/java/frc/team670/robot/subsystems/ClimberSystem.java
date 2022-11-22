@@ -252,7 +252,7 @@ public class ClimberSystem extends MustangSubsystemBase {
                 double motorRotationsAtMaxExtension, double allowedError, double maxAcc, double minVel, double maxVel) {
 
             setName("Climber" + motorId);
-            setLogFileHeader("Climber Pos", "target", "isLimitSwitchTripped");
+            //setLogFileHeader("Climber Pos", "target", "isLimitSwitchTripped");
             this.kFF = ff;
             this.kP = p;
             this.MOTOR_ROTATIONS_AT_RETRACTED = motorRotationsAtRetracted;

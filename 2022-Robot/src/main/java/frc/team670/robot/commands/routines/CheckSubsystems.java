@@ -12,6 +12,7 @@ import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.ClimberSystem.Level;
+import frc.team670.robot.subsystems.ConveyorSystem.Status;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.Deployer;
 import frc.team670.robot.subsystems.Intake;
@@ -61,10 +62,10 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
     public void execute() {
         if (!justAdvanced) {
             if (controller.getDPadState() == MustangController.DPadState.RIGHT) {
-                testProcedure(++currentStep);
+                //testProcedure(++currentStep);
                 justAdvanced = true;
             } else if (controller.getDPadState() == MustangController.DPadState.LEFT) {
-                testProcedure(--currentStep);
+                //testProcedure(--currentStep);
                 justAdvanced = true;
             }
         } else if (controller.getDPadState() == MustangController.DPadState.NEUTRAL) {
@@ -82,7 +83,7 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
         return healthReqs;
     }
 
-    public void testProcedure(int step) {
+    public void testProcedure(int step, ConveyorSystem conveyorSystem) {
         switch (step) {
             case 0:
                 deployer.deploy(false);
@@ -93,10 +94,10 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
                 intake.roll(false);
                 break;
             case 2:
-                SetConveyorMode(conveyorSystem, "Intaking");
+                conveyors.motors(ConveyorSystem.Status.INTAKING);
                 break;
             case 3:
-                conveyors.setConveyorMode(Status.EJECTING);
+                conveyors.motors(ConveyorSystem.Status.EJECTING);
                 break;
             case 4:
                 shooter.setTargetRPM(shooter.getDefaultRPM());

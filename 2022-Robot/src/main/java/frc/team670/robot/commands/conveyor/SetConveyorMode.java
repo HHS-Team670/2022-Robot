@@ -22,11 +22,9 @@ public class SetConveyorMode extends InstantCommand implements MustangCommand {
 
   private ConveyorSystem conveyors;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
-  private String mode;
+  private ConveyorSystem.Status mode;
 
-
-
-  public SetConveyorMode(ConveyorSystem conveyors, ConveyorSystem.Satus mode) {
+  public SetConveyorMode(ConveyorSystem conveyors, ConveyorSystem.Status mode) {
     this.conveyors = conveyors;
     addRequirements(conveyors);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -37,7 +35,6 @@ public class SetConveyorMode extends InstantCommand implements MustangCommand {
   public void initialize() {
     conveyors.motors(mode);
   }
-
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
