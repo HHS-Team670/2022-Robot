@@ -39,14 +39,31 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        return null;
+        return HealthState.GREEN;
     }
 
     @Override
     public void mustangPeriodic() {
         if (shooterBeamBreak.isTriggered()) {
             shooterMotor.set(0);
+            if (intakeBeamBreak.isTriggered()) {
+                intakeMotor.set(0);
+            }
         }
+    }
+    
+    public void someNumber() {
+        var count = 0;
+        if (shooterBeamBreak.isTriggered()) {
+            count += 1;
+        }
+        if (intakeBeamBreak.isTriggered()) {
+            count += 1;
+        }
+    }
+
+    public void Reset() {
+
     }
 
     public void stopAll() {
@@ -67,3 +84,5 @@ public class ConveyorSystem extends MustangSubsystemBase {
         
     }
 }
+
+
