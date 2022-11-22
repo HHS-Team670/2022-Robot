@@ -33,6 +33,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
                 Motor_Type.NEO_550);
         bb1 = new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
         bb2 = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+    
     }
 
     public void setC1(double speed) {
