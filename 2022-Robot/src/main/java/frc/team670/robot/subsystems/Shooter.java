@@ -21,23 +21,23 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.robot.commands.shooter.OverrideDynamicRPM;
+import frc.team670.robot.commands..OverrideDynamicRPM;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents a shooter with 2 NEOs.
+ * Represents a  with 2 NEOs.
  * Shoots using Vision, Ultrasonic, and manual overrides.
  * 
  * @author wilsonpotato, gentleTiger123, arghunter, smishra467
  */
-public class Shooter extends MustangSubsystemBase {
+public class  extends MustangSubsystemBase {
 
     private SparkMAXLite mainController, followerController;
     private List<SparkMAXLite> controllers;
 
-    private RelativeEncoder shooter_mainEncoder;
-    private SparkMaxPIDController shooter_mainPIDController;
+    private RelativeEncoder _mainEncoder;
+    private SparkMaxPIDController _mainPIDController;
 
     private double targetRPM = 0;
     private static double DEFAULT_SPEED = 2200;
@@ -68,8 +68,8 @@ public class Shooter extends MustangSubsystemBase {
 
     private boolean rpmVelSetCorrectly = true;
 
-    private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap.SHOOTER_ULTRASONIC_TPIN,
-            RobotMap.SHOOTER_ULTRASONIC_EPIN);
+    private static DIOUltrasonic ultrasonic = new DIOUltrasonic(RobotMap._ULTRASONIC_TPIN,
+            RobotMap._ULTRASONIC_EPIN);
 
     private static final double MIN_DISTANCE_HIGH_METERS = 1.60655;
 
@@ -84,23 +84,23 @@ public class Shooter extends MustangSubsystemBase {
 
     private boolean foundTarget;
 
-    public Shooter(Vision vision, MustangController mController, ConveyorSystem conveyor) {
+    public (Vision vision, MustangController mController, ConveyorSystem conveyor) {
         this.vision = vision;
-        setName("Shooter");
-        setLogFileHeader("Shooter Velocity Setpoint", "Shooter velocity", "Speed", "Ultrasonic distance", "P", "I", "D", "FF", "Ramp Rate");
-        controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
-                RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
+        setName("");
+        setLogFileHeader(" Velocity Setpoint", " velocity", "Speed", "Ultrasonic distance", "P", "I", "D", "FF", "Ramp Rate");
+        controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap._MAIN,
+                RobotMap._FOLLOWER, true, Motor_Type.NEO);
 
         mainController = controllers.get(0);
         followerController = controllers.get(1);
 
-        shooter_mainEncoder = mainController.getEncoder();
-        shooter_mainPIDController = mainController.getPIDController();
+        _mainEncoder = mainController.getEncoder();
+        _mainPIDController = mainController.getPIDController();
 
-        shooter_mainPIDController.setP(V_P, VELOCITY_SLOT);
-        shooter_mainPIDController.setI(V_I, VELOCITY_SLOT);
-        shooter_mainPIDController.setD(V_D, VELOCITY_SLOT);
-        shooter_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
+        _mainPIDController.setP(V_P, VELOCITY_SLOT);
+        _mainPIDController.setI(V_I, VELOCITY_SLOT);
+        _mainPIDController.setD(V_D, VELOCITY_SLOT);
+        _mainPIDController.setFF(V_FF, VELOCITY_SLOT);
 
         ultrasonic.setUltrasonicAutomaticMode(true);
 
@@ -111,11 +111,11 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public double getVelocity() {
-        return shooter_mainEncoder.getVelocity();
+        return _mainEncoder.getVelocity();
     }
 
     public void run() {
-        shooter_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
+        _mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
     }
 
     public void setTargetRPM(double targetRPM) {
@@ -147,7 +147,7 @@ public class Shooter extends MustangSubsystemBase {
         if (((diff > INITIAL_DIFF && speedAdjust < MAX_RPM_ADJUSTMENT)
                 || (diff < INITIAL_DIFF && speedAdjust > -(MAX_RPM_ADJUSTMENT)))) {
             this.speedAdjust += diff;
-            if (shooter_mainEncoder.getVelocity() > MIN_RUNNING_RPM) {
+            if (_mainEncoder.getVelocity() > MIN_RUNNING_RPM) {
                 run();
             }
         }
@@ -157,7 +157,7 @@ public class Shooter extends MustangSubsystemBase {
      * Gets target RPM for low goal based on the given distance using a prediction function
      * 
      * @param distance In meters, the distance we are shooting at
-     * @return The predicted "best fit" RPM for the shooter to spin at based on the given distance.
+     * @return The predicted "best fit" RPM for the  to spin at based on the given distance.
      */
     public double getTargetRPMForLowGoalDistance(double distance) {
         double predictedVal = ((224 * distance) + 1517);
@@ -183,11 +183,11 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public void stop() {
-        shooter_mainPIDController.setReference(0, ControlType.kDutyCycle);
+        _mainPIDController.setReference(0, ControlType.kDutyCycle);
     }
 
     public void idle() {
-        shooter_mainPIDController.setReference(3000, ControlType.kVelocity);
+        _mainPIDController.setReference(3000, ControlType.kVelocity);
     }
 
     public boolean isUpToSpeed() {
@@ -195,7 +195,7 @@ public class Shooter extends MustangSubsystemBase {
     }
 
     public void test() {
-        shooter_mainPIDController.setReference(SmartDashboard.getNumber("Shooter Velocity Setpoint", manual_velocity), ControlType.kVelocity);
+        _mainPIDController.setReference(SmartDashboard.getNumber(" Velocity Setpoint", manual_velocity), ControlType.kVelocity);
     }
 
     @Override
@@ -224,7 +224,7 @@ public class Shooter extends MustangSubsystemBase {
             foundTarget = false;
         }
 
-        if(!isRPMSetCorrectly() && conveyor.isRunning()){
+        if(!isRPMSetCorrectly() && conveyor.getStatus().equals("Shooting")){
             conveyor.stopAll();
         }
     }
@@ -255,12 +255,12 @@ public class Shooter extends MustangSubsystemBase {
      *   and sets that as the Target RPM.
      * If vision doesn't work:
      *   it tries to use the ultrasonic sensors
-     * If that doesn't work either, then it will run the shooter at default speed
+     * If that doesn't work either, then it will run the  at default speed
      */
 
     public double setRPM() {
         double targetRPM = 0;
-        String shooterSpeedChooser = "Manual (dynamicSpeed == false)"; //For debugging purposes. Uncomment the print to SmartDashboard at the bottom of this method.
+        String SpeedChooser = "Manual (dynamicSpeed == false)"; //For debugging purposes. Uncomment the print to SmartDashboard at the bottom of this method.
         
         // If using vision or ultrasonic...
         if (useDynamicSpeed) {
@@ -269,19 +269,19 @@ public class Shooter extends MustangSubsystemBase {
             if (foundTarget) {
                 distanceToTarget = vision.getDistanceToTargetM();
                 targetRPM = getTargetRPMForHighGoalDistance(distanceToTarget);
-                shooterSpeedChooser = "Vision";
+                SpeedChooser = "Vision";
             }
             if (Math.abs(distanceToTarget - RobotConstants.VISION_ERROR_CODE) < 10
                     || distanceToTarget < getMinHighDistanceInMeter()) { // double comparison
                 distanceToTarget = getUltrasonicDistanceInMeters();
                 targetRPM = getTargetRPMForLowGoalDistance(distanceToTarget);
-                shooterSpeedChooser = "Ultrasonic";
+                SpeedChooser = "Ultrasonic";
             }
             rpmVelSetCorrectly = true;
         } else { // If using a manual override...
             targetRPM = getTargetRPM();
             rpmVelSetCorrectly = true;
-            shooterSpeedChooser = "Manual (dynamicSpeed == false)";
+            SpeedChooser = "Manual (dynamicSpeed == false)";
         }
         
         // If target RPM somehow got set to an invalid number...
@@ -290,7 +290,7 @@ public class Shooter extends MustangSubsystemBase {
             rpmVelSetCorrectly = false;
         }
 
-        //SmartDashboard.putString("shooter-speed-chooser", shooterSpeedChooser);
+        //SmartDashboard.putString("-speed-chooser", SpeedChooser);
         setTargetRPM(targetRPM);
         return targetRPM;
     }
@@ -329,19 +329,19 @@ public class Shooter extends MustangSubsystemBase {
 
     @Override
     public void debugSubsystem() {
-        SmartDashboard.putNumber("Shooter Velocity Setpoint", manual_velocity);
-        SmartDashboard.putNumber("Shooter velocity", getVelocity());
-        SmartDashboard.putNumber("SHOOTER_P", V_P);
-        SmartDashboard.putNumber("SHOOTER_I", V_I);
-        SmartDashboard.putNumber("SHOOTER_D", V_D);
-        SmartDashboard.putNumber("SHOOTER_FF", V_FF);
-        SmartDashboard.putNumber("Shooter Ramp Rate", RAMP_RATE);
-        SmartDashboard.putNumber("Shooter speed", targetRPM);
+        SmartDashboard.putNumber(" Velocity Setpoint", manual_velocity);
+        SmartDashboard.putNumber(" velocity", getVelocity());
+        SmartDashboard.putNumber("_P", V_P);
+        SmartDashboard.putNumber("_I", V_I);
+        SmartDashboard.putNumber("_D", V_D);
+        SmartDashboard.putNumber("_FF", V_FF);
+        SmartDashboard.putNumber(" Ramp Rate", RAMP_RATE);
+        SmartDashboard.putNumber(" speed", targetRPM);
         SmartDashboard.putNumber("Ultrasonic Distance", getUltrasonicDistanceInMeters());
 
-        double shooterVelocitySetpoint = manual_velocity;
-        double shooterVelocity = getVelocity();
-        // writeToLogFile(shooterVelocitySetpoint, shooterVelocity, targetRPM, getUltrasonicDistanceInMeters(), V_P, V_I, V_D, V_FF, RAMP_RATE);
+        double VelocitySetpoint = manual_velocity;
+        double Velocity = getVelocity();
+        // writeToLogFile(VelocitySetpoint, Velocity, targetRPM, getUltrasonicDistanceInMeters(), V_P, V_I, V_D, V_FF, RAMP_RATE);
     }
 }
 

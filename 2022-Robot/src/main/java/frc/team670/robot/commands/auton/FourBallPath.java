@@ -59,21 +59,21 @@ public class FourBallPath extends SequentialCommandGroup implements MustangComma
 
         addCommands(
             new SequentialCommandGroup(
-                        // shoot first two balls (one in robot, one in front of tarmac)
-                        new ParallelCommandGroup(
-                            getTrajectoryFollowerCommand(trajectory, driveBase),
-                            new RunIntakeWithConveyor(intake, conveyor),
-                            new StartShooter(shooter, 3575)
-                        ),
-                        new StopDriveBase(driveBase),
-                        new ShootThenIntake(conveyor, shooter, intake, 3650), //this one changes!!
-                        getTrajectoryFollowerCommand(trajectory2, driveBase),
-                        getTrajectoryFollowerCommand(trajectory3, driveBase),
-                        new ParallelCommandGroup(
-                            new StopDriveBase(driveBase),
-                            new StartShooter(shooter, 3650)
-                        ),
-                        new SetConveyorMode(conveyor)
+                // shoot first two balls (one in robot, one in front of tarmac)
+                new ParallelCommandGroup(
+                    getTrajectoryFollowerCommand(trajectory, driveBase),
+                    new RunIntakeWithConveyor(intake, conveyor),
+                    new StartShooter(shooter, 3575)
+                ),
+                new StopDriveBase(driveBase),
+                new ShootThenIntake(conveyor, shooter, intake, 3650), //this one changes!!
+                getTrajectoryFollowerCommand(trajectory2, driveBase),
+                getTrajectoryFollowerCommand(trajectory3, driveBase),
+                new ParallelCommandGroup(
+                    new StopDriveBase(driveBase),
+                    new StartShooter(shooter, 3650)
+                ),
+                new SetConveyorMode(conveyor, ConveyorSystem.setStatus("Shooting"))
             ));
     }
 
