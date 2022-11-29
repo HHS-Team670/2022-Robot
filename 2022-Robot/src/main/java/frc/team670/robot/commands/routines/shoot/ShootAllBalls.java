@@ -21,8 +21,8 @@ import frc.team670.robot.subsystems.Vision;
  * Shoots all the balls in the conveyor
  * @author LakshBhambhani, EliseVambenepe
  */
+ 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
-
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public ShootAllBalls(ConveyorSystem conveyorSystem, Shooter shooter) {
@@ -32,7 +32,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
     addCommands(
         new StartShooter(shooter),
-        new SetConveyorMode(conveyorSystem),
+        new SetConveyorMode(conveyorSystem, "Shooting"),
         new WaitCommand(shooter.getWaitTime()),
         new StopShooter(shooter));
   }
@@ -47,9 +47,9 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
     addCommands(
       new StartShooter(shooter, rpm),
-      new SetConveyorMode(conveyorSystem),
-        new WaitCommand(shooter.getWaitTime()),
-        new StopShooter(shooter));
+      new SetConveyorMode(conveyorSystem, "Shooting"),
+      new WaitCommand(shooter.getWaitTime()),
+      new StopShooter(shooter));
   }
 
   /**

@@ -128,9 +128,9 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void debugSubsystem() {
-       // boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
+       boolean isConveyorOff = (conveyor.isRunning() == false);
         int conveyorBallCount = conveyor.getBallCount();
-        // super.writeToLogFile(isConveyorOff, conveyorBallCount);
+        super.writeToLogFile(isConveyorOff, conveyorBallCount);
     }
 
 }

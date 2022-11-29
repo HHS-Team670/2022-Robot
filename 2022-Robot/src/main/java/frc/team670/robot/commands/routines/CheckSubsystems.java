@@ -93,10 +93,10 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
                 intake.roll(false);
                 break;
             case 2:
-                //conveyors.setConveyorMode(Status.INTAKING);
+                conveyors.setStatus("Intaking");
                 break;
             case 3:
-                //conveyors.setConveyorMode(Status.EJECTING);
+                conveyors.setStatus("Ejecting");
                 break;
             case 4:
                 shooter.setTargetRPM(shooter.getDefaultRPM());

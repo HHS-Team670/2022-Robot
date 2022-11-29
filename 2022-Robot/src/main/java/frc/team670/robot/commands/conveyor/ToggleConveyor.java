@@ -30,9 +30,10 @@ public class ToggleConveyor extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
-        if(conveyors.isRunning()) {
+        if(conveyors.getStatus().equals("Intaking")) {
             conveyors.stopAll();
         } else {
+            conveyors.setStatus("Intaking");
             conveyors.setC1(0.7);
             conveyors.setC2(0.7);
         }
