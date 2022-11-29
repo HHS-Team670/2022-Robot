@@ -61,8 +61,14 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
+
     public void Intake(){
+        shooterMotor.set(0.7);
+        intakeMotor.set(0.7);
         
+    }
+    
+    public void StopIntake(){
         if(shooterBeamBreak.isTriggered()){
             shooterMotor.stopMotor();
             shooterTrigger = true;
@@ -73,14 +79,11 @@ public class ConveyorSystem extends MustangSubsystemBase {
                 intakeMotor.stopMotor();
             } 
         }
-
     }
 
     //Shoot
     public void Shoot(){
         if(shooterTrigger && intakeBeamBreak.isTriggered()){
-            shooterMotor.set(0.7);
-            intakeMotor.set(0.7);
             Intake();
         }
     }
@@ -91,10 +94,22 @@ public class ConveyorSystem extends MustangSubsystemBase {
         intakeMotor.set(-0.7);
     }
 
+    //stopping intake
+     
+
+    // For stopping the eject and shooter: if empty, then stop
+    public void Empty(){
+        if(!intakeBeamBreak.isTriggered() && !shooterBeamBreak.isTriggered()){
+            shooterMotor.stopMotor();
+            intakeMotor.stopMotor();
+        }
+    }
+
     //Setting the status
     public void setStatus(int x){
         if(x == 1){
             Intake();
+            StopIntake();
             status = 1;
         } else if(x == 2){
             Shoot();
@@ -137,7 +152,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         Intake();
-      
+        StopIntake();
         
     }
 
