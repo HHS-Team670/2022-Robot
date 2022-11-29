@@ -132,6 +132,13 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
+    public Boolean getStatus(String checkStatus){
+        if (status.equals(checkStatus)){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public HealthState checkHealth() {
         // TODO Auto-generated method stub
