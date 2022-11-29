@@ -94,7 +94,9 @@ public class AlignAngleToTargetAndShoot extends AlignAngleToTarget {
         super.end(interrupted);
         vision.getCamera().takeInputSnapshot();
         vision.getCamera().takeOutputSnapshot();
-        conveyor.setConveyorMode(ConveyorSystem.Status.SHOOTING);
+        // conveyor.setConveyorMode(ConveyorSystem.Status.SHOOTING);
+        conveyor.setIntakeConveyor(0.7);
+        conveyor.setShooterConveyor(0.7);
 
         //Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s Interrupted: %s, Distance: %s ShooterSpeed: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget, interrupted, distToTarget, shooterRPM);
     }

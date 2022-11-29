@@ -118,7 +118,7 @@ public class Intake extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         debugSubsystem();
-        if (conveyor.getStatus() == ConveyorSystem.Status.OFF && conveyor.getBallCount() == 2) {
+        if (!conveyor.isRunning()&& conveyor.getBallCount() == 2) {
             stop();
 
         }
@@ -128,7 +128,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void debugSubsystem() {
-        boolean isConveyorOff = (conveyor.getStatus() == ConveyorSystem.Status.OFF);
+        boolean isConveyorOff = (!conveyor.isRunning());
         int conveyorBallCount = conveyor.getBallCount();
         // super.writeToLogFile(isConveyorOff, conveyorBallCount);
     }
