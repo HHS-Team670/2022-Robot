@@ -20,6 +20,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -35,6 +37,7 @@ import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -48,6 +51,8 @@ import frc.team670.robot.constants.RobotMap;
  * @author lakshbhambhani
  */
 public class DriveBase extends TankDrive {
+
+  private Vision vision;
 
   private SparkMAXLite left1, left2, right1, right2;
   private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -67,6 +72,12 @@ public class DriveBase extends TankDrive {
   SparkMaxPIDController rightPIDController;
   
   private double prevHeading;
+
+  //2020 robot camera offset
+  public static final Pose2d TARGET_POSE = 
+    new Pose2d(FieldConstants.HUB_POSE_X, FieldConstants.HUB_POSE_Y,new Rotation2d(0.0));
+  
+    public static final Pose2d CAMERA_OFFSET = TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController) {
     this.mController = mustangController;
@@ -273,6 +284,17 @@ public class DriveBase extends TankDrive {
     if (SmartDashboard.getBoolean("aligned", false) && !MathUtils.doublesEqual(getHeading(), prevHeading, 0)) {
       SmartDashboard.putBoolean("aligned", false);
     }
+
+    Vision.VisionMeasurement visionMeasurement = vision.getPoseVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
+
+    if (visionMeasurement != null) {
+      // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
+      SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
+      // SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
+    } else {
+      // Logger.consoleError("Did not find targets!");
+    }
+
     prevHeading = getHeading();
   }
 
