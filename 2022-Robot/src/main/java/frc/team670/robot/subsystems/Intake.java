@@ -34,7 +34,7 @@ public class Intake extends MustangSubsystemBase {
         this.conveyor = conveyor;
         this.deployer = deployer;
         setName("Intake");
-        setLogFileHeader("isConveyorOff", "conveyorBallCount");
+        // setLogFileHeader("isConveyorOff", "conveyorBallCount");
         // Intake roller should be inverted
 
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
