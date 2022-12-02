@@ -28,6 +28,8 @@ public class ConveyorSystem extends MustangSubsystemBase{
         EJECTING,
         OFF
     }
+    private boolean conveyorRun=false;
+    
     SparkMAXLite Conveyor1Motor;
     SparkMAXLite Conveyor2Motor;
     private BeamBreak bb1;
@@ -41,6 +43,8 @@ public class ConveyorSystem extends MustangSubsystemBase{
         this.bb2 = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         Logger.consoleLog(""+bb2+""+bb1+"");
         this.ballcount=0;
+        this.conveyorRun=true;
+
         // this.status=Status.INTAKING;
         
     }
@@ -61,9 +65,11 @@ public class ConveyorSystem extends MustangSubsystemBase{
     }
     @Override
     public void mustangPeriodic(){
-        getBallCount();
-        motors(this.status);
+        if (conveyorRun==true){
+            getBallCount();
+            motors(this.status);
 
+        }
     }
     public void motors(ConveyorSystem.Status Status){
         this.status=Status;
