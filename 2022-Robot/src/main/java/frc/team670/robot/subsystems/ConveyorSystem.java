@@ -10,6 +10,7 @@ import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotMap;
@@ -37,8 +38,9 @@ public class ConveyorSystem extends MustangSubsystemBase{
     public void Conveyor(){
         Conveyor1Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         Conveyor2Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
-        bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
-        bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+        this.bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
+        boolean t= bb1.isTriggered();
+        this.bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
         this.ballcount=0;
         this.status=Status.INTAKING;
         
@@ -114,7 +116,10 @@ public class ConveyorSystem extends MustangSubsystemBase{
 
         
     public int getBallCount(){
-        if (bb1.isTriggered()==true && bb2.isTriggered()==true){
+        Logger.consoleLog(""+bb2);
+        boolean x=bb1.isTriggered();
+        boolean y=bb2.isTriggered();
+        if (x && y){
             ballcount=2;
             
 
