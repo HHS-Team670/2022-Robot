@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.commands.drivebase.AlignAngleToTarget;
 import frc.team670.robot.subsystems.ConveyorSystem;
 import frc.team670.robot.subsystems.DriveBase;
@@ -94,7 +95,7 @@ public class AlignAngleToTargetAndShoot extends AlignAngleToTarget {
         super.end(interrupted);
         vision.getCamera().takeInputSnapshot();
         vision.getCamera().takeOutputSnapshot();
-        // conveyor.setConveyorMode(conveyor);
+        new SetConveyorMode(conveyor, 2);
 
         //Logger.consoleLog("Time for Align + Shoot: %s Initial Angle: %s Final Angle: %s Interrupted: %s, Distance: %s ShooterSpeed: %s", (System.currentTimeMillis() - startTimeMillis), initialYaw, relativeYawToTarget, interrupted, distToTarget, shooterRPM);
     }

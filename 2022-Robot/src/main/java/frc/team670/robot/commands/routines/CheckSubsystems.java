@@ -8,6 +8,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.subsystems.ClimberSystem;
 import frc.team670.robot.subsystems.ClimberSystem.Climber;
 import frc.team670.robot.subsystems.ClimberSystem.Level;
@@ -93,7 +94,7 @@ public class CheckSubsystems extends CommandBase implements MustangCommand {
                 intake.roll(false);
                 break;
             case 2:
-                // conveyors.setConveyorMode(Status.INTAKING);
+                new SetConveyorMode(conveyors, 1);
                 break;
             case 3:
                 // conveyors.setConveyorMode(Status.EJECTING);

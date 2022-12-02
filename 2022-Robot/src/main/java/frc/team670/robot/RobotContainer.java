@@ -22,6 +22,7 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutonPathWithDelay;
 import frc.team670.robot.commands.auton.TwoBallPath;
+import frc.team670.robot.commands.conveyor.SetConveyorMode;
 import frc.team670.robot.commands.auton.FourBallPath;
 import frc.team670.robot.commands.routines.CheckSubsystems;
 import frc.team670.robot.constants.AutonTrajectory;
@@ -85,7 +86,7 @@ public class RobotContainer extends RobotContainerBase {
 	}
   
 	public void robotInit() {
-		// conveyorSystem.setShooter(shooter);
+		new SetConveyorMode(conveyorSystem, 2);
 		vision.switchLEDS(false);
 		Alliance alliance = DriverStation.getAlliance();
 		if (alliance == Alliance.Red) {

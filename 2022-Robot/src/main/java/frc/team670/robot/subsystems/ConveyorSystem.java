@@ -61,7 +61,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-
+// intake 
     public void Intake(){
         shooterMotor.set(0.7);
         intakeMotor.set(0.7);
@@ -145,7 +145,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
     public HealthState checkHealth() {
         
         // TODO Auto-generated method stub
-        return null;
+        return HealthState.GREEN;
     }
 
 
