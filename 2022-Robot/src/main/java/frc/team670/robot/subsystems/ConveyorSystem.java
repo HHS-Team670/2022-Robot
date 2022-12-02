@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.BeamBreak;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -31,18 +30,18 @@ public class ConveyorSystem extends MustangSubsystemBase{
     }
     SparkMAXLite Conveyor1Motor;
     SparkMAXLite Conveyor2Motor;
-    BeamBreak bb1;
-    BeamBreak bb2;
+    private BeamBreak bb1;
+    private BeamBreak bb2;
     int ballcount;
     Status status;
     public void Conveyor(){
         Conveyor1Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_CONVEYOR_MOTOR, Motor_Type.NEO_550);
         Conveyor2Motor=SparkMAXFactory.buildFactorySparkMAX(RobotMap.SHOOTER_CONVEYOR_MOTOR, Motor_Type.NEO_550);
-        this.bb1=new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
-        boolean t= bb1.isTriggered();
-        this.bb2=new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+        this.bb1 =  new BeamBreak(RobotMap.INTAKE_CONVEYOR_BEAMBREAK);
+        this.bb2 = new BeamBreak(RobotMap.SHOOTER_CONVEYOR_BEAMBREAK);
+        Logger.consoleLog(""+bb2+""+bb1+"");
         this.ballcount=0;
-        this.status=Status.INTAKING;
+        // this.status=Status.INTAKING;
         
     }
     public void SetC1(double speed) {
@@ -117,8 +116,8 @@ public class ConveyorSystem extends MustangSubsystemBase{
         
     public int getBallCount(){
         Logger.consoleLog(""+bb2);
-        boolean x=bb1.isTriggered();
-        boolean y=bb2.isTriggered();
+        boolean x=this.bb1.isTriggered();
+        boolean y=this.bb2.isTriggered();
         if (x && y){
             ballcount=2;
             
