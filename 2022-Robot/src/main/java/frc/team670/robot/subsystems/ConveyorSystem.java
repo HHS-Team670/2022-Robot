@@ -115,7 +115,6 @@ public class ConveyorSystem extends MustangSubsystemBase{
 
         
     public int getBallCount(){
-        Logger.consoleLog(""+bb2);
         boolean x=this.bb1.isTriggered();
         boolean y=this.bb2.isTriggered();
         if (x && y){
@@ -123,10 +122,10 @@ public class ConveyorSystem extends MustangSubsystemBase{
             
 
         }
-        else if ((bb1.isTriggered()==true && bb2.isTriggered()==false) || (bb1.isTriggered()==false && bb2.isTriggered()==true)){
+        else if ((x==true && y==false) || (x==false && y==true)){
             ballcount=1;
         }
-        else if (bb1.isTriggered()==false && bb2.isTriggered()==false){
+        else if (x==false && y==false){
             ballcount=0;
         }
         return ballcount;
