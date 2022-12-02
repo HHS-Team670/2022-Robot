@@ -132,11 +132,8 @@ public class ConveyorSystem extends MustangSubsystemBase {
         }
     }
 
-    public Boolean getStatus(String checkStatus){
-        if (status.equals(checkStatus)){
-            return true;
-        }
-        return false;
+    public String getStatus(){
+        return status;
     }
 
     @Override
