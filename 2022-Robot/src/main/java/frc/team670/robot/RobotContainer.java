@@ -46,7 +46,7 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class RobotContainer extends RobotContainerBase {
 
-	private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kRev);
+	private static PowerDistribution pd = new PowerDistribution(1, ModuleType.kCTRE);
 
 	private static Deployer deployer = new Deployer();
 	private static ConveyorSystem conveyorSystem = new ConveyorSystem();
@@ -58,32 +58,36 @@ public class RobotContainer extends RobotContainerBase {
 	private static Climber verticalClimber = climbers.getVerticalClimber();
 	private static Climber diagonalClimber = climbers.getDiagonalClimber();
 	private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX,
-		shooter, intake, conveyorSystem, climbers);
+			shooter, intake, conveyorSystem, climbers);
 
 	private static OI oi = new OI();
 
-  	private static boolean debugSubsystems = true;
+	private static boolean debugSubsystems = true;
 
- 	private static SendableChooser<MustangCommand> m_auto_chooser;
+	private static SendableChooser<MustangCommand> m_auto_chooser;
 
- 	public RobotContainer() {
+	public RobotContainer() {
 		super();
-		addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber, climbers);
+		addSubsystem(conveyorSystem, shooter, intake, deployer, vision, leds, verticalClimber, diagonalClimber,
+				climbers);
 		m_auto_chooser = new SendableChooser<MustangCommand>();
 		m_auto_chooser.setDefaultOption("4 Ball Auto",
-			new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal));
-		m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH", new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
-			deployer, AutonTrajectory.ATarmac2Ball, HubType.UPPER));
+				new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer,
+						AutonTrajectory.BTarmacHighHubTerminal));
+		m_auto_chooser.addOption("2 Ball Auto A Tarmac HIGH",
+				new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
+						deployer, AutonTrajectory.ATarmac2Ball, HubType.UPPER));
 		m_auto_chooser.addOption("2 Ball Auto B Tarmac Close HIGH", new TwoBallPath(driveBase, intake, conveyorSystem,
-			shooter, deployer, AutonTrajectory.BTarmacCenter2Ball, HubType.UPPER));
-		m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH", new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
-			deployer, AutonTrajectory.BTarmacLower2Ball, HubType.UPPER));
+				shooter, deployer, AutonTrajectory.BTarmacCenter2Ball, HubType.UPPER));
+		m_auto_chooser.addOption("2 Ball Auto B Tarmac Far HIGH",
+				new TwoBallPath(driveBase, intake, conveyorSystem, shooter,
+						deployer, AutonTrajectory.BTarmacLower2Ball, HubType.UPPER));
 		SmartDashboard.putData(m_auto_chooser);
 		SmartDashboard.putNumber("Delay Time", 0);
 		oi.configureButtonBindings(driveBase, conveyorSystem, shooter, intake, deployer, vision, verticalClimber,
-			diagonalClimber,climbers);
+				diagonalClimber, climbers);
 	}
-  
+
 	public void robotInit() {
 		conveyorSystem.setShooter(shooter);
 		vision.switchLEDS(false);
@@ -106,7 +110,8 @@ public class RobotContainer extends RobotContainerBase {
 	 * @return the command to run in autonomous
 	 */
 	public MustangCommand getAutonomousCommand() {
-		MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0), m_auto_chooser.getSelected());
+		MustangCommand autonCommand = new AutonPathWithDelay(SmartDashboard.getNumber("Delay Time", 0),
+				m_auto_chooser.getSelected());
 		return autonCommand;
 	}
 
@@ -117,9 +122,11 @@ public class RobotContainer extends RobotContainerBase {
 		deployer.setEncoderPositionFromAbsolute();
 		driveBase.initBrakeMode();
 		Logger.consoleLog("autoInit called");
-		if (getAutonomousCommand().equals(new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.BTarmacHighHubTerminal))) {
+		if (getAutonomousCommand().equals(new FourBallPath(driveBase, intake, conveyorSystem, shooter, deployer,
+				AutonTrajectory.BTarmacHighHubTerminal))) {
 			leds.solid(LEDColor.PURPLE);
-		} else if (getAutonomousCommand().equals(new TwoBallPath(driveBase, intake, conveyorSystem, shooter, deployer, AutonTrajectory.ATarmac2Ball, HubType.UPPER))) {
+		} else if (getAutonomousCommand().equals(new TwoBallPath(driveBase, intake, conveyorSystem, shooter, deployer,
+				AutonTrajectory.ATarmac2Ball, HubType.UPPER))) {
 			leds.solid(LEDColor.BLUE);
 		}
 	}
@@ -129,7 +136,7 @@ public class RobotContainer extends RobotContainerBase {
 		shooter.setWaitTime(2);
 		driveBase.setTeleopRampRate();
 		deployer.setEncoderPositionFromAbsolute();
-		pd.setSwitchableChannel(false);
+		// pd.setSwitchableChannel(false);
 	}
 
 	@Override
@@ -174,10 +181,11 @@ public class RobotContainer extends RobotContainerBase {
 	@Override
 	public void testInit() {
 		for (MustangSubsystemBase subsystem : allSubsystems) {
-		    subsystem.setDebugSubsystem(true);
+			subsystem.setDebugSubsystem(true);
 		}
 		MustangScheduler.getInstance()
-			.schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers, getDriverController()));
+				.schedule(new CheckSubsystems(intake, deployer, conveyorSystem, shooter, climbers,
+						getDriverController()));
 	}
 
 	@Override
@@ -190,7 +198,7 @@ public class RobotContainer extends RobotContainerBase {
 		driveBase.getDriveTrain().feed();
 	}
 
-	public static SendableChooser<MustangCommand> getAutoChooser(){
+	public static SendableChooser<MustangCommand> getAutoChooser() {
 		return m_auto_chooser;
 	}
 
