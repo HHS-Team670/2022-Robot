@@ -9,6 +9,7 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
+// import java.util.Timer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -32,6 +34,7 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRobotOrientedDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.TankDrive;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
@@ -53,6 +56,8 @@ import frc.team670.robot.constants.RobotMap;
 public class DriveBase extends TankDrive {
 
   private Vision vision;
+  private Timer timer = new Timer();
+
 
   private SparkMAXLite left1, left2, right1, right2;
   private RelativeEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -118,6 +123,7 @@ public class DriveBase extends TankDrive {
 
     // initialized NavX and sets Odometry. Position is zeroed.
     navXMicro = new NavX(RobotMap.NAVX_PORT);
+    timer.start();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
     prevHeading = getHeading();
     initBrakeMode();
@@ -290,9 +296,9 @@ public class DriveBase extends TankDrive {
     if (visionMeasurement != null) {
       // poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
       SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
-      // SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
+      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
     } else {
-      // Logger.consoleError("Did not find targets!");
+      Logger.consoleError("Did not find targets!");
     }
 
     prevHeading = getHeading();
