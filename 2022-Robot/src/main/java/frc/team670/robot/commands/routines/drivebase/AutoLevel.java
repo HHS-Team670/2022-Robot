@@ -2,23 +2,25 @@ package frc.team670.robot.commands.routines.drivebase;
 
 import java.util.Map;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.constants.RobotMap;
 
-public class AutoLevel extends CommandBase implements MustangCommand{
-DriveBase driveBase;
-AHRS gyro = new AHRS(SPI.Port.kMXP);
-double target = 0;
+public class AutoLevel extends CommandBase implements MustangCommand {
+    DriveBase driveBase;
+    NavX m_navx;
+    double target = 0;
 
-    public AutoLevel(DriveBase driveBase){
+    public AutoLevel(DriveBase driveBase) {
         this.driveBase = driveBase;
+        // m_navx = driveBase.navXMicro;
+        m_navx = new NavX(RobotMap.NAVX_PORT);
     }
 
     @Override
@@ -35,18 +37,18 @@ double target = 0;
 
     @Override
     public void execute() {
-        double angle = gyro.getRawGyroX();
-        Logger.consoleLog("Pitch: "+angle);
-        Logger.consoleLog("to string: "+gyro.toString());
+        double angle = m_navx.getPitch();
+        Logger.consoleLog("Pitch: " + angle);
+        // Logger.consoleLog("to string: "+m_navx.toString());
 
-        double kp = 0.0005;
+        double kp = 0.05;
 
-        double adjustment = (target-angle)*kp; //clamp for safety later
-        driveBase.curvatureDrive(adjustment, 0, false);
+        double adjustment = MathUtil.clamp((target - angle) * kp, -1, 1); // check if i called clamp correctly 🤣
+        driveBase.curvatureDrive(-adjustment, 0, false); // negative since undo/counteract
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
 }
