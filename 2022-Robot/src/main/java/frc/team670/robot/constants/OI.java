@@ -17,6 +17,7 @@ import frc.team670.robot.commands.drivebase.HoldPosition;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.StopAll;
 import frc.team670.robot.commands.routines.drivebase.AlignAngleToTargetAndShoot;
+import frc.team670.robot.commands.routines.drivebase.AutoLevel;
 import frc.team670.robot.commands.routines.intake.EjectCargo;
 import frc.team670.robot.commands.routines.intake.RaiseIntakeToAngle;
 import frc.team670.robot.commands.routines.intake.RunIntakeWithConveyor;
@@ -51,6 +52,7 @@ public class OI extends OIBase {
   // private static JoystickButton turnVisionLEDsOffOp = new
   // JoystickButton(getOperatorController(), XboxButtons.START);
   // driver controls
+  private static JoystickButton autoLevel = new JoystickButton(getDriverController(), XboxButtons.X);
   private static JoystickButton alignToTarget = new JoystickButton(getDriverController(), XboxButtons.RIGHT_BUMPER);
   private static JoystickButton toggleRaisedIntake = new JoystickButton(getDriverController(), XboxButtons.Y);
   private static JoystickButton holdPosition = new JoystickButton(getDriverController(), XboxButtons.A);
@@ -120,6 +122,7 @@ public class OI extends OIBase {
 
     // turnVisionLEDsOffOp.whenPressed(new SetVisionLEDs(false, vision));
     // driver
+    autoLevel.whenPressed(new AutoLevel(driveBase));
     shootAllBalls.whenPressed(new ShootAllBalls(conveyorSystem, shooter));
     alignToTarget.whenPressed(new AlignAngleToTarget(driveBase, vision));
     toggleRaisedIntake.whenPressed(new RaiseIntakeToAngle(60, deployer, intake)); // TODO: still doesn't work, gotta
