@@ -2,7 +2,10 @@ package frc.team670.robot.commands.routines.drivebase;
 
 import java.util.Map;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
@@ -14,13 +17,10 @@ import frc.team670.robot.constants.RobotMap;
 
 public class AutoLevel extends CommandBase implements MustangCommand {
     DriveBase driveBase;
-    NavX m_navx;
     double target = 0;
 
     public AutoLevel(DriveBase driveBase) {
         this.driveBase = driveBase;
-        // m_navx = driveBase.navXMicro;
-        m_navx = new NavX(RobotMap.NAVX_PORT);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class AutoLevel extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
-        double angle = m_navx.getPitch();
-        Logger.consoleLog("Pitch: " + angle);
-        // Logger.consoleLog("to string: "+m_navx.toString());
-
+        double angle = driveBase.getPitch();
+        SmartDashboard.putString("Pitch: ", ""+angle);
+        
         double kp = 0.05;
 
         double adjustment = MathUtil.clamp((target - angle) * kp, -1, 1); // check if i called clamp correctly 🤣
-        driveBase.curvatureDrive(-adjustment, 0, false); // negative since undo/counteract
+        driveBase.curvatureDrive(adjustment, 0, false); // negative since undo/counteract
+        //Seems that negative is wrong dir? 
     }
 
     @Override

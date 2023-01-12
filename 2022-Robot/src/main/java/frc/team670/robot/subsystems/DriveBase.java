@@ -319,6 +319,10 @@ public class DriveBase extends TankDrive {
     return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
   }
 
+  public double getPitch() {
+    return Math.IEEEremainder(navXMicro.getPitch(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
+  }
+
   /**
    * Returns the wheel speeds of the leftMain Motor and rightMainMotor
    */
