@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -14,15 +15,19 @@ import frc.team670.robot.subsystems.DriveBase;
 public class AutoLevel extends CommandBase implements MustangCommand {
     private DriveBase driveBase;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-
+    private Timer level_timer;
+    private Timer error_timer;
+    private double LEVEL_CHECK_PERIOD = 5;
+    private double ERROR_QUIT_PERIOD = 3;
     private double target = 0;
+    private double ALLOWED_ERROR = 0.5;
+    private double ERROR_PITCH = 20;
 
     public AutoLevel(DriveBase driveBase) {
         this.driveBase = driveBase;
-        
+
         this.healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         this.healthReqs.put(driveBase, HealthState.GREEN);
-        //what is addRequirements? do i need it?
     }
 
     @Override
@@ -30,31 +35,45 @@ public class AutoLevel extends CommandBase implements MustangCommand {
         return healthReqs;
     }
 
-    // @Override
-    // public void initialize() {
-    //     // probably don't need
-    //     // gyro.calibrate();
-    // }
-
     @Override
     public void execute() {
-        double angle = driveBase.getPitch();
-        SmartDashboard.putString("Pitch: ", "" + angle);
+        double pitch = driveBase.getPitch();
+        SmartDashboard.putNumber("Pitch: ", pitch);
 
+        double error = (target - pitch);
+
+        if (Math.abs(error) < ALLOWED_ERROR) { // check if level.
+            level_timer.start(); // noop if timer already running, which is what we want
+            driveBase.stop(); // stop motors?
+            return;
+        }
+        level_timer.stop();
+        level_timer.reset();
+
+        if (Math.abs(error) > ERROR_PITCH) { //check if error (ramp is held down by another robot?)
+            error_timer.start();
+            return;
+        }
+        error_timer.stop();
+        error_timer.reset();
+
+        //begin correction
         double kp = 0.05;
-        //for fun i want to try doing verlett integration on the gyro and fusion (maybe just a filter) that with the accelrometer to get my own pitch measurement and compare with the getPitch method
-        double adjustment = MathUtil.clamp((target - angle) * kp, -1, 1); // check if i called clamp correctly 🤣
-        driveBase.curvatureDrive(adjustment, 0, false); // negative adjustment since undo/counteract (update, negative gives oposite direction?)
+        // use dynamic/variable target angle?
+        // reduce continuous movement by using a second target adjustment proportional
+        // for wheel av?
+        // compensate for backemf?
+        double adjustment = MathUtil.clamp(error * kp, -1, 1);
+        driveBase.curvatureDrive(adjustment, 0, false);
     }
 
     @Override
     public boolean isFinished() {
-        return super.isFinished(); //return false;
-        //maybe do time based (like stop after 5 secs) or angle change based (it has settled down and robot ramp system is basically static equalibrium)
+        return level_timer.hasElapsed(LEVEL_CHECK_PERIOD) || error_timer.hasElapsed(ERROR_QUIT_PERIOD); // level or error
     }
 
     @Override
     public void end(boolean interrupted) {
-        driveBase.stop(); //idk if we want this here but for now imma go with yes
+        driveBase.stop(); // idk if we want this here but for now imma go with yes
     }
 }
