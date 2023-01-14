@@ -39,6 +39,8 @@ public class AutoLevel extends CommandBase implements MustangCommand {
     public void execute() {
         double pitch = driveBase.getPitch();
         SmartDashboard.putNumber("Pitch: ", pitch);
+        SmartDashboard.putNumber("Leveled time: ", level_timer.get());
+        SmartDashboard.putNumber("Error time: ", error_timer.get());
 
         double error = (target - pitch);
 
@@ -58,11 +60,7 @@ public class AutoLevel extends CommandBase implements MustangCommand {
         error_timer.reset();
 
         //begin correction
-        double kp = 0.05;
-        // use dynamic/variable target angle?
-        // reduce continuous movement by using a second target adjustment proportional
-        // for wheel av?
-        // compensate for backemf?
+        double kp = 0.05; //use pid code?
         double adjustment = MathUtil.clamp(error * kp, -1, 1);
         driveBase.curvatureDrive(adjustment, 0, false);
     }
