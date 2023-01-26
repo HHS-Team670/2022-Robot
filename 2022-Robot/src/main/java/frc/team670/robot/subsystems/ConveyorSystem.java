@@ -83,7 +83,7 @@ public class ConveyorSystem extends MustangSubsystemBase {
 
     //Shoot
     public void Shoot(){
-        if(shooterTrigger && intakeBeamBreak.isTriggered()){
+        if(shooterBeamBreak.isTriggered() || intakeBeamBreak.isTriggered()){
             Intake();
         }
     }
@@ -113,9 +113,11 @@ public class ConveyorSystem extends MustangSubsystemBase {
             status = 1;
         } else if(x == 2){
             Shoot();
+            Empty();
             status = 2;
         } else if(x == 3){
             Eject();
+            Empty();
             status = 3;
         }
     }

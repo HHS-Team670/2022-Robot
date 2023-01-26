@@ -58,8 +58,7 @@ public class RobotContainer extends RobotContainerBase {
 	private static ClimberSystem climbers = new ClimberSystem(getBackupController(), deployer);
 	private static Climber verticalClimber = climbers.getVerticalClimber();
 	private static Climber diagonalClimber = climbers.getDiagonalClimber();
-	private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX,
-		shooter, intake, conveyorSystem, climbers);
+	private static LEDs leds = new LEDs(RobotMap.LED_PORT, RobotConstants.LED_START_INDEX, RobotConstants.LED_END_INDEX);
 
 	private static OI oi = new OI();
 
@@ -86,13 +85,13 @@ public class RobotContainer extends RobotContainerBase {
 	}
   
 	public void robotInit() {
-		new SetConveyorMode(conveyorSystem, 2);
+		// new SetConveyorMode(conveyorSystem, 2);
 		vision.switchLEDS(false);
 		Alliance alliance = DriverStation.getAlliance();
 		if (alliance == Alliance.Red) {
-			leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
+			//leds.setAllianceColors(LEDColor.RED, LEDColor.BLUE);
 		} else {
-			leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
+			//leds.setAllianceColors(LEDColor.BLUE, LEDColor.RED);
 		}
 		if (debugSubsystems) {
 			for (MustangSubsystemBase subsystem : allSubsystems) {

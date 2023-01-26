@@ -29,14 +29,14 @@ public class SetConveyorMode extends InstantCommand implements MustangCommand {
     addRequirements(conveyors);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(conveyors, HealthState.GREEN);
-      
-      if(x == 1){
-        conveyors.setStatus(1);
-      } else if(x == 2){
-        conveyors.setStatus(2);
-      } else if(x == 3){
-        conveyors.setStatus(3);
-      }
+      conveyors.setStatus(x);
+      // if(x == 1){
+      //   conveyors.setStatus(1);
+      // } else if(x == 2){
+      //   conveyors.setStatus(2);
+      // } else if(x == 3){
+      //   conveyors.setStatus(3);
+      // }
 
       
       
